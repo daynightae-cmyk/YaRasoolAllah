@@ -14,6 +14,10 @@ import BabAlsamaaFAB, {
   BabAlsamaaSmartNotifier,
 } from "./components/BabAlsamaa/BabAlsamaaFAB";
 import WelcomeModal from "./components/WelcomeModal";
+import GateOfLightPage from "./pages/GateOfLightPage";
+import WhoIsMuhammadPage from "./pages/WhoIsMuhammadPage";
+import SunnahPage from "./pages/SunnahPage";
+import PropheticDayPage from "./pages/PropheticDayPage";
 import HomePage from "./pages/HomePage";
 import QuranPage from "./pages/QuranPage";
 import SeerahPage from "./pages/SeerahPage";
@@ -62,18 +66,45 @@ function AppContent() {
     <>
       <Switch>
         <Route path="/">
+          {() => <GateOfLightPage />}
+        </Route>
+        <Route path="/who-is-muhammad">
+          {() => <WhoIsMuhammadPage />}
+        </Route>
+        <Route path="/who-is-muhammad/:chapter">
+          {() => <WhoIsMuhammadPage />}
+        </Route>
+        <Route path="/sunnah">
+          {() => <SunnahPage />}
+        </Route>
+        <Route path="/sources">
+          {() => <SunnahPage />}
+        </Route>
+        <Route path="/character">
+          {() => <WhoIsMuhammadPage defaultChapterId="family-and-personal-character" />}
+        </Route>
+        <Route path="/prophetic-day">
+          {() => <PropheticDayPage />}
+        </Route>
+        <Route path="/24-hours">
+          {() => <PropheticDayPage />}
+        </Route>
+        <Route path="/library">
+          {() => (
+            <AppLayout showSidebar={true}>
+              <DigitalLibraryPage />
+            </AppLayout>
+          )}
+        </Route>
+        <Route path="/daily">
           {() => (
             <AppLayout>
-              <AlMuftiAlMubeenPage />
+              <DailyRemindersPage />
             </AppLayout>
           )}
         </Route>
         <Route path="/home">
-          {() => (
-            <AppLayout showSidebar={true}>
-              <HomePage />
-            </AppLayout>
-          )}
+          {() => <GateOfLightPage />}
         </Route>
         <Route path="/quran">
           {() => (

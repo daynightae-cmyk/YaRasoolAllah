@@ -451,8 +451,8 @@ ${context}
 
   // إحصائيات النظام
   public getSystemStats(): any {
-    const typeDistribution = {};
-    const categoryDistribution = {};
+    const typeDistribution: Record<string, number> = {};
+    const categoryDistribution: Record<string, number> = {};
 
     for (const entry of this.knowledgeBase.values()) {
       typeDistribution[entry.type] = (typeDistribution[entry.type] || 0) + 1;

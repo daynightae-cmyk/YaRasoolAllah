@@ -1153,6 +1153,7 @@ export async function getQuranChapters(): Promise<QuranChapter[]> {
 export async function getQuranVerse(
   surah: number,
   ayah: number,
+  language?: string,
 ): Promise<QuranVerse | null> {
   // In a real implementation, this would fetch from a proper Quran API
   const key = `${surah}-${ayah}`;

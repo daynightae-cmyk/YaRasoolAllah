@@ -316,7 +316,7 @@ export default function IslamicKnowledgePage() {
               اكتشف المزيد من المعرفة الإسلامية
             </h3>
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Link href="/five-pillars">
+              <Link href="/five-pillars" asChild>
                 <Button variant="outline" className="w-full h-auto p-4">
                   <div className="text-center">
                     <span className="material-symbols-outlined text-2xl mb-2 block text-emerald-600">temple_buddhist</span>
@@ -325,7 +325,7 @@ export default function IslamicKnowledgePage() {
                 </Button>
               </Link>
               
-              <Link href="/women-in-islam">
+              <Link href="/women-in-islam" asChild>
                 <Button variant="outline" className="w-full h-auto p-4">
                   <div className="text-center">
                     <span className="material-symbols-outlined text-2xl mb-2 block text-purple-600">female</span>
@@ -334,7 +334,7 @@ export default function IslamicKnowledgePage() {
                 </Button>
               </Link>
               
-              <Link href="/seerah">
+              <Link href="/seerah" asChild>
                 <Button variant="outline" className="w-full h-auto p-4">
                   <div className="text-center">
                     <span className="material-symbols-outlined text-2xl mb-2 block text-gold-600">account_circle</span>
@@ -343,7 +343,7 @@ export default function IslamicKnowledgePage() {
                 </Button>
               </Link>
               
-              <Link href="/ai-assistant">
+              <Link href="/ai-assistant" asChild>
                 <Button variant="outline" className="w-full h-auto p-4">
                   <div className="text-center">
                     <span className="material-symbols-outlined text-2xl mb-2 block text-blue-600">psychology</span>

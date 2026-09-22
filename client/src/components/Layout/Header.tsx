@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import ThemeToggle from "../Common/ThemeToggle";
 import LanguageSwitcher from "../Common/LanguageSwitcher";
+import { BRAND } from "@/config/brand";
 
 export default function Header() {
   const [location] = useLocation();
@@ -14,19 +15,15 @@ export default function Header() {
 
   const navigationItems = [
     { href: "/", label: t("nav.home"), icon: "home" },
+    { href: "/who-is-muhammad", label: "من هو محمد ﷺ؟", icon: "favorite" },
     { href: "/quran", label: t("nav.quran"), icon: "menu_book" },
-    {
-      href: "/al-mufti-al-mubeen",
-      label: "🤖 المفتي المبين",
-      icon: "gavel",
-      badge: "مجاني",
-    },
+    { href: "/seerah", label: t("nav.seerah"), icon: "account_circle" },
+    { href: "/sunnah", label: "دار الحديث", icon: "verified" },
     {
       href: "/digital-library",
       label: "📚 المكتبة الرقمية",
       icon: "local_library",
     },
-    { href: "/seerah", label: t("nav.seerah"), icon: "account_circle" },
     {
       href: "/prayer-guide",
       label: t("nav.prayer_guide"),
@@ -38,8 +35,7 @@ export default function Header() {
       icon: "auto_stories",
     },
     { href: "/calendar", label: t("nav.calendar"), icon: "calendar_month" },
-    { href: "/children", label: t("nav.children"), icon: "child_care" },
-    { href: "/ai-assistant", label: t("nav.ai_assistant"), icon: "psychology" },
+    { href: "/kids", label: t("nav.children"), icon: "child_care" },
   ];
 
   const isActive = (href: string) => {
@@ -64,8 +60,8 @@ export default function Header() {
               <h1 className="text-xl font-amiri font-bold text-emerald-700 dark:text-emerald-400">
                 {t("app.name")}
               </h1>
-              <p className="text-xs text-gray-500 dark:text-gray-400 font-inter">
-                Al-Kitab Al-Mubeen
+              <p className="text-xs text-amber-600 dark:text-amber-400 font-inter">
+                {BRAND.name.en}
               </p>
             </div>
           </Link>

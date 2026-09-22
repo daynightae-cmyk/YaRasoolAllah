@@ -136,34 +136,34 @@ export default function Sidebar() {
   ];
 
   const renderNavItem = (item: any) => (
-    <Link key={item.href} href={item.href}>
-      <a
-        className={cn(
-          "flex items-center justify-between p-3 rounded-lg transition-all duration-300 hover:scale-105 group",
-          location === item.href
-            ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg"
-            : "text-gray-600 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50",
-        )}
-      >
-        <div className="flex items-center space-x-3 rtl:space-x-reverse">
-          <div
-            className={cn(
-              "transition-colors",
-              location === item.href
-                ? "text-white"
-                : "text-gray-500 dark:text-gray-400",
-            )}
-          >
-            {item.icon}
-          </div>
-          <span className="font-inter text-sm font-medium">{item.label}</span>
+    <Link
+      key={item.href}
+      href={item.href}
+      className={cn(
+        "flex items-center justify-between p-3 rounded-lg transition-all duration-300 hover:scale-105 group",
+        location === item.href
+          ? "bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-lg"
+          : "text-gray-600 dark:text-gray-300 hover:bg-gray-100/50 dark:hover:bg-gray-800/50",
+      )}
+    >
+      <div className="flex items-center space-x-3 rtl:space-x-reverse">
+        <div
+          className={cn(
+            "transition-colors",
+            location === item.href
+              ? "text-white"
+              : "text-gray-500 dark:text-gray-400",
+          )}
+        >
+          {item.icon}
         </div>
-        {item.badge && (
-          <Badge className="bg-amber-500 text-white border-0 px-2 py-1 text-xs animate-pulse">
-            {item.badge}
-          </Badge>
-        )}
-      </a>
+        <span className="font-inter text-sm font-medium">{item.label}</span>
+      </div>
+      {item.badge && (
+        <Badge className="bg-amber-500 text-white border-0 px-2 py-1 text-xs animate-pulse">
+          {item.badge}
+        </Badge>
+      )}
     </Link>
   );
 
@@ -251,13 +251,13 @@ export default function Sidebar() {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-4 pt-0 space-y-3">
-            <Link href="/bab-alsamaa-settings">
+            <Link href="/bab-alsamaa-settings" asChild>
               <Button className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-amiri text-sm py-2 rounded-lg">
                 <Heart className="w-4 h-4 ml-2 rtl:mr-2" />
                 تحدث مع باب السماء
               </Button>
             </Link>
-            <Link href="/daily-verse">
+            <Link href="/daily-verse" asChild>
               <Button
                 variant="outline"
                 className="w-full border-amber-300 text-amber-700 dark:text-amber-300 hover:bg-amber-50 dark:hover:bg-amber-900/20 font-amiri text-sm py-2 rounded-lg"

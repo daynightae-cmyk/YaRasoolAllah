@@ -6,6 +6,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { useTheme } from "./ThemeProvider";
 import LanguageSwitcher from "./LanguageSwitcher";
 import DivineToggle from "./DivineToggle";
+import { BRAND } from "@/config/brand";
 import {
   Menu,
   X,
@@ -24,6 +25,8 @@ import {
   Building2,
   BarChart3,
   ChevronRight,
+  Heart,
+  Feather,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -43,51 +46,50 @@ export default function Header() {
 
   const mainNavItems = [
     {
-      href: "/home",
-      label: "الرئيسية",
+      href: "/",
+      label: "بوابة النور",
       englishLabel: "Home",
       icon: <Home className="w-4 h-4" />,
     },
     {
-      href: "/dashboard",
-      label: "لوحة التحكم",
-      englishLabel: "Dashboard",
-      badge: "جديد",
-      icon: <BarChart3 className="w-4 h-4" />,
+      href: "/who-is-muhammad",
+      label: "من هو محمد ﷺ؟",
+      englishLabel: "Who is Muhammad?",
+      badge: "جامع",
+      icon: <Heart className="w-4 h-4 text-red-500" />,
+    },
+    {
+      href: "/seerah",
+      label: "درب السيرة",
+      englishLabel: "Seerah",
+      icon: <Compass className="w-4 h-4" />,
     },
     {
       href: "/quran",
-      label: "القرآن الكريم",
-      englishLabel: "Holy Quran",
+      label: "رِواق القرآن",
+      englishLabel: "Quran",
       icon: <BookOpen className="w-4 h-4" />,
     },
     {
-      href: "/quran-audio",
-      label: "القرآن الصوتي",
-      englishLabel: "Audio Quran",
-      badge: "HD",
-      icon: <Headphones className="w-4 h-4" />,
+      href: "/sunnah",
+      label: "دار الحديث",
+      englishLabel: "Sunnah",
+      icon: <Feather className="w-4 h-4" />,
     },
     {
-      href: "/daily-verse",
-      label: "الآية اليومية",
-      englishLabel: "Daily Verse",
-      icon: <Star className="w-4 h-4" />,
+      href: "/digital-library",
+      label: "مكتبة الرفوف",
+      englishLabel: "Library",
+      icon: <Library className="w-4 h-4" />,
     },
   ];
 
   const secondaryNavItems = [
     {
       href: "/children-tv",
-      label: "الطفل المبين",
-      englishLabel: "Children's Content",
+      label: "واحة الطفل والأسرة",
+      englishLabel: "Children & Family",
       icon: <Baby className="w-4 h-4" />,
-    },
-    {
-      href: "/digital-library",
-      label: "المكتبة الرقمية",
-      englishLabel: "Digital Library",
-      icon: <Library className="w-4 h-4" />,
     },
     {
       href: "/calendar",
@@ -126,31 +128,31 @@ export default function Header() {
         "sticky top-0 z-50 animate-fade-in",
         "backdrop-blur-sm border-b",
         mode === "heaven"
-          ? "bg-gray-800/95 border-gray-700"
-          : "bg-white/95 border-gray-200",
+          ? "bg-slate-900/95 border-slate-800 text-slate-100"
+          : "bg-white/95 border-slate-200 text-slate-900",
       )}
     >
       <div className="container-simple">
         <div className="flex justify-between items-center h-16">
           {/* Logo Section */}
-          <Link href="/home">
-            <div className="flex items-center gap-3 group cursor-pointer p-2 rounded-lg hover:bg-muted/50 transition-all duration-200">
-              <div className="icon-primary w-10 h-10">
-                <BookOpen className="w-5 h-5" />
+          <Link href="/">
+            <div className="flex items-center gap-3 group cursor-pointer p-2 rounded-xl hover:bg-muted/50 transition-all duration-200">
+              <div className="w-10 h-10 rounded-xl bg-emerald-800 text-amber-300 flex items-center justify-center font-amiri font-bold text-lg border border-amber-400/30 group-hover:scale-105 transition-transform">
+                ﷺ
               </div>
 
               <div
                 className={`${direction === "rtl" ? "text-right" : "text-left"}`}
               >
-                <h1 className="text-lg font-cairo font-bold text-primary">
-                  الكت��ب المبين
+                <h1 className="text-lg font-amiri font-bold text-foreground">
+                  {BRAND.name.ar}
                 </h1>
                 <div className="flex items-center gap-2">
-                  <p className="text-xs font-tajawal text-muted-foreground">
-                    {getGreeting()}
+                  <p className="text-[11px] font-tajawal text-muted-foreground">
+                    {BRAND.domain}
                   </p>
-                  <div className="w-1 h-1 rounded-full bg-primary/40"></div>
-                  <span className="badge-primary text-xs px-2 py-1">
+                  <div className="w-1 h-1 rounded-full bg-emerald-500/40"></div>
+                  <span className="text-[11px] text-muted-foreground font-mono">
                     {formatTime(currentTime)}
                   </span>
                 </div>

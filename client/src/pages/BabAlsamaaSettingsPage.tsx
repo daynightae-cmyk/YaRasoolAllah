@@ -89,14 +89,14 @@ export default function BabAlsamaaSettingsPage() {
   const getMoodDistribution = () => {
     const analytics = getMoodAnalytics();
     const total = Object.values(analytics.last7Days).reduce(
-      (sum, count) => sum + count,
+      (sum: number, count) => sum + (count as number),
       0,
     );
 
     return Object.entries(analytics.last7Days).map(([mood, count]) => ({
       mood,
-      count,
-      percentage: total > 0 ? Math.round((count / total) * 100) : 0,
+      count: count as number,
+      percentage: total > 0 ? Math.round(((count as number) / total) * 100) : 0,
     }));
   };
 
@@ -394,7 +394,6 @@ export default function BabAlsamaaSettingsPage() {
                                     );
                                 updateSettings({ enabledTypes: types });
                               }}
-                              size="sm"
                             />
                           </div>
                         ))}

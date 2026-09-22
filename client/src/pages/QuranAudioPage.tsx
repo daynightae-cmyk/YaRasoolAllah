@@ -33,6 +33,7 @@ import {
   TrendingUp,
   Eye,
   Calendar,
+  Book,
   Timer,
 } from "lucide-react";
 import { cn } from "@/lib/utils";

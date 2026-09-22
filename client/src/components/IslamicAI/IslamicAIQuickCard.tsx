@@ -262,8 +262,8 @@ export default function IslamicAIQuickCard({
 
           {/* الأزرار الرئيسية */}
           <div className="flex gap-3">
-            <Link href="/islamic-ai-management" className="flex-1">
-              <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-600 hover:to-blue-700 text-white">
+            <Link href="/islamic-ai-management" asChild>
+              <Button className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-600 hover:to-blue-700 text-white">
                 <span className="material-symbols-outlined mr-2">
                   dashboard
                 </span>
@@ -271,7 +271,7 @@ export default function IslamicAIQuickCard({
               </Button>
             </Link>
 
-            <Link href="/al-mufti-al-mubeen">
+            <Link href="/al-mufti-al-mubeen" asChild>
               <Button
                 variant="outline"
                 className="border-emerald-300 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
@@ -331,12 +331,12 @@ export function IslamicAIMiniCard({ className }: { className?: string }) {
         </p>
 
         <div className="flex items-center justify-between">
-          <Link href="/islamic-ai-management">
+          <Link href="/islamic-ai-management" asChild>
             <Button size="sm" variant="outline" className="h-6 px-2 text-xs">
               إدارة النموذج
             </Button>
           </Link>
-          <Link href="/al-mufti-al-mubeen">
+          <Link href="/al-mufti-al-mubeen" asChild>
             <Button size="sm" className="h-6 px-2 text-xs bg-emerald-600">
               جرب الآن
             </Button>

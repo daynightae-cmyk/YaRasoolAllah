@@ -222,7 +222,7 @@ export default function SpiritualHub() {
 
           {/* Action Buttons */}
           <div className="grid grid-cols-2 gap-4">
-            <Link href="/bab-alsamaa-settings">
+            <Link href="/bab-alsamaa-settings" asChild>
               <Button className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-amiri py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                 <Heart className="w-5 h-5 ml-2 rtl:mr-2" />
                 تحدث معنا

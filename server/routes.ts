@@ -8,7 +8,7 @@ import {
   insertPrayerTimesSchema,
 } from "@shared/schema";
 
-const JWT_SECRET = process.env.JWT_SECRET || "al-kitab-al-mubeen-secret-key";
+const JWT_SECRET = process.env.JWT_SECRET || "ya-rasool-allah-secret-key";
 
 // Simple authentication middleware for demo
 const authenticateToken = (req: any, res: any, next: any) => {

@@ -196,8 +196,8 @@ ${response.verse ? `📖 ${response.verse}` : ""}
 
 ${response.story ? `✨ ${response.story}` : ""}
 
-📱 الكتاب المبين - باب السماء مفتوح لك دائماً
-https://elkitab-almubeen.app
+📱 منصة يا رسول الله ﷺ — باب السماء مفتوح لك دائماً
+https://yarasoolallah.org
 
 #باب_السماء #دعاء #القرآن
     `.trim();

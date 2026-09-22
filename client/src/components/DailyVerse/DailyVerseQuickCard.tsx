@@ -35,7 +35,7 @@ ${dailyVerse.arabic}
 
 📖 ${dailyVerse.surahName} - آية ${dailyVerse.ayah}
 
-📱 حمّل التطبيق: https://elkitab-almubeen.app
+📱 منصة يا رسول الله ﷺ: https://yarasoolallah.org
 
 #الآية_اليومية #القرآن_الكريم
     `.trim();
@@ -179,7 +179,7 @@ ${dailyVerse.arabic}
           {/* Actions */}
           {showActions && (
             <div className="flex gap-2 pt-4">
-              <Link href="/daily-verse">
+              <Link href="/daily-verse" asChild>
                 <Button className="flex-1 bg-gradient-to-r from-emerald-500 to-blue-600 hover:from-emerald-600 hover:to-blue-700 text-white">
                   <span className="material-symbols-outlined mr-2 text-sm">
                     explore
@@ -256,7 +256,7 @@ export function DailyVerseMiniCard({ className }: { className?: string }) {
           <Badge variant="secondary" className="text-xs">
             {dailyVerse.surahName}
           </Badge>
-          <Link href="/daily-verse">
+          <Link href="/daily-verse" asChild>
             <Button size="sm" variant="ghost" className="h-6 px-2 text-xs">
               المزيد
             </Button>

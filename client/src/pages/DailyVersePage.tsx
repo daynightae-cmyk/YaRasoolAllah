@@ -166,10 +166,10 @@ ${getDailyDua()}
 
 ${settings.customMessage ? `\n💎 ${settings.customMessage}` : ""}
 
-📱 حمّل تطبيق الكتاب المبين للمزيد:
-https://elkitab-almubeen.app
+📱 منصة يا رسول الله ﷺ:
+https://yarasoolallah.org
 
-#الآية_اليومية #القرآن_الكريم #الكتاب_المبين
+#الآية_اليومية #القرآن_الكريم #يا_رسول_الله
     `.trim();
 
     // Update share stats
@@ -186,7 +186,7 @@ https://elkitab-almubeen.app
         break;
       case "telegram":
         window.open(
-          `https://t.me/share/url?url=${encodeURIComponent("https://elkitab-almubeen.app")}&text=${encodeURIComponent(message)}`,
+          `https://t.me/share/url?url=${encodeURIComponent("https://yarasoolallah.org")}&text=${encodeURIComponent(message)}`,
         );
         break;
       case "copy":
@@ -220,7 +220,7 @@ https://elkitab-almubeen.app
   };
 
   const generateQRCode = () => {
-    return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent("https://elkitab-almubeen.app/daily-verse")}`;
+    return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent("https://yarasoolallah.org/daily")}`;
   };
 
   return (
@@ -850,7 +850,6 @@ https://elkitab-almubeen.app
                             <Switch
                               checked={contact.active}
                               onCheckedChange={() => toggleContact(contact.id)}
-                              size="sm"
                             />
                           </div>
                         ))
@@ -1268,7 +1267,7 @@ https://elkitab-almubeen.app
                               </span>
                               <span className="text-sm">{item.text}</span>
                             </div>
-                            <Switch checked={item.active} size="sm" />
+                            <Switch checked={item.active} />
                           </div>
                         ))}
                       </div>

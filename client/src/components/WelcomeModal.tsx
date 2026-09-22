@@ -252,7 +252,7 @@ export default function WelcomeModal({ isOpen, onClose }: WelcomeModalProps) {
                   </Button>
 
                   <div className="grid grid-cols-2 gap-2">
-                    <Link href="/quran">
+                    <Link href="/quran" asChild>
                       <Button
                         variant="outline"
                         className="btn-secondary w-full font-cairo"
@@ -263,7 +263,7 @@ export default function WelcomeModal({ isOpen, onClose }: WelcomeModalProps) {
                       </Button>
                     </Link>
 
-                    <Link href="/daily-verse">
+                    <Link href="/daily-verse" asChild>
                       <Button
                         variant="outline"
                         className="btn-secondary w-full font-cairo"

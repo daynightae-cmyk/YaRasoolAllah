@@ -160,9 +160,9 @@ export class AutoShareService {
 
   private async generateShareMessage(verse: any): Promise<string> {
     const dua = this.getDailyDua();
-    const appLink = "https://elkitab-almubeen.app";
+    const appLink = "https://yarasoolallah.org";
 
-    let message = `🌟 الآية اليومية من الكتاب المبين 🌟\n\n`;
+    let message = `🌟 الآية اليومية — منصة يا رسول الله ﷺ 🌟\n\n`;
 
     message += `${verse.arabic}\n\n`;
     message += `"${verse.translation}"\n\n`;
@@ -181,8 +181,8 @@ export class AutoShareService {
       message += `💎 ${this.settings.customMessage}\n\n`;
     }
 
-    message += `📱 حمّل تطبيق الكتاب المبين للمزيد:\n${appLink}\n\n`;
-    message += `#الآية_اليومية #القرآن_الكريم #الكتاب_المبين`;
+    message += `📱 منصة يا رسول الله ﷺ:\n${appLink}\n\n`;
+    message += `#الآية_اليومية #القرآن_الكريم #يا_رسول_الله`;
 
     return message;
   }

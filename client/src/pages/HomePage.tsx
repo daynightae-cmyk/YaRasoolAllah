@@ -336,7 +336,7 @@ export default function HomePage() {
 
       {/* Explore Button - مطابق للمراجع تماماً */}
       <div className="px-4 mb-6">
-        <Link href="/">
+        <Link href="/" asChild>
           <button className="btn-ref btn-ref-primary w-full font-cairo font-bold animate-glow">
             <Brain className="w-5 h-5" />
             استكشف الآن - المفتي المبين

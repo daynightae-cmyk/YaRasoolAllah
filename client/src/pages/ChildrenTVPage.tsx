@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { Link } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import {
   childrenVideos,
@@ -12,8 +13,9 @@ import AgeFilter from "@/components/ChildrenTV/AgeFilter";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Home, Settings, Volume2, Moon, Sun } from "lucide-react";
+import { Home, Settings, Volume2, Moon, Sun, ShieldCheck } from "lucide-react";
 import { useTheme } from "@/components/ThemeProvider";
+import { BRAND } from "@/config/brand";
 
 export default function ChildrenTVPage() {
   const { t, isRTL } = useLanguage();
@@ -71,14 +73,14 @@ export default function ChildrenTVPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4 rtl:space-x-reverse">
               <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-                <span className="text-3xl">📺</span>
+                <span className="text-3xl">🌱</span>
               </div>
               <div>
                 <h1 className="text-3xl md:text-4xl font-bold font-amiri">
-                  الطفل المبين
+                  واحة الطفل والأسرة — يا رسول الله ﷺ
                 </h1>
-                <p className="text-white/80 font-inter mt-1">
-                  تلفازك التعليمي الإسلامي المفضل
+                <p className="text-white/80 font-cairo text-xs mt-1">
+                  محتوى مرئي تربوي آمن يعلم الأخلاق والسيرة النبوية بدون أي تجسيد
                 </p>
               </div>
             </div>
@@ -89,6 +91,7 @@ export default function ChildrenTVPage() {
                 size="sm"
                 onClick={toggleMode}
                 className="text-white hover:bg-white/20 p-2"
+                aria-label="تبديل المظهر"
               >
                 {mode === "heaven" ? (
                   <Sun className="w-5 h-5" />
@@ -97,22 +100,16 @@ export default function ChildrenTVPage() {
                 )}
               </Button>
 
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowSettings(!showSettings)}
-                className="text-white hover:bg-white/20 p-2"
-              >
-                <Settings className="w-5 h-5" />
-              </Button>
-
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-white hover:bg-white/20 p-2"
-              >
-                <Home className="w-5 h-5" />
-              </Button>
+              <Link href="/" asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-white hover:bg-white/20 p-2"
+                  aria-label="الرئيسية"
+                >
+                  <Home className="w-5 h-5" />
+                </Button>
+              </Link>
             </div>
           </div>
 

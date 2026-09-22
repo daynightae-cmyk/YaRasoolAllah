@@ -1,493 +1,323 @@
-import { useEffect, useState, Suspense, lazy } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useEffect, useState, Suspense, lazy } from "react";
+import InstitutionShell from "@/components/Institution/InstitutionShell";
+import EvidenceDrawer, { EvidenceSource } from "@/components/Institution/EvidenceDrawer";
+import LivingShelf, { LibraryBook } from "@/components/Library/LivingShelf";
+import BookCard from "@/components/Library/BookCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useProgress } from "../contexts/ProgressContext";
-import { useLanguage } from "../contexts/LanguageContext";
-import { Link } from "wouter";
-import booksData from "../data/books.json";
-import { quranRecitations, getFeaturedReciters } from "../data/quranAudio";
+import booksData from "@/data/books.json";
+import {
+  Library,
+  Search,
+  BookOpen,
+  Filter,
+  Grid3X3,
+  List,
+  Sparkles,
+  ShieldCheck,
+  Bookmark,
+  Layers,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
-// Lazy loading للمكونات
-const BookCard = lazy(() => import("../components/Library/BookCard"));
-const AudioPlayer = lazy(() => import("../components/Library/AudioPlayer"));
-const BookReader = lazy(() => import("../components/Library/BookReader"));
-const DownloadManager = lazy(
-  () => import("../components/Library/DownloadManager"),
-);
-
-interface Book {
-  id: string;
-  title: string;
-  titleEn: string;
-  author: string;
-  authorEn: string;
-  category: string;
-  language: string;
-  format: string;
-  pages: number;
-  description: string;
-  descriptionEn: string;
-  downloadUrl: string;
-  coverImage: string;
-  tags: string[];
-  publishedYear: number;
-  size: string;
-  isAudioAvailable: boolean;
-  audioUrl?: string;
-  rating: number;
-  downloads: number;
-  featured?: boolean;
-}
-
-interface Category {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  color: string;
-}
+const BookReader = lazy(() => import("@/components/Library/BookReader"));
+const DownloadManager = lazy(() => import("@/components/Library/DownloadManager"));
 
 export default function DigitalLibraryPage() {
-  const { updateLastVisited, completeLesson } = useProgress();
-  const { direction } = useLanguage();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const [activeTab, setActiveTab] = useState<"shelves" | "catalog">("shelves");
+  const [selectedBook, setSelectedBook] = useState<LibraryBook | null>(null);
+  const [selectedEvidence, setSelectedEvidence] = useState<EvidenceSource | null>(null);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const [sortBy, setSortBy] = useState<
-    "title" | "downloads" | "rating" | "year"
-  >("downloads");
-  const [isLoading, setIsLoading] = useState(true);
   const [showDownloadManager, setShowDownloadManager] = useState(false);
 
-  useEffect(() => {
-    updateLastVisited("/digital-library");
-    // محاكاة تحميل البيانات
-    setTimeout(() => setIsLoading(false), 1000);
-  }, [updateLastVisited]);
+  const allBooks: LibraryBook[] = booksData.books as LibraryBook[];
 
-  const categories: Category[] = booksData.categories;
-  const books: Book[] = booksData.books;
+  // Filtered books for catalog search
+  const filteredBooks = allBooks.filter((book) => {
+    const matchesCategory =
+      selectedCategory === "all" || book.category === selectedCategory;
+    const matchesSearch =
+      !searchQuery ||
+      book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      book.description?.toLowerCase().includes(searchQuery.toLowerCase());
 
-  // تصفية وترتيب الكتب
-  const filteredBooks = books
-    .filter((book) => {
-      const matchesCategory =
-        selectedCategory === "all" || book.category === selectedCategory;
-      const matchesSearch =
-        !searchQuery ||
-        book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        book.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        book.tags.some((tag) =>
-          tag.toLowerCase().includes(searchQuery.toLowerCase()),
-        );
+    return matchesCategory && matchesSearch;
+  });
 
-      return matchesCategory && matchesSearch;
-    })
-    .sort((a, b) => {
-      switch (sortBy) {
-        case "title":
-          return a.title.localeCompare(b.title);
-        case "downloads":
-          return b.downloads - a.downloads;
-        case "rating":
-          return b.rating - a.rating;
-        case "year":
-          return b.publishedYear - a.publishedYear;
-        default:
-          return 0;
-      }
+  // Shelf group sets
+  const seerahBooks = allBooks.filter((b) => b.category === "seerah");
+  const hadithBooks = allBooks.filter((b) => b.category === "hadith");
+  const quranBooks = allBooks.filter((b) => b.category === "quran");
+  const fiqhAqeedahBooks = allBooks.filter(
+    (b) => b.category === "fiqh" || b.category === "aqeedah"
+  );
+
+  const handleInspectBookEvidence = (book: LibraryBook) => {
+    setSelectedEvidence({
+      title: book.title,
+      collectionOrWork: book.titleEn || book.title,
+      authorOrCompiler: book.author,
+      referenceNumber: `LIB-${book.id.toUpperCase()}`,
+      originalText: `كتاب: ${book.title}\nالمؤلف: ${book.author}\nالتصنيف: ${book.category}\nعدد الصفحات: ${book.pages} صفحة\nسنة النشر/التحقيق: ${book.publishedYear}م`,
+      translationExcerpt: book.descriptionEn || book.description,
+      status: "verified",
+      provenanceDataset: "المكتبة الرقمية المحققة — صرح يا رسول الله ﷺ",
     });
-
-  const handleBookRead = (book: Book) => {
-    setSelectedBook(book);
-    completeLesson(`book-${book.id}`);
   };
-
-  const handleDownload = async (book: Book) => {
-    try {
-      // إحصائية التحميل
-      completeLesson(`download-${book.id}`);
-
-      // فتح رابط التحميل في تبويب جديد
-      window.open(book.downloadUrl, "_blank");
-
-      // إشعار نجاح
-      console.log(`تم بدء تحميل: ${book.title}`);
-    } catch (error) {
-      console.error("خطأ في التحميل:", error);
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Skeleton className="h-12 w-64 mx-auto mb-8" />
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {[...Array(8)].map((_, i) => (
-              <Card key={i} className="animate-pulse">
-                <CardHeader>
-                  <Skeleton className="h-48 w-full mb-4" />
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-3 w-1/2" />
-                </CardHeader>
-                <CardContent>
-                  <Skeleton className="h-20 w-full mb-4" />
-                  <Skeleton className="h-8 w-full" />
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen py-8 bg-gradient-to-br from-emerald-50 via-white to-blue-50 dark:from-emerald-950 dark:via-gray-900 dark:to-blue-950">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center space-x-2 rtl:space-x-reverse bg-emerald-100 dark:bg-emerald-900/30 px-4 py-2 rounded-full mb-6">
-            <span className="material-symbols-outlined text-emerald-600 dark:text-emerald-400">
-              local_library
-            </span>
-            <span className="text-sm font-medium text-emerald-700 dark:text-emerald-300">
-              المكتبة الرقمية الشاملة
-            </span>
-          </div>
-
-          <h1 className="text-4xl md:text-5xl font-amiri font-bold text-gray-900 dark:text-white mb-4">
-            📚 الكتاب المبين - المكتبة الإسلامية الرقمية
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-300 font-inter max-w-3xl mx-auto">
-            مكتبة شاملة تضم أهم الكتب والمؤلفات الإسلامية من القرآن والحديث
-            والفقه والعقيدة والسيرة النبوية
-          </p>
-
-          {/* إحصائيات سريعة */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 max-w-2xl mx-auto">
-            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-              <div className="text-2xl font-bold text-emerald-600">
-                {books.length}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                كتاب
-              </div>
-            </div>
-            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-              <div className="text-2xl font-bold text-blue-600">
-                {categories.length}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                ��صنيف
-              </div>
-            </div>
-            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-              <div className="text-2xl font-bold text-purple-600">
-                {books
-                  .reduce((sum, book) => sum + book.downloads, 0)
-                  .toLocaleString()}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                تحميل
-              </div>
-            </div>
-            <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm">
-              <div className="text-2xl font-bold text-orange-600">
-                {books.filter((book) => book.isAudioAvailable).length}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                كتاب صوتي
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* قسم القرآن الكريم الصوتي */}
-        <div className="mb-12">
-          <Card className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white border-0 shadow-xl">
-            <CardContent className="p-8">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4 rtl:space-x-reverse">
-                  <div className="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center">
-                    <span className="text-3xl">🎧</span>
-                  </div>
-                  <div>
-                    <h2 className="text-3xl font-bold font-amiri mb-2">
-                      القرآن الكريم الصوتي
-                    </h2>
-                    <p className="text-emerald-100 font-inter">
-                      استمع إلى القرآن الكريم بأصوات أشهر القراء مع إمكانية
-                      تخصيص القارئ المفضل
-                    </p>
-                  </div>
-                </div>
-                <Link href="/quran-audio">
-                  <Button
-                    size="lg"
-                    variant="secondary"
-                    className="bg-white text-emerald-600 hover:bg-emerald-50 font-amiri"
-                  >
-                    استمع الآن
-                  </Button>
-                </Link>
-              </div>
-
-              {/* القراء المميزون */}
-              <div className="mt-8">
-                <h3 className="text-xl font-bold font-amiri mb-4 text-emerald-100">
-                  القراء المميزون
-                </h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {getFeaturedReciters().map((reciter) => (
-                    <div
-                      key={reciter.id}
-                      className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center hover:bg-white/20 transition-colors"
-                    >
-                      <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-2">
-                        <span className="text-xl">🎙️</span>
-                      </div>
-                      <h4 className="font-bold font-amiri text-sm mb-1">
-                        {reciter.reciterName}
-                      </h4>
-                      <p className="text-emerald-100 text-xs font-inter">
-                        {reciter.country}
-                      </p>
-                      <div className="flex items-center justify-center space-x-1 rtl:space-x-reverse mt-2 text-xs">
-                        <span>⭐</span>
-                        <span>{reciter.rating}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                  <div className="bg-white/10 rounded-lg p-4 text-center">
-                    <div className="text-2xl font-bold">
-                      {quranRecitations.length}
-                    </div>
-                    <div className="text-emerald-100">قارئ متاح</div>
-                  </div>
-                  <div className="bg-white/10 rounded-lg p-4 text-center">
-                    <div className="text-2xl font-bold">114</div>
-                    <div className="text-emerald-100">سورة كاملة</div>
-                  </div>
-                  <div className="bg-white/10 rounded-lg p-4 text-center">
-                    <div className="text-2xl font-bold">مجاني</div>
-                    <div className="text-emerald-100">100% تحميل</div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* البحث والفلترة */}
-        <Card className="mb-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
-          <CardContent className="p-6">
-            <div className="flex flex-col lg:flex-row gap-4 mb-6">
-              <div className="flex-1 relative">
-                <Input
-                  placeholder="ابحث في المكتبة..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className={`w-full ${direction === "rtl" ? "text-right pr-12" : "text-left pl-12"}`}
-                />
-                <span
-                  className={`material-symbols-outlined absolute ${direction === "rtl" ? "right-4" : "left-4"} top-1/2 transform -translate-y-1/2 text-gray-400`}
-                >
-                  search
+    <InstitutionShell activeWing="library">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10 text-right">
+        {/* Institutional Banner */}
+        <div className="rounded-3xl p-8 bg-gradient-to-r from-amber-950 via-slate-900 to-slate-950 border border-amber-900/30 text-amber-50 shadow-xl space-y-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="space-y-2 max-w-2xl">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-amber-500" />
+                <span className="text-xs font-mono text-amber-300">
+                  خزانة التراث والمخطوطات
+                </span>
+                <span className="text-slate-400 text-xs">·</span>
+                <span className="text-xs font-tajawal text-slate-300">
+                  {allBooks.length} مؤلفاً محققاً
                 </span>
               </div>
-
-              <div className="flex gap-2">
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as any)}
-                  className="px-4 py-2 border border-gray-300 rounded-lg bg-white dark:bg-gray-700 dark:border-gray-600"
-                >
-                  <option value="downloads">الأكثر تحميلاً</option>
-                  <option value="rating">الأعلى تقييماً</option>
-                  <option value="title">ترتيب أبجدي</option>
-                  <option value="year">الأحدث</option>
-                </select>
-
-                <Button
-                  variant="outline"
-                  onClick={() => setShowDownloadManager(true)}
-                  className="text-blue-600"
-                >
-                  <span className="material-symbols-outlined">download</span>
-                </Button>
-
-                <Button
-                  variant="outline"
-                  onClick={() =>
-                    setViewMode(viewMode === "grid" ? "list" : "grid")
-                  }
-                >
-                  <span className="material-symbols-outlined">
-                    {viewMode === "grid" ? "view_list" : "grid_view"}
-                  </span>
-                </Button>
-              </div>
+              <h1 className="text-3xl md:text-5xl font-amiri font-bold tracking-tight text-white">
+                خزانة المعرفة والرفوف الرقمية
+              </h1>
+              <p className="text-sm md:text-base font-tajawal text-slate-300 leading-relaxed">
+                مكتبة مركزية شاملة لأمهات كتب السيرة والشمائل والحديث والفقه، بطبعات محققة وفهرسة علمية رصينة بدون أي ادعاءات أو تقييمات مصطنعة.
+              </p>
             </div>
 
-            {/* تصنيفات الكتب */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3">
-              <Button
-                variant={selectedCategory === "all" ? "default" : "outline"}
-                onClick={() => setSelectedCategory("all")}
-                className={`h-auto p-3 ${
-                  selectedCategory === "all"
-                    ? "bg-emerald-600 text-white"
-                    : "text-emerald-600 dark:text-emerald-400"
-                }`}
+            {/* Mode Segmented Switch (Shelves vs Catalog) */}
+            <div className="p-1 rounded-2xl bg-black/40 border border-amber-500/20 inline-flex self-start md:self-auto gap-1">
+              <button
+                type="button"
+                onClick={() => setActiveTab("shelves")}
+                className={cn(
+                  "px-4 py-2 rounded-xl text-xs font-cairo transition-all flex items-center gap-2",
+                  activeTab === "shelves"
+                    ? "bg-amber-600 text-white font-bold shadow-md"
+                    : "text-slate-300 hover:text-white"
+                )}
               >
-                <div className="text-center w-full">
-                  <span className="material-symbols-outlined text-xl mb-1 block">
-                    category
-                  </span>
-                  <span className="font-amiri text-xs block">الكل</span>
-                  <Badge variant="secondary" className="mt-1 text-xs">
-                    {books.length}
-                  </Badge>
-                </div>
-              </Button>
-
-              {categories.map((category) => (
-                <Button
-                  key={category.id}
-                  variant={
-                    selectedCategory === category.id ? "default" : "outline"
-                  }
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`h-auto p-3 ${
-                    selectedCategory === category.id
-                      ? `bg-${category.color}-600 text-white`
-                      : `text-${category.color}-600 dark:text-${category.color}-400`
-                  }`}
-                >
-                  <div className="text-center w-full">
-                    <span className="material-symbols-outlined text-xl mb-1 block">
-                      {category.icon}
-                    </span>
-                    <span className="font-amiri text-xs block">
-                      {category.name}
-                    </span>
-                    <Badge variant="secondary" className="mt-1 text-xs">
-                      {
-                        books.filter((book) => book.category === category.id)
-                          .length
-                      }
-                    </Badge>
-                  </div>
-                </Button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* الكتب المميزة */}
-        {selectedCategory === "all" && !searchQuery && (
-          <div className="mb-8">
-            <h2 className="text-2xl font-amiri font-bold text-gray-900 dark:text-white mb-6">
-              📖 الكتب المميزة
-            </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {books
-                .filter((book) => book.featured)
-                .map((book) => (
-                  <Suspense
-                    key={book.id}
-                    fallback={<Skeleton className="h-96 w-full" />}
-                  >
-                    <BookCard
-                      book={book}
-                      onRead={() => handleBookRead(book)}
-                      onDownload={() => handleDownload(book)}
-                      featured={true}
-                    />
-                  </Suspense>
-                ))}
-            </div>
-          </div>
-        )}
-
-        {/* شبكة الكتب */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-amiri font-bold text-gray-900 dark:text-white">
-              {selectedCategory === "all"
-                ? "جميع الكتب"
-                : categories.find((c) => c.id === selectedCategory)?.name}
-              <span className="text-lg text-gray-500 mr-2">
-                ({filteredBooks.length})
-              </span>
-            </h2>
-          </div>
-
-          <div
-            className={`grid ${
-              viewMode === "grid"
-                ? "md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
-                : "grid-cols-1"
-            } gap-6`}
-          >
-            {filteredBooks.map((book) => (
-              <Suspense
-                key={book.id}
-                fallback={<Skeleton className="h-96 w-full" />}
+                <Layers className="w-4 h-4" />
+                <span>رفوف المكتبة</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab("catalog")}
+                className={cn(
+                  "px-4 py-2 rounded-xl text-xs font-cairo transition-all flex items-center gap-2",
+                  activeTab === "catalog"
+                    ? "bg-amber-600 text-white font-bold shadow-md"
+                    : "text-slate-300 hover:text-white"
+                )}
               >
-                <BookCard
-                  book={book}
-                  onRead={() => handleBookRead(book)}
-                  onDownload={() => handleDownload(book)}
-                  viewMode={viewMode}
-                />
-              </Suspense>
-            ))}
+                <Grid3X3 className="w-4 h-4" />
+                <span>الفهرس والبحث</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* رسالة عدم وجود نتائج */}
-        {filteredBooks.length === 0 && (
-          <div className="text-center py-12">
-            <span className="material-symbols-outlined text-6xl text-gray-400 mb-4">
-              search_off
-            </span>
-            <h3 className="text-xl font-amiri font-bold text-gray-600 dark:text-gray-400 mb-2">
-              لا توجد نتائج
-            </h3>
-            <p className="text-gray-500 dark:text-gray-500">
-              جرب تغيير مصطلح البحث أو التصنيف
-            </p>
+        {/* SHELVES MODE */}
+        {activeTab === "shelves" && (
+          <div className="space-y-6">
+            <LivingShelf
+              shelfTitleAr="رف السيرة النبوية والشمائل الشريفة"
+              shelfTitleEn="Prophetic Biography & Shama'il"
+              shelfDescriptionAr="دراسات موثقة في حياة النبي ﷺ وأخلاقه وشمائله من أمهات المصادر المعتمدة"
+              books={seerahBooks}
+              onRead={(b) => setSelectedBook(b)}
+              onDownload={(b) => handleInspectBookEvidence(b)}
+              onInspectEvidence={(b) => handleInspectBookEvidence(b)}
+            />
+
+            <LivingShelf
+              shelfTitleAr="رف الحديث ودواوين السنة المشرفة"
+              shelfTitleEn="Hadith & Prophetic Traditions"
+              shelfDescriptionAr="دواوين السنة الستة وشروحها المعتمدة بروايات محققة وتخريج علمي"
+              books={hadithBooks}
+              onRead={(b) => setSelectedBook(b)}
+              onDownload={(b) => handleInspectBookEvidence(b)}
+              onInspectEvidence={(b) => handleInspectBookEvidence(b)}
+            />
+
+            <LivingShelf
+              shelfTitleAr="رف القرآن الكريم وتفاسيره"
+              shelfTitleEn="Holy Quran & Exegesis"
+              shelfDescriptionAr="المصاحف المرتلة وأصول التفاسير ودراسات علوم القرآن وبيانه"
+              books={quranBooks}
+              onRead={(b) => setSelectedBook(b)}
+              onDownload={(b) => handleInspectBookEvidence(b)}
+              onInspectEvidence={(b) => handleInspectBookEvidence(b)}
+            />
+
+            <LivingShelf
+              shelfTitleAr="رف الفقه والأصول والعقيدة"
+              shelfTitleEn="Jurisprudence, Principles & Creed"
+              shelfDescriptionAr="أمهات مسائل الفقه الميسر وضوابط الأصول وأصول الاعتقاد الراسخ"
+              books={fiqhAqeedahBooks}
+              onRead={(b) => setSelectedBook(b)}
+              onDownload={(b) => handleInspectBookEvidence(b)}
+              onInspectEvidence={(b) => handleInspectBookEvidence(b)}
+            />
           </div>
         )}
 
-        {/* قارئ الكتب */}
-        {selectedBook && (
-          <Suspense fallback={<Skeleton className="h-screen w-full" />}>
-            <BookReader
-              book={selectedBook}
-              onClose={() => setSelectedBook(null)}
-            />
-          </Suspense>
-        )}
+        {/* CATALOG / SEARCH MODE */}
+        {activeTab === "catalog" && (
+          <div className="space-y-6">
+            {/* Search & Filter Controls */}
+            <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-border shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="relative w-full sm:max-w-md">
+                <Search className="w-4 h-4 absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="ابحث بالعنوان أو اسم المؤلف أو المحقق..."
+                  className="pr-10 h-11 rounded-xl text-sm font-cairo"
+                />
+              </div>
 
-        {/* مدير التحميلات */}
-        <Suspense fallback={null}>
-          <DownloadManager
-            isOpen={showDownloadManager}
-            onClose={() => setShowDownloadManager(false)}
+              <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
+                {/* Category Filter */}
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="h-10 px-3 rounded-xl border border-border bg-slate-50 dark:bg-slate-800 text-xs font-cairo text-foreground"
+                >
+                  <option value="all">جميع الأقسام ({allBooks.length})</option>
+                  <option value="seerah">السيرة النبوية</option>
+                  <option value="hadith">الحديث النبوي</option>
+                  <option value="quran">القرآن الكريم</option>
+                  <option value="fiqh">الفقه الإسلامي</option>
+                  <option value="aqeedah">العقيدة</option>
+                </select>
+
+                {/* View Mode Toggle */}
+                <div className="p-1 rounded-xl bg-slate-100 dark:bg-slate-800 border border-border inline-flex gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setViewMode("grid")}
+                    className={cn(
+                      "p-1.5 rounded-lg text-xs transition-colors",
+                      viewMode === "grid"
+                        ? "bg-white dark:bg-slate-700 text-foreground shadow-xs"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
+                    aria-label="عرض شبكي"
+                  >
+                    <Grid3X3 className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setViewMode("list")}
+                    className={cn(
+                      "p-1.5 rounded-lg text-xs transition-colors",
+                      viewMode === "list"
+                        ? "bg-white dark:bg-slate-700 text-foreground shadow-xs"
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
+                    aria-label="عرض قائمة"
+                  >
+                    <List className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Results Counter (Zero-Pill Unboxed Text) */}
+            <div className="flex items-center justify-between text-xs text-muted-foreground font-tajawal px-1">
+              <div className="flex items-center gap-2">
+                <span>النتائج المعروضة:</span>
+                <span className="font-mono font-bold text-foreground">
+                  {filteredBooks.length}
+                </span>
+                <span>كتاباً</span>
+              </div>
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  className="text-amber-700 dark:text-amber-400 hover:underline text-xs"
+                >
+                  مسح البحث
+                </button>
+              )}
+            </div>
+
+            {/* Book Cards Grid / List */}
+            {filteredBooks.length > 0 ? (
+              <div
+                className={cn(
+                  "gap-4",
+                  viewMode === "grid"
+                    ? "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+                    : "space-y-4"
+                )}
+              >
+                {filteredBooks.map((book) => (
+                  <BookCard
+                    key={book.id}
+                    book={book as any}
+                    onRead={() => setSelectedBook(book)}
+                    onDownload={() => handleInspectBookEvidence(book)}
+                    viewMode={viewMode}
+                  />
+                ))}
+              </div>
+            ) : (
+              /* Dignified Empty State */
+              <div className="p-12 text-center rounded-3xl bg-white dark:bg-slate-900 border border-border space-y-3">
+                <div className="w-12 h-12 mx-auto rounded-2xl bg-amber-500/10 text-amber-600 flex items-center justify-center">
+                  <Library className="w-6 h-6" />
+                </div>
+                <h3 className="font-amiri font-bold text-xl text-foreground">
+                  لم نعثر على كتب مطابقة لمعايير البحث
+                </h3>
+                <p className="text-xs font-tajawal text-muted-foreground max-w-sm mx-auto">
+                  تأكد من كتابة الكلمات بدقة أو اختر "جميع الأقسام" لاستعراض كامل فهرس المكتبة.
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setSearchQuery("");
+                    setSelectedCategory("all");
+                  }}
+                  className="text-xs font-cairo"
+                >
+                  إعادة ضبط البحث
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Book Reader Modal */}
+      {selectedBook && (
+        <Suspense fallback={<Skeleton className="fixed inset-0 z-50" />}>
+          <BookReader
+            book={selectedBook as any}
+            onClose={() => setSelectedBook(null)}
           />
         </Suspense>
-      </div>
-    </div>
+      )}
+
+      {/* Evidence Drawer for Verified Editions */}
+      <EvidenceDrawer
+        isOpen={!!selectedEvidence}
+        onClose={() => setSelectedEvidence(null)}
+        evidence={selectedEvidence}
+      />
+    </InstitutionShell>
   );
 }

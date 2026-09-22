@@ -81,7 +81,7 @@ ${dailyVerse.arabic}
 📖 ${dailyVerse.surahName} - آية ${dailyVerse.ayah}
 
 ${settings.showDua ? `🤲 ${getDailyDua()}\n` : ""}
-📱 حمّل الكتاب المبين: https://elkitab-almubeen.app
+📱 منصة يا رسول الله ﷺ: https://yarasoolallah.org
 
 #الآية_اليومية #القرآن_الكريم
     `.trim();

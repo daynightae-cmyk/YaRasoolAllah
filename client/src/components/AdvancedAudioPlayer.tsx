@@ -633,7 +633,7 @@ export default function AdvancedAudioPlayer({
                         "h-24 w-6 appearance-none bg-transparent cursor-pointer",
                         "[-webkit-appearance:slider-vertical]",
                       )}
-                      style={{ writingMode: "bt-lr" }}
+                      style={{ writingMode: "vertical-lr" as any }}
                     />
                   </div>
                   <div

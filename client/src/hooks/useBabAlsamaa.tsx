@@ -250,7 +250,7 @@ export function useEmotionalDetection() {
     );
 
     const dominantMood =
-      Object.entries(moodCounts).sort(([, a], [, b]) => b - a)[0]?.[0] ||
+      Object.entries(moodCounts).sort(([, a], [, b]) => (b as number) - (a as number))[0]?.[0] ||
       "neutral";
 
     return {
