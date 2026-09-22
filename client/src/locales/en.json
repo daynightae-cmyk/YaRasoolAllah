@@ -1,0 +1,163 @@
+{
+  "app": {
+    "name": "Al-Kitab Al-Mubeen",
+    "tagline": "Your Comprehensive Islamic Encyclopedia",
+    "description": "A comprehensive Islamic platform featuring the Holy Quran, Prophet's biography, and Islamic knowledge"
+  },
+  "navigation": {
+    "home": "Home",
+    "quran": "Holy Quran",
+    "seerah": "Prophet's Biography",
+    "knowledge": "Islamic Knowledge",
+    "prayerGuide": "Prayer Guide",
+    "reminders": "Daily Reminders",
+    "calendar": "Islamic Calendar",
+    "kids": "Kids Section",
+    "assistant": "AI Assistant"
+  },
+  "prayer": {
+    "times": "Prayer Times",
+    "fajr": "Fajr",
+    "sunrise": "Sunrise",
+    "dhuhr": "Dhuhr",
+    "asr": "Asr",
+    "maghrib": "Maghrib",
+    "isha": "Isha",
+    "current": "Current Prayer",
+    "next": "Next Prayer",
+    "timeRemaining": "Time Remaining",
+    "notifications": "Enable Notifications"
+  },
+  "quran": {
+    "title": "Holy Quran",
+    "search": "Search in Quran",
+    "surah": "Surah",
+    "verse": "Verse",
+    "tafsir": "Tafsir",
+    "translation": "Translation",
+    "recitation": "Recitation",
+    "bookmark": "Bookmark",
+    "share": "Share"
+  },
+  "seerah": {
+    "title": "Prophet's Biography",
+    "biography": "Biography of Prophet Muhammad ﷺ",
+    "earlyLife": "Early Life",
+    "mission": "Beginning of Mission",
+    "hijra": "Migration",
+    "medina": "Life in Medina"
+  },
+  "knowledge": {
+    "title": "Islamic Knowledge",
+    "aqeedah": "Creed",
+    "fiqh": "Islamic Jurisprudence",
+    "hadith": "Hadith",
+    "history": "Islamic History",
+    "ethics": "Ethics and Manners",
+    "contemporary": "Contemporary Issues"
+  },
+  "pillars": {
+    "title": "Five Pillars of Islam",
+    "shahada": "Shahada",
+    "salah": "Prayer",
+    "zakat": "Zakat",
+    "hajj": "Hajj",
+    "sawm": "Fasting"
+  },
+  "reminders": {
+    "title": "Daily Reminders",
+    "morning": "Morning Adhkar",
+    "evening": "Evening Adhkar",
+    "general": "General Adhkar",
+    "sleep": "Sleep Adhkar",
+    "food": "Food Adhkar",
+    "tasbih": "Digital Tasbih"
+  },
+  "calendar": {
+    "title": "Islamic Calendar",
+    "hijri": "Hijri Date",
+    "gregorian": "Gregorian Date",
+    "events": "Islamic Events",
+    "months": {
+      "muharram": "Muharram",
+      "safar": "Safar",
+      "rabiAlAwwal": "Rabi' Al-Awwal",
+      "rabiAlAkhir": "Rabi' Al-Akhir",
+      "jumadaAlAwwal": "Jumada Al-Awwal",
+      "jumadaAlAkhirah": "Jumada Al-Akhirah",
+      "rajab": "Rajab",
+      "shaban": "Sha'ban",
+      "ramadan": "Ramadan",
+      "shawwal": "Shawwal",
+      "dhuAlQadah": "Dhu Al-Qa'dah",
+      "dhuAlHijjah": "Dhu Al-Hijjah"
+    }
+  },
+  "kids": {
+    "title": "Kids Section",
+    "stories": "Prophet Stories",
+    "games": "Educational Games",
+    "coloring": "Coloring Pages",
+    "activities": "Fun Activities"
+  },
+  "assistant": {
+    "title": "Islamic AI Assistant",
+    "welcome": "Welcome! How can I help you?",
+    "placeholder": "Type your Islamic question here...",
+    "thinking": "Searching for answer...",
+    "error": "Sorry, an error occurred. Please try again."
+  },
+  "common": {
+    "welcome": "Welcome",
+    "search": "Search",
+    "save": "Save",
+    "share": "Share",
+    "continue": "Continue",
+    "start": "Start",
+    "read": "Read",
+    "learn": "Learn",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "completed": "Completed",
+    "inProgress": "In Progress",
+    "readTime": "Read Time",
+    "minutes": "minutes",
+    "hours": "hours",
+    "days": "days"
+  },
+  "forms": {
+    "required": "This field is required",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "name": "Name",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "login": "Login",
+    "register": "Register",
+    "forgotPassword": "Forgot Password?"
+  },
+  "messages": {
+    "success": {
+      "saved": "Successfully saved",
+      "updated": "Successfully updated",
+      "deleted": "Successfully deleted",
+      "completed": "Successfully completed"
+    },
+    "error": {
+      "general": "An error occurred, please try again",
+      "network": "Network connection error",
+      "notFound": "Requested content not found",
+      "unauthorized": "Unauthorized access"
+    },
+    "info": {
+      "noData": "No data available",
+      "loading": "Loading data...",
+      "comingSoon": "Coming soon"
+    }
+  }
+}

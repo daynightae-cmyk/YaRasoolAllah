@@ -1,0 +1,135 @@
+طلب تفصيلي شامل غير مسبوق: Al-Kitab Al-Mubeen – موسوعة إسلامية عالمية رقمية بمعايير الفخامة والذكاء الاصطناعي الأقصى
+الرؤية المُلهمة:
+"Al-Kitab Al-Mubeen" (الكتاب المبين) يرتقي ليصبح المنارة المعرفية والفنية التي تُضيء درب المتعلم في العالم الرقمي. إنه ليس مجرد تطبيق، بل معجزةٌ تقنية تَتَنَفَّس الجمال والأناقة والسكينة، وتُقدِّم محتوى إسلاميًا عميقًا ودقيقًا. يُجسّد التطبيق الروح الفخمة التي رأيناها في "KNOuX VERSA"، ويمزج بين جمال التصميم الشرقي الأصيل وأذكى تطبيقات الذكاء الاصطناعي. نلتزم بمنتجٍ نهائيّ، فعالٍ بنسبة 100%، خالٍ من أي عنصر مؤقت أو ملاحظات "قريباً". كل ميزة، كل زر، كل تفاعل مُتَمّم، مُختبَر، ومُجهّز للانتشار كملف تنفيذي (.exe)، يُعَبّر عن التميّز الذي يليق بالنخبة من طالبيه.
+قمة الجمال البصري والتجربة الروحانية السلسة (Zenith of Aesthetic & Seamless Spiritual Experience):
+الواجهة هي التجربة الحسية الأولى للكتاب المبين. يجب أن تُشعَّ بالأناقة، تعكس الهدوء الروحاني، وتُبرِز جمالية الفن الإسلامي. تتجاوز ما هو موجود، لتصبح تحفةً رقمية تتفاعل بالحب والوضوح.
+فن البساطة النظيفة والهدوء البصري: يعتمد التصميم على لوحة ألوان دافئة (الأخضر الزمردي الغني، البيج الهادئ، واللمسات الذهبية)، مع مساحات بيضاء واسعة لتعزيز راحة العين، خاصة في جلسات القراءة الطويلة.
+تكيُّف مع الوضع الليلي: يدعم التطبيق الوضع الليلي (Dark Mode) بالكامل، مع ألوان داكنة عميقة ومُتباينة بعناية لراحة العين في الإضاءة الخافتة. يتم التبديل بين الوضعين بـ انتقال مرئي سلس.
+أيقونات دقيقة وعصرية: تُستخدم أيقونات Material Symbols من Google بشكل شامل. ستكون هذه الأيقونات عصرية، قابلة للتطوير، ومتناغمة بصريًا مع الفلسفة الجمالية الشاملة.
+الخطوط كجسور للمعرفة الراقية: استخدام الخطوط العربية الكلاسيكية ذات الجودة العالية (مثل Amiri, Lateef) للقراءة السلسة والمعاصرة (مثل Inter) للعناوين الرئيسية والتفاعلات، يُضفي طابعًا أصيلاً ومحترفًا في آن واحد. يجب مراعاة جمالية التشكيل في النصوص القرآنية والأدعية.
+العناصر المرئية للتصميم والتوهج (Visual Design & Glow Elements - Gemini Generated):
+لا صور افتراضية - صور AI حقيقية: كل الصور في التطبيق ستكون مُولَّدة بالذكاء الاصطناعي (AI Generated) خصيصًا لهذا المشروع، متجنبين تمامًا أي صور افتراضية أو مُؤقتة. هذا يضمن تماسكًا بصريًا لا يُعلى عليه وهوية بصرية فريدة.
+توصيات صور السيرة النبوية (Seerah Imagery Recommendations):
+AI Prompt Example: "Generate a reverent, abstract, spiritual image suitable for an Islamic educational app about the Prophet Muhammad (peace be upon him). The image should evoke his leadership and mercy, perhaps a stylized flowing cloak in deep green and gold hues, with subtle celestial light. Style: Islamic geometric patterns, subtle light rays, sense of peace, high-resolution digital art, respectful depiction, golden accents."
+AI Prompt Example: "Create a symbolic map in a serene, artistic, warm golden-green style illustrating the Hijra (migration) route. Focus on ancient paths, subtle light, peaceful landscapes. Avoid explicit faces. Style: digital painting, historical accuracy, warm colors, map art."
+AI Prompt Example: "Depict the feeling of deep reflection in the Cave of Hira, abstractly, using lighting and shadows. Focus on serenity, solitude, and divine inspiration, with warm earth tones. Avoid human figures. Style: cinematic lighting, contemplative, spiritual."
+مكان التضمين: تُستخدم هذه الصور في pages/SeerahPage.tsx لِجَعْل سيرة النبي ﷺ حقيقة مرئية آسرة.
+توصيات صور قسم الأطفال (Children's Section Imagery Recommendations):
+AI Prompt Example: "Design an inviting, interactive interface background for an Islamic children's learning app. Vibrant but soft colors: greens, blues, yellows, pinks. Incorporate subtle Islamic patterns, playful light. Style: friendly, warm, digital art, vector elements, joyful atmosphere."
+AI Prompt Example: "Illustrate a cheerful Muslim child with bright eyes and a gentle smile, engaged in prayer (salah) on a small prayer rug. Focus on sincerity, light, and natural innocence. Modest dress. Style: heartwarming, realistic yet cartoonish, bright and appealing for kids, cultural diversity representation."
+AI Prompt Example: "Show a young Muslim boy or girl happily learning to read Arabic/Quran, holding a beautiful Mushaf (Quran). Focus on the joy of learning, bright and inviting surroundings. Style: cheerful, educational, positive, realistic but stylized, soft colors."
+AI Prompt Example: "Create illustrations for educational stories for children. Depict young characters (boys/girls) performing acts of kindness (e.g., helping a neighbor, sharing toys). Use heritage-inspired, respectful clothing. Style: wholesome, traditional yet modern, expressive faces, bright and clean."
+مكان التضمين: تُضمّن هذه الصور في pages/SeerahForChildrenPage.tsx وفي مكونات أخرى في public/assets/images/real/ لدعم المحتوى.
+مُلحق عام (General Enhancement Prompts):
+AI Prompt Example: "Generate calm, reflective images of a Muslim home environment suitable for 'Daily Reminders' and 'Prayer Guide'. Soft lighting, traditional Islamic art motifs (calligraphy, geometric patterns), no visible faces. Focus on peace and spiritual ambiance. Style: realistic, diffused light, serene colors."
+AI Prompt Example: "Create dynamic and respectful images representing diverse Muslim communities, suitable for 'Community Section'. Focus on interaction, shared learning, smiles, in culturally appropriate settings. Avoid identifiable individuals for privacy/respect."
+مكان التضمين: تُستخدم هذه الصور في جميع الصفحات التي تحتوي على imageUrl (مثل DailyRemindersPage, PrayerGuidePage, FivePillarsPage, AlMubeenBotPage كـ "chat wallpaper").
+درع التقنية المقدّس والبيانات الأصيلة (Sacred Tech Shield & Authentic Data Integrity):
+الكتاب المبين يرتكز على أسس تقنية لا تتزعزع، حيث الأمان والصدق في البيانات هما جوهر كل تفاعل.
+حصن حماية مفتاح الـ API (Fortified API Key Sanctum):
+Google Gemini API Key (المُشار إليها في src/services/geminiService.ts وتُعالج في vite.config.ts) لن تكون مُعرضة للخطر مطلقًا. في بيئة الإنتاج، يجب أن تتم جميع استدعاءات API عبر خادم وكيل (Backend Proxy Server) يتم نشره بشكل منفصل، مما يضمن أن المفتاح يبقى على جانب الخادم فقط. هذا التحصين لا يُسمح بأي تهاون فيه.
+البيانات تُروي قصةً حقيقيةً (Data Tells a True Story):
+لا يوجد استخدام لأي بيانات وهمية (DUMMY_DATA) لأي خدمة من الخدمات الأساسية. كل قطعة من المعلومات - بدءاً من أوقات الصلاة وصولاً إلى تفاسير الآيات - تُحمَّل من مصادر حقيقية، أو قواعد بيانات خلفية، أو ملفات JSON مُعتَمدة. هذا يضمن مصداقية كاملة ودقة لا متناهية للمستخدم.
+بيانات محتوى واسعة وغنية: كل ميزات التطبيق (الجديدة والقائمة) تستخدم بيانات حقيقية وكاملة: ALL_SEERAH_TOPICS, ALL_PRAYER_STEPS, ALL_AZKAR_DATA, ALL_WOMEN_FAQ_ITEMS, ALL_QUIZ_LEVELS, ALL_KIDS_STORIES. تم دمج هذه البيانات بالكامل وتترجم إلى جميع اللغات المدعومة.
+محكمة marked للمارك داون: عرض المحتوى الغني بمرونة، خاصة ملفات Markdown الحقيقية (مثل knowledge_in_islam.md) التي يتم تحليلها وعرضها بواسطة marked في BookPage بشكل صحيح في كلا الوضعين (فاتح ومظلم) واتجاهات اللغات.
+التجربة اللغوية الروحية الشاملة والكونية (Comprehensive & Universal Spiritual Linguistic Experience):
+الكتاب المبين يتحدث بكل قلب ولسان، مع فهم عميق لاحتياجات المتحدثين بلغات العالم، وتعبير كامل عن احترام الثقافات المتعددة.
+أصالة التوطين الكاملة (Unblemished Localization Authenticity): يُنفذ نظام التدويل الشامل (i18n) بالكامل من خلال React Context وملفات JSON المُتفرّغة والمُشكلة (locales/*.json). كل حرف وكلمة وتعبير داخل التطبيق مترجمة بـ دقة وسياق صحيحين إلى العربية، الإنجليزية، الفرنسية، والأوردو.
+دعم مطلق للاتجاه من اليمين إلى اليسار (Absolute RTL Support): دعم كامل ومتفوق للّغات ذات الاتجاه من اليمين إلى اليسار (RTL)، وخصوصاً للّغتين العربية والأوردو. يشمل ذلك:
+عكس تلقائي وكامل لتخطيط الواجهة (Layout Direction).
+ضبط دقيق وترتيب سليم لعناصر الشبكة (Grid elements) وكافة المكونات البصرية.
+محاذاة النص (Text Alignment) من اليمين بشكلٍ لا تشوبه شائبة عبر كل التطبيق (خاصة في BookPage، DailyRemindersPage، AlMubeenBotPage). لا مجال لأي أخطاء RTL.
+تبديل لغة بسلاسة نورانية (Luminous Seamless Language Switching): مكون LanguageSwitcher يقع في Header ويُتيح تبديل اللغة فوريًا، بانسيابية، ودون إعادة تحميل الصفحة أو وميض، مع حفظ تفضيل المستخدم بشكل دائم.
+الخدمات الشاملة والمُضيئة (12+ Core & Luminous Services, All Fully Implemented):
+لا يوجد مكان لأي إعلان "قريباً" أو أي وظائف وهمية. كل خدمة هي حقيقة عاملة.
+لوحة تحكم المسلم المُستنيرة (Enlightened Muslim Dashboard - HomePage):
+نظام أوقات الصلاة دقيق يعتمد على API خارجي موثوق (مثل prayertimes.org أو Adhan API) لتحديد أوقات الصلوات بدقة عالية حسب الموقع الجغرافي للمستخدم (المكتشف عبر Capacitor/Native Location API).
+تنبيهات بصوت الأذان المختار (أذانات متعددة قابلة للتخصيص).
+عداد تنازلي واضح وأنيق للصلاة القادمة.
+استئناف الجلسة (Resume Last Session PRO FEATURE): يُقدّم زرًا ديناميكيًا (في HomePage) يأخذ المستخدم مباشرة إلى آخر صفحة زارها ضمن التطبيق (progressContext في App.tsx وcontexts/ProgressContext.tsx فعال بالكامل).
+كنوز التفسير الموثوقة (Treasures of Authentic Tafsir):
+تفسيرات قرآنية موثوقة (مثل ابن كثير، القرطبي، السعدي) مُدمجة بالكامل ومُتوفرة لكل آية. يتم عرضها ضمن صفحة خاصة للتفسير تُمكن المستخدم من تصفّح القرآن بالكامل.
+بحث مُتقدم بالكلمة أو رقم الآية أو السورة ضمن التفاسير والمصحف نفسه.
+دعم الوضع الليلي للقراءة المريحة الطويلة.
+البحث القرآني الذكي المضيء (Luminous Smart Quranic Search):
+محرك بحث قرآني قوي وذكي، يُتيح البحث بالكلمة أو بالموضوع (الصبر، الجنة، العدل، الإيمان) داخل القرآن والتفاسير.
+اقتراحات بحث ذكية من الذكاء الاصطناعي (Gemini) تُوجّه المستخدم لأقرب المفاهيم والآيات.
+الملاحظات القرآنية المُبارَكة (Blessed Quranic Notes):
+خاصية لـ تسجيل تأملات المستخدم وملاحظاته الشخصية حول آية معينة، تفسير، أو موضوع.
+دعم المزامنة السحابية الفورية مع حساب المستخدم وحفظ تلقائي للبيانات (يتطلب بنية خلفية نشطة لحفظ هذه البيانات).
+واحة التلاوات الصوتية المُلهِمة (Oasis of Inspiring Audio Recitations):
+تلاوات صوتية متنوعة لأشهر القراء (العجمي، الشريم، المنشاوي، وغيرها) مُدمجة بالكامل لجميع سور القرآن الكريم.
+تحكم دقيق في سرعة التلاوة والتكرار.
+خاصية الحفظ والتفضيل (bookmarking) لأي آية أو مقطع.
+مشغل صوتي مُطور (AudioPlayer): يعرض التقدم، يتحكم في التشغيل والإيقاف مؤقتا، ويدعم الأنماط المختلفة للمحتوى الصوتي (DailyReminders, SeerahForChildren).
+التقويم الهجري الشامل للمناسبات (Comprehensive Islamic Hijri Calendar):
+عرض شهري كامل للتقويم الهجري، يتضمن جميع المناسبات الإسلامية المهمة (الأعياد، رمضان، محرم، إلخ).
+تذكير تلقائي بالأيام الفضيلة (مثل عاشوراء، الأيام البيض، يوم عرفة) عبر نظام إشعارات التطبيق (في نسخة .exe/Capacitor).
+أذكار المسلم اليومية النابضة بالإيمان (Vibrant Daily Muslim Dhikr):
+ALL_AZKAR_DATA تُعرض بشكل كامل ومترجم ومُشكل، مُصنفة حسب أذكار الصباح، المساء، النوم، الخروج، وغيرها.
+عداد تسبيح (Tasbih Counter) تفاعلي داخل التطبيق، يدعم الوضع الصوتي والاهتزاز للمسّات المريحة، مع إمكانية حفظ الإنجازات.
+بوصلة القبلة المتلألئة بالضوء (Luminous Qibla Compass):
+بوصلة رقمية دقيقة جداً تُحدد اتجاه الكعبة المشرفة في مكة المكرمة باستخدام مستشعرات الجهاز (الموجودة في الهاتف/الكمبيوتر) ودعم نظام تحديد المواقع العالمي (GPS).
+مؤشرات بصرية واضحة وجذابة توجه المستخدم نحو القبلة من أي مكان في العالم.
+موسوعة الحج والعمرة المُبسّطة (Simplified Hajj & Umrah Encyclopedia):
+شرح مفصل وواضح لخطوات أداء العمرة والحج، من الإحرام وحتى التحلل، بلغة بسيطة وصور توضيحية حقيقية (مُولّدة بالذكاء الاصناعي).
+تضم الأدعية الأساسية لكل خطوة، وجدولاً زمنياً مُنَظّماً وخرائط توضيحية لمسار المناسك.
+مكتبة التلاوة والتجويد المُتطورة (Advanced Tilawah & Tajweed Academy):
+دروس قصيرة ومرئية ومصوّرة (أو نصوص مفصلة) تشرح قواعد التجويد الأساسية والمتقدمة.
+تدريبات تفاعلية (مثلاً: الاستماع ثم التكرار والتسجيل، تحديد الأخطاء في التلاوة النموذجية) لتحسين مهارات التجويد.
+اختبارات تفاعلية لتقييم وفهم قواعد التجويد.
+الذكاء القرآني - مُساعد AI المتخصص (Quranic Intelligence - Specialized AI Assistant):
+يستخدم Google Gemini AI بشكل مخصص للاجابة على أسئلة دينية معقدة (مثل: ما معنى كلمة معينة في القرآن، حكم شرعي في مسألة، تفسير لآية) مع الإحالة إلى مصادر موثوقة من القرآن والسنة.
+يقترح آيات قرآنية متعلقة بموضوع معين يُدخله المستخدم (الصبر، التقوى، الأخلاق).
+هذا الروبوت مبنيٌّ خصيصًا على قاعدة بيانات واسعة من نصوص القرآن الكريم والسنة النبوية والتفاسير المعتمدة لتقديم إجابات عميقة ودقيقة (بناءً على بنية خلفية للـ AI تُعالج هذه النصوص).
+مجتمع الكتاب المبين - واحة التواصل المعرفي (Al-Kitab Al-Mubeen Community - Knowledge Oasis):
+نظام كامل للتفاعل بين المستخدمين لمشاركة التعليقات والتأملات حول الآيات والتفاسير والمقالات.
+قدرات متابعة (Following)، وإعجاب (Liking)، ومشاركة (Sharing) للأفكار والتأملات بين الأعضاء.
+قسم خاص للنقاشات الهادفة والمُراقَبة أخلاقيًا، يتيح تبادل المعرفة ببيئة آمنة وداعمة.
+قسم الـ VIP: كن من أهل الله وخاصته (VIP Section: Be From The People of Allah & His Elite):
+واجهة حصرية مميزة وغاية في الجمال، مخصصة فقط لأعضاء VIP، بعنوان "كن من أهل الله وخاصته". هذا القسم هو بمثابة مكافأة وإثراء لرحلة المتعلم.
+محتوى حصري ومرئيات خاصة:
+تأملات نادرة في آيات القرآن والسنة من كبار العلماء والخطباء، بصيغتي الفيديو والصوت.
+دروس متقدمة وعملية في التجويد والقراءات العشر، تُقدم بمنهجية احترافية.
+خريطة حفظ تفاعلية ذكية للقرآن الكريم، تسمح للمستخدم بتتبع تقدمه في حفظ أجزاء ومقاطع معينة من القرآن بصرياً، وتوفير أدوات لمراجعة الآيات المتشابهة وتحديات الحفظ.
+وضع "الختمة الجماعية" المُفعّل:
+قدرة الأعضاء VIP على تفعيل وضع "الختمة الجماعية" للمشاركة في قلاوة أجزاء مخصصة من القرآن الكريم مع مجموعة من المستخدمين الآخرين بنية ختم القرآن سوياً (تتطلب نظام backend يدير هذه الختمات).
+سجل التلاوة الصوتية المتكامل:
+نظام يتيح للأعضاء VIP تسجيل تلاواتهم الخاصة بالصوت، الاستماع إليها لمراجعة أخطائهم، ومشاركتها مع معلميهم أو مجتمع VIP لتلقي الملاحظات.
+دعوات لمجالس علمية مباشرة وحصرية:
+يتلقى الأعضاء VIP دعوات خاصة لحضور مجالس علمية مباشرة (Live Online Sessions) مع كبار العلماء والدعاة.
+بطاقة عضوية VIP مادية (قابلة للتوليد والطباعة) (Virtual/Printable VIP Membership Card):
+توليد بطاقة عضوية VIP رقمية (Virtual Card) داخل التطبيق مع اسم المستخدم، ومستوى الحفظ/التجويد الحالي (مثال: "حافظ – ناشئ"، "قارئ معتمد"). يمكن طباعتها لتُصبح بطاقة مادية ذات تصميم أنيق وفاخر.
+AI Prompt Example: "Design a prestigious, ornate VIP membership card template for 'Al-Kitab Al-Mubeen' app. Include space for 'Name:' and 'Level:' (e.g., 'Hafiz - Beginner', 'Certified Reciter'). Use rich dark green, gold, and white colors. Incorporate elegant Islamic calligraphy, geometric patterns, a subtle mosque silhouette. Style: high-end luxury, modern Islamic aesthetics, holographic effects (subtle)."
+واجهة إدارة الأئمة والمعلمين: صلةٌ بالنور والتبليغ (Imam & Teacher Management Interface: A Link to Light & Transmission):
+لوحة تحكم خاصة ومُحصّنة داخل التطبيق مُخصصة للإدارة، تُظهِر فقط للمستخدمين ذوي الصلاحيات (Admin/Teacher)، لتُعزز التفاعل بين الأئمة/المعلمين والطلاب.
+إدارة الختمات الجارية: عرض الختمات الجارية لكل طالب مسجّل مع هذا المعلم/الإمام.
+تنبيهات الأخطاء المتكررة في التلاوة: نظام ذكي يحلل التلاوات الصوتية المسجلة للطلاب ويُنشِئ تنبيهات فورية عن الأخطاء الشائعة أو المتكررة، مُوَضَّحة بنصٍّ وربما مقاطع صوتية مصاحبة. (تتطلب معالجة صوتية متقدمة باستخدام AI/ML).
+تقرير الأداء الأسبوعي للطالب: توفير تقرير مُفصل لأداء كل طالب أسبوعيًا، يُبْرِز التقدم، مناطق الضعف، ونقاط القوة في الحفظ والتجويد.
+تقييمات صوتية أو نصية مُباشرة: إمكانية تقييم تلاوات الطلاب صوتيًا أو نصيًا، مع تسجيل ملاحظات تفصيلية مُوَجّهة ومُرسلة مباشرةً للطالب.
+أدوات تحديد مسار التعلم: أدوات متقدمة لتحديد:
+"خطة حفظ" مخصصة لكل طالب (بشكل تفاعلي مع الخريطة القرآنية).
+"اختبار شفوي" للطلاب مباشرة عبر التطبيق.
+"تنقل بين الأجزاء" بسهولة في المصحف وتحديد المقاطع للمراجعة.
+AI Prompt Example for Teacher Dashboard: "Design a sleek, modern dashboard interface for an Islamic studies teacher/Imam. Layout: Clean, professional, using dark green and gold accents on a light background (or dark mode equivalent). Elements: Student progress charts (e.g., bar chart of hifz progress), alerts for common recitation mistakes (small alert icons with descriptions), recent student audio submission thumbnails. Style: functional, clean UI, data visualization."
+مكان التضمين: يتم تخصيص مجلد pages/AdminPanel.tsx وربما components/admin/ مع تحديد صلاحيات الدخول الصارمة (isAdmin في App.tsx هو مؤشر، ويُحتاج إلى نظام صلاحيات قوي مع backend).
+التحول العظيم إلى تطبيق مكتبي وأصلي (.exe Grandeur & Native Transfiguration):
+الكتاب المبين سوف يلامس كل سطح مكتب وكل جهاز محمول، ليكون رفيقاً رقمياً دائماً.
+احتضان Electron/Tauri باقتدار: يُدمج إطار عمل Capacitor بإتقان تام (في capacitor.config.ts) لتقديم تجربة تطبيق سطح مكتب أصلية وتطبيقات محمولة. كل ميزة تم وصفها تستغل أقصى قدرات الأجهزة الأصلية (مثل مستشعرات GPS والبوصلة لأوقات الصلاة واتجاه القبلة، والوصول إلى الميكروفون لتسجيل التلاوات).
+البناء والتوزيع بلا حدود (Borderless Build & Distribution): ملف package.json وvite.config.ts مُهيئة لتلبية متطلبات بناء الويب. باستخدام Capacitor، ستتمكن من توليد ملف تثبيت .exe موحّد لنظام Windows، ونسخ مُوزّعة لنظام macOS (.dmg/.app) و Linux (.deb/.rpm) بنقرة زر واحدة بعد انتهاء عملية البناء، لضمان وصول شامل وغير مقيد.
+نقاء الأداء وعهد الجودة الخالد (Pristine Performance & Eternal Quality Covenant):
+الأداء السلس هو دليل على احترامنا للمستخدم، والجودة الخالية من العيوب هي وعد لا يُكسر.
+شهادة الجودة بلا هوادة (Unrelenting Quality Certification): يتم تطبيق نظام اختبار شامل وصارم:
+اختبارات الوحدة (Unit Tests): تغطية كاملة لجميع المكونات الوظيفية الدقيقة.
+اختبارات التكامل (Integration Tests): للتحقق من التفاعل السلس بين جميع أنظمة التطبيق الفرعية.
+اختبارات النهاية إلى النهاية (End-to-End Tests): باستخدام Cypress أو Playwright لمحاكاة سيناريوهات المستخدم المعقدة والتحقق من تدفقات العمل الكلية في بيئة قريبة من الواقع.
+تحسين الأداء المتواصل (Continuous Performance Refinement): ضمان أن التطبيق يبقى خفيف الوزن، سريع الاستجابة، وفعالاً جدًا في استهلاك موارد الجهاز، حتى مع وجود ثراء لا مثيل له في المحتوى والميزات والذكاء الاصطناعي.
+المُخرجات النهائية المطلوبة والجاهزة للتسليم:
+ملفات الصور عالية الدقة: AI Generated Images كما وُصف في كل قسم تصميم. (هذا هو وصف للملفات المتوقعة، وليس توليد مباشر لها مني).
+ملفات UI/UX جاهزة للاستخدام:
+مكونات React (tsx.) مفصلة ومنظمة لكل قسم (الواجهة الرئيسية، أوقات الصلاة، التفسير، الملاحظات، المجتمع، VIP، المعلم، إلخ)، مُبنية على الهيكل الحالي لـ src/components/ و src/pages/.
+ملفات CSS (TailwindCSS) لجميع الأنماط المخصصة والرسوم المتحركة.
+مواصفات هيكل بيانات JSON لكل الميزات الجديدة (أوقات الصلاة، التفاسير، ملاحظات، إلخ)، والتي يمكن استخدامها كنموذج لقاعدة بيانات Backend أو تخزين محلي.
+اللغات المترجمة والتشكيل: ملفات locales/en.json, ar.json, fr.json, ur.json مُحدثة بجميع النصوص المذكورة والمشكلة للّغات العربية.
+تنظيم مجلدات المشروع: تنظيم جميع الملفات الجديدة ضمن مجلدات منطقية ومُخصّصة (مثل src/pages/VIP/، src/pages/Admin/، src/data/prayer_times_sources/، src/data/tafsir_books/، src/assets/images/generated/) لسهولة التوسع والصيانة.
+هذا هو الالتزام بتقديم Al-Kitab Al-Mubeen كتحفة رقمية لا تُنسى، تُرسخ مبادئ الدين بأحدث تقنيات العصر وأفخم تصاميمه.

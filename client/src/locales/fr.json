@@ -1,0 +1,424 @@
+{
+  "app": {
+    "name": "Al-Kitab Al-Mubeen",
+    "description": "Une plateforme islamique complète visant à diffuser des connaissances islamiques authentiques et à fournir des outils pratiques aux musulmans du monde entier"
+  },
+  "nav": {
+    "home": "Accueil",
+    "quran": "Saint Coran",
+    "seerah": "Biographie du Prophète",
+    "prayer_guide": "Guide de Prière",
+    "daily_reminders": "Rappels Quotidiens",
+    "calendar": "Calendrier Islamique",
+    "children": "Section Enfants",
+    "ai_assistant": "Assistant IA",
+    "more": "Plus",
+    "more_services": "Plus de Services",
+    "menu": "Menu"
+  },
+  "home": {
+    "welcome_badge": "Bienvenue dans votre voyage spirituel",
+    "hero_title_1": "Votre porte d'entrée vers des",
+    "hero_title_2": "connaissances islamiques complètes",
+    "hero_description": "Découvrez les trésors du patrimoine islamique à travers une plateforme complète qui combine le Saint Coran, des interprétations authentiques, la biographie du Prophète et des connaissances islamiques authentiques",
+    "start_journey": "Commencer le Voyage",
+    "browse_content": "Parcourir le Contenu",
+    "resume_session": "Reprendre la Dernière Session",
+    "search_quran": "Rechercher dans le Coran",
+    "daily_verse": "Verset du Jour",
+    "features_title": "Services Complets de Connaissances Islamiques",
+    "features_description": "Un ensemble intégré d'outils et de ressources islamiques authentiques pour enrichir votre voyage spirituel et de connaissance",
+    "daily_reminders_title": "Rappels Quotidiens et Dhikr",
+    "daily_reminders_description": "Choisissez parmi une collection complète de supplications et prières authentiques pour rester connecté avec Allah"
+  },
+  "features": {
+    "quran": {
+      "title": "Saint Coran et Tafsir",
+      "description": "Le Noble Coran avec des interprétations authentiques d'Ibn Kathir, Al-Qurtubi et As-Sa'di, avec recherche avancée et récitation"
+    },
+    "seerah": {
+      "title": "Noble Biographie du Prophète",
+      "description": "Un voyage complet à travers la vie du Prophète Muhammad ﷺ avec les étapes clés, les leçons et les insights de sa vie bénie"
+    },
+    "prayer_guide": {
+      "title": "Guide de Prière Complet",
+      "description": "Apprenez la prière étape par étape avec les règles et l'étiquette, plus les supplications et remembrances recommandées"
+    },
+    "ai_assistant": {
+      "title": "Assistant Islamique Intelligent",
+      "description": "Obtenez des réponses précises à vos questions islamiques à partir de sources fiables en utilisant l'intelligence artificielle"
+    },
+    "calendar": {
+      "title": "Calendrier Islamique",
+      "description": "Suivez les dates et occasions islamiques importantes avec des rappels pour les vacances et les nuits bénies"
+    },
+    "children": {
+      "title": "Section Enfants",
+      "description": "Histoires éducatives islamiques et jeux pour enfants pour apprendre l'étiquette, la morale et les valeurs islamiques de manière amusante"
+    }
+  },
+  "actions": {
+    "save": "Sauvegarder",
+    "share": "Partager",
+    "tafsir": "Tafsir",
+    "explore_now": "Explorer Maintenant",
+    "read_azkar": "Lire le Dhikr",
+    "browse_azkar": "Parcourir le Dhikr",
+    "read": "Lire",
+    "search": "Rechercher",
+    "bookmark": "Marque-page",
+    "read_more": "Lire Plus",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "complete": "Terminer",
+    "reset": "Réinitialiser",
+    "reset_all": "Tout Réinitialiser",
+    "count": "Compter",
+    "take_quiz": "Passer le Quiz"
+  },
+  "prayer_times": {
+    "title": "Heures de Prière",
+    "next_prayer": "Prochaine Prière",
+    "time_remaining": "Temps Restant",
+    "location_unknown": "Localisation Inconnue",
+    "enable_notifications": "Activer les Notifications",
+    "error_title": "Erreur des Heures de Prière",
+    "error_description": "Nous n'avons pas pu charger les heures de prière. Veuillez réessayer."
+  },
+  "quran": {
+    "holy_quran": "Saint Coran",
+    "title": "Le Saint Coran",
+    "description": "Lisez et contemplez le Saint Coran avec des interprétations authentiques et une recherche avancée",
+    "surahs": "Chapitres",
+    "search": "Recherche",
+    "bookmarks": "Marque-pages",
+    "search_placeholder": "Rechercher des chapitres...",
+    "verses": "versets",
+    "surah": "Chapitre",
+    "verse": "verset",
+    "meccan": "Mecquois",
+    "medinan": "Médinois",
+    "advanced_search": "Recherche Avancée",
+    "search_by_keyword": "Recherche par Mot-clé",
+    "enter_keyword": "Entrer le mot-clé",
+    "search_by_topic": "Recherche par Sujet",
+    "enter_topic": "Entrer le sujet",
+    "no_bookmarks": "Aucun marque-page sauvegardé",
+    "bookmark_verses_description": "Sauvegardez vos versets favoris pour vous y référer plus tard",
+    "topics": {
+      "patience": "Patience",
+      "paradise": "Paradis",
+      "justice": "Justice",
+      "faith": "Foi"
+    }
+  },
+  "seerah": {
+    "prophet_biography": "Biographie du Prophète",
+    "title": "La Noble Biographie du Prophète",
+    "description": "Apprenez sur la vie du Prophète Muhammad ﷺ à travers des histoires et des leçons de sa biographie bénie",
+    "categories": {
+      "all": "Tous les Sujets",
+      "early_life": "Vie Précoce",
+      "prophethood": "Prophétie",
+      "hijra": "Migration",
+      "medina": "Vie à Médine",
+      "final_years": "Dernières Années"
+    },
+    "no_topics_found": "Aucun sujet trouvé",
+    "try_different_category": "Essayez un filtre différent",
+    "key_lessons": "Leçons Clés",
+    "lesson_placeholder_1": "L'importance de la patience et de la persévérance face aux difficultés",
+    "lesson_placeholder_2": "La valeur du bon caractère dans l'appel des gens vers Allah",
+    "lesson_placeholder_3": "La nécessité de la sagesse et de la miséricorde dans les relations avec autrui"
+  },
+  "prayer": {
+    "comprehensive_guide": "Guide de Prière Complet",
+    "title": "Guide de Prière",
+    "description": "Apprenez la prière étape par étape avec une explication détaillée et les règles islamiques",
+    "step_by_step": "Étape par Étape",
+    "prayer_times": "Heures de Prière",
+    "rules_etiquette": "Règles et Étiquette",
+    "your_progress": "Votre Progrès",
+    "completed": "terminé",
+    "step": "Étape",
+    "of": "de",
+    "detailed_instructions": "Instructions Détaillées",
+    "helpful_tip": "Conseil Utile",
+    "prerequisites": "Prérequis",
+    "etiquette": "Étiquette",
+    "times": {
+      "fajr": "Fajr",
+      "dhuhr": "Dhuhr",
+      "asr": "Asr",
+      "maghrib": "Maghrib",
+      "isha": "Isha",
+      "fajr_desc": "La prière Fajr est de 2 rak'ahs",
+      "dhuhr_desc": "La prière Dhuhr est de 4 rak'ahs",
+      "asr_desc": "La prière Asr est de 4 rak'ahs",
+      "maghrib_desc": "La prière Maghrib est de 3 rak'ahs",
+      "isha_desc": "La prière Isha est de 4 rak'ahs"
+    },
+    "rakaat": "rak'ahs",
+    "rules": {
+      "cleanliness": "Pureté et ablution",
+      "direction": "Faire face à la Qibla",
+      "time": "Entrée du temps",
+      "covering": "Couvrir l'awrah",
+      "intention": "Intention correcte"
+    },
+    "etiquette": {
+      "humility": "Humilité et modestie",
+      "focus": "Concentration et présence du cœur",
+      "recitation": "Belle récitation",
+      "posture": "Mouvements corrects",
+      "dhikr": "Remembrance et supplication"
+    },
+    "steps": {
+      "intention": {
+        "title": "Intention",
+        "description": "Intention de prière et présence du cœur",
+        "detail1": "Gardez dans votre cœur que vous allez prier Allah",
+        "detail2": "Spécifiez le type de prière que vous allez effectuer",
+        "detail3": "Rendez votre intention purement pour Allah",
+        "tip": "L'intention est dans le cœur et il n'est pas recommandé de la dire à haute voix"
+      },
+      "wudu": {
+        "title": "Ablution",
+        "description": "La pureté est une condition pour une prière valide",
+        "detail1": "Commencez par Bismillah",
+        "detail2": "Lavez les mains trois fois",
+        "detail3": "Rincez la bouche et le nez trois fois",
+        "detail4": "Lavez le visage trois fois",
+        "detail5": "Lavez les bras jusqu'aux coudes trois fois",
+        "detail6": "Essuyez la tête et les oreilles une fois",
+        "detail7": "Lavez les pieds jusqu'aux chevilles trois fois",
+        "tip": "Assurez-vous que l'eau atteigne toutes les parties du membre"
+      },
+      "qibla": {
+        "title": "Faire Face à la Qibla",
+        "description": "Se tourner vers la Sainte Kaaba à La Mecque",
+        "detail1": "Déterminez précisément la direction de la Qibla",
+        "detail2": "Tenez-vous face à la Sainte Kaaba",
+        "detail3": "Assurez-vous que tout votre corps fait face à la Qibla",
+        "tip": "Vous pouvez utiliser une boussole ou des applications pour déterminer la Qibla"
+      },
+      "takbir": {
+        "title": "Takbir d'Ouverture",
+        "description": "Lever les mains et dire Allahu Akbar pour commencer la prière",
+        "detail1": "Levez vos mains au niveau des épaules",
+        "detail2": "Dites 'Allahu Akbar' clairement",
+        "detail3": "Placez la main droite sur la gauche sur la poitrine",
+        "tip": "Ce takbir vous fait entrer en prière, donc ne parlez pas après"
+      },
+      "fatiha": {
+        "title": "Réciter Al-Fatiha",
+        "description": "Réciter la Sourate Al-Fatiha est un pilier dans chaque rak'ah",
+        "detail1": "Récitez complètement la Sourate Al-Fatiha",
+        "detail2": "Lisez lentement et clairement",
+        "detail3": "Contemplez les significations des versets",
+        "tip": "Al-Fatiha est un pilier de la prière et la prière n'est pas valide sans elle"
+      },
+      "ruku": {
+        "title": "Inclinaison (Ruku)",
+        "description": "Se pencher avec les mains sur les genoux",
+        "detail1": "Dites Takbir et inclinez-vous jusqu'à ce que vos mains atteignent vos genoux",
+        "detail2": "Dites 'Subhana Rabbi al-Azeem' trois fois ou plus",
+        "detail3": "Gardez le dos droit",
+        "tip": "L'inclinaison montre l'humilité et la soumission à Allah"
+      },
+      "sujud": {
+        "title": "Prosternation (Sujud)",
+        "description": "Placer le front et le nez sur le sol",
+        "detail1": "Prosternez-vous sur sept parties : front, nez, paumes, genoux et orteils",
+        "detail2": "Dites 'Subhana Rabbi al-A'la' trois fois ou plus",
+        "detail3": "Faites des supplications à Allah dans votre prosternation",
+        "tip": "La prosternation est quand le serviteur est le plus proche de son Seigneur, alors faites beaucoup de supplications"
+      },
+      "tashahhud": {
+        "title": "Tashahhud",
+        "description": "S'asseoir pour réciter le tashahhud dans la deuxième et dernière rak'ah",
+        "detail1": "Asseyez-vous en position tawarruk et placez votre main droite sur votre cuisse droite",
+        "detail2": "Récitez le tashahhud complet",
+        "detail3": "Pointez avec votre index en mentionnant le nom d'Allah",
+        "tip": "Le tashahhud est obligatoire dans la deuxième et dernière rak'ah"
+      },
+      "tasleem": {
+        "title": "Tasleem (Salutation)",
+        "description": "Terminer la prière avec la salutation",
+        "detail1": "Tournez à droite et dites 'As-salamu alaykum wa rahmatullah'",
+        "detail2": "Tournez à gauche et dites 'As-salamu alaykum wa rahmatullah'",
+        "detail3": "Ayez l'intention de terminer la prière avec le tasleem",
+        "tip": "Le tasleem vous fait sortir de la prière, vous pouvez donc parler et bouger après"
+      }
+    }
+  },
+  "azkar": {
+    "daily_remembrance": "Remembrance Quotidienne",
+    "title": "Dhikr et Rappels Quotidiens",
+    "description": "Choisissez parmi une collection complète de supplications et prières authentiques pour rester connecté avec Allah",
+    "daily_azkar": "Dhikr Quotidien",
+    "digital_tasbih": "Tasbih Numérique",
+    "morning": "Dhikr du Matin",
+    "evening": "Dhikr du Soir",
+    "general": "Dhikr Général",
+    "morning_description": "Commencez votre journée avec des supplications authentiques, en cherchant refuge, et des protections prophétiques",
+    "evening_description": "Terminez votre journée avec la remembrance, la supplication, et demander le pardon avec le dhikr béni du soir",
+    "general_description": "Dhikr pour le sommeil, la nourriture, le voyage, et toutes les occasions quotidiennes avec explication de leurs vertus",
+    "available_azkar": "Dhikr Disponible",
+    "count_dhikr": "Compter le Dhikr",
+    "source": "Source",
+    "benefits": "Bénéfices",
+    "no_azkar_available": "Aucun dhikr disponible",
+    "select_different_category": "Sélectionnez une catégorie différente",
+    "tasbih_description": "Utilisez le tasbih numérique pour compter les glorifications et remembrances",
+    "count": "Compter",
+    "total_count": "Compte Total"
+  },
+  "calendar": {
+    "islamic_calendar": "Calendrier Islamique",
+    "title": "Calendrier Islamique",
+    "description": "Suivez les dates et occasions islamiques importantes avec les calendriers Hijri et Grégorien",
+    "today_hijri": "Aujourd'hui dans le Calendrier Hijri",
+    "corresponding_to": "correspondant à",
+    "gregorian_calendar": "Calendrier Grégorien",
+    "upcoming_events": "Événements à Venir",
+    "all_events": "Tous les Événements",
+    "religious": "Religieux",
+    "celebrations": "Célébrations",
+    "pilgrimage": "Pèlerinage",
+    "historical": "Historique",
+    "no_events_found": "Aucun événement trouvé",
+    "try_different_filter": "Essayez un filtre différent",
+    "important_dates": "Dates Importantes",
+    "ramadan": "Ramadan",
+    "eid_fitr": "Eid Al-Fitr",
+    "hajj_season": "Saison du Hajj",
+    "eid_adha": "Eid Al-Adha",
+    "days_remaining": "jours restants"
+  },
+  "children": {
+    "welcome_message": "Bienvenue chers enfants",
+    "title": "Section Enfants",
+    "description": "Apprenez l'Islam de manière amusante et interactive avec des histoires éducatives et des jeux",
+    "stories": "Histoires",
+    "activities": "Activités",
+    "progress": "Progrès",
+    "all_ages": "Tous Âges",
+    "ages_3_5": "3-5 ans",
+    "ages_5_8": "5-8 ans",
+    "ages_8_12": "8-12 ans",
+    "read_story": "Lire l'Histoire",
+    "start_activity": "Commencer l'Activité",
+    "no_stories_found": "Aucune histoire trouvée",
+    "try_different_age_group": "Essayez un groupe d'âge différent",
+    "stories_read": "Histoires Lues",
+    "activities_completed": "Activités Terminées",
+    "points_earned": "Points Gagnés",
+    "recent_achievements": "Réalisations Récentes",
+    "difficulty": {
+      "easy": "Facile",
+      "medium": "Moyen",
+      "hard": "Difficile"
+    },
+    "activities": {
+      "prayer_quiz": "Quiz de Prière",
+      "prayer_quiz_desc": "Testez vos connaissances des règles et étiquette de la prière",
+      "arabic_letters": "Lettres Arabes",
+      "arabic_letters_desc": "Apprenez les lettres arabes de manière amusante",
+      "quran_memory": "Mémoire du Coran",
+      "quran_memory_desc": "Un jeu pour mémoriser les versets coraniques"
+    },
+    "achievements": {
+      "first_story": "Première Histoire",
+      "first_story_desc": "Vous avez lu votre première histoire islamique",
+      "quiz_master": "Maître du Quiz",
+      "quiz_master_desc": "Vous avez répondu correctement à 10 questions",
+      "daily_learner": "Apprenant Quotidien",
+      "daily_learner_desc": "Vous avez appris quelque chose de nouveau chaque jour pendant une semaine"
+    }
+  },
+  "ai_assistant": {
+    "powered_by_ai": "Alimenté par l'IA",
+    "title": "Assistant Islamique Intelligent",
+    "description": "Obtenez des réponses fiables à vos questions islamiques à partir de sources authentiques en utilisant l'intelligence artificielle",
+    "quick_questions_title": "Questions Rapides",
+    "guidelines_title": "Directives",
+    "assistant_name": "Assistant Al-Mubeen",
+    "online_status": "En ligne et prêt à aider",
+    "online": "En ligne",
+    "welcome_title": "Bienvenue",
+    "welcome_message": "Je suis ici pour vous aider avec toutes les questions islamiques que vous avez. Demandez sur le Coran, la Sunnah, le Fiqh, et tout sujet islamique.",
+    "sources": "Sources",
+    "thinking": "Je réfléchis à une réponse...",
+    "input_placeholder": "Tapez votre question ici...",
+    "disclaimer": "Rappelez-vous que c'est un assistant IA. Il est préférable de consulter des érudits qualifiés pour des décisions religieuses importantes",
+    "error": "Erreur",
+    "quick_questions": {
+      "prayer_times": "Quelles sont les heures de prière d'aujourd'hui ?",
+      "ramadan_rules": "Quelles sont les règles du jeûne du Ramadan ?",
+      "zakat_calculation": "Comment calculer la Zakat ?",
+      "marriage_islam": "Quelles sont les étiquettes du mariage en Islam ?",
+      "parent_rights": "Quels sont les droits des parents en Islam ?",
+      "business_ethics": "Quelles sont les éthiques commerciales en Islam ?"
+    },
+    "guideline_1": "Réponses du Coran et de la Sunnah Prophétique",
+    "guideline_2": "Sources fiables d'érudits reconnus",
+    "guideline_3": "Disponible en plusieurs langues 24h/24 et 7j/7",
+    "features": {
+      "authentic_sources": "Sources Authentiques",
+      "authentic_sources_desc": "Toutes les réponses du Coran, de la Sunnah, et des paroles d'érudits reconnus",
+      "multilingual": "Multilingue",
+      "multilingual_desc": "Disponible en arabe, anglais, français et ourdou",
+      "available_24_7": "Disponible 24h/24 et 7j/7",
+      "available_24_7_desc": "Aide instantanée à tout moment de la journée"
+    }
+  },
+  "footer": {
+    "quick_links": "Liens Rapides",
+    "support": "Support",
+    "help_center": "Centre d'Aide",
+    "faq": "FAQ",
+    "privacy_policy": "Politique de Confidentialité",
+    "terms_of_service": "Conditions d'Utilisation",
+    "download_app": "Télécharger l'Application",
+    "contact_us": "Nous Contacter",
+    "support_available": "Support technique 24h/24 et 7j/7 disponible",
+    "copyright": "Droits d'auteur",
+    "all_rights_reserved": "Tous droits réservés"
+  },
+  "login": {
+    "title": "Connexion",
+    "subtitle": "Connectez-vous à votre compte Al-Kitab Al-Mubeen",
+    "email": "Email",
+    "email_placeholder": "Entrez votre email",
+    "password": "Mot de passe",
+    "password_placeholder": "Entrez le mot de passe",
+    "login_button": "Se Connecter",
+    "or_continue_with": "Ou continuer avec",
+    "already_have_account": "Vous avez déjà un compte ? Connectez-vous",
+    "need_account": "Besoin d'un compte ? Créez-en un",
+    "demo_info": "Pour la démo : Vous pouvez créer un nouveau compte ou utiliser n'importe quelles informations d'identification pour vous connecter",
+    "success": "Succès",
+    "welcome_back": "Bon retour",
+    "error": "Erreur",
+    "fill_all_fields": "Veuillez remplir tous les champs"
+  },
+  "register": {
+    "title": "Créer un Nouveau Compte",
+    "subtitle": "Rejoignez la communauté Al-Kitab Al-Mubeen",
+    "username": "Nom d'utilisateur",
+    "username_placeholder": "Entrez le nom d'utilisateur",
+    "email": "Email",
+    "email_placeholder": "Entrez votre email",
+    "password": "Mot de passe",
+    "password_placeholder": "Entrez le mot de passe",
+    "confirm_password": "Confirmer le Mot de passe",
+    "confirm_password_placeholder": "Re-entrez le mot de passe",
+    "register_button": "Créer le Compte",
+    "success": "Compte créé avec succès",
+    "please_login": "Vous pouvez maintenant vous connecter",
+    "error": "Erreur lors de la création du compte",
+    "fill_all_fields": "Veuillez remplir tous les champs",
+    "passwords_dont_match": "Les mots de passe ne correspondent pas"
+  }
+}

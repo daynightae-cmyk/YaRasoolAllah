@@ -1,0 +1,647 @@
+@import url("https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@300;400;500;600;700&family=Tajawal:wght@300;400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============= EXACT REFERENCE COLORS - ألوان مطابقة للمراجع تماماً ============= */
+:root {
+  /* Dark Colors from References */
+  --ref-dark-bg: #0f172a; /* الخلفية الداكنة الرئيسية */
+  --ref-dark-card: #1e293b; /* البطاقات الداكنة */
+  --ref-dark-card-light: #334155; /* البطاقات الفاتحة قليلاً */
+  --ref-dark-border: #475569; /* الحدود الداكنة */
+
+  /* Bright Colors from References */
+  --ref-lime-bright: #84cc16; /* الأخضر الليموني المضيء - مثل المراجع */
+  --ref-lime-dark: #65a30d; /* الأخضر الليموني الداكن */
+  --ref-emerald: #10b981; /* الأخضر الزمردي */
+  --ref-emerald-dark: #059669; /* الأخضر الزمردي الداكن */
+
+  /* Text Colors */
+  --ref-text-white: #ffffff;
+  --ref-text-light: #f8fafc;
+  --ref-text-muted: #94a3b8;
+  --ref-text-dark: #64748b;
+
+  /* Accent Colors */
+  --ref-orange: #fb923c;
+  --ref-blue: #3b82f6;
+  --ref-purple: #8b5cf6;
+  --ref-yellow: #fbbf24;
+
+  /* Shadcn System Colors */
+  --background: 248 250 252;
+  --foreground: 15 23 42;
+  --card: 255 255 255;
+  --card-foreground: 15 23 42;
+  --popover: 255 255 255;
+  --popover-foreground: 15 23 42;
+  --primary: 132 204 22;
+  --primary-foreground: 15 23 42;
+  --secondary: 241 245 249;
+  --secondary-foreground: 15 23 42;
+  --muted: 241 245 249;
+  --muted-foreground: 100 116 139;
+  --accent: 101 163 13;
+  --accent-foreground: 255 255 255;
+  --destructive: 239 68 68;
+  --destructive-foreground: 248 250 252;
+  --border: 226 232 240;
+  --input: 226 232 240;
+  --ring: 132 204 22;
+  --radius: 24px;
+}
+
+/* Dark Theme - مطابق للمراجع تماماً */
+.theme-heaven {
+  --background: 15 23 42;
+  --foreground: 248 250 252;
+  --card: 30 41 59;
+  --card-foreground: 248 250 252;
+  --popover: 30 41 59;
+  --popover-foreground: 248 250 252;
+  --primary: 132 204 22;
+  --primary-foreground: 15 23 42;
+  --secondary: 51 65 85;
+  --secondary-foreground: 248 250 252;
+  --muted: 51 65 85;
+  --muted-foreground: 148 163 184;
+  --accent: 101 163 13;
+  --accent-foreground: 15 23 42;
+  --destructive: 239 68 68;
+  --destructive-foreground: 248 250 252;
+  --border: 71 85 105;
+  --input: 71 85 105;
+  --ring: 132 204 22;
+}
+
+/* Light Theme */
+.theme-earth {
+  --background: 248 250 252;
+  --foreground: 15 23 42;
+  --card: 255 255 255;
+  --card-foreground: 15 23 42;
+  --popover: 255 255 255;
+  --popover-foreground: 15 23 42;
+  --primary: 132 204 22;
+  --primary-foreground: 15 23 42;
+  --secondary: 241 245 249;
+  --secondary-foreground: 15 23 42;
+  --muted: 241 245 249;
+  --muted-foreground: 100 116 139;
+  --accent: 101 163 13;
+  --accent-foreground: 255 255 255;
+  --destructive: 239 68 68;
+  --destructive-foreground: 248 250 252;
+  --border: 226 232 240;
+  --input: 226 232 240;
+  --ring: 132 204 22;
+}
+
+/* ============= BASE STYLES ============= */
+* {
+  border-color: hsl(var(--border));
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: "Inter", "Cairo", sans-serif;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+/* Dark body override */
+.theme-heaven body {
+  background-color: var(--ref-dark-bg);
+  color: var(--ref-text-white);
+}
+
+/* ============= TYPOGRAPHY ============= */
+.font-amiri {
+  font-family: "Amiri", serif;
+  line-height: 1.8;
+}
+
+.font-inter {
+  font-family: "Inter", sans-serif;
+  line-height: 1.5;
+}
+
+.font-cairo {
+  font-family: "Cairo", sans-serif;
+  line-height: 1.6;
+}
+
+.font-tajawal {
+  font-family: "Tajawal", sans-serif;
+  line-height: 1.7;
+}
+
+/* ============= REFERENCE CARD SYSTEM ============= */
+.card-ref {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: 24px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  position: relative;
+}
+
+.theme-heaven .card-ref {
+  background: var(--ref-dark-card);
+  border: 1px solid var(--ref-dark-border);
+  color: var(--ref-text-white);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.card-ref:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(132, 204, 22, 0.15);
+}
+
+.theme-heaven .card-ref:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.card-ref-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--ref-dark-bg) 0%,
+    var(--ref-dark-card) 100%
+  );
+  color: var(--ref-text-white);
+  border: 1px solid var(--ref-dark-border);
+}
+
+/* ============= BUTTON SYSTEM LIKE REFERENCES ============= */
+.btn-ref {
+  border: none;
+  border-radius: 20px;
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 14px;
+  font-family: "Cairo", sans-serif;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 48px;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ref-primary {
+  background: var(--ref-lime-bright);
+  color: var(--ref-dark-bg);
+  box-shadow: 0 4px 12px rgba(132, 204, 22, 0.3);
+  font-weight: 700;
+}
+
+.btn-ref-primary:hover {
+  background: var(--ref-lime-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(132, 204, 22, 0.4);
+}
+
+.btn-ref-secondary {
+  background: var(--ref-dark-card);
+  color: var(--ref-text-white);
+  border: 1px solid var(--ref-dark-border);
+}
+
+.btn-ref-secondary:hover {
+  background: var(--ref-dark-card-light);
+  transform: translateY(-2px);
+}
+
+/* ============= ICON SYSTEM LIKE REFERENCES ============= */
+.icon-ref {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.icon-ref-lime {
+  background: var(--ref-lime-bright);
+  color: var(--ref-dark-bg);
+  box-shadow: 0 4px 12px rgba(132, 204, 22, 0.3);
+}
+
+.icon-ref-emerald {
+  background: var(--ref-emerald);
+  color: white;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.icon-ref-orange {
+  background: var(--ref-orange);
+  color: white;
+  box-shadow: 0 4px 12px rgba(251, 146, 60, 0.3);
+}
+
+.icon-ref-blue {
+  background: var(--ref-blue);
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.icon-ref-purple {
+  background: var(--ref-purple);
+  color: white;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.icon-ref-yellow {
+  background: var(--ref-yellow);
+  color: var(--ref-dark-bg);
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+}
+
+.icon-ref-dark {
+  background: var(--ref-dark-card);
+  color: var(--ref-text-white);
+  border: 1px solid var(--ref-dark-border);
+}
+
+.icon-ref:hover {
+  transform: scale(1.1);
+}
+
+/* ============= ANIMATIONS ============= */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(132, 204, 22, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(132, 204, 22, 0.5);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+/* ============= FORM CONTROLS ============= */
+.input-ref {
+  background: hsl(var(--card));
+  border: 2px solid hsl(var(--border));
+  border-radius: 20px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-family: "Cairo", sans-serif;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  min-height: 48px;
+}
+
+.theme-heaven .input-ref {
+  background: var(--ref-dark-card);
+  border: 2px solid var(--ref-dark-border);
+  color: var(--ref-text-white);
+}
+
+.input-ref:focus {
+  outline: none;
+  border-color: var(--ref-lime-bright);
+  box-shadow: 0 0 0 4px rgba(132, 204, 22, 0.1);
+}
+
+.input-ref::placeholder {
+  color: hsl(var(--muted-foreground));
+  font-family: "Tajawal", sans-serif;
+}
+
+.theme-heaven .input-ref::placeholder {
+  color: var(--ref-text-muted);
+}
+
+/* ============= NAVIGATION ============= */
+.nav-ref {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 20px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  min-height: 56px;
+  font-weight: 500;
+  font-family: "Cairo", sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-ref:hover {
+  background: hsl(var(--muted));
+  transform: translateX(4px);
+}
+
+.theme-heaven .nav-ref:hover {
+  background: var(--ref-dark-card-light);
+}
+
+.nav-ref.active {
+  background: var(--ref-lime-bright);
+  color: var(--ref-dark-bg);
+  box-shadow: 0 4px 12px rgba(132, 204, 22, 0.3);
+}
+
+.nav-ref.active:hover {
+  transform: translateX(0) translateY(-2px);
+}
+
+/* ============= BADGES ============= */
+.badge-ref {
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: "Cairo", sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge-ref-lime {
+  background: var(--ref-lime-bright);
+  color: var(--ref-dark-bg);
+  box-shadow: 0 2px 8px rgba(132, 204, 22, 0.2);
+}
+
+.badge-ref-orange {
+  background: var(--ref-orange);
+  color: white;
+  box-shadow: 0 2px 8px rgba(251, 146, 60, 0.2);
+}
+
+.badge-ref-emerald {
+  background: var(--ref-emerald);
+  color: white;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+}
+
+.badge-ref-dark {
+  background: var(--ref-dark-card);
+  color: var(--ref-text-white);
+  border: 1px solid var(--ref-dark-border);
+}
+
+/* ============= MOSQUE SILHOUETTE ============= */
+.mosque-ref {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 120px;
+  height: 120px;
+  opacity: 0.06;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.mosque-ref svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+
+/* ============= BOTTOM NAVIGATION ============= */
+.bottom-nav-ref {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: hsl(var(--card));
+  border-top: 1px solid hsl(var(--border));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.theme-heaven .bottom-nav-ref {
+  background: var(--ref-dark-card);
+  border-top: 1px solid var(--ref-dark-border);
+}
+
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 4px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  color: hsl(var(--muted-foreground));
+}
+
+.theme-heaven .bottom-nav-item {
+  color: var(--ref-text-muted);
+}
+
+.bottom-nav-item.active {
+  color: var(--ref-lime-bright);
+}
+
+.bottom-nav-item.active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 3px;
+  background: var(--ref-lime-bright);
+  border-radius: 0 0 3px 3px;
+}
+
+/* ============= UTILITIES ============= */
+.container-ref {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.section-ref {
+  padding: 16px 0;
+}
+
+/* ============= SCROLLBAR ============= */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+}
+
+.theme-heaven ::-webkit-scrollbar-track {
+  background: var(--ref-dark-card);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ref-lime-bright);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ref-lime-dark);
+}
+
+/* ============= RTL SUPPORT ============= */
+[dir="rtl"] {
+  direction: rtl;
+}
+
+[dir="rtl"] .nav-ref:hover {
+  transform: translateX(-4px);
+}
+
+[dir="rtl"] .nav-ref.active:hover {
+  transform: translateX(0) translateY(-2px);
+}
+
+/* ============= MOBILE OPTIMIZATIONS ============= */
+@media (max-width: 768px) {
+  .card-ref {
+    padding: 16px;
+    border-radius: 20px;
+  }
+
+  .btn-ref {
+    min-height: 52px;
+    padding: 14px 20px;
+  }
+
+  .nav-ref {
+    min-height: 60px;
+    padding: 16px;
+  }
+
+  .input-ref {
+    min-height: 52px;
+    padding: 14px 16px;
+  }
+}
+
+/* ============= FOCUS STYLES ============= */
+.focus-visible:focus-visible {
+  outline: 2px solid var(--ref-lime-bright);
+  outline-offset: 2px;
+}
+
+/* ============= LOADING STATES ============= */
+.loading-ref {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted)) 25%,
+    hsl(var(--muted) / 0.5) 50%,
+    hsl(var(--muted)) 75%
+  );
+  background-size: 200% 100%;
+  animation: loading-ref 1.5s infinite;
+}
+
+.theme-heaven .loading-ref {
+  background: linear-gradient(
+    90deg,
+    var(--ref-dark-card) 25%,
+    rgba(51, 65, 85, 0.5) 50%,
+    var(--ref-dark-card) 75%
+  );
+}
+
+@keyframes loading-ref {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ============= SPECIAL EFFECTS ============= */
+.glow-ref {
+  box-shadow: 0 0 20px rgba(132, 204, 22, 0.4);
+}
+
+.gradient-text-ref {
+  background: linear-gradient(
+    135deg,
+    var(--ref-lime-bright),
+    var(--ref-emerald)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
