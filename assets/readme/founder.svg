@@ -1,0 +1,9 @@
+<svg width="1600" height="340" viewBox="0 0 1600 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs><linearGradient id="fbg" x1="0" y1="0" x2="1600" y2="340"><stop stop-color="#06140F"/><stop offset=".56" stop-color="#102E25"/><stop offset="1" stop-color="#0B151D"/></linearGradient><linearGradient id="fgold" x1="470" y1="80" x2="1130" y2="250"><stop stop-color="#F4DD92"/><stop offset="1" stop-color="#A98739"/></linearGradient></defs>
+<rect width="1600" height="340" rx="34" fill="url(#fbg)"/>
+<g opacity=".6" fill="#D7BB65"><circle cx="120" cy="72" r="2"/><circle cx="190" cy="132" r="3"/><circle cx="1370" cy="86" r="2"/><circle cx="1460" cy="154" r="3"/><path d="M280 70l3 8 8 3-8 3-3 8-3-8-8-3 8-3 3-8Z"/><path d="M1320 230l3 8 8 3-8 3-3 8-3-8-8-3 8-3 3-8Z"/></g>
+<text x="800" y="86" text-anchor="middle" font-family="Arial" font-size="17" letter-spacing="5" fill="#ABC2B7">FOUNDER • SOFTWARE DEVELOPER • KNOUX</text>
+<text x="800" y="160" text-anchor="middle" direction="rtl" font-family="Tahoma,Arial" font-size="52" font-weight="700" fill="url(#fgold)">المهندس صادق الجزار</text>
+<text x="800" y="218" text-anchor="middle" font-family="Georgia,serif" font-size="28" fill="#F2E9D0">Sadek Elgazar</text>
+<text x="800" y="270" text-anchor="middle" font-family="Arial" font-size="16" letter-spacing="2.5" fill="#ABC2B7">KNOUX — BUILDING TECHNOLOGY FOR PEOPLE</text>
+</svg>
