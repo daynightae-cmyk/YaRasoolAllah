@@ -44,38 +44,29 @@ export function ThemeProvider({
     const root = window.document.documentElement;
     const body = document.body;
 
-    // Remove all theme classes
-    root.classList.remove("theme-heaven", "theme-earth");
-    body.classList.remove("theme-heaven", "theme-earth");
+    // Remove previous theme classes
+    root.classList.remove("theme-heaven", "theme-earth", "dark", "light");
+    body.classList.remove("theme-heaven", "theme-earth", "dark", "light");
 
-    // Add current theme class
+    // Add current theme class and standard Tailwind dark class
     root.classList.add(`theme-${mode}`);
     body.classList.add(`theme-${mode}`);
+    if (mode === "heaven") {
+      root.classList.add("dark");
+      body.classList.add("dark");
+    } else {
+      root.classList.add("light");
+      body.classList.add("light");
+    }
+
+    // Clean inline body style override to let institutional CSS tokens govern smoothly
+    body.style.cssText = "";
 
     // Store in localStorage
     try {
       localStorage.setItem(storageKey, mode);
     } catch (error) {
       console.warn("Failed to save theme to localStorage:", error);
-    }
-
-    // Apply theme-specific styles
-    if (mode === "heaven") {
-      // Heaven mode: Dark cosmic background with Arabic fonts
-      body.style.cssText = `
-        font-family: "Noto Naskh Arabic", "Amiri", serif;
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-        color: #ffffff;
-        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-      `;
-    } else {
-      // Earth mode: Clean white background with modern fonts
-      body.style.cssText = `
-        font-family: "Cairo", "IBM Plex Sans Arabic", sans-serif;
-        background: #ffffff;
-        color: #1a1a1a;
-        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-      `;
     }
   }, [mode, storageKey]);
 

@@ -18,7 +18,7 @@ export default function AppLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 dark:from-slate-900 dark:via-blue-950 dark:to-purple-950 islamic-pattern-enhanced">
+    <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       {/* Header */}
       <Header />
 

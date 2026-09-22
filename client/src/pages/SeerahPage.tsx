@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import InstitutionShell from "@/components/Institution/InstitutionShell";
 import SourceDrawer, { SourceProvenanceItem } from "@/components/common/SourceDrawer";
 import LearningDepthSelector, { useLearningDepth } from "@/components/Institution/LearningDepthSelector";
+import MountainousBattlefieldMap from "@/components/Seerah/MountainousBattlefieldMap";
 import {
   seerahChapters,
   seerahCategories,
@@ -35,6 +36,7 @@ import {
   Layers,
   GitCommit,
   CheckCircle2,
+  Mountain,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -108,7 +110,7 @@ const HISTORICAL_LOCATIONS = [
 export default function SeerahPage() {
   const { depth } = useLearningDepth();
   const [selectedChapter, setSelectedChapter] = useState<SeerahChapter | null>(null);
-  const [activeTab, setActiveTab] = useState<"chapters" | "timeline" | "map" | "causes">("chapters");
+  const [activeTab, setActiveTab] = useState<"chapters" | "timeline" | "battles" | "map" | "causes">("chapters");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [selectedEvidence, setSelectedEvidence] = useState<SourceProvenanceItem | null>(null);
@@ -157,18 +159,20 @@ export default function SeerahPage() {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <Badge className="bg-amber-400/20 text-amber-300 border-amber-400/30 text-xs font-tajawal">
-                  الرواق الثاني في الصرح
-                </Badge>
-                <span className="text-xs text-slate-400 font-mono">
-                  {seerahChapters.length} فصول • {allTimelineEvents.length} محطة موثقة
+                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                <span className="text-xs font-tajawal text-emerald-300">
+                  الرواق الثاني في الصرح النبوي
+                </span>
+                <span className="text-slate-500 text-xs">·</span>
+                <span className="text-xs text-slate-300 font-mono">
+                  {seerahChapters.length} فصول · {allTimelineEvents.length} محطة موثقة
                 </span>
               </div>
               <h1 className="text-3xl md:text-5xl font-amiri font-bold tracking-tight">
                 درب السيرة النبوية الشريفة
               </h1>
               <p className="text-sm md:text-base font-tajawal text-slate-300 max-w-2xl leading-relaxed">
-                استكشف السيرة العطرة لخير الأنام ﷺ عبر تسلسل زمني دقيق، وخرائط للمواقع التاريخية، وشواهد موثقة من أمهات كتب الحديث والسير، خالية تماماً من أي تجسيد.
+                استكشف السيرة العطرة لخير الأنام ﷺ عبر تسلسل زمني دقيق، وأطلس تضاريسي متحرك لغزوات النبي ﷺ، وخرائط للمواقع التاريخية، وشواهد موثقة من أمهات كتب الحديث والسير، خالية تماماً من أي تجسيد.
               </p>
             </div>
 
@@ -209,6 +213,22 @@ export default function SeerahPage() {
             >
               <Clock className="w-4 h-4" />
               <span>شريط التسلسل الزمني الكامل</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setActiveTab("battles");
+                setSelectedChapter(null);
+              }}
+              className={cn(
+                "px-4 py-2 rounded-xl transition-colors flex items-center gap-2 font-semibold",
+                activeTab === "battles"
+                  ? "bg-amber-700 text-white shadow-sm"
+                  : "bg-slate-800/80 text-slate-300 hover:bg-slate-700"
+              )}
+            >
+              <Mountain className="w-4 h-4 text-amber-300" />
+              <span>أطلس الغزوات التضاريسي المتحرك</span>
             </button>
 
             <button
@@ -467,6 +487,24 @@ export default function SeerahPage() {
                 </div>
               ))}
             </div>
+          </div>
+        ) : activeTab === "battles" ? (
+          /* ========================================================
+             VIEW: MOUNTAINOUS BATTLEFIELD CARTOGRAPHY ATLAS
+             ======================================================== */
+          <div className="space-y-6">
+            <div className="p-6 bg-card rounded-3xl border border-border space-y-2">
+              <div className="flex items-center gap-2">
+                <Mountain className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                <h2 className="text-xl font-amiri font-bold text-foreground">
+                  أطلس الغزوات التضاريسي المحقق
+                </h2>
+              </div>
+              <p className="text-xs text-muted-foreground font-tajawal leading-relaxed">
+                خرائط تضاريسية جبلية ثلاثية الأبعاد لغزوات النبي ﷺ الكبرى، توضح طبيعة التضاريس (جبال، أودية، حرات، خنادق، آبار مياه) ومسارات الزحف والتحركات التكتيكية والمراحل العسكرية التاريخية دون أي تمثيل تصويري للمصطفى ﷺ.
+              </p>
+            </div>
+            <MountainousBattlefieldMap />
           </div>
         ) : activeTab === "map" ? (
           /* ========================================================
