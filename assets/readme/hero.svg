@@ -1,0 +1,17 @@
+<svg width="1600" height="640" viewBox="0 0 1600 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <linearGradient id="bg" x1="80" y1="10" x2="1520" y2="630" gradientUnits="userSpaceOnUse"><stop stop-color="#04120E"/><stop offset=".45" stop-color="#0A2D24"/><stop offset="1" stop-color="#07131D"/></linearGradient>
+  <radialGradient id="halo" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1260 120) rotate(135) scale(420)"><stop stop-color="#E8CC79" stop-opacity=".24"/><stop offset="1" stop-color="#E8CC79" stop-opacity="0"/></radialGradient>
+  <linearGradient id="gold" x1="470" y1="145" x2="1130" y2="425" gradientUnits="userSpaceOnUse"><stop stop-color="#FFF0B6"/><stop offset=".44" stop-color="#E2C36F"/><stop offset="1" stop-color="#A47D2C"/></linearGradient>
+</defs>
+<rect width="1600" height="640" rx="42" fill="url(#bg)"/><rect width="1600" height="640" rx="42" fill="url(#halo)"/>
+<g fill="#F6E7B1"><circle cx="110" cy="90" r="2"/><circle cx="170" cy="145" r="3"/><circle cx="252" cy="74" r="2.2"/><circle cx="350" cy="115" r="2"/><circle cx="470" cy="75" r="3"/><circle cx="565" cy="122" r="2"/><circle cx="688" cy="72" r="2.4"/><circle cx="835" cy="110" r="2"/><circle cx="968" cy="68" r="3"/><circle cx="1080" cy="118" r="2"/><circle cx="1185" cy="64" r="2.4"/><circle cx="1440" cy="126" r="3"/><circle cx="1500" cy="78" r="2"/><path d="M125 212l4 11 11 4-11 4-4 11-4-11-11-4 11-4 4-11Z"/><path d="M1470 225l3 8 8 3-8 3-3 8-3-8-8-3 8-3 3-8Z"/></g>
+<g transform="translate(1280 120)"><circle r="76" fill="#E6CB78"/><circle cx="32" cy="-21" r="80" fill="#0A251E"/></g>
+<g opacity=".32" stroke="#DDBD60" fill="none"><path d="M170 595V322C170 186 280 76 416 76H1184C1320 76 1430 186 1430 322V595" stroke-width="2"/><path d="M245 595V346C245 242 329 158 433 158H1167C1271 158 1355 242 1355 346V595" stroke-width="1.5"/><path d="M330 595V372C330 302 387 245 457 245H1143C1213 245 1270 302 1270 372V595"/></g>
+<text x="800" y="274" text-anchor="middle" direction="rtl" font-family="Tahoma,Arial,sans-serif" font-size="88" font-weight="700" fill="url(#gold)">يا رسول الله ﷺ</text>
+<text x="800" y="344" text-anchor="middle" font-family="Georgia,serif" font-size="30" letter-spacing="8" fill="#F5EBCB">YA RASOOL ALLAH</text>
+<text x="800" y="410" text-anchor="middle" direction="rtl" font-family="Tahoma,Arial,sans-serif" font-size="27" fill="#DCEBE4">رحلة موثّقة لفهم السيرة • القرآن • السنة • المعرفة</text>
+<text x="800" y="458" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" letter-spacing="2.2" fill="#9DB8AC">SOURCE-FIRST • HUMAN-CENTERED • MULTILINGUAL • ACCESSIBLE</text>
+<path d="M470 520H1130" stroke="url(#gold)" opacity=".66"/><circle cx="800" cy="520" r="5.5" fill="#E2C36F"/>
+<text x="800" y="574" text-anchor="middle" font-family="Arial,sans-serif" font-size="14" letter-spacing="4" fill="#8CA59B">KNOW • VERIFY • LEARN • REFLECT</text>
+</svg>
