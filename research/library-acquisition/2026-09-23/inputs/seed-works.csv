@@ -1,0 +1,51 @@
+work_id,canonical_title_ar,canonical_title_en,author_name_ar,author_death_hijri,author_death_ce_approx,category_primary,category_secondary,era,language_original,work_status,bibliographic_source,bibliographic_source_url,confidence_note
+W001,القرآن الكريم,The Noble Quran,لا يوجد مؤلف بشري - وحي,NULL,NULL,A-القرآن وعلومه,المصاحف,Revelation era,Arabic,primary_scripture_public_domain_as_text,General reference / canonical fact,NULL,HIGH - not independently source-cited this session; universally established
+W002,جامع البيان عن تأويل آي القرآن (تفسير الطبري),Tafsir al-Tabari,محمد بن جرير الطبري,310,923,B-التفسير,تفسير بالمأثور,3rd century AH,Arabic,classical_public_domain_author,General reference / classical bio-bibliographical knowledge,NULL,HIGH - standard attribution; needs source URL in follow-up pass
+W003,تفسير القرآن العظيم (تفسير ابن كثير),Tafsir Ibn Kathir,إسماعيل بن عمر بن كثير,774,1373,B-التفسير,تفسير بالمأثور,8th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W004,الجامع لأحكام القرآن (تفسير القرطبي),Tafsir al-Qurtubi,محمد بن أحمد القرطبي,671,1273,B-التفسير,تفسير بالأحكام,7th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W005,تفسير الجلالين,Tafsir al-Jalalayn,جلال الدين المحلي وجلال الدين السيوطي,864 / 911,1459 / 1505,B-التفسير,تفسير موجز,9th-10th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W006,أسباب النزول,Asbab al-Nuzul,علي بن أحمد الواحدي,468,1075,A-القرآن وعلومه,أسباب النزول,5th century AH,Arabic,classical_public_domain_author,General reference,NULL,MEDIUM-HIGH
+W007,الإتقان في علوم القرآن,Al-Itqan fi Ulum al-Quran,جلال الدين السيوطي,911,1505,A-القرآن وعلومه,علوم القرآن,9th-10th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W008,صحيح البخاري,Sahih al-Bukhari,محمد بن إسماعيل البخاري,256,870,C-الحديث النبوي,الصحيحان,3rd century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W009,صحيح مسلم,Sahih Muslim,مسلم بن الحجاج القشيري النيسابوري,261,875,C-الحديث النبوي,الصحيحان,3rd century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W010,سنن أبي داود,Sunan Abi Dawud,سليمان بن الأشعث أبو داود السجستاني,275,889,C-الحديث النبوي,السنن,3rd century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W011,جامع الترمذي,Jami al-Tirmidhi,محمد بن عيسى الترمذي,279,892,C-الحديث النبوي,الجوامع,3rd century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W012,سنن النسائي,Sunan al-Nasai,أحمد بن شعيب النسائي,303,915,C-الحديث النبوي,السنن,4th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W013,سنن ابن ماجه,Sunan Ibn Majah,محمد بن يزيد ابن ماجه,273,887,C-الحديث النبوي,السنن,3rd century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W014,موطأ الإمام مالك,Muwatta Imam Malik,مالك بن أنس,179,795,C-الحديث النبوي,الموطآت,2nd century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W015,مسند الإمام أحمد بن حنبل,Musnad Ahmad,أحمد بن حنبل,241,855,C-الحديث النبوي,المسانيد,3rd century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W016,المستدرك على الصحيحين,Al-Mustadrak ala al-Sahihayn,محمد بن عبد الله الحاكم النيسابوري,405,1014,C-الحديث النبوي,المستدركات,5th century AH,Arabic,classical_public_domain_author,General reference,NULL,MEDIUM-HIGH
+W017,صحيح ابن خزيمة,Sahih Ibn Khuzaymah,محمد بن إسحاق ابن خزيمة,311,923,C-الحديث النبوي,المصنفات,4th century AH,Arabic,classical_public_domain_author,General reference,NULL,MEDIUM-HIGH
+W018,صحيح ابن حبان,Sahih Ibn Hibban,محمد بن حبان البستي,354,965,C-الحديث النبوي,المصنفات,4th century AH,Arabic,classical_public_domain_author,General reference,NULL,MEDIUM-HIGH
+W019,السنن الكبرى للبيهقي,Al-Sunan al-Kubra,أحمد بن الحسين البيهقي,458,1066,C-الحديث النبوي,السنن,5th century AH,Arabic,classical_public_domain_author,General reference,NULL,MEDIUM-HIGH
+W020,رياض الصالحين,Riyadh al-Salihin,يحيى بن شرف النووي,676,1277,C-الحديث النبوي,الأربعينات وكتب الرقاق الحديثية,7th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W021,الأربعون النووية,Al-Arbaun al-Nawawiyyah,يحيى بن شرف النووي,676,1277,C-الحديث النبوي,الأربعينات,7th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W022,بلوغ المرام,Bulugh al-Maram,أحمد بن علي ابن حجر العسقلاني,852,1449,C-الحديث النبوي,كتب التخريج والأحكام,9th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W023,فتح الباري بشرح صحيح البخاري,Fath al-Bari,أحمد بن علي ابن حجر العسقلاني,852,1449,C-الحديث النبوي,شروح الحديث,9th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W024,المنهاج شرح صحيح مسلم,Sharh Sahih Muslim (al-Minhaj),يحيى بن شرف النووي,676,1277,C-الحديث النبوي,شروح الحديث,7th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W025,السيرة النبوية لابن هشام,Al-Sirah al-Nabawiyyah (Ibn Hisham's recension of Ibn Ishaq),عبد الملك بن هشام (تهذيبا لسيرة محمد بن إسحاق),213,828,D-السيرة النبوية,السيرة,3rd century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W026,كتاب المغازي للواقدي,Kitab al-Maghazi,محمد بن عمر الواقدي,207,823,D-السيرة النبوية,المغازي,3rd century AH,Arabic,classical_public_domain_author,General reference,NULL,MEDIUM-HIGH
+W027,الطبقات الكبرى لابن سعد,Al-Tabaqat al-Kubra,محمد بن سعد كاتب الواقدي,230,845,H-التراجم والطبقات,طبقات الصحابة والتابعين,3rd century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W028,زاد المعاد في هدي خير العباد,Zad al-Maad,محمد بن أبي بكر ابن قيم الجوزية,751,1350,D-السيرة النبوية,السيرة الموضوعية,8th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W029,الرحيق المختوم,Al-Raheeq Al-Makhtum (The Sealed Nectar),صفي الرحمن المباركفوري,NULL (modern - d. circa 2006 CE),2006,D-السيرة النبوية,الدراسات الحديثة,20th century CE,Arabic,MODERN_WORK_COPYRIGHT_LIKELY_ACTIVE,General reference,NULL,MEDIUM - modern work; treat rights separately from classical works per Section 34
+W030,الشمائل المحمدية,Al-Shama'il al-Muhammadiyyah,محمد بن عيسى الترمذي,279,892,D-السيرة النبوية,الشمائل,3rd century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W031,دلائل النبوة,Dala'il al-Nubuwwah,أحمد بن الحسين البيهقي,458,1066,D-السيرة النبوية,دلائل النبوة,5th century AH,Arabic,classical_public_domain_author,General reference,NULL,MEDIUM-HIGH
+W032,الإصابة في تمييز الصحابة,Al-Isabah fi Tamyiz al-Sahabah,أحمد بن علي ابن حجر العسقلاني,852,1449,E-الصحابة,تراجم الصحابة,9th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W033,أسد الغابة في معرفة الصحابة,Usd al-Ghabah,علي بن محمد ابن الأثير,630,1233,E-الصحابة,تراجم الصحابة,7th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W034,الاستيعاب في معرفة الأصحاب,Al-Istiab fi Marifat al-Ashab,يوسف بن عبد الله ابن عبد البر,463,1071,E-الصحابة,تراجم الصحابة,5th century AH,Arabic,classical_public_domain_author,General reference,NULL,MEDIUM-HIGH
+W035,سير أعلام النبلاء,Siyar Alam al-Nubala,محمد بن أحمد الذهبي,748,1348,H-التراجم والطبقات,سير الأعلام,8th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W036,وفيات الأعيان,Wafayat al-Ayan,أحمد بن محمد ابن خلكان,681,1282,H-التراجم والطبقات,وفيات الأعيان,7th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W037,تهذيب التهذيب,Tahdhib al-Tahdhib,أحمد بن علي ابن حجر العسقلاني,852,1449,C-الحديث النبوي,علم الرجال,9th century AH,Arabic,classical_public_domain_author,General reference,NULL,MEDIUM-HIGH
+W038,تاريخ بغداد,Tarikh Baghdad,أحمد بن علي الخطيب البغدادي,463,1071,N-التاريخ الإسلامي,التاريخ المحلي,5th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W039,تاريخ دمشق,Tarikh Dimashq,علي بن الحسن ابن عساكر,571,1176,N-التاريخ الإسلامي,التاريخ المحلي,6th century AH,Arabic,classical_public_domain_author,General reference,NULL,MEDIUM-HIGH
+W040,العقيدة الطحاوية,Al-Aqidah al-Tahawiyyah,أحمد بن محمد الطحاوي,321,933,I-العقيدة,أصول الاعتقاد,4th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W041,كتاب التوحيد,Kitab al-Tawhid,محمد بن عبد الوهاب,1206,1792,I-العقيدة,التوحيد,12th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W042,المدونة الكبرى,Al-Mudawwanah al-Kubra,مالك بن أنس (رواية سحنون),179 (المؤلف) / 240 (الراوي سحنون),795 / 854,J-الفقه,فقه مالكي,2nd-3rd century AH,Arabic,classical_public_domain_author,General reference,NULL,MEDIUM
+W043,الأم,Al-Umm,محمد بن إدريس الشافعي,204,820,J-الفقه,فقه شافعي,3rd century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W044,المغني,Al-Mughni,عبد الله بن أحمد ابن قدامة,620,1223,J-الفقه,فقه حنبلي,7th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W045,بداية المجتهد ونهاية المقتصد,Bidayat al-Mujtahid,محمد بن أحمد ابن رشد (الحفيد),595,1198,J-الفقه,فقه مقارن,6th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W046,الرسالة,Al-Risalah,محمد بن إدريس الشافعي,204,820,K-أصول الفقه والقواعد,أصول الفقه,3rd century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W047,الموافقات,Al-Muwafaqat,إبراهيم بن موسى الشاطبي,790,1388,K-أصول الفقه والقواعد,المقاصد,8th century AH,Arabic,classical_public_domain_author,General reference,NULL,MEDIUM-HIGH
+W048,تاريخ الرسل والملوك (تاريخ الطبري),Tarikh al-Tabari,محمد بن جرير الطبري,310,923,N-التاريخ الإسلامي,التاريخ العام,3rd century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W049,البداية والنهاية,Al-Bidayah wal-Nihayah,إسماعيل بن عمر ابن كثير,774,1373,N-التاريخ الإسلامي,الحوليات,8th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
+W050,الكامل في التاريخ,Al-Kamil fi al-Tarikh,علي بن محمد ابن الأثير,630,1233,N-التاريخ الإسلامي,التاريخ العام,7th century AH,Arabic,classical_public_domain_author,General reference,NULL,HIGH
