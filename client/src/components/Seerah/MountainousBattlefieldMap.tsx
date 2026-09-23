@@ -659,11 +659,13 @@ export default function MountainousBattlefieldMap() {
             <rect width="100%" height="100%" fill="url(#carto-grid)" />
           </svg>
 
-          {/* SVG Map Core */}
+          {/* SVG Map Core: illustrative teaching diagram, not surveyed geography */}
           <svg
             className="w-full h-full"
             viewBox={activeBattle.mapData.viewBox}
             preserveAspectRatio="xMidYMid meet"
+            role="img"
+            aria-label={`رسم توضيحي تقريبي لموقعة ${activeBattle.nameAr}: التضاريس والمسارات رمزية تعليمية، والتفاصيل التاريخية مذكورة نصًا في وصف المراحل.`}
           >
             {/* Shaded Terrain Contours */}
             {showTerrainContours && (
