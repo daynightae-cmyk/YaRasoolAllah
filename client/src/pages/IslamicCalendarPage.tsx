@@ -18,45 +18,63 @@ import {
   Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { usePrayerTimes } from "@/hooks/usePrayerTimes";
+
+/** Real Hijri date from the runtime Islamic calendar — never hardcoded. */
+function getHijriToday() {
+  const parts = new Intl.DateTimeFormat("en-u-ca-islamic", {
+    day: "numeric",
+    month: "numeric",
+    year: "numeric",
+  }).formatToParts(new Date());
+  const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
+  const ar = new Intl.DateTimeFormat("ar-SA-u-ca-islamic", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    weekday: "long",
+  }).formatToParts(new Date());
+  const arGet = (type: string) => ar.find((p) => p.type === type)?.value ?? "";
+  const day = Number(get("day")) || 1;
+  const monthNum = Number(get("month")) || 0;
+  const monthName = arGet("month");
+  return {
+    day,
+    month: monthName,
+    monthNum,
+    year: arGet("year"),
+    dayName: arGet("weekday"),
+    // The Prophetic birthday is observed on 12 Rabi' al-Awwal (month 3).
+    occasion: monthNum === 3 && day === 12 ? "المولد النبوي الشريف" : null,
+  };
+}
 
 export default function IslamicCalendarPage() {
   const { t, isRTL } = useLanguage();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  // Mock Islamic date data
-  const islamicDate = {
-    day: 15,
-    month: "ربيع الأول",
-    year: 1446,
-    dayName: "الأحد",
-    occasion: "المولد النبوي الشريف",
-  };
+  // Real Hijri date + Ramadan derivation. Prayer times come from the live
+  // AlAdhan-backed hook below; nothing here is hardcoded.
+  const islamicDate = getHijriToday();
+  const {
+    prayerTimes: livePrayerTimes,
+    nextPrayer,
+    timeRemaining,
+    isLoading: prayerLoading,
+    error: prayerError,
+  } = usePrayerTimes();
 
-  // Mock prayer times
-  const prayerTimes = [
-    { name: "الفجر", time: "04:51", timeLeft: "", icon: "🌅", active: false },
-    { name: "الشروق", time: "06:25", timeLeft: "", icon: "☀️", active: false },
-    {
-      name: "الظهر",
-      time: "11:57",
-      timeLeft: "بعد ساعتين",
-      icon: "🌞",
-      active: true,
-    },
-    { name: "العصر", time: "15:08", timeLeft: "", icon: "🌇", active: false },
-    { name: "المغرب", time: "17:41", timeLeft: "", icon: "🌅", active: false },
-    { name: "العشاء", time: "19:15", timeLeft: "", icon: "🌙", active: false },
-  ];
-
-  // Mock Ramadan data
-  const ramadanData = {
-    isRamadan: true,
-    dayOfRamadan: 15,
-    suhoorTime: "04:30",
-    iftarTime: "17:41",
-    daysLeft: 15,
-  };
+  const ramadanData =
+    islamicDate.monthNum === 9
+      ? {
+          isRamadan: true,
+          dayOfRamadan: islamicDate.day,
+          suhoorTime: livePrayerTimes.find((p) => p.name === "fajr")?.time ?? "—",
+          iftarTime: livePrayerTimes.find((p) => p.name === "maghrib")?.time ?? "—",
+          daysLeft: 30 - islamicDate.day,
+        }
+      : { isRamadan: false, dayOfRamadan: 0, suhoorTime: "—", iftarTime: "—", daysLeft: 0 };
 
   const formatCurrentTime = () => {
     return new Date().toLocaleTimeString("ar-SA", {
@@ -241,46 +259,58 @@ export default function IslamicCalendarPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {prayerTimes.map((prayer, index) => (
-              <div
-                key={index}
-                className={cn(
-                  "flex items-center justify-between p-3 rounded-xl transition-all",
-                  prayer.active
-                    ? "bg-emerald-400/20 border-l-4 border-emerald-400"
-                    : "hover:bg-white/5",
-                )}
-              >
-                <div className="flex items-center space-x-3 rtl:space-x-reverse">
-                  <div className="text-2xl">{prayer.icon}</div>
-                  <div>
+            {prayerLoading ? (
+              <p className="text-sm font-amiri text-white/80 text-center py-4">
+                جارٍ جلب المواقيت من خدمة الأذان حسب موقعك...
+              </p>
+            ) : prayerError || livePrayerTimes.length === 0 ? (
+              <p className="text-sm font-amiri text-white/80 text-center py-4">
+                تعذر جلب المواقيت (الموقع أو الشبكة). اسمح بالوصول للموقع ثم أعد المحاولة.
+              </p>
+            ) : (
+              livePrayerTimes.map((prayer) => {
+                const isNext = prayer.name === nextPrayer;
+                return (
+                  <div
+                    key={prayer.name}
+                    className={cn(
+                      "flex items-center justify-between p-3 rounded-xl transition-all",
+                      isNext
+                        ? "bg-emerald-400/20 border-l-4 border-emerald-400"
+                        : "hover:bg-white/5",
+                    )}
+                  >
+                    <div className="flex items-center space-x-3 rtl:space-x-reverse">
+                      <div>
+                        <div
+                          className={cn(
+                            "font-amiri font-medium",
+                            isNext ? "text-emerald-300" : "text-white",
+                          )}
+                        >
+                          {prayer.arabicName}
+                        </div>
+                        {isNext && timeRemaining && (
+                          <div className="text-xs text-emerald-400">
+                            التالية — متبقٍ {timeRemaining}
+                          </div>
+                        )}
+                      </div>
+                    </div>
                     <div
                       className={cn(
-                        "font-amiri font-medium",
-                        prayer.active ? "text-emerald-300" : "text-white",
+                        "font-mono text-lg",
+                        isNext
+                          ? "text-emerald-300 font-bold"
+                          : "text-gray-300",
                       )}
                     >
-                      {prayer.name}
+                      {prayer.time}
                     </div>
-                    {prayer.timeLeft && (
-                      <div className="text-xs text-emerald-400">
-                        {prayer.timeLeft}
-                      </div>
-                    )}
                   </div>
-                </div>
-                <div
-                  className={cn(
-                    "font-mono text-lg",
-                    prayer.active
-                      ? "text-emerald-300 font-bold"
-                      : "text-gray-300",
-                  )}
-                >
-                  {prayer.time}
-                </div>
-              </div>
-            ))}
+                );
+              })
+            )}
           </CardContent>
         </Card>
 
