@@ -34,6 +34,7 @@ export type SearchResultCategory =
   | "book"
   | "kids"
   | "daily_guidance"
+  | "wing"
   | "source_record";
 
 export interface UnifiedSearchResult {
@@ -130,6 +131,29 @@ export default function GlobalSearchDialog({ isOpen, onClose }: GlobalSearchDial
       });
     });
 
+    // 5. Institutional wings: real routes only, honestly described.
+    // (Merged from the retired InstitutionalSearchDialog so no coverage
+    // is lost in the single-owner consolidation.)
+    const wings: Array<[string, string, string, string]> = [
+      ["who-is-muhammad", "من هو محمد ﷺ؟ (مدخل تعريفي)", "التعريف بالنبي ورسالته الإنسانية", "/who-is-muhammad"],
+      ["quran", "رِواق القرآن الكريم", "المصحف وعينة ترجمة إنجليزية؛ التفاسير المحققة قيد الإدخال", "/quran"],
+      ["sunnah", "دار الحديث الشريف", "سجلات محلية بدرجاتها ومصادر أحكامها", "/sunnah"],
+      ["prophetic-day", "الهدي النبوي اليومي", "ترتيب تعليمي للسنن والعادات الواردة", "/prophetic-day"],
+      ["library", "مكتبة الرفوف", "فهرس ببليوغرافي أولي وروابط خارجية", "/library"],
+      ["sources", "خزانة المصادر", "سجل التوثيق والحقوق الحي", "/sources"],
+    ];
+    wings.forEach(([id, title, excerpt, path]) => {
+      items.push({
+        id: `wing-${id}`,
+        category: "wing",
+        categoryLabelAr: "أروقة الصرح",
+        title,
+        excerpt,
+        path,
+        provenance: "التنقل المؤسسي",
+      });
+    });
+
     return items;
   }, []);
 
@@ -152,6 +176,7 @@ export default function GlobalSearchDialog({ isOpen, onClose }: GlobalSearchDial
     { id: "book", label: "المكتبة والكتب" },
     { id: "daily_guidance", label: "الأذكار والهدي" },
     { id: "kids", label: "ركن الطفل" },
+    { id: "wing", label: "الأروقة" },
   ];
 
   return (

@@ -337,35 +337,6 @@ ${context}
 الإجابة:`;
   }
 
-  /**
-   * @deprecated Foundation gate: retained for reference only. It is no longer
-   * routed from any active response path (callPhiModel is blocked).
-   */
-  private generateMockResponse(question: string, context: string): string {
-    // محاكاة إجابات ذكية حسب نوع السؤال
-    const questionLower = question.toLowerCase();
-
-    if (questionLower.includes("صلاة") || questionLower.includes("صوم")) {
-      return `بناءً على المصادر الشرعية الموثوقة، ${this.extractMainPoint(context)}. 
-
-وقد ورد في الحديث الشريف ما يؤكد هذا المعنى، والله أعلم.
-
-ننصح بمراجعة أهل العلم المختصين للتفصيل أكثر في هذه المسألة.`;
-    }
-
-    if (questionLower.includes("تفسير") || questionLower.includes("آية")) {
-      return `في تفسير هذه الآية الكريمة، ${this.extractMainPoint(context)}.
-
-قال المفسرون: هذا المعنى يتضح من خلال السياق القرآني والسنة النبوية المطهرة.
-
-والله تعالى أعلم بمراده من كلامه.`;
-    }
-
-    return `${this.extractMainPoint(context)}
-
-هذا ما يظهر من المصادر المتاحة، والله أعلم. لمزيد من التفصيل، يُنصح بمراجعة المصادر الأصلية وأهل الاختصاص.`;
-  }
-
   private extractMainPoint(context: string): string {
     if (!context)
       return "لم تتوفر معلومات كافية في قاعدة البيانات حول هذا الموضوع";

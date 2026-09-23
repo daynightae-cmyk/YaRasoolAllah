@@ -254,18 +254,19 @@ export default function IslamicAIChat({
           {/* معلومات إضافية للإجابات */}
           {message.response && (
             <div className="mt-3 space-y-2">
-              {/* مستوى الثقة */}
+              {/* مستوى الثقة: يعرض حالته الحقيقية، بلا شارة تحقق موهومة */}
               <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                <span className="material-symbols-outlined text-sm">
-                  verified
-                </span>
                 <span>
-                  مستوى الثقة: {Math.round(message.response.confidence * 100)}%
+                  {message.response.confidence > 0
+                    ? `مستوى الثقة: ${Math.round(message.response.confidence * 100)}%`
+                    : "لا توجد إجابة مولدة موثقة — راجع المصادر أدناه"}
                 </span>
                 <Badge variant="outline" className="text-xs">
                   {message.response.type === "direct"
                     ? "مصادر مباشرة"
-                    : "استنتاج"}
+                    : message.response.type === "general"
+                      ? "فهرس محلي فقط"
+                      : "استنتاج"}
                 </Badge>
               </div>
 
