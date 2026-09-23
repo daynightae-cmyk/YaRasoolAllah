@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import InstitutionalHeader from "./InstitutionalHeader";
 import InstitutionalFooter from "./InstitutionalFooter";
 import { Link, useLocation } from "wouter";
@@ -35,13 +35,32 @@ export default function InstitutionShell({
   hideFooter = false,
 }: InstitutionShellProps) {
   const [location] = useLocation();
-  // Shell direction follows the active language (ar/ur RTL, en/fr LTR).
-  // Arabic Quran/Hadith excerpts keep their own local RTL containers.
   const { direction } = useLanguage();
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const updateProgress = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0);
+    };
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    updateProgress();
+    return () => window.removeEventListener("scroll", updateProgress);
+  }, []);
 
   return (
       <div className="institution-shell min-h-screen flex flex-col text-slate-900 dark:text-slate-100 transition-colors pb-16 md:pb-0" dir={direction} data-wing={activeWing}>
         <InstitutionalHeader />
+
+        {/* Journey progress thread — a gold hairline that fills as the reader
+            descends through the institution, giving a sense of spatial traversal. */}
+        <div className="fixed top-0 inset-x-0 z-[55] h-[2px] pointer-events-none" aria-hidden="true">
+          <div
+            className="h-full bg-gradient-to-l from-amber-400 via-amber-500 to-emerald-600 transition-[width] duration-150 ease-out"
+            style={{ width: `${scrollProgress * 100}%` }}
+          />
+        </div>
 
         <main id="main-content" className="flex-1 w-full">
           {children}
