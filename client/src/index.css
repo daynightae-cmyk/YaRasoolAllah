@@ -35,6 +35,21 @@
   --input: 40 18% 88%;
   --ring: 38 68% 44%;
 
+  --chart-1: 164 42% 32%;
+  --chart-2: 38 68% 44%;
+  --chart-3: 199 45% 38%;
+  --chart-4: 24 58% 50%;
+  --chart-5: 278 30% 48%;
+
+  --sidebar-background: 40 30% 97%;
+  --sidebar-foreground: 215 28% 12%;
+  --sidebar-primary: 164 42% 26%;
+  --sidebar-primary-foreground: 40 30% 98%;
+  --sidebar-accent: 40 18% 92%;
+  --sidebar-accent-foreground: 215 28% 14%;
+  --sidebar-border: 40 18% 86%;
+  --sidebar-ring: 38 68% 44%;
+
   --radius: 16px;
 }
 
@@ -63,6 +78,21 @@
   --border: 216 20% 18%;             /* Hairline slate border */
   --input: 216 20% 18%;
   --ring: 38 72% 52%;
+
+  --chart-1: 164 42% 48%;
+  --chart-2: 38 72% 58%;
+  --chart-3: 199 54% 58%;
+  --chart-4: 24 70% 60%;
+  --chart-5: 278 42% 66%;
+
+  --sidebar-background: 216 26% 10%;
+  --sidebar-foreground: 40 28% 94%;
+  --sidebar-primary: 38 72% 52%;
+  --sidebar-primary-foreground: 216 28% 8%;
+  --sidebar-accent: 216 22% 16%;
+  --sidebar-accent-foreground: 40 28% 94%;
+  --sidebar-border: 216 20% 20%;
+  --sidebar-ring: 38 72% 52%;
 }
 
 /* ==========================================================================
