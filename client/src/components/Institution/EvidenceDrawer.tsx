@@ -108,7 +108,7 @@ export default function EvidenceDrawer({
           </DialogTitle>
 
           {claimContext && (
-            <DialogDescription className="text-sm font-cairo bg-muted/40 p-3 rounded-xl border-r-4 border-amber-600 dark:border-amber-500 text-muted-foreground">
+            <DialogDescription className="text-sm font-cairo bg-muted/40 p-3 rounded-xl border-s-4 border-amber-600 dark:border-amber-500 text-muted-foreground">
               <span className="font-bold text-foreground block mb-1">المحطة أو الشاهد:</span>
               {claimContext}
             </DialogDescription>

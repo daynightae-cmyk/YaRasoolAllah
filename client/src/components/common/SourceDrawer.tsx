@@ -24,6 +24,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 import type { RightsDecision } from "@shared/source-governance";
 
@@ -165,6 +166,7 @@ export default function SourceDrawer({
   viewMode = "general",
 }: SourceDrawerProps) {
   const { toast } = useToast();
+  const { direction } = useLanguage();
   const [copiedCitation, setCopiedCitation] = useState(false);
   const [copiedText, setCopiedText] = useState(false);
   const [showIsnad, setShowIsnad] = useState(false);
@@ -253,7 +255,7 @@ export default function SourceDrawer({
       <SheetContent
         side="left"
         className="w-full sm:max-w-xl md:max-w-2xl p-0 bg-white dark:bg-slate-900 border-r border-border shadow-2xl flex flex-col h-full z-50 text-right overflow-hidden"
-        dir="rtl"
+        dir={direction}
       >
         {/* ========================================================
             HEADER: SCHOLARLY TITLE & STATUS
@@ -288,7 +290,7 @@ export default function SourceDrawer({
 
           {/* Context claim highlight if available */}
           {claimContext && (
-            <SheetDescription className="text-xs font-cairo bg-amber-500/10 dark:bg-amber-500/15 border-r-3 border-amber-600 dark:border-amber-400 p-3 rounded-lg text-slate-700 dark:text-slate-300 mt-2 text-right">
+            <SheetDescription className="text-xs font-cairo bg-amber-500/10 dark:bg-amber-500/15 border-s-3 border-amber-600 dark:border-amber-400 p-3 rounded-lg text-slate-700 dark:text-slate-300 mt-2 text-right">
               <span className="font-bold text-amber-900 dark:text-amber-200 block mb-0.5">
                 الشاهد أو المحطة الموثّقة:
               </span>

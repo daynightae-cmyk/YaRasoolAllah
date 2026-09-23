@@ -42,8 +42,11 @@ export class SpiritualNotificationService {
   }
 
   private loadSettings(): NotificationSettings {
+    // Interruption contract: notifications (which can auto-open Bab Al-Samaa)
+    // are strictly opt-in. A fresh install must never schedule random,
+    // inactivity, or scroll-driven interruptions on its own.
     const defaultSettings: NotificationSettings = {
-      enabled: true,
+      enabled: false,
       frequency: "moderate",
       quietHours: { start: "23:00", end: "06:00" },
       enabledTypes: ["motivation", "reminder", "comfort"],

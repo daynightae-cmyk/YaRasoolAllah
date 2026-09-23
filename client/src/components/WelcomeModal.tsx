@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { BookOpen, Compass, Library, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   Dialog,
   DialogContent,
@@ -21,6 +22,7 @@ const TRUST_POINTS = [
 ];
 
 export default function WelcomeModal({ isOpen, onClose }: WelcomeModalProps) {
+  const { direction } = useLanguage();
   return (
     <Dialog
       open={isOpen}
@@ -30,7 +32,7 @@ export default function WelcomeModal({ isOpen, onClose }: WelcomeModalProps) {
     >
       <DialogContent
         className="max-w-xl overflow-hidden border-amber-900/15 bg-background p-0 text-right shadow-elevation-3 dark:border-amber-300/15"
-        dir="rtl"
+        dir={direction}
       >
         <div className="border-b border-border bg-gradient-to-l from-emerald-950 to-emerald-800 px-6 py-8 text-stone-50 sm:px-8">
           <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-amber-300/35 bg-white/5 text-amber-200">

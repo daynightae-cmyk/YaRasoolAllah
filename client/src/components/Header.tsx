@@ -5,7 +5,7 @@ import { useLanguage } from "../contexts/LanguageContext";
 import { useTheme } from "./ThemeProvider";
 import LanguageSwitcher from "./LanguageSwitcher";
 import DivineToggle from "./DivineToggle";
-import InstitutionalSearchDialog from "./common/InstitutionalSearchDialog";
+import GlobalSearchDialog from "./Institution/GlobalSearchDialog";
 import { BRAND } from "@/config/brand";
 import {
   Menu,
@@ -309,8 +309,8 @@ export default function Header() {
         )}
       </header>
 
-      {/* Global Institutional Search Dialog */}
-      <InstitutionalSearchDialog
+      {/* Global Institutional Search Dialog (single search owner) */}
+      <GlobalSearchDialog
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}
       />
