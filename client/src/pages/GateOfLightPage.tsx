@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { seerahChapters } from "@/data/seerahData";
 import { workRegistry } from "@shared/knowledge-registry";
+import WingCorridor from "@/components/Homepage/WingCorridor";
 import {
   Sparkles,
   Compass,
@@ -199,38 +200,7 @@ export default function GateOfLightPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {INSTITUTION_WINGS.filter((w) => w.id !== "gate-of-light").map((wing) => (
-              <Link key={wing.id} href={wing.path}>
-                <Card className="h-full rounded-2xl border-border/80 hover:border-emerald-600 dark:hover:border-emerald-500 hover:shadow-md transition-all group cursor-pointer bg-white/70 dark:bg-slate-900/60">
-                  <CardContent className="p-5 space-y-3 text-right">
-                    <div className="flex items-center justify-between text-xs text-muted-foreground font-tajawal">
-                      <span className="font-mono font-bold">
-                        رواق {wing.number}
-                      </span>
-                      {wing.badge && (
-                        <span>
-                          {wing.badge}
-                        </span>
-                      )}
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-amiri font-bold text-foreground group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
-                        {wing.nameAr}
-                      </h3>
-                      <p className="text-xs text-muted-foreground font-cairo line-clamp-2 mt-1 leading-relaxed">
-                        {wing.taglineAr}
-                      </p>
-                    </div>
-                    <div className="pt-2 flex items-center justify-between text-xs font-cairo text-emerald-700 dark:text-emerald-400 font-semibold">
-                      <span>دخول الرواق</span>
-                      <ChevronLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
+          <WingCorridor />
         </section>
 
         {/* ========================================================
