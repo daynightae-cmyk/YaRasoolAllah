@@ -29,6 +29,7 @@ const DOCK_ITEMS = [
   { href: "/daily", label: "اليوم", icon: Sun },
 ];
 
+/** Wrap institution pages with navigation, reading progress, and the shared layout. */
 export default function InstitutionShell({
   children,
   activeWing,

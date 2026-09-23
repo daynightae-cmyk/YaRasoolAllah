@@ -61,6 +61,7 @@ const WING_TINTS: Record<string, { glow: string; ring: string; text: string }> =
   },
 };
 
+/** Render a wing as a linked chamber with its own icon and accent colors. */
 function WingChamber({ wing }: { wing: WingDefinition }) {
   const Icon = WING_ICONS[wing.id] ?? Compass;
   const tint = WING_TINTS[wing.id] ?? WING_TINTS["prophetic-seerah"];
@@ -106,6 +107,7 @@ function WingChamber({ wing }: { wing: WingDefinition }) {
   );
 }
 
+/** Display the institution wings as a corridor, excluding the entry gate. */
 export default function WingCorridor() {
   const wings = INSTITUTION_WINGS.filter((w) => w.id !== "gate-of-light");
 

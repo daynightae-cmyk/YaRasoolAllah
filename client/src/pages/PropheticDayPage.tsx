@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+/** Present the daily stations with period navigation and supporting evidence. */
 export default function PropheticDayPage() {
   const { depth } = useLearningDepth();
   const [activeStationId, setActiveStationId] = useState<string>(PROPHETIC_DAY_STATIONS[0].id);

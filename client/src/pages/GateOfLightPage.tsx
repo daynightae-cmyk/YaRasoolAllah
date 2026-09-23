@@ -31,6 +31,7 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
+/** Render the entry page with featured reading paths and the wing corridor. */
 export default function GateOfLightPage() {
   const { depth } = useLearningDepth();
   const [selectedEvidence, setSelectedEvidence] = useState<EvidenceSource | null>(null);
