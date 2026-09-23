@@ -63,6 +63,9 @@ export default function IslamicCalendarPage() {
     timeRemaining,
     isLoading: prayerLoading,
     error: prayerError,
+    methodId,
+    methods,
+    setMethodId,
   } = usePrayerTimes();
 
   const ramadanData =
@@ -261,6 +264,21 @@ export default function IslamicCalendarPage() {
               <Clock className="w-5 h-5" />
               <span>أوقات الصلاة</span>
             </CardTitle>
+            <div className="flex items-center gap-2 pt-2 text-xs font-tajawal text-white/70">
+              <label htmlFor="prayer-method">طريقة الحساب:</label>
+              <select
+                id="prayer-method"
+                value={methodId}
+                onChange={(e) => setMethodId(Number(e.target.value))}
+                className="rounded-lg bg-white/10 border border-white/20 px-2 py-1 text-xs font-tajawal text-white"
+              >
+                {methods.map((m) => (
+                  <option key={m.id} value={m.id} className="text-slate-900">
+                    {m.nameAr}
+                  </option>
+                ))}
+              </select>
+            </div>
           </CardHeader>
           <CardContent className="space-y-3">
             {prayerLoading ? (
