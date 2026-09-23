@@ -1,3 +1,10 @@
+/**
+ * UNREVIEWED external-recording index. Not imported or rendered anywhere in
+ * the product. The views/downloads/rating/coverImage values below are
+ * unverified placeholders from an old draft: they must never be displayed,
+ * and every entry needs per-recording rights review before any in-platform
+ * streaming, bundling, or download feature is built on it.
+ */
 export interface QuranRecitation {
   id: string;
   reciterName: string;
@@ -12,9 +19,10 @@ export interface QuranRecitation {
   style: "murattal" | "mujawwad" | "hafs" | "warsh";
   country: string;
   featured?: boolean;
-  views: number;
-  downloads: number;
-  rating: number;
+  // Quarantined placeholders — see module note. Never render.
+  views?: number;
+  downloads?: number;
+  rating?: number;
   coverImage?: string;
 }
 
