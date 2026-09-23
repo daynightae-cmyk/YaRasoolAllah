@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { seerahChapters } from "@/data/seerahData";
-import booksData from "@/data/books.json";
+import { workRegistry } from "@shared/knowledge-registry";
 import {
   Sparkles,
   Compass,
@@ -52,80 +52,62 @@ export default function GateOfLightPage() {
   // First 4 real Seerah chapters for highlights
   const seerahTeaser = seerahChapters.slice(0, 4);
 
-  // Books categories from authentic books.json
-  const categories = (booksData as any).categories || [];
-  const books = (booksData as any).books || [];
+  const categories = [
+    { id: "seerah", name: "السيرة" },
+    { id: "tafsir", name: "التفسير" },
+    { id: "hadith", name: "الحديث" },
+  ] as const;
+  const books = workRegistry;
 
   return (
     <InstitutionShell activeWing="gate-of-light">
-      <div className="space-y-16 py-6 md:py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="gate-page space-y-16 pb-10 max-w-[92rem] mx-auto px-4 sm:px-6 lg:px-8">
         {/* ========================================================
             HERO SECTION — بوابـــــة النــــور
             ======================================================== */}
-        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-emerald-950 via-slate-900 to-slate-950 border border-emerald-900/40 p-8 md:p-14 text-white shadow-2xl text-right">
-          {/* Subtle Islamic geometric pattern background */}
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
-
-          <div className="relative z-10 max-w-4xl mx-auto space-y-6 text-center">
-            {/* Sacred Prophetic Emblem */}
-            <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-amber-400/10 border border-amber-400/30 text-amber-300 mb-2 shadow-inner">
-              <span className="font-amiri font-bold text-3xl md:text-4xl leading-none">
-                ﷺ
-              </span>
-            </div>
-
-            <div className="space-y-3">
-              <span className="inline-block text-xs md:text-sm font-tajawal uppercase tracking-widest text-amber-300 font-semibold">
-                الصرح الرقمي العالمي للسيرة النبوية والقرآن والسنة
-              </span>
-              <h1 className="text-4xl md:text-6xl font-amiri font-bold text-white tracking-tight leading-tight">
-                {BRAND.name.ar}
-              </h1>
-              <p className="text-base md:text-xl font-tajawal text-slate-300 max-w-2xl mx-auto leading-relaxed">
-                {BRAND.tagline.ar}
+        <section className="gate-stage" aria-labelledby="gate-title">
+          <div className="gate-stage__light" aria-hidden="true" />
+          <div className="gate-stage__arch" aria-hidden="true" />
+          <div className="gate-stage__content">
+            <div className="gate-stage__intro">
+              <div className="gate-seal" aria-label="صلى الله عليه وسلم"><span>ﷺ</span></div>
+              <p className="gate-stage__eyebrow">صرح رقمي للسيرة النبوية والقرآن والسنة</p>
+              <h1 id="gate-title">{BRAND.name.ar}</h1>
+              <p className="gate-stage__tagline">{BRAND.tagline.ar}</p>
+              <div className="gate-stage__rule" aria-hidden="true"><span /></div>
+              <p className="gate-stage__invitation">
+                ادخل من سيرة الإنسان والرسول ﷺ، ثم سر بين النص، والرواية، والمكان،
+                والمصدر بطمأنينة الباحث وأمانة المؤسسة.
               </p>
+              <div className="gate-stage__actions">
+                <Link href="/who-is-muhammad" className="gate-primary-journey">
+                  <Heart className="h-5 w-5" />
+                  <span><small>الرحلة الأساسية</small>من هو محمد ﷺ؟</span>
+                  <ArrowLeft className="h-4 w-4" />
+                </Link>
+                <div className="gate-stage__depth"><LearningDepthSelector /></div>
+              </div>
             </div>
 
-            {/* Depth Mode Indicator */}
-            <div className="pt-2 flex items-center justify-center">
-              <LearningDepthSelector />
-            </div>
-
-            {/* Direct Entry Actions - One Dominant Focal Anchor + Secondary Guides */}
-            <div className="pt-4 flex flex-wrap items-center justify-center gap-3">
-              <Link href="/who-is-muhammad" asChild>
-                <Button
-                  size="lg"
-                  className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-cairo font-bold rounded-2xl shadow-lg hover:shadow-amber-500/20 px-8 h-12 text-sm sm:text-base gap-2.5 transition-all"
-                >
-                  <Heart className="w-5 h-5 text-red-800" />
-                  <span>ابدأ رحلة «من هو محمد ﷺ؟» (مدخل للإنسانية)</span>
-                </Button>
+            <nav className="gate-stage__portals" aria-label="مداخل المعرفة">
+              <Link href="/seerah" className="gate-portal gate-portal--seerah">
+                <Compass className="h-5 w-5" /><span><small>السرد والمكان</small>درب السيرة</span><ArrowLeft className="h-4 w-4" />
               </Link>
-
-              <Link href="/prophetic-day" asChild>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="bg-emerald-950/60 hover:bg-emerald-900/80 border-emerald-500/40 text-emerald-200 font-cairo font-semibold rounded-2xl px-6 h-12 text-sm gap-2"
-                >
-                  <Sun className="w-4 h-4 text-amber-300" />
-                  <span>24 ساعة في رحاب الهدي النبوي</span>
-                </Button>
+              <Link href="/quran" className="gate-portal gate-portal--quran">
+                <BookOpen className="h-5 w-5" /><span><small>قراءة هادئة</small>رِواق القرآن</span><ArrowLeft className="h-4 w-4" />
               </Link>
-
-              <Link href="/sunnah" asChild>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="bg-slate-900/60 hover:bg-slate-800/80 border-slate-700 text-slate-300 font-cairo rounded-2xl px-6 h-12 text-sm gap-2"
-                >
-                  <Feather className="w-4 h-4 text-cyan-300" />
-                  <span>دار الحديث الشريف</span>
-                </Button>
+              <Link href="/sunnah" className="gate-portal gate-portal--hadith">
+                <Feather className="h-5 w-5" /><span><small>الرواية والدرجة</small>دار الحديث</span><ArrowLeft className="h-4 w-4" />
               </Link>
-            </div>
+              <Link href="/library" className="gate-portal gate-portal--library">
+                <Library className="h-5 w-5" /><span><small>الأعمال والنسخ</small>مكتبة الرفوف</span><ArrowLeft className="h-4 w-4" />
+              </Link>
+              <Link href="/prophetic-day" className="gate-portal gate-portal--daily">
+                <Sun className="h-5 w-5" /><span><small>تأمل وتطبيق</small>محراب اليوم</span><ArrowLeft className="h-4 w-4" />
+              </Link>
+            </nav>
           </div>
+          <div className="gate-stage__foundation" aria-hidden="true"><span>معرفة</span><span>سكينة</span><span>كرامة</span><span>اكتشاف</span></div>
         </section>
 
         {/* ========================================================
@@ -327,7 +309,7 @@ export default function GateOfLightPage() {
           <div className="flex items-center justify-between">
             <Link href="/library" asChild>
               <Button variant="ghost" size="sm" className="font-cairo text-xs gap-1">
-                تصفح الأرفف الكاملة ({books.length} كتاباً)
+                تصفح الأرفف الكاملة ({books.length} سجل عمل)
                 <ChevronLeft className="w-4 h-4" />
               </Button>
             </Link>
@@ -343,8 +325,8 @@ export default function GateOfLightPage() {
 
           {/* Render 3 Top Shelves */}
           <div className="space-y-6">
-            {categories.slice(0, 3).map((cat: any) => {
-              const catBooks = books.filter((b: any) => b.category === cat.id).slice(0, 5);
+            {categories.map((cat) => {
+              const catBooks = books.filter((work) => work.category === cat.id).slice(0, 5);
               return (
                 <div
                   key={cat.id}
@@ -352,7 +334,7 @@ export default function GateOfLightPage() {
                 >
                   <div className="flex items-center justify-between">
                       <span className="text-xs font-tajawal text-muted-foreground">
-                        {catBooks.length} كتب في الفهرس
+                        {catBooks.length} أعمال في الفهرس
                       </span>
                     <div className="flex items-center gap-2">
                       <h3 className="font-amiri font-bold text-lg text-foreground">{cat.name}</h3>
@@ -362,19 +344,19 @@ export default function GateOfLightPage() {
 
                   {/* Visual Shelf Line */}
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 pt-2">
-                    {catBooks.map((book: any) => (
-                      <Link key={book.id} href="/library">
+                    {catBooks.map((book) => (
+                      <Link key={book.workId} href="/library">
                         <div className="p-3.5 rounded-xl bg-white dark:bg-slate-900 border border-border/80 hover:border-emerald-600 shadow-xs hover:shadow-md transition-all group text-right flex flex-col justify-between h-36 cursor-pointer">
                           <div>
                             <span className="text-[10px] font-mono text-muted-foreground block mb-1">
-                              {book.pages || 0} ص
+                              {book.openitiWorkUri ?? "catalog-only"}
                             </span>
                             <h4 className="font-cairo font-bold text-xs text-foreground group-hover:text-emerald-700 dark:group-hover:text-emerald-400 line-clamp-2">
-                              {book.title}
+                              {book.titleAr}
                             </h4>
                           </div>
                           <div className="text-[11px] text-muted-foreground font-tajawal line-clamp-1 border-t pt-1">
-                            {book.author}
+                            {book.authorAr}
                           </div>
                         </div>
                       </Link>
@@ -395,14 +377,14 @@ export default function GateOfLightPage() {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1">
               <Badge className="bg-cyan-900/50 text-cyan-200 border-cyan-700/50 text-xs font-tajawal">
-                الكتب الستة والأسانيد المحققة
+                أعمال مفهرسة · عينات قيد المراجعة
               </Badge>
               <h2 className="text-2xl md:text-3xl font-amiri font-bold">
                 دار الحديث النبوي الشريف
               </h2>
               <p className="text-xs text-slate-400 font-cairo">
-                منهج علمي صارم في عرض الأحاديث مع تصنيف درجات الصحة، وبيان الرواة، والربط العضوي بأحداث السيرة، مع حظر كامل للأحاديث الموضوعة والمختلقة.
-                الأعداد أدناه أحجام المدونات الست المعتمدة عالميًا؛ التغطية النصية المحلية المعروضة حاليًا عينة قيد الإدخال والمراجعة.
+                جناح أرشيفي يفصل بين الرواية، والعمل، والحكم، ومصدر الحكم، والمقيّم،
+                وحالة المراجعة. لا Corpus خارجي منشور ولا اتصال API حاليًا.
               </p>
             </div>
             <Link href="/sunnah" asChild>
@@ -415,12 +397,12 @@ export default function GateOfLightPage() {
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {[
-              { name: "صحيح البخاري", count: "7563 حديثاً", icon: "الجامع المسند" },
-              { name: "صحيح مسلم", count: "3033 حديثاً", icon: "المسند الصحيح" },
-              { name: "سنن أبي داود", count: "5274 حديثاً", icon: "السنن الفقهية" },
-              { name: "جامع الترمذي", count: "3956 حديثاً", icon: "العلل والأحكام" },
-              { name: "سنن النسائي", count: "5758 حديثاً", icon: "المجتبى" },
-              { name: "سنن ابن ماجه", count: "4341 حديثاً", icon: "السنن" },
+              { name: "صحيح البخاري", count: "فهرس عمل", icon: "OpenITI · مراجعة" },
+              { name: "صحيح مسلم", count: "فهرس عمل", icon: "OpenITI · مراجعة" },
+              { name: "سنن أبي داود", count: "سجل ببليوغرافي", icon: "Corpus غير متصل" },
+              { name: "جامع الترمذي", count: "سجل ببليوغرافي", icon: "Corpus غير متصل" },
+              { name: "سنن النسائي", count: "سجل ببليوغرافي", icon: "Corpus غير متصل" },
+              { name: "سنن ابن ماجه", count: "سجل ببليوغرافي", icon: "Corpus غير متصل" },
             ].map((col) => (
               <div
                 key={col.name}
@@ -444,7 +426,7 @@ export default function GateOfLightPage() {
                 محراب اليوم والهدي اليومي
               </h3>
               <p className="text-xs text-muted-foreground font-cairo">
-                أوقات الصلاة الدقيقة، أذكار الصباح والمساء، المسبحة الرقمية، والتقويم الهجري الشريف.
+                 مواقيت مع طريقة الحساب الظاهرة، وأداة ذكر محلية. نصوص الأذكار متوقفة حتى اكتمال المصدر والدرجة والمراجعة.
               </p>
             </div>
             <Link href="/daily" asChild>

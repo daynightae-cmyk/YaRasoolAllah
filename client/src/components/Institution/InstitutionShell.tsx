@@ -40,7 +40,7 @@ export default function InstitutionShell({
   const { direction } = useLanguage();
 
   return (
-      <div className="min-h-screen flex flex-col bg-slate-50/50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors pb-16 md:pb-0" dir={direction}>
+      <div className="institution-shell min-h-screen flex flex-col text-slate-900 dark:text-slate-100 transition-colors pb-16 md:pb-0" dir={direction} data-wing={activeWing}>
         <InstitutionalHeader />
 
         <main id="main-content" className="flex-1 w-full">
@@ -51,7 +51,7 @@ export default function InstitutionShell({
 
         {/* Mobile Navigation Dock */}
         <nav
-          className="fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 md:hidden flex items-center justify-around px-2 py-1.5 shadow-lg"
+          className="institution-mobile-dock fixed bottom-0 inset-x-0 z-40 md:hidden flex items-center justify-around px-2 py-1.5"
           aria-label="شريط التنقل السريع"
         >
           {DOCK_ITEMS.map((item) => {

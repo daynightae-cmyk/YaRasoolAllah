@@ -542,6 +542,19 @@ export const CANONICAL_BATTLES: BattleCampaign[] = [
   },
 ];
 
+const ATLAS_EVIDENCE: Record<string, {
+  sourceIds: string[];
+  confidence: "متوسط" | "منخفض";
+  dispute: string;
+  mapType: string;
+  geographicBasis: string;
+}> = {
+  badr: { sourceIds: ["work-ibn-hisham-sira", "work-tabari-tarikh", "work-waqidi-maghazi"], confidence: "منخفض", dispute: "المعسكرات والمسارات تقريبية وليست نتيجة مسح أثري.", mapType: "إعادة بناء تفسيرية غير ملاحية", geographicBasis: "سياق تاريخي وصفي بلا basemap حديث مضمّن." },
+  uhud: { sourceIds: ["work-ibn-hisham-sira", "work-ibn-kathir-bidaya"], confidence: "متوسط", dispute: "المعالم العامة معروفة؛ الخطوط والمواضع التفصيلية تعليمية تقريبية.", mapType: "مخطط تضاريس تاريخي تفسيري", geographicBasis: "تمييز صريح بين المعلم الحديث والرواية التاريخية." },
+  khandaq: { sourceIds: ["work-ibn-hisham-sira", "work-tabari-tarikh", "work-ibn-kathir-bidaya"], confidence: "منخفض", dispute: "امتداد الخندق ومواضع المخيمات محل نقاش؛ لا دقة مترية مدعاة.", mapType: "مخطط حصار تفسيري غير ملاحّي", geographicBasis: "طبقات وصفية بلا تنزيل تلقائي لخريطة حديثة." },
+  "mecca-conquest": { sourceIds: ["work-ibn-hisham-sira", "work-ibn-sad-tabaqat", "work-ibn-kathir-bidaya"], confidence: "منخفض", dispute: "مسارات الدخول تمثيل سردي تقريبي لا تحديد ميداني دقيق.", mapType: "مخطط رحلة تاريخي تفسيري", geographicBasis: "اتجاهات عامة مستفادة من الروايات، لا بيانات قوات حديثة." },
+};
+
 export default function MountainousBattlefieldMap() {
   const [selectedBattleId, setSelectedBattleId] = useState<string>("badr");
   const [currentPhaseIndex, setCurrentPhaseIndex] = useState<number>(0);
@@ -551,6 +564,7 @@ export default function MountainousBattlefieldMap() {
 
   const activeBattle = CANONICAL_BATTLES.find((b) => b.id === selectedBattleId) || CANONICAL_BATTLES[0];
   const activePhase = activeBattle.phases[currentPhaseIndex] || activeBattle.phases[0];
+  const evidence = ATLAS_EVIDENCE[activeBattle.id];
 
   const handleSelectBattle = (id: string) => {
     setSelectedBattleId(id);
@@ -572,6 +586,13 @@ export default function MountainousBattlefieldMap() {
 
   return (
     <div className="space-y-6 text-right">
+      <section className="atlas-evidence-strip" aria-label="بيان دليل الخريطة">
+        <div><span>نوع الخريطة</span><strong>{evidence.mapType}</strong></div>
+        <div><span>الثقة المكانية</span><strong>{evidence.confidence}</strong></div>
+        <div><span>المصادر</span><strong dir="ltr">{evidence.sourceIds.join(" · ")}</strong></div>
+        <div><span>موضع الخلاف</span><strong>{evidence.dispute}</strong></div>
+        <p>{evidence.geographicBasis}</p>
+      </section>
       {/* Top Selector Ribbon of Canonical Campaigns */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
         {CANONICAL_BATTLES.map((battle) => {
@@ -580,6 +601,7 @@ export default function MountainousBattlefieldMap() {
             <button
               key={battle.id}
               type="button"
+              aria-pressed={isActive}
               onClick={() => handleSelectBattle(battle.id)}
               className={cn(
                 "px-4 py-2.5 rounded-xl text-xs sm:text-sm font-cairo font-bold whitespace-nowrap transition-all duration-200 border flex items-center gap-2",
@@ -596,12 +618,12 @@ export default function MountainousBattlefieldMap() {
       </div>
 
       {/* Main Cartographic Box */}
-      <div className="rounded-3xl border border-stone-800/80 bg-gradient-to-b from-[#14100c] via-[#0d0c0b] to-[#080706] text-amber-50 shadow-2xl overflow-hidden relative">
+      <div className="atlas-documentary border border-stone-700/70 bg-gradient-to-b from-[#262219] via-[#181710] to-[#11120f] text-amber-50 shadow-2xl overflow-hidden relative">
         {/* Cartographic Header Bar */}
-        <div className="p-6 sm:p-8 border-b border-stone-800/80 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-black/40 backdrop-blur-sm">
+        <div className="p-6 sm:p-8 border-b border-stone-700/70 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#242018]/90">
           <div className="space-y-1.5 max-w-xl">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-amber-500" />
               <span className="text-xs font-mono text-amber-300 uppercase tracking-wider">
                 {activeBattle.nameEn}
               </span>
@@ -616,15 +638,16 @@ export default function MountainousBattlefieldMap() {
             </p>
           </div>
 
-          {/* Tactical Layers Toggles */}
+          {/* Documentary layer controls */}
           <div className="flex items-center gap-2 self-start md:self-auto">
             <button
               type="button"
+              aria-pressed={showTerrainContours}
               onClick={() => setShowTerrainContours(!showTerrainContours)}
               className={cn(
                 "px-3 py-1.5 rounded-lg text-xs font-tajawal border transition-colors flex items-center gap-1.5",
                 showTerrainContours
-                  ? "bg-amber-600/30 border-amber-500/50 text-amber-200"
+                  ? "bg-amber-700/20 border-amber-500/45 text-amber-100"
                   : "bg-stone-900 border-stone-800 text-stone-400"
               )}
             >
@@ -633,11 +656,12 @@ export default function MountainousBattlefieldMap() {
             </button>
             <button
               type="button"
+              aria-pressed={showTacticalPaths}
               onClick={() => setShowTacticalPaths(!showTacticalPaths)}
               className={cn(
                 "px-3 py-1.5 rounded-lg text-xs font-tajawal border transition-colors flex items-center gap-1.5",
                 showTacticalPaths
-                  ? "bg-emerald-600/30 border-emerald-500/50 text-emerald-200"
+                  ? "bg-stone-700/50 border-stone-500/60 text-stone-100"
                   : "bg-stone-900 border-stone-800 text-stone-400"
               )}
             >
@@ -648,12 +672,12 @@ export default function MountainousBattlefieldMap() {
         </div>
 
         {/* The Mountainous Cartographic Map Viewport */}
-        <div className="relative w-full aspect-[16/10] sm:aspect-[16/9] max-h-[580px] bg-[#0c0a08] overflow-hidden select-none">
+        <div className="atlas-documentary__map relative w-full aspect-[16/10] sm:aspect-[16/9] max-h-[580px] bg-[#cbb78e] overflow-hidden select-none">
           {/* Ancient Parchment Texture Grid Lines */}
-          <svg className="absolute inset-0 w-full h-full opacity-15 pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+          <svg className="absolute inset-0 w-full h-full opacity-20 pointer-events-none" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <pattern id="carto-grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#d97706" strokeWidth="0.5" />
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#5d4b35" strokeWidth="0.45" />
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#carto-grid)" />
@@ -693,7 +717,7 @@ export default function MountainousBattlefieldMap() {
                     <text
                       x={contour.labelPos.x}
                       y={contour.labelPos.y}
-                      fill="#e2d9cc"
+                      fill="#3f3326"
                       fontSize="12"
                       fontFamily="Amiri, serif"
                       textAnchor="middle"
@@ -706,7 +730,7 @@ export default function MountainousBattlefieldMap() {
               </g>
             )}
 
-            {/* Tactical Movement Routes (Animated subtle lines) */}
+            {/* Interpretive routes: static, neutral, non-directional, and non-navigational. */}
             {showTacticalPaths && (
               <g className="transition-opacity duration-300">
                 {activeBattle.mapData.tacticalPaths.map((tacticalPath) => (
@@ -714,19 +738,18 @@ export default function MountainousBattlefieldMap() {
                     <path
                       d={tacticalPath.pathD}
                       fill="none"
-                      stroke={tacticalPath.color}
-                      strokeWidth="2.5"
-                      strokeDasharray={tacticalPath.dashArray || "none"}
-                      className={cn(tacticalPath.animated ? "animate-pulse" : "")}
-                      markerEnd="url(#arrow)"
+                      stroke="#655844"
+                      strokeWidth="1.65"
+                      strokeDasharray="8,7"
+                      className="atlas-interpretive-path"
                     />
                   </g>
                 ))}
               </g>
             )}
 
-            {/* Tactical Positions & Event Markers */}
-            {activeBattle.mapData.positions.map((pos) => {
+            {/* Approximate evidence markers; color does not encode combat teams. */}
+            {activeBattle.mapData.positions.map((pos, positionIndex) => {
               const isSelected = selectedMarker === pos.id;
               const isPhaseActive = activePhase.activeMarkers.includes(pos.id);
 
@@ -734,17 +757,26 @@ export default function MountainousBattlefieldMap() {
                 <g
                   key={pos.id}
                   className="cursor-pointer transition-transform duration-200"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`${pos.labelAr} — موضع تفسيري تقريبي`}
                   onClick={() => setSelectedMarker(isSelected ? null : pos.id)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      setSelectedMarker(isSelected ? null : pos.id);
+                    }
+                  }}
                 >
-                  {/* Outer Pulsing Ping for active phase */}
+                  {/* Static focus ring for the selected narrative phase. */}
                   {isPhaseActive && (
                     <circle
                       cx={pos.x}
                       cy={pos.y}
                       r="16"
-                      fill={pos.faction === "muslim" ? "#10b981" : "#ef4444"}
-                      opacity="0.25"
-                      className="animate-ping"
+                      fill="#8b7047"
+                      opacity="0.18"
+                      className="atlas-active-marker-ring"
                     />
                   )}
 
@@ -753,28 +785,22 @@ export default function MountainousBattlefieldMap() {
                     cx={pos.x}
                     cy={pos.y}
                     r={isSelected ? "9" : "7"}
-                    fill={
-                      pos.faction === "muslim"
-                        ? "#059669"
-                        : pos.faction === "opponent"
-                        ? "#dc2626"
-                        : "#d97706"
-                    }
-                    stroke="#ffffff"
+                    fill="#765c38"
+                    stroke="#f3e6c8"
                     strokeWidth="2"
                     className="shadow-lg"
                   />
 
                   {/* Marker Text Label */}
                   <text
-                    x={pos.x}
-                    y={pos.y - 12}
-                    fill="#ffffff"
+                    x={pos.x + (positionIndex % 2 === 0 ? -10 : 10)}
+                    y={pos.y - 14 - (positionIndex % 3) * 13}
+                    fill="#2d251c"
                     fontSize="11"
                     fontFamily="Cairo, sans-serif"
                     fontWeight="bold"
                     textAnchor="middle"
-                    className="drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] select-none"
+                    className="select-none"
                   >
                     {pos.labelAr.split(" (")[0]}
                   </text>
@@ -785,24 +811,25 @@ export default function MountainousBattlefieldMap() {
 
           {/* Selected Marker Detail Card (Pop-up on map click) */}
           {selectedMarker && (
-            <div className="absolute bottom-4 right-4 max-w-sm p-4 rounded-xl bg-slate-950/90 border border-amber-500/40 text-amber-50 shadow-2xl backdrop-blur-md animate-fade-in text-right">
+            <div className="absolute bottom-4 right-4 max-w-sm p-4 bg-[#eee2c8]/95 border border-[#7c633f]/55 text-[#30271d] shadow-2xl animate-fade-in text-right">
               {(() => {
                 const marker = activeBattle.mapData.positions.find((p) => p.id === selectedMarker);
                 if (!marker) return null;
                 return (
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono text-amber-400">موقع موثق تاريخياً</span>
+                      <span className="text-[10px] font-mono text-[#765c38]">موضع تفسيري تقريبي</span>
                       <button
                         type="button"
                         onClick={() => setSelectedMarker(null)}
-                        className="text-stone-400 hover:text-white text-xs px-1"
+                        className="text-[#765c38] hover:text-[#30271d] text-xs px-1"
+                        aria-label="إغلاق بطاقة الموضع"
                       >
                         ✕
                       </button>
                     </div>
-                    <h4 className="text-sm font-bold font-cairo text-white">{marker.labelAr}</h4>
-                    <p className="text-xs font-tajawal text-stone-300 leading-relaxed">
+                    <h4 className="text-sm font-bold font-cairo text-[#30271d]">{marker.labelAr}</h4>
+                    <p className="text-xs font-tajawal text-[#5b4934] leading-relaxed">
                       {marker.descriptionAr}
                     </p>
                   </div>
@@ -812,10 +839,10 @@ export default function MountainousBattlefieldMap() {
           )}
 
           {/* Compass Rose Ornament (Top Left) */}
-          <div className="absolute top-4 left-4 p-2 rounded-xl bg-black/60 border border-stone-800/80 text-amber-400/80 flex flex-col items-center pointer-events-none">
+          <div className="absolute top-4 left-4 p-2 bg-[#eee2c8]/90 border border-[#765c38]/45 text-[#765c38] flex flex-col items-center pointer-events-none">
             <span className="text-[10px] font-mono font-bold">شمال (N)</span>
-            <Compass className="w-5 h-5 my-0.5 animate-spin-slow" />
-            <span className="text-[9px] font-mono text-stone-400">الحجاز</span>
+            <Compass className="w-5 h-5 my-0.5" />
+            <span className="text-[9px] font-mono text-[#5b4934]">الحجاز</span>
           </div>
         </div>
 
@@ -824,7 +851,7 @@ export default function MountainousBattlefieldMap() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <span className="text-xs font-bold font-cairo text-amber-400">
-                المرحلة التكتيكية {activePhase.phaseNumber} من {activeBattle.phases.length}:
+                المرحلة السردية {activePhase.phaseNumber} من {activeBattle.phases.length}:
               </span>
               <h3 className="text-base font-bold font-amiri text-white">
                 {activePhase.titleAr}
