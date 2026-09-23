@@ -377,6 +377,259 @@ body {
     radial-gradient(ellipse 80% 50% at 50% 0%, hsl(38 72% 52% / 0.05), transparent 55%),
     radial-gradient(ellipse 60% 40% at 50% 100%, hsl(164 42% 26% / 0.04), transparent 50%);
 }
+.institution-shell[data-wing="prophetic-day"]::after {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, hsl(35 70% 48% / 0.05), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 100% 80%, hsl(210 40% 30% / 0.03), transparent 50%);
+}
+
+/* ==========================================================================
+   PROPHETIC DAY — Sundial journey through 24 hours of guidance
+   Each station carries the ambient light of its time of day, the page
+   reads like walking from dawn through noon to night.
+   ========================================================================== */
+
+.prophetic-journey { max-width: 90rem; margin-inline: auto; padding-block: clamp(1.5rem, 3vw, 3rem) 4rem; }
+
+/* --- Sundial timeline --- a horizontal beam of hours with station nodes */
+.sundial {
+  position: relative;
+  display: flex;
+  gap: 0.5rem;
+  margin-block: 1.5rem 2.5rem;
+  padding: 1.75rem 1rem 1.25rem;
+  background: hsl(var(--card) / 0.72);
+  border: 1px solid hsl(var(--primary) / 0.18);
+  border-radius: 0.5rem 0.5rem 1.5rem 1.5rem;
+}
+
+/* The arc of sky behind the stations */
+.sundial::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3.5rem;
+  border-radius: 0.5rem 0.5rem 50% 50% / 0.5rem 0.5rem 100% 100%;
+  background: linear-gradient(90deg,
+    hsl(30 60% 35% / 0.12),
+    hsl(45 70% 45% / 0.1) 25%,
+    hsl(25 80% 50% / 0.08) 50%,
+    hsl(15 65% 40% / 0.1) 75%,
+    hsl(250 30% 30% / 0.12)
+  );
+  pointer-events: none;
+}
+
+.sundial-node {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  position: relative;
+  z-index: 1;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+}
+
+.sundial-node__orb {
+  width: 2.4rem;
+  height: 2.4rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1.5px solid hsl(var(--border));
+  background: hsl(var(--card));
+  color: hsl(var(--muted-foreground));
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease, color 200ms ease;
+}
+
+.sundial-node:hover .sundial-node__orb { transform: translateY(-3px); }
+.sundial-node.is-active .sundial-node__orb {
+  transform: translateY(-4px) scale(1.12);
+  border-color: var(--time-color, hsl(var(--primary)));
+  color: var(--time-color, hsl(var(--primary)));
+  box-shadow: 0 0 0 3px hsl(var(--background)), 0 0 18px -2px var(--time-glow, hsl(var(--primary) / 0.4));
+}
+
+.sundial-node__label { font: 600 0.6rem "Cairo", sans-serif; color: hsl(var(--muted-foreground)); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.sundial-node.is-active .sundial-node__label { color: hsl(var(--foreground)); font-weight: 700; }
+.sundial-node__time { font: 400 0.5rem "Inter", sans-serif; color: hsl(var(--muted-foreground) / 0.7); }
+
+/* Time-of-day color tokens set per-station via inline style */
+.sundial-node[data-period="fajr"] { --time-color: hsl(35 75% 50%); --time-glow: hsl(35 75% 50% / 0.35); }
+.sundial-node[data-period="morning"] { --time-color: hsl(45 85% 45%); --time-glow: hsl(45 85% 45% / 0.3); }
+.sundial-node[data-period="noon"] { --time-color: hsl(28 80% 48%); --time-glow: hsl(28 80% 48% / 0.3); }
+.sundial-node[data-period="afternoon"] { --time-color: hsl(15 70% 48%); --time-glow: hsl(15 70% 48% / 0.3); }
+.sundial-node[data-period="maghrib"] { --time-color: hsl(330 45% 50%); --time-glow: hsl(330 45% 50% / 0.25); }
+.sundial-node[data-period="night"] { --time-color: hsl(240 45% 58%); --time-glow: hsl(240 45% 58% / 0.25); }
+
+/* --- Reading alcove --- the main station display area */
+.alcove {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  align-items: start;
+}
+
+.alcove__stage {
+  position: relative;
+  padding: clamp(1.75rem, 3vw, 2.75rem);
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--primary) / 0.2);
+  box-shadow: 0 30px 65px -50px hsl(215 40% 10% / 0.65);
+  overflow: hidden;
+}
+
+/* Ambient wash at top — the time-of-day light falling on the page */
+.alcove__stage::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 8rem;
+  background: linear-gradient(180deg, var(--alcove-wash, hsl(var(--primary) / 0.04)), transparent);
+  pointer-events: none;
+}
+
+.alcove__header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.alcove__icon {
+  width: 3.25rem;
+  height: 3.25rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--time-color, hsl(var(--primary) / 0.35));
+  color: var(--time-color, hsl(var(--primary)));
+  background: hsl(var(--card));
+  flex-shrink: 0;
+}
+
+.alcove__timeframe { color: var(--time-color, hsl(var(--primary))); font: 700 0.7rem "Cairo", sans-serif; }
+.alcove__title { margin-top: 0.2rem; font: 700 clamp(1.35rem, 2.5vw, 2rem)/1.5 "Amiri", serif; }
+
+/* --- Manuscript cartouche for the hadith text --- */
+.prophetic-cartouche {
+  position: relative;
+  margin-block: 1.5rem;
+  padding: clamp(1.75rem, 3vw, 2.5rem) clamp(1.5rem, 3vw, 2.5rem) 1.75rem;
+  background:
+    radial-gradient(ellipse at center, hsl(var(--primary) / 0.05) 0%, transparent 70%),
+    hsl(var(--card));
+  border: 1px solid hsl(var(--primary) / 0.25);
+  border-radius: 0.25rem;
+  overflow: hidden;
+}
+
+.prophetic-cartouche::before {
+  content: "";
+  position: absolute;
+  inset: 0.5rem;
+  border: 1px solid hsl(var(--primary) / 0.12);
+  pointer-events: none;
+  border-radius: 0.15rem;
+}
+
+.prophetic-cartouche__label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.prophetic-cartouche__label > span:first-child {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--time-color, hsl(var(--primary)));
+  font: 700 0.72rem "Cairo", sans-serif;
+}
+
+.prophetic-cartouche__label > span:last-child {
+  color: hsl(var(--muted-foreground));
+  font: 400 0.62rem "Inter", sans-serif;
+}
+
+.prophetic-cartouche__arabic {
+  position: relative;
+  font: 700 clamp(1.35rem, 2.2vw, 1.75rem)/2.1 "Amiri", serif;
+  color: hsl(var(--foreground));
+  letter-spacing: 0.01em;
+}
+
+.prophetic-cartouche__translation {
+  position: relative;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid hsl(var(--border));
+  color: hsl(var(--muted-foreground));
+  font: 400 0.8rem/1.8 "Inter", sans-serif;
+  font-style: italic;
+}
+
+/* --- Principle & application sections --- */
+.alcove__principle { margin-top: 1.5rem; }
+.alcove__principle h3 { display: flex; align-items: center; gap: 0.4rem; font: 700 0.82rem "Cairo", sans-serif; color: var(--time-color, hsl(var(--primary))); }
+.alcove__principle p { margin-top: 0.5rem; font: 400 0.82rem/1.9 "Tajawal", sans-serif; color: hsl(var(--foreground)); }
+
+.alcove__application {
+  margin-top: 1.25rem;
+  padding: 1.25rem;
+  background: hsl(var(--muted) / 0.5);
+  border-inline-start: 2px solid var(--time-color, hsl(var(--primary)));
+  border-radius: 0.25rem;
+}
+.alcove__application h3 { display: flex; align-items: center; gap: 0.4rem; font: 700 0.78rem "Cairo", sans-serif; color: hsl(var(--foreground)); }
+.alcove__application p { margin-top: 0.4rem; font: 400 0.78rem/1.85 "Tajawal", sans-serif; color: hsl(var(--muted-foreground)); }
+
+/* --- Navigation footer of the alcove --- */
+.alcove__nav { display: flex; align-items: center; justify-content: space-between; margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid hsl(var(--border)); }
+
+/* --- Reflection nook (sidebar) --- */
+.reflection-nook {
+  position: sticky;
+  top: 6.5rem;
+  padding: clamp(1.5rem, 3vw, 2rem);
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--primary) / 0.22);
+  box-shadow: 0 28px 58px -44px hsl(215 40% 10% / 0.65);
+  text-align: start;
+}
+
+.reflection-nook__label { display: flex; align-items: center; gap: 0.4rem; color: hsl(var(--primary)); font: 700 0.68rem "Cairo", sans-serif; }
+.reflection-nook__prompt { margin-top: 0.85rem; padding-inline-start: 0.85rem; border-inline-start: 2px solid hsl(var(--primary) / 0.4); font: 400 1.05rem/2 "Amiri", serif; font-style: italic; color: hsl(var(--foreground)); }
+.reflection-nook__hint { margin-top: 0.85rem; font: 400 0.68rem/1.8 "Tajawal", sans-serif; color: hsl(var(--muted-foreground)); }
+.reflection-nook__summary { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid hsl(var(--border)); display: grid; gap: 0.5rem; }
+.reflection-nook__summary li { display: flex; align-items: center; justify-content: space-between; font: 400 0.68rem "Tajawal", sans-serif; color: hsl(var(--muted-foreground)); }
+.reflection-nook__summary li:not(:last-child) { padding-bottom: 0.4rem; border-bottom: 1px solid hsl(var(--border)); }
+.reflection-nook__summary strong { color: hsl(var(--foreground)); }
+
+@media (max-width: 1023px) {
+  .alcove { grid-template-columns: 1fr; }
+  .reflection-nook { position: relative; top: auto; }
+}
+
+@media (max-width: 767px) {
+  .sundial { gap: 0.2rem; padding: 1.5rem 0.5rem 1rem; }
+  .sundial-node__orb { width: 2rem; height: 2rem; }
+  .sundial-node__label { font-size: 0.52rem; }
+  .sundial-node__time { display: none; }
+  .prophetic-journey { padding-inline: 0.75rem; }
+  .alcove__stage { padding: 1.25rem; }
+  .prophetic-cartouche { padding: 1.25rem 1rem 1rem; }
+  .prophetic-cartouche__arabic { font-size: 1.2rem; }
+}
 
 .institution-header {
   background: hsl(var(--background) / 0.9);
