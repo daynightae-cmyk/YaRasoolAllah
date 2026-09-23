@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ChildrenVideo } from "@/data/childrenVideos";
-import { Play, Star, Eye, Clock } from "lucide-react";
+import { Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface VideoCardProps {
@@ -92,13 +92,8 @@ export default function VideoCard({
           </div>
         </div>
 
-        {/* Duration Badge */}
-        {video.duration && (
-          <Badge className="absolute bottom-2 left-2 bg-black/70 text-white border-0">
-            <Clock className="w-3 h-3 mr-1" />
-            {video.duration}
-          </Badge>
-        )}
+        {/* Duration values are producer-side data and unverified locally;
+            the badge is omitted until durations are confirmed. */}
 
         {/* Category Badge */}
         <Badge
@@ -122,22 +117,9 @@ export default function VideoCard({
           {video.description}
         </p>
 
-        {/* Video Stats */}
+        {/* Video Stats: engagement figures are not collected for embeds. */}
         <div className="flex items-center justify-between mb-3 text-xs text-gray-500 dark:text-gray-400">
-          <div className="flex items-center space-x-3 rtl:space-x-reverse">
-            {video.views && (
-              <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                <Eye className="w-3 h-3" />
-                <span>{video.views.toLocaleString()}</span>
-              </div>
-            )}
-            {video.rating && (
-              <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                <Star className="w-3 h-3 fill-current text-yellow-500" />
-                <span>{video.rating}</span>
-              </div>
-            )}
-          </div>
+          <span>عرض خارجي عبر يوتيوب</span>
           <Badge
             variant="outline"
             className="text-xs border-purple-200 dark:border-purple-700 text-purple-600 dark:text-purple-400"

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ChildrenVideo, ageGroups } from "@/data/childrenVideos";
 import VideoCard from "./VideoCard";
-import { Search, Filter, Grid3X3, List, Star, Clock, Eye } from "lucide-react";
+import { Search, Filter, Grid3X3, List } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface VideoGridProps {
@@ -28,9 +28,7 @@ export default function VideoGrid({
 }: VideoGridProps) {
   const { t, isRTL } = useLanguage();
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState<"popular" | "rating" | "recent">(
-    "popular",
-  );
+  const [sortBy, setSortBy] = useState<"alpha" | "category">("alpha");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const filteredAndSortedVideos = useMemo(() => {
@@ -56,17 +54,15 @@ export default function VideoGrid({
       });
     }
 
-    // Sort videos
+    // Sort videos. Engagement figures are unverified placeholders, so the
+    // only honest orders are alphabetical and by category.
     filtered = [...filtered].sort((a, b) => {
       switch (sortBy) {
-        case "popular":
-          return (b.views || 0) - (a.views || 0);
-        case "rating":
-          return (b.rating || 0) - (a.rating || 0);
-        case "recent":
-          return a.title.localeCompare(b.title); // Simple alphabetical sort as proxy for recent
+        case "category":
+          return a.category.localeCompare(b.category) || a.title.localeCompare(b.title);
+        case "alpha":
         default:
-          return 0;
+          return a.title.localeCompare(b.title);
       }
     });
 
@@ -96,12 +92,10 @@ export default function VideoGrid({
 
   const getSortLabel = (sort: string) => {
     switch (sort) {
-      case "popular":
-        return "الأكثر مشاهدة";
-      case "rating":
-        return "الأعلى تقييماً";
-      case "recent":
-        return "الأحدث";
+      case "alpha":
+        return "أبجدي";
+      case "category":
+        return "حسب الفئة";
       default:
         return "";
     }
@@ -172,9 +166,8 @@ export default function VideoGrid({
                 onChange={(e) => setSortBy(e.target.value as any)}
                 className="px-3 py-1 rounded-md border border-purple-200 dark:border-purple-700 bg-white/50 dark:bg-gray-700/50 text-sm font-amiri focus:border-purple-400 dark:focus:border-purple-500"
               >
-                <option value="popular">الأكثر مشاهدة</option>
-                <option value="rating">الأعلى تقييماً</option>
-                <option value="recent">الأحدث</option>
+                <option value="alpha">أبجدي</option>
+                <option value="category">حسب الفئة</option>
               </select>
 
               {/* View Mode Toggle */}
