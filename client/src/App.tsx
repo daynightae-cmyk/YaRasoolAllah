@@ -15,6 +15,7 @@ import WelcomeModal from "./components/WelcomeModal";
 import GateOfLightPage from "./pages/GateOfLightPage";
 import WhoIsMuhammadPage from "./pages/WhoIsMuhammadPage";
 import SunnahPage from "./pages/SunnahPage";
+import SourcesPage from "./pages/SourcesPage";
 import PropheticDayPage from "./pages/PropheticDayPage";
 import HomePage from "./pages/HomePage";
 import QuranPage from "./pages/QuranPage";
@@ -79,7 +80,7 @@ function AppContent() {
           {() => <SunnahPage />}
         </Route>
         <Route path="/sources">
-          {() => <SunnahPage />}
+          {() => <SourcesPage />}
         </Route>
         <Route path="/character">
           {() => <WhoIsMuhammadPage defaultChapterId="family-and-personal-character" />}
