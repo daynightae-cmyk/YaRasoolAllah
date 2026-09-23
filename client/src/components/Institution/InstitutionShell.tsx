@@ -2,6 +2,7 @@ import React from "react";
 import InstitutionalHeader from "./InstitutionalHeader";
 import InstitutionalFooter from "./InstitutionalFooter";
 import { Link, useLocation } from "wouter";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   Sparkles,
   Compass,
@@ -34,12 +35,15 @@ export default function InstitutionShell({
   hideFooter = false,
 }: InstitutionShellProps) {
   const [location] = useLocation();
+  // Shell direction follows the active language (ar/ur RTL, en/fr LTR).
+  // Arabic Quran/Hadith excerpts keep their own local RTL containers.
+  const { direction } = useLanguage();
 
   return (
-      <div className="min-h-screen flex flex-col bg-slate-50/50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors pb-16 md:pb-0" dir="rtl">
+      <div className="min-h-screen flex flex-col bg-slate-50/50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors pb-16 md:pb-0" dir={direction}>
         <InstitutionalHeader />
 
-        <main className="flex-1 w-full">
+        <main id="main-content" className="flex-1 w-full">
           {children}
         </main>
 

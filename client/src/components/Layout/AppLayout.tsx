@@ -68,6 +68,7 @@ export default function AppLayout({
 
         {/* Main Content */}
         <main
+          id="main-content"
           className={cn(
             "w-full min-w-0 flex-1 min-h-screen transition-all duration-300",
             showSidebar ? "lg:ml-0" : "",
