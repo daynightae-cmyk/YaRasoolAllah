@@ -59,6 +59,14 @@ if (evaluateResourceUsage(sampleResource, sampleRights, "cache", "production").a
   throw new Error("Development Quran sample must be blocked in production");
 }
 
+const tanzilResource = providerResourceRegistry.find(
+  (item) => item.resourceId === "resource-tanzil-uthmani-min-1-1",
+)!;
+const tanzilRights = rightsLedger.find((item) => item.rightsId === tanzilResource.rightsId)!;
+if (!evaluateResourceUsage(tanzilResource, tanzilRights, "full_text", "production").allowed) {
+  throw new Error("Cleared Tanzil artifact must expose full text in production");
+}
+
 console.log(
   `Source governance PASS: ${sourceRegistry.length} sources, ${rightsLedger.length} rights records, ${providerResourceRegistry.length} provider resources.`,
 );

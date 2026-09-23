@@ -82,6 +82,20 @@ export const sourceRegistry: SourceRegistryEntry[] = sourceRegistryEntrySchema.a
     editorialStatus: "rights_review_pending",
     notes: "المجموعة جزئية؛ يلزم مفتاح API ونسبة الدرجة إلى مقيّم مسمى ومراجعة حقوق الاستخدام.",
   },
+  {
+    sourceId: "src-tanzil-uthmani-min-1-1-acquired",
+    title: "Tanzil Uthmani-min Quran Text 1.1 — acquired immutable artifact",
+    provider: "Tanzil",
+    kind: "primary_text",
+    canonicalUrl: "https://tanzil.net/download/",
+    version: "1.1-uthmani-min",
+    artifactSha256:
+      "2f531f9b1fc886df06297d1a9d5d521fb1fa8a777ca68b3e1cb3e2491fdad6ac",
+    checkedAt: CHECKED_AT,
+    editorialStatus: "verified",
+    notes:
+      "نص عربي حرفي مُنزّل ومحفوظ دون تعديل؛ البصمة والعدد (114 سورة / 6236 آية) متحقق منهما آليًا عند الإدخال. التوثيق هنا لسلامة الملف واكتماله، لا لتحقيق علمي للنص.",
+  },
 ]);
 
 export const rightsLedger: RightsLedgerEntry[] = rightsLedgerEntrySchema.array().parse([
@@ -199,6 +213,26 @@ export const rightsLedger: RightsLedgerEntry[] = rightsLedgerEntrySchema.array()
     checkedAt: CHECKED_AT,
     reviewNote: "يلزم مفتاح API وقرار حقوق موثق قبل أي استهلاك إنتاجي أو تخزين.",
   },
+  {
+    rightsId: "rights-tanzil-uthmani-min-1-1",
+    sourceId: "src-tanzil-uthmani-min-1-1-acquired",
+    decision: "cleared",
+    licenseName: "Tanzil Text License (verbatim copies, attribution required)",
+    licenseUrl: "https://tanzil.net/docs/text_license",
+    termsSnapshotPath: null,
+    attribution: "Tanzil Project (tanzil.net)",
+    permissions: {
+      apiAccess: "forbidden",
+      caching: "allowed",
+      streaming: "forbidden",
+      offline: "allowed",
+      redistribution: "allowed",
+      commercial: "allowed",
+    },
+    checkedAt: CHECKED_AT,
+    reviewNote:
+      "يسمح بالنص الحرفي دون تعديل مع النسبة؛ القرار يغطي النص العربي فقط لا الترجمات.",
+  },
 ]);
 
 export const providerResourceRegistry: ProviderResourceEntry[] =
@@ -280,6 +314,19 @@ export const providerResourceRegistry: ProviderResourceEntry[] =
       credentialsConfigured: false,
       allowedUsages: [],
       productionReady: false,
+    },
+    {
+      resourceId: "resource-tanzil-uthmani-min-1-1",
+      sourceId: "src-tanzil-uthmani-min-1-1-acquired",
+      rightsId: "rights-tanzil-uthmani-min-1-1",
+      provider: "Tanzil",
+      resourceType: "file",
+      endpoint: "https://tanzil.net/download/",
+      acquisitionStatus: "acquired_immutable",
+      credentialsRequired: false,
+      credentialsConfigured: false,
+      allowedUsages: ["cache", "full_text"],
+      productionReady: true,
     },
   ]);
 

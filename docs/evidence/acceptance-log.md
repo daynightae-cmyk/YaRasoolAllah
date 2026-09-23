@@ -91,3 +91,19 @@ uninspected imagery.
 
 Production deployment, full screen-reader pass, production performance
 numbers, scholarly authentication, or rights clearance.
+
+## 12. Addendum — Tanzil Arabic corpus ingestion (post-log slice)
+
+- Artifact `data-sources/tanzil/quran-uthmani-min-1.1.txt` downloaded from
+  tanzil.net, SHA-256 `2F531F9B…6AC` verified, 114 surahs / 6236 verses /
+  sequential numbering reconciled against live chapter metadata by
+  `npm run ingest:quran` (PASS).
+- `getQuranVerse` serves real Arabic for any valid surah:ayah; translation
+  stays EN-sample-only (null otherwise); tafsir stays pending.
+- Live: 2:100 renders verbatim Uthmani text with pending-translation note;
+  daily verse rotates over the full corpus (observed 2:260).
+- Registry extended: source/rights/resource triple for the acquired
+  artifact (cleared, verbatim+attribution); validator asserts full_text
+  allowed for it in production (7/7/7 PASS).
+- QuranSearch component remains unreferenced (dead but honest); corpus
+  search is API-ready, not yet wired to a live UI.
