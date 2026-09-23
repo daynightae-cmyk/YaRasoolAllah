@@ -102,7 +102,7 @@ export default function InstitutionalSearchDialog({
       },
       {
         title: "أطلس الغزوات التضاريسي المتحرك",
-        subtitle: "تضاريس ومسارات معارك بدر وأحد والخندق وفتح مكة",
+        subtitle: "تضاريس ومسارات معارك بدر وأحد والخندق (تغطية المزيد قيد الإدخال)",
         category: "seerah" as const,
         url: "/seerah",
       },
