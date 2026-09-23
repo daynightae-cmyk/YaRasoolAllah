@@ -337,7 +337,7 @@ export default function QuranPage() {
                   <div className="space-y-6">
                     {/* Arabic Verse Display */}
                     <div className="p-8 md:p-12 rounded-3xl bg-amber-50/20 dark:bg-slate-800/40 border border-amber-900/10 dark:border-amber-500/10 text-center space-y-6">
-                      <p className="font-quran text-2xl md:text-4xl leading-loose text-foreground font-medium select-text">
+                      <p dir="auto" className="font-quran text-2xl md:text-4xl leading-loose text-foreground font-medium select-text">
                         {verse.arabic}
                         <span className="ayah-rosette">
                           {verse.ayah}

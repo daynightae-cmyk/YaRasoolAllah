@@ -266,7 +266,7 @@ export default function SeerahForChildrenPage() {
           <Card className="bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/30 dark:to-blue-800/30 text-center">
             <CardContent className="p-4">
               <div className="text-3xl mb-2">⭐</div>
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">4</div>
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{categories.length}</div>
               <p className="text-sm text-gray-600 dark:text-gray-400">أنواع مختلفة</p>
             </CardContent>
           </Card>
@@ -284,8 +284,8 @@ export default function SeerahForChildrenPage() {
           <Card className="bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900/30 dark:to-purple-800/30 text-center">
             <CardContent className="p-4">
               <div className="text-3xl mb-2">🎯</div>
-              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">100%</div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">دروس مفيدة</p>
+              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">{ageGroups.length - 1}</div>
+              <p className="text-sm text-gray-600 dark:text-gray-400">فئات عمرية</p>
             </CardContent>
           </Card>
         </div>

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Link } from "wouter";
 import {
   Dialog,
@@ -56,6 +56,20 @@ interface GlobalSearchDialogProps {
 export default function GlobalSearchDialog({ isOpen, onClose }: GlobalSearchDialogProps) {
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+
+  // Explicit Escape-to-close: the acceptance contract requires Escape to
+  // close the topmost surface regardless of focus-trap library behavior.
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.stopPropagation();
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isOpen, onClose]);
 
   // Build searchable index from authentic datasets
   const allIndexedItems = useMemo<UnifiedSearchResult[]>(() => {

@@ -38,12 +38,19 @@ export default function SunnahPage() {
     return matchesCol && matchesQuery;
   });
 
-  const handleCopy = (id: string, text: string) => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(text);
-      setCopiedId(id);
-      setTimeout(() => setCopiedId(null), 2000);
+  const handleCopy = async (id: string, text: string) => {
+    if (!navigator.clipboard) {
+      setCopiedId(`failed-${id}`);
+      setTimeout(() => setCopiedId(null), 2500);
+      return;
     }
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedId(id);
+    } catch {
+      setCopiedId(`failed-${id}`);
+    }
+    setTimeout(() => setCopiedId(null), 2000);
   };
 
   return (
@@ -204,7 +211,7 @@ export default function SunnahPage() {
               </div>
 
               {/* Prophetic Text */}
-              <p className="font-amiri text-xl md:text-2xl leading-relaxed text-foreground font-semibold py-2">
+              <p dir="auto" className="font-amiri text-xl md:text-2xl leading-relaxed text-foreground font-semibold py-2">
                 {item.textAr}
               </p>
 
@@ -234,6 +241,11 @@ export default function SunnahPage() {
                       <>
                         <Check className="w-3.5 h-3.5 text-emerald-600" />
                         <span>تم النسخ</span>
+                      </>
+                    ) : copiedId === `failed-${item.id}` ? (
+                      <>
+                        <Copy className="w-3.5 h-3.5 text-red-600" />
+                        <span>تعذر النسخ — انسخ يدويًا</span>
                       </>
                     ) : (
                       <>

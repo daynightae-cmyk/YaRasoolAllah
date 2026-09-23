@@ -114,12 +114,14 @@ export default function SeerahPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [selectedEvidence, setSelectedEvidence] = useState<SourceProvenanceItem | null>(null);
-  const [readingProgress, setReadingProgress] = useState<Record<string, boolean>>({});
+  // Visiting a chapter records a visit, never completion: opening text is
+  // not evidence of having read or completed it.
+  const [visitedChapters, setVisitedChapters] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     try {
       const saved = localStorage.getItem("seerah-reading-progress");
-      if (saved) setReadingProgress(JSON.parse(saved));
+      if (saved) setVisitedChapters(JSON.parse(saved));
     } catch {
       // Ignore
     }
@@ -130,8 +132,8 @@ export default function SeerahPage() {
     try {
       localStorage.setItem("last-reading-path", `/seerah`);
       localStorage.setItem("last-reading-title", ch.title);
-      const updated = { ...readingProgress, [ch.id]: true };
-      setReadingProgress(updated);
+      const updated = { ...visitedChapters, [ch.id]: true };
+      setVisitedChapters(updated);
       localStorage.setItem("seerah-reading-progress", JSON.stringify(updated));
     } catch {
       // Ignore
@@ -182,8 +184,10 @@ export default function SeerahPage() {
           </div>
 
           {/* Navigation Tabs */}
-          <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-slate-800 text-xs font-cairo">
+          <div role="tablist" aria-label="أقسام السيرة" className="flex flex-wrap items-center gap-2 pt-4 border-t border-slate-800 text-xs font-cairo">
             <button
+              role="tab"
+              aria-selected={activeTab === "chapters"}
               onClick={() => {
                 setActiveTab("chapters");
                 setSelectedChapter(null);
@@ -200,6 +204,8 @@ export default function SeerahPage() {
             </button>
 
             <button
+              role="tab"
+              aria-selected={activeTab === "timeline"}
               onClick={() => {
                 setActiveTab("timeline");
                 setSelectedChapter(null);
@@ -216,6 +222,8 @@ export default function SeerahPage() {
             </button>
 
             <button
+              role="tab"
+              aria-selected={activeTab === "battles"}
               onClick={() => {
                 setActiveTab("battles");
                 setSelectedChapter(null);
@@ -232,6 +240,8 @@ export default function SeerahPage() {
             </button>
 
             <button
+              role="tab"
+              aria-selected={activeTab === "map"}
               onClick={() => {
                 setActiveTab("map");
                 setSelectedChapter(null);
@@ -248,6 +258,8 @@ export default function SeerahPage() {
             </button>
 
             <button
+              role="tab"
+              aria-selected={activeTab === "causes"}
               onClick={() => {
                 setActiveTab("causes");
                 setSelectedChapter(null);
@@ -392,11 +404,20 @@ export default function SeerahPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {filteredChapters.map((ch) => {
-                const isRead = readingProgress[ch.id];
+                const wasVisited = visitedChapters[ch.id];
                 return (
                   <Card
                     key={ch.id}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`فتح فصل ${ch.title}`}
                     onClick={() => handleSelectChapter(ch)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        handleSelectChapter(ch);
+                      }
+                    }}
                     className="p-6 rounded-3xl border-border/80 hover:border-emerald-600 dark:hover:border-emerald-500 hover:shadow-md transition-all cursor-pointer group bg-white dark:bg-slate-900 flex flex-col justify-between"
                   >
                     <div className="space-y-3">
@@ -404,10 +425,10 @@ export default function SeerahPage() {
                         <span className="font-mono font-bold">
                           الفصل 0{ch.order}
                         </span>
-                        {isRead && (
+                        {wasVisited && (
                           <span className="text-[11px] font-cairo text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-semibold">
                             <CheckCircle2 className="w-3.5 h-3.5" />
-                            تمت القراءة
+                            زرته سابقًا
                           </span>
                         )}
                       </div>
@@ -529,7 +550,17 @@ export default function SeerahPage() {
                 return (
                   <div
                     key={loc.id}
+                    role="button"
+                    tabIndex={0}
+                    aria-pressed={isSelected}
+                    aria-label={`عرض تفاصيل موضع ${loc.nameAr}`}
                     onClick={() => setSelectedLocation(isSelected ? null : loc.id)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setSelectedLocation(isSelected ? null : loc.id);
+                      }
+                    }}
                     className={cn(
                       "p-5 rounded-2xl border transition-all cursor-pointer text-right space-y-3",
                       isSelected
