@@ -29,16 +29,52 @@ interface UsePrayerTimesReturn {
   isLoading: boolean;
   error: string | null;
   currentPrayer: PrayerTime | null;
+  methodId: number;
+  methods: Array<{ id: number; nameAr: string; nameEn: string }>;
+  setMethodId: (id: number) => void;
+}
+
+/**
+ * Calculation authorities (AlAdhan method registry). No method is labeled
+ * "correct": the user picks the institutional convention they follow.
+ */
+export const PRAYER_METHODS = [
+  { id: 4, nameAr: "أم القرى (مكة)", nameEn: "Umm al-Qura" },
+  { id: 3, nameAr: "رابطة العالم الإسلامي", nameEn: "Muslim World League" },
+  { id: 2, nameAr: "الجمعية الإسلامية لأمريكا الشمالية", nameEn: "ISNA" },
+  { id: 5, nameAr: "الهيئة المصرية للمساحة", nameEn: "Egyptian Authority" },
+  { id: 1, nameAr: "جامعة كراتشي", nameEn: "Karachi" },
+];
+
+function loadMethodId(): number {
+  try {
+    const saved = Number(localStorage.getItem("prayer-method-id"));
+    if (PRAYER_METHODS.some((m) => m.id === saved)) return saved;
+  } catch {
+    // fall through to default
+  }
+  return 4;
 }
 
 export function usePrayerTimes(): UsePrayerTimesReturn {
   const [prayerTimes, setPrayerTimes] = useState<PrayerTimes | null>(null);
-  const [location, setLocation] = useState<string>("الرياض");
+  const [location, setLocation] = useState<string>("??????");
   const [nextPrayer, setNextPrayer] = useState<string>("");
   const [timeRemaining, setTimeRemaining] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [methodId, setMethodIdState] = useState<number>(loadMethodId);
   const [currentPrayer, setCurrentPrayer] = useState<PrayerTime | null>(null);
+
+  const setMethodId = (id: number) => {
+    if (!PRAYER_METHODS.some((m) => m.id === id)) return;
+    setMethodIdState(id);
+    try {
+      localStorage.setItem("prayer-method-id", String(id));
+    } catch {
+      // Preference stays in memory for this session.
+    }
+  };
 
   useEffect(() => {
     const fetchPrayerTimes = async () => {
@@ -54,9 +90,9 @@ export function usePrayerTimes(): UsePrayerTimesReturn {
 
         const { latitude, longitude } = position.coords;
 
-        // Use the Prayer Times API
+        // Use the Prayer Times API with the user-selected calculation method
         const response = await fetch(
-          `https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=4`,
+          `https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=${methodId}`,
         );
 
         if (!response.ok) {
@@ -94,14 +130,14 @@ export function usePrayerTimes(): UsePrayerTimesReturn {
 
         setPrayerTimes(fallbackTimes);
         setLocation("الرياض");
-        setError("Using offline prayer times for Riyadh");
+        setError("تعذر جلب المواقيت — تحقق من إذن الموقع والاتصال بالشبكة");
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchPrayerTimes();
-  }, []);
+  }, [methodId]);
 
   useEffect(() => {
     if (!prayerTimes) return;
@@ -202,5 +238,8 @@ export function usePrayerTimes(): UsePrayerTimesReturn {
     isLoading,
     error,
     currentPrayer,
+    methodId,
+    methods: PRAYER_METHODS,
+    setMethodId,
   };
 }
