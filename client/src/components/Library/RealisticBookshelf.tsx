@@ -179,9 +179,20 @@ export default function RealisticBookshelf({
                 key={book.id}
                 className="group relative flex flex-col items-center flex-shrink-0 cursor-pointer select-none transition-all duration-300"
                 style={{ width: `${width}px` }}
+                role="button"
+                tabIndex={0}
+                aria-label={`عرض سجل كتاب ${book.title} للمؤلف ${book.author}`}
                 onMouseEnter={() => setHoveredBookId(book.id)}
                 onMouseLeave={() => setHoveredBookId(null)}
+                onFocus={() => setHoveredBookId(book.id)}
+                onBlur={() => setHoveredBookId(null)}
                 onClick={() => onSelectBook(book)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    onSelectBook(book);
+                  }
+                }}
               >
                 {/* Floating Hover Label / Tooltip Above Book */}
                 <div

@@ -1,5 +1,17 @@
 # YA RASOOL ALLAH ﷺ — Migration Authority
 
+> CURRENT EXECUTION AUTHORITY (verified 2026-09-23, supersedes any older
+> recovery instructions found in chat transcripts or planning prompts):
+>
+> - Canonical branch `main` == `origin/main` at
+>   `72a087d35fea78ba1016d44240552922df533a3e` (or newer if live Git proves it).
+> - Foundation recovery, Codex worktree reconciliation, PR #1 work, and
+>   delivery PRs #2–#19 are HISTORICAL — DO NOT RE-EXECUTE.
+> - The sections below remain valid as product/integrity authority. Any
+>   paragraph describing a dirty worktree, staged renames, or an open PR #1
+>   is forensic history, not an executable instruction.
+> - Continue only from live-verified repository reality.
+
 ## Product
 - Arabic name: يا رسول الله ﷺ
 - English name: Ya Rasool Allah

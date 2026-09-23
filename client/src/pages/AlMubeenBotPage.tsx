@@ -33,22 +33,21 @@ export default function AlMubeenBotPage() {
   useEffect(() => {
     updateLastVisited("/ai-assistant");
     
-    // Add welcome message
+    // Add welcome message: the provider is not connected, so the message
+    // must say so instead of promising sourced answers.
     const welcomeMessage: ChatMessage = {
       id: "welcome",
-      content: `السلام عليكم ورحمة الله وبركاته! 🌟
+      content: `السلام عليكم ورحمة الله وبركاته!
 
-أهلاً وسهلاً بك في المساعد الإسلامي الذكي. أنا هنا لمساعدتك في الإجابة على أسئلتك الإسلامية.
+المساعد الذكي غير متاح حاليًا: لا يوجد مزود إجابة موصول بمسار مراجعة
+ومصادر. لن تصلك إجابات مولدة من هذه الصفحة حتى يُفعّل المزود الخادمي المعتمد.
 
-يمكنني مساعدتك في:
-• أسئلة عن القرآن الكريم والتفسير
-• أحكام الفقه الإسلامي
-• السيرة النبوية الشريفة
-• الأدعية والأذكار
-• الأخلاق والآداب الإسلامية
-• أحكام العبادات
+حتى ذلك الحين، يمكنك التصفح المباشر للمصادر:
+• رِواق القرآن الكريم (/quran)
+• دار الحديث الشريف (/sunnah)
+• خزانة المصادر (/sources)
 
-اطرح سؤالك وسأحاول الإجابة عليه بإذن الله، مع ذكر المصادر الموثوقة.`,
+وهذه المنصة لا تصدر فتاوى شخصية — للمسائل الخاصة راجع أهل العلم المختصين.`,
       isUser: false,
       timestamp: new Date()
     };
@@ -183,7 +182,7 @@ export default function AlMubeenBotPage() {
             المُبين بوت 🤖
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 font-inter max-w-2xl mx-auto">
-            اسأل عن أي موضوع إسلامي واحصل على إجابات دقيقة من مصادر موثوقة
+            خدمة الإجابة غير مفعّلة حاليًا — تصفح المصادر المباشرة أدناه
           </p>
         </div>
 
@@ -197,7 +196,7 @@ export default function AlMubeenBotPage() {
                 </div>
                 <div>
                   <h3 className="font-amiri text-lg">المُبين بوت</h3>
-                  <p className="text-sm text-emerald-600 dark:text-emerald-400">متصل ومستعد للمساعدة</p>
+                  <p className="text-sm text-amber-600 dark:text-amber-400">غير متصل — بانتظار المزود المعتمد</p>
                 </div>
               </div>
               
