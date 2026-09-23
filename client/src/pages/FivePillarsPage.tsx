@@ -19,6 +19,54 @@ interface Pillar {
   color: string;
 }
 
+// Static tone map: Tailwind JIT only generates classes present as string
+// literals, so dynamic `from-${color}-50` interpolation would silently
+// produce unstyled elements. Every tone below is a full literal.
+const PILLAR_TONES: Record<
+  string,
+  { card: string; icon: string; badge: string; glyph: string; hero: string }
+> = {
+  emerald: {
+    card: "from-emerald-50 to-emerald-100 dark:from-emerald-900/20 dark:to-emerald-800/20",
+    icon: "bg-emerald-600",
+    badge: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+    glyph: "text-emerald-600 dark:text-emerald-400",
+    hero: "from-emerald-500 to-emerald-600",
+  },
+  blue: {
+    card: "from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20",
+    icon: "bg-blue-600",
+    badge: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+    glyph: "text-blue-600 dark:text-blue-400",
+    hero: "from-blue-500 to-blue-600",
+  },
+  green: {
+    card: "from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20",
+    icon: "bg-green-600",
+    badge: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+    glyph: "text-green-600 dark:text-green-400",
+    hero: "from-green-500 to-green-600",
+  },
+  purple: {
+    card: "from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20",
+    icon: "bg-purple-600",
+    badge: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
+    glyph: "text-purple-600 dark:text-purple-400",
+    hero: "from-purple-500 to-purple-600",
+  },
+  orange: {
+    card: "from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20",
+    icon: "bg-orange-600",
+    badge: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
+    glyph: "text-orange-600 dark:text-orange-400",
+    hero: "from-orange-500 to-orange-600",
+  },
+};
+
+function pillarTone(color: string) {
+  return PILLAR_TONES[color] ?? PILLAR_TONES.emerald;
+}
+
 export default function FivePillarsPage() {
   const { updateLastVisited, completeLesson } = useProgress();
   const { direction } = useLanguage();
@@ -326,12 +374,12 @@ export default function FivePillarsPage() {
             {pillars.map((pillar, index) => (
               <Card 
                 key={pillar.id} 
-                className={`cursor-pointer card-hover bg-gradient-to-br from-${pillar.color}-50 to-${pillar.color}-100 dark:from-${pillar.color}-900/20 dark:to-${pillar.color}-800/20`}
+                className={`cursor-pointer card-hover bg-gradient-to-br ${pillarTone(pillar.color).card}`}
                 onClick={() => setSelectedPillar(pillar)}
               >
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-3 rtl:space-x-reverse">
-                    <div className={`w-12 h-12 bg-${pillar.color}-600 rounded-xl flex items-center justify-center`}>
+                    <div className={`w-12 h-12 ${pillarTone(pillar.color).icon} rounded-xl flex items-center justify-center`}>
                       <span className="material-symbols-outlined text-white text-2xl">{pillar.icon}</span>
                     </div>
                     <div className="flex-1">
@@ -353,10 +401,10 @@ export default function FivePillarsPage() {
                   </p>
                   
                   <div className="flex items-center justify-between">
-                    <Badge className={`bg-${pillar.color}-100 text-${pillar.color}-700 dark:bg-${pillar.color}-900/30 dark:text-${pillar.color}-400`}>
+                    <Badge className={pillarTone(pillar.color).badge}>
                       ركن أساسي
                     </Badge>
-                    <span className={`material-symbols-outlined text-${pillar.color}-600 dark:text-${pillar.color}-400`}>
+                    <span className={`material-symbols-outlined ${pillarTone(pillar.color).glyph}`}>
                       arrow_forward
                     </span>
                   </div>
@@ -389,7 +437,7 @@ export default function FivePillarsPage() {
                 </div>
                 
                 <div className="text-center mb-6">
-                  <div className={`w-24 h-24 bg-gradient-to-br from-${selectedPillar.color}-500 to-${selectedPillar.color}-600 rounded-full flex items-center justify-center mx-auto mb-4`}>
+                  <div className={`w-24 h-24 bg-gradient-to-br ${pillarTone(selectedPillar.color).hero} rounded-full flex items-center justify-center mx-auto mb-4`}>
                     <span className="material-symbols-outlined text-white text-4xl">{selectedPillar.icon}</span>
                   </div>
                   

@@ -217,6 +217,22 @@ export default function SeerahForChildrenPage() {
     return categories.find(cat => cat.id === categoryId);
   };
 
+  // Static tone map: Tailwind JIT only generates classes present as string
+  // literals, so dynamic `bg-${color}-100` interpolation would silently
+  // produce unstyled badges. "gold" maps to the amber scale.
+  const CATEGORY_TONES: Record<string, string> = {
+    gray: "bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400",
+    pink: "bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400",
+    blue: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+    purple: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
+    emerald: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+    gold: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+    amber: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+  };
+
+  const categoryTone = (color: string | undefined) =>
+    CATEGORY_TONES[color ?? ""] ?? CATEGORY_TONES.gray;
+
   return (
     <div className="min-h-screen py-8 bg-gradient-to-br from-pink-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-blue-900/10 dark:to-purple-900/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -306,7 +322,7 @@ export default function SeerahForChildrenPage() {
                 >
                   <CardHeader>
                     <div className="flex items-center justify-between mb-4">
-                      <Badge className={`bg-${categoryInfo?.color}-100 text-${categoryInfo?.color}-700 dark:bg-${categoryInfo?.color}-900/30 dark:text-${categoryInfo?.color}-400`}>
+                      <Badge className={categoryTone(categoryInfo?.color)}>
                         <span className="material-symbols-outlined text-sm mr-1 rtl:ml-1">
                           {categoryInfo?.icon}
                         </span>
@@ -393,7 +409,7 @@ export default function SeerahForChildrenPage() {
                     <Badge className="bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400">
                       {selectedStory.ageGroup}
                     </Badge>
-                    <Badge className={`bg-${getCategoryInfo(selectedStory.category)?.color}-100 text-${getCategoryInfo(selectedStory.category)?.color}-700`}>
+                    <Badge className={categoryTone(getCategoryInfo(selectedStory.category)?.color)}>
                       {getCategoryInfo(selectedStory.category)?.name}
                     </Badge>
                     <Badge variant="outline" className="text-purple-600">
