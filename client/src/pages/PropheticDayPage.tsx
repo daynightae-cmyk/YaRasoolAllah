@@ -127,7 +127,7 @@ export default function PropheticDayPage() {
                 <span className="alcove__timeframe">{activeStation.timeframeAr}</span>
                 <h2 className="alcove__title">{activeStation.titleAr}</h2>
               </div>
-              <Badge variant="outline" className="ms-auto font-mono text-[10px] shrink-0">
+              <Badge variant="outline" className="alcove__source ms-auto font-mono text-[10px]">
                 {activeStation.sourceReference}
               </Badge>
             </header>

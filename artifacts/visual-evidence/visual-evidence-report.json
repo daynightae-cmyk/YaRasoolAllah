@@ -574,31 +574,14 @@
       "viewportWidth": 360,
       "viewportHeight": 900,
       "documentWidth": 360,
-      "documentHeight": 4097,
+      "documentHeight": 4034,
       "bodyWidth": 360,
       "applicationMounted": true,
       "expectedOrigin": "http://127.0.0.1:3002",
       "originMatches": true,
       "direction": "rtl",
       "horizontalOverflow": false,
-      "overflowElements": [
-        {
-          "tag": "div",
-          "id": "",
-          "className": "inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 t",
-          "left": -8,
-          "right": 188,
-          "width": 197
-        },
-        {
-          "tag": "button",
-          "id": "",
-          "className": "inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 f",
-          "left": -41,
-          "right": 75,
-          "width": 115
-        }
-      ],
+      "overflowElements": [],
       "visiblyUnnamedInteractive": [],
       "unnamedInteractive": 1,
       "runtimeErrors": []
@@ -618,31 +601,14 @@
       "viewportWidth": 360,
       "viewportHeight": 900,
       "documentWidth": 360,
-      "documentHeight": 4097,
+      "documentHeight": 4034,
       "bodyWidth": 360,
       "applicationMounted": true,
       "expectedOrigin": "http://127.0.0.1:3002",
       "originMatches": true,
       "direction": "rtl",
       "horizontalOverflow": false,
-      "overflowElements": [
-        {
-          "tag": "div",
-          "id": "",
-          "className": "inline-flex items-center rounded-full border px-2.5 py-0.5 font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 t",
-          "left": -8,
-          "right": 188,
-          "width": 197
-        },
-        {
-          "tag": "button",
-          "id": "",
-          "className": "inline-flex items-center justify-center whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 f",
-          "left": -41,
-          "right": 75,
-          "width": 115
-        }
-      ],
+      "overflowElements": [],
       "visiblyUnnamedInteractive": [],
       "unnamedInteractive": 1,
       "runtimeErrors": []
