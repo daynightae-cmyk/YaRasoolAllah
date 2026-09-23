@@ -34,6 +34,35 @@ export default function ReciterSelector({
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
+  // Static category tones: Tailwind JIT only generates literal classes.
+  const CATEGORY_TONES: Record<string, { active: string; idle: string }> = {
+    blue: {
+      active: "bg-blue-600 hover:bg-blue-700 text-white",
+      idle: "border-blue-200 dark:border-blue-700 text-blue-600 dark:text-blue-400",
+    },
+    emerald: {
+      active: "bg-emerald-600 hover:bg-emerald-700 text-white",
+      idle: "border-emerald-200 dark:border-emerald-700 text-emerald-600 dark:text-emerald-400",
+    },
+    gold: {
+      active: "bg-amber-600 hover:bg-amber-700 text-white",
+      idle: "border-amber-200 dark:border-amber-700 text-amber-600 dark:text-amber-400",
+    },
+    purple: {
+      active: "bg-purple-600 hover:bg-purple-700 text-white",
+      idle: "border-purple-200 dark:border-purple-700 text-purple-600 dark:text-purple-400",
+    },
+    teal: {
+      active: "bg-teal-600 hover:bg-teal-700 text-white",
+      idle: "border-teal-200 dark:border-teal-700 text-teal-600 dark:text-teal-400",
+    },
+  };
+
+  const categoryTone = (color: string, active: boolean) => {
+    const tone = CATEGORY_TONES[color] ?? CATEGORY_TONES.emerald;
+    return active ? tone.active : tone.idle;
+  };
+
   const filteredReciters = (() => {
     let reciters =
       selectedCategory === "all"
@@ -53,10 +82,11 @@ export default function ReciterSelector({
       );
     }
 
-    return reciters.sort((a, b) => {
+    return [...reciters].sort((a, b) => {
       if (a.featured && !b.featured) return -1;
       if (!a.featured && b.featured) return 1;
-      return b.rating - a.rating;
+      // Engagement metrics are unverified placeholders: never sort by them.
+      return a.reciterNameEn.localeCompare(b.reciterNameEn);
     });
   })();
 
@@ -142,9 +172,10 @@ export default function ReciterSelector({
                 onClick={() => setSelectedCategory(category.id)}
                 className={cn(
                   "font-amiri",
-                  selectedCategory === category.id
-                    ? `bg-${category.color}-600 hover:bg-${category.color}-700 text-white`
-                    : `border-${category.color}-200 dark:border-${category.color}-700 text-${category.color}-600 dark:text-${category.color}-400`,
+                  categoryTone(
+                    category.color,
+                    selectedCategory === category.id,
+                  ),
                 )}
               >
                 {category.name} ({getRecitationsByCategory(category.id).length})
@@ -227,14 +258,7 @@ export default function ReciterSelector({
                         <Clock className="w-3 h-3" />
                         <span>{reciter.duration}</span>
                       </div>
-                      <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                        <Download className="w-3 h-3" />
-                        <span>{formatNumber(reciter.downloads)}</span>
-                      </div>
-                      <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                        <Star className="w-3 h-3 fill-current text-yellow-500" />
-                        <span>{reciter.rating}</span>
-                      </div>
+                      <span>إحصاءات الاستماع غير متاحة · حقوق التشغيل قيد المراجعة</span>
                     </div>
 
                     <div className="flex space-x-2 rtl:space-x-reverse">

@@ -24,12 +24,11 @@ import {
   Clock,
   Music,
   Headphones,
-  Star,
   Globe,
   Mic,
   Radio,
-  Users,
   Award,
+  ShieldCheck,
   TrendingUp,
   Eye,
   Calendar,
@@ -85,6 +84,9 @@ export default function QuranAudioPage() {
   const [isShuffling, setIsShuffling] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
+  // No media source is bound in this slice: in-platform playback stays
+  // disabled until recording rights are documented per reciter.
+  const [mediaBlocked, setMediaBlocked] = useState(false);
 
   const surahs: Surah[] = [
     {
@@ -174,14 +176,14 @@ export default function QuranAudioPage() {
       englishName: "Mishary Rashid Al-Afasy",
       country: "الكويت",
       countryFlag: "🇰🇼",
-      style: "ورش عن نافع",
+      style: "حفص عن عاصم",
       description: "قارئ مشهور بصوته العذب وتلاوته المؤثرة",
-      followers: "15.2M",
-      rating: 4.9,
-      totalRecitations: 114,
+      followers: "غير متاح",
+      rating: 0,
+      totalRecitations: 0,
       speciality: "التلاوة المرتلة",
-      avatar: "👨‍🎤",
-      isVerified: true,
+      avatar: "🎙️",
+      isVerified: false,
       popularSurahs: ["الفاتحة", "البقرة", "آل عمران"],
     },
     {
@@ -193,12 +195,12 @@ export default function QuranAudioPage() {
       countryFlag: "🇸🇦",
       style: "حفص عن عاصم",
       description: "إمام الحرم المكي الشريف",
-      followers: "18.7M",
-      rating: 5.0,
-      totalRecitations: 114,
+      followers: "غير متاح",
+      rating: 0,
+      totalRecitations: 0,
       speciality: "التلاوة الخاشعة",
       avatar: "🕌",
-      isVerified: true,
+      isVerified: false,
       popularSurahs: ["الكهف", "يس", "الرحمن"],
     },
     {
@@ -210,12 +212,12 @@ export default function QuranAudioPage() {
       countryFlag: "🇸🇦",
       style: "حفص عن عاصم",
       description: "إمام الحرم المكي الشريف سابقاً",
-      followers: "12.5M",
-      rating: 4.8,
-      totalRecitations: 114,
+      followers: "غير متاح",
+      rating: 0,
+      totalRecitations: 0,
       speciality: "التلاوة العاطفية",
       avatar: "🎙️",
-      isVerified: true,
+      isVerified: false,
       popularSurahs: ["الملك", "الفجر", "الليل"],
     },
     {
@@ -227,12 +229,12 @@ export default function QuranAudioPage() {
       countryFlag: "🇸🇦",
       style: "حفص عن عاصم",
       description: "إمام الحرم المكي الشريف",
-      followers: "14.1M",
-      rating: 4.9,
-      totalRecitations: 114,
+      followers: "غير متاح",
+      rating: 0,
+      totalRecitations: 0,
       speciality: "التلاوة الحزينة",
       avatar: "🎵",
-      isVerified: true,
+      isVerified: false,
       popularSurahs: ["مريم", "طه", "الأنبياء"],
     },
     {
@@ -244,12 +246,12 @@ export default function QuranAudioPage() {
       countryFlag: "🇪🇬",
       style: "حفص عن عاصم",
       description: "أسطورة القراءة والتجويد",
-      followers: "16.8M",
-      rating: 5.0,
-      totalRecitations: 114,
+      followers: "غير متاح",
+      rating: 0,
+      totalRecitations: 0,
       speciality: "التجويد المثالي",
       avatar: "👑",
-      isVerified: true,
+      isVerified: false,
       popularSurahs: ["الواقعة", "الحاقة", "المعارج"],
     },
   ];
@@ -289,10 +291,21 @@ export default function QuranAudioPage() {
     const audio = audioRef.current;
     if (!audio) return;
 
+    // Honesty gate: never present a playing state without bound media.
+    if (!audio.currentSrc && !audio.src) {
+      setMediaBlocked(true);
+      setIsPlaying(false);
+      return;
+    }
+    setMediaBlocked(false);
+
     if (isPlaying) {
       audio.pause();
     } else {
-      audio.play();
+      void audio.play().catch(() => {
+        setMediaBlocked(true);
+        setIsPlaying(false);
+      });
     }
     setIsPlaying(!isPlaying);
   };
@@ -475,19 +488,16 @@ export default function QuranAudioPage() {
                   {currentReciterData.country}
                 </p>
 
-                {/* Stats */}
+                {/* Rights state: engagement metrics are not collected; audio
+                    rights for in-platform playback are pending review. */}
                 <div className="flex items-center space-x-4 rtl:space-x-reverse text-xs">
                   <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                    <Users className="w-3 h-3" />
-                    <span>{currentReciterData.followers}</span>
-                  </div>
-                  <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                    <Star className="w-3 h-3 text-yellow-400" />
-                    <span>{currentReciterData.rating}</span>
+                    <ShieldCheck className="w-3 h-3" />
+                    <span>بيانات الاستماع غير متاحة</span>
                   </div>
                   <div className="flex items-center space-x-1 rtl:space-x-reverse">
                     <Music className="w-3 h-3" />
-                    <span>{currentReciterData.totalRecitations}</span>
+                    <span>حقوق التشغيل قيد المراجعة</span>
                   </div>
                 </div>
               </div>
@@ -652,12 +662,8 @@ export default function QuranAudioPage() {
                     </p>
                     <div className="flex items-center space-x-3 rtl:space-x-reverse text-xs">
                       <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                        <Users className="w-3 h-3" />
-                        <span>{reciter.followers}</span>
-                      </div>
-                      <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                        <Star className="w-3 h-3 text-yellow-400" />
-                        <span>{reciter.rating}</span>
+                        <ShieldCheck className="w-3 h-3" />
+                        <span>بيانات الاستماع غير متاحة</span>
                       </div>
                     </div>
                   </div>
@@ -753,7 +759,7 @@ export default function QuranAudioPage() {
                     )}
                   >
                     <Timer className="w-4 h-4" />
-                    <span>{currentSurahData.duration}</span>
+                    <span>مدة التسجيل: غير مربوطة</span>
                   </span>
                   <span
                     className={cn(
@@ -877,6 +883,21 @@ export default function QuranAudioPage() {
                   >
                     <Repeat className="w-6 h-6" />
                   </Button>
+                </div>
+
+                {/* Playback rights state: always visible, never implied. */}
+                <div
+                  role="status"
+                  className={cn(
+                    "mx-auto max-w-xl rounded-xl border px-4 py-2.5 text-center text-xs font-tajawal leading-relaxed",
+                    mode === "heaven"
+                      ? "border-amber-300/30 bg-white/10 text-white/85"
+                      : "border-amber-600/30 bg-amber-50 text-amber-900",
+                  )}
+                >
+                  {mediaBlocked
+                    ? "لا يوجد ملف صوتي مربوط بهذا الزر — التشغيل الداخلي معطل حتى توثيق حقوق التسجيل لكل قارئ."
+                    : "وحدة الاستماع الداخلية غير مفعّلة بعد: لا وسيط صوتي موثق الحقوق مربوط حاليًا."}
                 </div>
 
                 {/* Secondary Controls */}
