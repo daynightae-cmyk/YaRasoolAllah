@@ -340,7 +340,7 @@ export default function DigitalLibraryPage() {
                 <BookOpen className="w-10 h-10 mx-auto text-muted-foreground/50" />
                 <h3 className="text-base font-bold font-cairo">لا توجد مصنفات مطابقة لبحثك</h3>
                 <p className="text-xs font-tajawal text-muted-foreground max-w-sm mx-auto">
-                  حاول تغيير مصطلح البحث أو اختيار قسم مختلف للوصول إلى كتب التراث المحققة.
+                  حاول تغيير مصطلح البحث أو اختيار قسم مختلف للوصول إلى سجلات الفهرس.
                 </p>
                 <Button
                   variant="outline"
