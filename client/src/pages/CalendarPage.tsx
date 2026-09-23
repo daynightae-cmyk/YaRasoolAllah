@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useProgress } from "@/contexts/ProgressContext";
-import Header from "@/components/Layout/Header";
-import Footer from "@/components/Layout/Footer";
+import InstitutionalHeader from "@/components/Institution/InstitutionalHeader";
+import InstitutionalFooter from "@/components/Institution/InstitutionalFooter";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -109,7 +109,7 @@ export default function CalendarPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-accent/20">
-      <Header />
+      <InstitutionalHeader />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Page Header */}
@@ -344,7 +344,7 @@ export default function CalendarPage() {
         </div>
       </main>
 
-      <Footer />
+      <InstitutionalFooter />
     </div>
   );
 }

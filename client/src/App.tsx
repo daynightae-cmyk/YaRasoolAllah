@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Switch, Route, Router } from "wouter";
+import { Switch, Route, Router, useLocation } from "wouter";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
@@ -8,6 +8,7 @@ import { ThemeProvider } from "./components/ThemeProvider";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { ProgressProvider } from "./contexts/ProgressContext";
 import { BabAlsamaaProvider, useBabAlsamaa } from "./hooks/useBabAlsamaa";
+import { DepthProvider } from "./components/Institution/LearningDepthSelector";
 import AppLayout from "./components/Layout/AppLayout";
 import BabAlsamaa from "./components/BabAlsamaa/BabAlsamaa";
 import BabAlsamaaFAB, {
@@ -43,6 +44,7 @@ import DashboardPage from "./pages/DashboardPage";
 
 function AppContent() {
   const { isOpen, closeBab, triggerContext } = useBabAlsamaa();
+  const [location] = useLocation();
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
 
   useEffect(() => {
@@ -90,11 +92,7 @@ function AppContent() {
           {() => <PropheticDayPage />}
         </Route>
         <Route path="/library">
-          {() => (
-            <AppLayout showSidebar={true}>
-              <DigitalLibraryPage />
-            </AppLayout>
-          )}
+          {() => <DigitalLibraryPage />}
         </Route>
         <Route path="/daily">
           {() => (
@@ -107,11 +105,7 @@ function AppContent() {
           {() => <GateOfLightPage />}
         </Route>
         <Route path="/quran">
-          {() => (
-            <AppLayout>
-              <QuranPage />
-            </AppLayout>
-          )}
+          {() => <QuranPage />}
         </Route>
         <Route path="/quran-audio">
           {() => (
@@ -149,25 +143,13 @@ function AppContent() {
           )}
         </Route>
         <Route path="/digital-library">
-          {() => (
-            <AppLayout showSidebar={true}>
-              <DigitalLibraryPage />
-            </AppLayout>
-          )}
+          {() => <DigitalLibraryPage />}
         </Route>
         <Route path="/books">
-          {() => (
-            <AppLayout>
-              <DigitalLibraryPage />
-            </AppLayout>
-          )}
+          {() => <DigitalLibraryPage />}
         </Route>
         <Route path="/seerah">
-          {() => (
-            <AppLayout>
-              <SeerahPage />
-            </AppLayout>
-          )}
+          {() => <SeerahPage />}
         </Route>
         <Route path="/prayer-guide">
           {() => (
@@ -212,11 +194,7 @@ function AppContent() {
           )}
         </Route>
         <Route path="/children-tv">
-          {() => (
-            <AppLayout>
-              <ChildrenTVPage />
-            </AppLayout>
-          )}
+          {() => <ChildrenTVPage />}
         </Route>
         <Route path="/ai-assistant">
           {() => (
@@ -266,10 +244,12 @@ function AppContent() {
       <BabAlsamaaSmartNotifier />
 
       {/* نافذة الترحيب المنبثقة */}
-      <WelcomeModal
-        isOpen={showWelcomeModal}
-        onClose={handleCloseWelcomeModal}
-      />
+      {location !== "/" && location !== "/home" && (
+        <WelcomeModal
+          isOpen={showWelcomeModal}
+          onClose={handleCloseWelcomeModal}
+        />
+      )}
     </>
   );
 }
@@ -280,16 +260,18 @@ export default function App() {
       <ThemeProvider>
         <LanguageProvider>
           <ProgressProvider>
-            <BabAlsamaaProvider>
-              <TooltipProvider>
-                <div className="app font-cairo">
+            <DepthProvider>
+              <BabAlsamaaProvider>
+                <TooltipProvider>
+                  <div className="app font-cairo">
                   <Router>
                     <AppContent />
                   </Router>
                   <Toaster />
-                </div>
-              </TooltipProvider>
-            </BabAlsamaaProvider>
+                  </div>
+                </TooltipProvider>
+              </BabAlsamaaProvider>
+            </DepthProvider>
           </ProgressProvider>
         </LanguageProvider>
       </ThemeProvider>

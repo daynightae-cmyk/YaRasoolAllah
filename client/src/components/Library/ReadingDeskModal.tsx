@@ -27,8 +27,7 @@ interface ReadingDeskModalProps {
   book: LibraryBook | null;
   isOpen: boolean;
   onClose: () => void;
-  onRead: (book: LibraryBook) => void;
-  onDownload: (book: LibraryBook) => void;
+  onOpenExternalSource: (book: LibraryBook) => void;
   onInspectProvenance: (book: LibraryBook) => void;
 }
 
@@ -36,8 +35,7 @@ export default function ReadingDeskModal({
   book,
   isOpen,
   onClose,
-  onRead,
-  onDownload,
+  onOpenExternalSource,
   onInspectProvenance,
 }: ReadingDeskModalProps) {
   const [copied, setCopied] = useState(false);
@@ -45,7 +43,7 @@ export default function ReadingDeskModal({
   if (!book) return null;
 
   const handleCopyCitation = () => {
-    const citation = `${book.author}. ${book.title}. ${book.publisher || "طبعة محققة معتمدة"}، ${book.publishedYear}م. ${book.investigator ? `تحقيق: ${book.investigator}. ` : ""}مكتبة صرح يا رسول الله ﷺ الرقمية.`;
+    const citation = `${book.author}. ${book.title}. ${book.publisher || "بيانات الناشر غير متاحة"}، ${book.publishedYear}م. ${book.investigator ? `تحقيق: ${book.investigator}. ` : ""}مكتبة صرح يا رسول الله ﷺ الرقمية.`;
     navigator.clipboard.writeText(citation);
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
@@ -65,7 +63,7 @@ export default function ReadingDeskModal({
                 </span>
                 <span className="text-slate-400 text-xs">·</span>
                 <span className="text-xs font-tajawal text-slate-300">
-                  طبعة رقمية محققة
+                  سجل ببليوغرافي — حالة النسخة قيد المراجعة
                 </span>
               </div>
               <DialogTitle className="text-2xl sm:text-3xl font-amiri font-bold text-white text-right">
@@ -104,7 +102,7 @@ export default function ReadingDeskModal({
                 المحقق / المعتني به
               </span>
               <p className="text-sm font-semibold font-cairo">
-                {book.investigator || "نخبة من العلماء المحققين"}
+                {book.investigator || "غير متاح في السجل"}
               </p>
             </div>
             <div className="space-y-1">
@@ -112,7 +110,7 @@ export default function ReadingDeskModal({
                 دار النشر / الطبعة
               </span>
               <p className="text-sm font-semibold font-cairo">
-                {book.publisher || book.edition || "دار التراث الإسلامي"}
+                {book.publisher || book.edition || "غير متاح في السجل"}
               </p>
             </div>
             <div className="space-y-1">
@@ -158,7 +156,7 @@ export default function ReadingDeskModal({
                 )}
               </Button>
               <span className="text-xs font-tajawal text-muted-foreground">
-                صيغة الاستشهاد المعتمدة (Citation)
+                مسودة استشهاد ببليوغرافي (بيانات تحتاج مراجعة)
               </span>
             </div>
             <div className="p-3 bg-muted/30 border border-border/70 rounded-lg text-xs font-mono text-muted-foreground select-all leading-normal text-left" dir="ltr">
@@ -179,27 +177,21 @@ export default function ReadingDeskModal({
             </Button>
 
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <Button
-                variant="secondary"
-                size="sm"
-                className="flex-1 sm:flex-none font-tajawal gap-1.5"
-                onClick={() => onDownload(book)}
-              >
-                <Download className="w-4 h-4" />
-                <span>تحميل النسخة ({book.size})</span>
-              </Button>
+              {book.downloadUrl && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="flex-1 sm:flex-none font-tajawal gap-1.5"
+                  onClick={() => onOpenExternalSource(book)}
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  <span>فتح المصدر الخارجي</span>
+                </Button>
+              )}
 
-              <Button
-                size="sm"
-                className="flex-1 sm:flex-none bg-primary text-primary-foreground font-tajawal font-semibold gap-1.5 shadow-md hover:brightness-105"
-                onClick={() => {
-                  onClose();
-                  onRead(book);
-                }}
-              >
-                <BookOpen className="w-4 h-4" />
-                <span>فتح كتاب المطالعة</span>
-              </Button>
+              <div className="flex-1 sm:flex-none text-xs font-tajawal text-muted-foreground" role="status">
+                المطالعة داخل المنصة غير متاحة لعدم وجود نص أو ملف مرخّص ومراجع.
+              </div>
             </div>
           </div>
         </div>

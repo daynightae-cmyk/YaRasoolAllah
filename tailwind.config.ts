@@ -5,6 +5,23 @@ export default {
   content: ["./client/index.html", "./client/src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      spacing: {
+        micro: "var(--space-micro)",
+        control: "var(--space-control)",
+        component: "var(--space-component)",
+        section: "var(--space-section)",
+        institutional: "var(--space-institutional)",
+      },
+      maxWidth: {
+        "prose-ar": "var(--max-w-prose-ar)",
+        reading: "var(--max-w-reading)",
+        content: "var(--max-w-content)",
+      },
+      boxShadow: {
+        "elevation-1": "var(--shadow-elevation-1)",
+        "elevation-2": "var(--shadow-elevation-2)",
+        "elevation-3": "var(--shadow-elevation-3)",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

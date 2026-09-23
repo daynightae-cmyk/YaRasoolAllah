@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import Header from "../Header";
-import Footer from "../Footer";
+import InstitutionalHeader from "../Institution/InstitutionalHeader";
+import InstitutionalFooter from "../Institution/InstitutionalFooter";
 import Sidebar from "./Sidebar";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -20,7 +20,7 @@ export default function AppLayout({
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       {/* Header */}
-      <Header />
+      <InstitutionalHeader />
 
       <div className="flex">
         {/* Sidebar Toggle Button (Mobile) */}
@@ -78,7 +78,7 @@ export default function AppLayout({
       </div>
 
       {/* Footer */}
-      <Footer />
+      <InstitutionalFooter />
     </div>
   );
 }

@@ -19,9 +19,9 @@ export default function InstitutionalFooter() {
         </div>
 
         {/* Links Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-right">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-component md:gap-section text-right">
           {/* Col 1: Identity */}
-          <div className="col-span-2 md:col-span-1 space-y-3">
+          <div className="md:col-span-4 space-y-3">
             <div className="flex items-center gap-2">
               <span className="font-amiri font-bold text-2xl text-amber-300 leading-none">ﷺ</span>
               <h3 className="font-amiri font-bold text-xl text-white">{BRAND.name.ar}</h3>
@@ -35,7 +35,7 @@ export default function InstitutionalFooter() {
           </div>
 
           {/* Col 2: Wings 1-4 */}
-          <div className="space-y-2">
+          <div className="md:col-span-2 space-y-2">
             <h4 className="font-cairo font-bold text-sm text-amber-400">أروقة الصرح</h4>
             <ul className="space-y-1.5 text-xs font-cairo text-slate-300">
               <li>
@@ -67,7 +67,7 @@ export default function InstitutionalFooter() {
           </div>
 
           {/* Col 3: Wings 5-8 */}
-          <div className="space-y-2">
+          <div className="md:col-span-2 space-y-2">
             <h4 className="font-cairo font-bold text-sm text-amber-400">المعرفة والأسرة</h4>
             <ul className="space-y-1.5 text-xs font-cairo text-slate-300">
               <li>
@@ -104,10 +104,10 @@ export default function InstitutionalFooter() {
           </div>
 
           {/* Col 4: Methodological Commitment */}
-          <div className="space-y-2 text-xs font-cairo">
+          <div className="md:col-span-4 space-y-2 text-xs font-cairo border-t md:border-t-0 md:border-s md:border-slate-800/80 pt-component md:pt-0 md:ps-component">
             <h4 className="font-cairo font-bold text-sm text-amber-400">الأمانة العلمية</h4>
             <p className="text-slate-400 leading-relaxed">
-              تعتمد المنصة على الروايات المحققة، والتفاسير المعتمدة، وكتب الصحاح والسنن، مع توثيق المصدر وعزل الشروح عن النصوص الأصلية المعصومة.
+              تُعرض حالة المصدر والمراجعة لكل سجل عند توفرها، ويُفصل النص المنقول عن الشروح التحريرية. لا تُفترض حالة التحقق عند غياب بيانات المراجعة.
             </p>
             <div className="pt-2 text-[11px] text-slate-500">
               البريد المؤسسي: {BRAND.contactEmail}
@@ -115,8 +115,8 @@ export default function InstitutionalFooter() {
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-slate-800/80 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 font-tajawal gap-3">
+        {/* Rights and institutional signature remain visually separate from navigation. */}
+        <div className="border-t border-amber-950/30 pt-section flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 font-tajawal gap-3">
           <p>© {BRAND.currentYear} {BRAND.name.ar} — صرح رقمي عالمي مستقل لوجه الله تعالى.</p>
           <div className="flex items-center gap-4 text-[11px]">
             <span>خالٍ من الإعلانات التجارية</span>

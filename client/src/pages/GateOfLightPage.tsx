@@ -40,9 +40,13 @@ export default function GateOfLightPage() {
     try {
       const savedPath = localStorage.getItem("last-reading-path");
       const savedTitle = localStorage.getItem("last-reading-title");
-      if (savedPath && savedTitle) {
+      const validReadingPaths = new Set(["/seerah", "/quran", "/sunnah", "/library"]);
+      if (savedPath && savedTitle && validReadingPaths.has(savedPath)) {
         setLastVisitedPath(savedPath);
         setLastVisitedTitle(savedTitle);
+      } else {
+        localStorage.removeItem("last-reading-path");
+        localStorage.removeItem("last-reading-title");
       }
     } catch {
       // Ignore
@@ -58,15 +62,15 @@ export default function GateOfLightPage() {
 
   return (
     <InstitutionShell activeWing="gate-of-light">
-      <div className="space-y-16 py-6 md:py-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="space-y-section py-component md:py-section max-w-content mx-auto px-4 sm:px-6 lg:px-8">
         {/* ========================================================
             HERO SECTION — بوابـــــة النــــور
             ======================================================== */}
-        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-emerald-950 via-slate-900 to-slate-950 border border-emerald-900/40 p-8 md:p-14 text-white shadow-2xl text-right">
+        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-emerald-950 via-slate-900 to-slate-950 border border-emerald-900/40 px-6 py-institutional md:px-14 text-white shadow-elevation-3 text-right">
           {/* Subtle Islamic geometric pattern background */}
           <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
 
-          <div className="relative z-10 max-w-4xl mx-auto space-y-6 text-center">
+          <div className="relative z-10 max-w-reading mx-auto space-y-component text-center">
             {/* Sacred Prophetic Emblem */}
             <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-amber-400/10 border border-amber-400/30 text-amber-300 mb-2 shadow-inner">
               <span className="font-amiri font-bold text-3xl md:text-4xl leading-none">
@@ -81,7 +85,7 @@ export default function GateOfLightPage() {
               <h1 className="text-4xl md:text-6xl font-amiri font-bold text-white tracking-tight leading-tight">
                 {BRAND.name.ar}
               </h1>
-              <p className="text-base md:text-xl font-tajawal text-slate-300 max-w-2xl mx-auto leading-relaxed">
+              <p className="text-base md:text-xl font-tajawal text-slate-300 mx-auto leading-relaxed">
                 {BRAND.tagline.ar}
               </p>
             </div>
@@ -103,25 +107,14 @@ export default function GateOfLightPage() {
                 </Button>
               </Link>
 
-              <Link href="/prophetic-day" asChild>
+              <Link href="/quran" asChild>
                 <Button
-                  size="lg"
+                  size="default"
                   variant="outline"
-                  className="bg-emerald-950/60 hover:bg-emerald-900/80 border-emerald-500/40 text-emerald-200 font-cairo font-semibold rounded-2xl px-6 h-12 text-sm gap-2"
+                  className="bg-emerald-950/60 hover:bg-emerald-900/80 border-emerald-500/40 text-emerald-100 font-cairo font-semibold rounded-xl px-5 h-10 text-xs sm:text-sm gap-2"
                 >
-                  <Sun className="w-4 h-4 text-amber-300" />
-                  <span>24 ساعة في رحاب الهدي النبوي</span>
-                </Button>
-              </Link>
-
-              <Link href="/sunnah" asChild>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="bg-slate-900/60 hover:bg-slate-800/80 border-slate-700 text-slate-300 font-cairo rounded-2xl px-6 h-12 text-sm gap-2"
-                >
-                  <Feather className="w-4 h-4 text-cyan-300" />
-                  <span>دار الحديث الشريف</span>
+                  <BookOpen className="w-4 h-4 text-amber-300" aria-hidden="true" />
+                  <span>دخول رِواق القرآن الكريم</span>
                 </Button>
               </Link>
             </div>
@@ -132,7 +125,7 @@ export default function GateOfLightPage() {
             REAL CONTINUATION PANEL — "أين أنت في الرحلة؟"
             ======================================================== */}
         {lastVisitedPath ? (
-          <section className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 flex items-center justify-between text-right">
+          <section className="p-component rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 flex items-center justify-between text-right">
             <div className="flex items-center gap-3">
               <Bookmark className="w-5 h-5 text-emerald-700 dark:text-emerald-400 shrink-0" />
               <div>
@@ -152,7 +145,7 @@ export default function GateOfLightPage() {
             </Link>
           </section>
         ) : (
-          <section className="p-4 rounded-2xl bg-slate-100/80 dark:bg-slate-900/60 border border-border/80 flex items-center justify-between text-right">
+          <section className="p-component rounded-2xl bg-slate-100/80 dark:bg-slate-900/60 border border-border/80 flex items-center justify-between text-right">
             <div className="flex items-center gap-3">
               <Compass className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
               <p className="text-xs font-cairo text-muted-foreground">
@@ -171,7 +164,7 @@ export default function GateOfLightPage() {
         {/* ========================================================
             FLAGSHIP JOURNEY BANNER: "من هو محمد بن عبد الله ﷺ؟"
             ======================================================== */}
-        <section className="rounded-3xl p-8 bg-gradient-to-r from-amber-500/10 via-emerald-500/10 to-transparent border border-amber-500/30 text-right space-y-4">
+        <section className="rounded-3xl p-section bg-gradient-to-r from-amber-500/10 via-emerald-500/10 to-transparent border border-amber-500/30 text-right space-y-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-2 max-w-2xl">
               <Badge className="bg-amber-600/20 text-amber-900 dark:text-amber-300 hover:bg-amber-600/30 text-xs font-tajawal">
@@ -221,7 +214,7 @@ export default function GateOfLightPage() {
             {INSTITUTION_WINGS.filter((w) => w.id !== "gate-of-light").map((wing) => (
               <Link key={wing.id} href={wing.path}>
                 <Card className="h-full rounded-2xl border-border/80 hover:border-emerald-600 dark:hover:border-emerald-500 hover:shadow-md transition-all group cursor-pointer bg-white/70 dark:bg-slate-900/60">
-                  <CardContent className="p-5 space-y-3 text-right">
+                  <CardContent className="p-component space-y-control text-right">
                     <div className="flex items-center justify-between text-xs text-muted-foreground font-tajawal">
                       <span className="font-mono font-bold">
                         رواق {wing.number}
@@ -276,7 +269,7 @@ export default function GateOfLightPage() {
             {seerahTeaser.map((ch, idx) => (
               <div
                 key={ch.id}
-                className="p-5 rounded-2xl border border-border/80 bg-white dark:bg-slate-900/80 shadow-xs space-y-3 flex flex-col justify-between"
+                className="p-component rounded-2xl border border-border/80 bg-white dark:bg-slate-900/80 shadow-xs space-y-3 flex flex-col justify-between"
               >
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs font-tajawal text-muted-foreground">
@@ -288,10 +281,10 @@ export default function GateOfLightPage() {
                         setSelectedEvidence({
                           title: ch.title,
                           collectionOrWork: "سيرة ابن هشام والبداية والنهاية لابن كثير",
-                          status: "verified",
+                          status: "editorial_review_pending",
                           chapter: ch.title,
                           originalText: ch.details.slice(0, 200) + "...",
-                          provenanceDataset: "سجل السيرة النبوية المعتمدة",
+                          provenanceDataset: "سجل السيرة النبوية — يحتاج مراجعة تحريرية",
                         })
                       }
                       className="text-[11px] text-amber-700 dark:text-amber-400 hover:underline flex items-center gap-1 font-cairo"
@@ -326,7 +319,7 @@ export default function GateOfLightPage() {
           <div className="flex items-center justify-between">
             <Link href="/library" asChild>
               <Button variant="ghost" size="sm" className="font-cairo text-xs gap-1">
-                تصفح الأرفف الكاملة ({books.length} كتاباً)
+                تصفح فهرس الرفوف ({books.length} سجلًا)
                 <ChevronLeft className="w-4 h-4" />
               </Button>
             </Link>
@@ -347,11 +340,11 @@ export default function GateOfLightPage() {
               return (
                 <div
                   key={cat.id}
-                  className="p-6 rounded-3xl bg-amber-950/5 dark:bg-amber-950/20 border border-amber-900/15 dark:border-amber-500/15 space-y-4"
+                  className="p-section rounded-3xl bg-amber-950/5 dark:bg-amber-950/20 border border-amber-900/15 dark:border-amber-500/15 space-y-4"
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-tajawal text-muted-foreground">
-                      {catBooks.length} كتب معتمدة
+                      {catBooks.length} سجلات في الفهرس
                     </span>
                     <div className="flex items-center gap-2">
                       <h3 className="font-amiri font-bold text-lg text-foreground">{cat.name}</h3>
@@ -390,7 +383,7 @@ export default function GateOfLightPage() {
         {/* ========================================================
             DAR AL-HADITH & SUNNAH TEASER — دار الحديث
             ======================================================== */}
-        <section className="rounded-3xl p-8 bg-slate-900 text-white border border-slate-800 space-y-6 text-right">
+        <section className="rounded-3xl p-section bg-slate-900 text-white border border-slate-800 space-y-6 text-right">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="space-y-1">
               <Badge className="bg-cyan-900/50 text-cyan-200 border-cyan-700/50 text-xs font-tajawal">
@@ -422,7 +415,7 @@ export default function GateOfLightPage() {
             ].map((col) => (
               <div
                 key={col.name}
-                className="p-4 rounded-xl bg-slate-800/80 border border-slate-700/60 text-center space-y-1"
+                className="p-component rounded-xl bg-slate-800/80 border border-slate-700/60 text-center space-y-1"
               >
                 <span className="text-[10px] text-cyan-400 font-mono block">{col.icon}</span>
                 <h4 className="font-amiri font-bold text-base text-slate-100">{col.name}</h4>
@@ -435,7 +428,7 @@ export default function GateOfLightPage() {
         {/* ========================================================
             DAILY SANCTUARY TEASER — محراب اليوم
             ======================================================== */}
-        <section className="p-6 rounded-3xl border border-emerald-600/30 bg-emerald-50/50 dark:bg-emerald-950/20 text-right space-y-4">
+        <section className="p-section rounded-3xl border border-emerald-600/30 bg-emerald-50/50 dark:bg-emerald-950/20 text-right space-y-4">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="space-y-1">
               <h3 className="font-amiri font-bold text-xl text-foreground">

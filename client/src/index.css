@@ -36,6 +36,19 @@
   --ring: 38 68% 44%;
 
   --radius: 16px;
+
+  /* Shared layout rhythm: use these through the semantic Tailwind utilities. */
+  --space-micro: 0.25rem;
+  --space-control: 0.5rem;
+  --space-component: 1rem;
+  --space-section: 2.5rem;
+  --space-institutional: 6rem;
+  --max-w-prose-ar: 42rem;
+  --max-w-reading: 48rem;
+  --max-w-content: 72rem;
+  --shadow-elevation-1: 0 1px 2px rgb(20 28 36 / 0.06);
+  --shadow-elevation-2: 0 8px 24px rgb(20 28 36 / 0.12);
+  --shadow-elevation-3: 0 18px 48px rgb(10 16 24 / 0.2);
 }
 
 /* Dark Theme — Deep Midnight Obsidian & Aged Gold */
@@ -63,6 +76,10 @@
   --border: 216 20% 18%;             /* Hairline slate border */
   --input: 216 20% 18%;
   --ring: 38 72% 52%;
+
+  --shadow-elevation-1: 0 1px 2px rgb(0 0 0 / 0.2);
+  --shadow-elevation-2: 0 8px 24px rgb(0 0 0 / 0.3);
+  --shadow-elevation-3: 0 18px 48px rgb(0 0 0 / 0.45);
 }
 
 /* ==========================================================================

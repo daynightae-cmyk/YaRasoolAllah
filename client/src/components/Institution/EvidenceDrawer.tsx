@@ -18,7 +18,7 @@ export interface EvidenceSource {
   chapter?: string;
   originalText?: string;
   translationExcerpt?: string;
-  status: "verified" | "multiple_sourced" | "historically_approximate" | "disputed" | "editorial_review_pending";
+  status?: "verified" | "multiple_sourced" | "historically_approximate" | "disputed" | "editorial_review_pending";
   grade?: string;
   uncertaintyNote?: string;
   provenanceDataset?: string;
@@ -33,7 +33,7 @@ interface EvidenceDrawerProps {
 }
 
 const STATUS_CONFIG: Record<
-  EvidenceSource["status"],
+  NonNullable<EvidenceSource["status"]>,
   { labelAr: string; labelEn: string; variant: "default" | "secondary" | "outline" | "destructive" }
 > = {
   verified: {
@@ -71,7 +71,9 @@ export default function EvidenceDrawer({
 }: EvidenceDrawerProps) {
   if (!evidence) return null;
 
-  const status = STATUS_CONFIG[evidence.status] || STATUS_CONFIG.verified;
+  const status = evidence.status
+    ? STATUS_CONFIG[evidence.status]
+    : STATUS_CONFIG.editorial_review_pending;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

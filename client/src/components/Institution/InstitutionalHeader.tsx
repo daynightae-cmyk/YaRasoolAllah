@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import DivineToggle from "@/components/DivineToggle";
 import LearningDepthSelector from "./LearningDepthSelector";
-import GlobalSearchDialog from "./GlobalSearchDialog";
+import InstitutionalSearchDialog from "@/components/common/InstitutionalSearchDialog";
 import {
   Search,
   Menu,
@@ -23,6 +23,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+// Desktop navigation intentionally begins at xl to prevent eight wing links plus search
+// and user controls from becoming crowded at tablet and compact-laptop widths.
 const NAV_ITEMS = [
   { href: "/", labelAr: "بوابة النور", labelEn: "Home", icon: Sparkles },
   { href: "/who-is-muhammad", labelAr: "من هو محمد ﷺ؟", labelEn: "Who is Muhammad?", icon: Heart, highlight: true },
@@ -170,8 +172,9 @@ export default function InstitutionalHeader() {
       </header>
 
       {/* Global Search Dialog */}
-      <GlobalSearchDialog
+      <InstitutionalSearchDialog
         isOpen={isSearchOpen}
+        onOpen={() => setIsSearchOpen(true)}
         onClose={() => setIsSearchOpen(false)}
       />
     </>

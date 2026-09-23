@@ -1,7 +1,6 @@
 import React from "react";
 import InstitutionalHeader from "./InstitutionalHeader";
 import InstitutionalFooter from "./InstitutionalFooter";
-import { DepthProvider } from "./LearningDepthSelector";
 import { Link, useLocation } from "wouter";
 import {
   Sparkles,
@@ -13,6 +12,7 @@ import {
   Heart,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface InstitutionShellProps {
   children: React.ReactNode;
@@ -35,10 +35,13 @@ export default function InstitutionShell({
   hideFooter = false,
 }: InstitutionShellProps) {
   const [location] = useLocation();
+  const { direction } = useLanguage();
 
   return (
-    <DepthProvider>
-      <div className="min-h-screen flex flex-col bg-slate-50/50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors pb-16 md:pb-0" dir="rtl">
+    <div
+      className="min-h-screen flex flex-col bg-slate-50/50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors pb-16 md:pb-0"
+      dir={direction}
+    >
         <InstitutionalHeader />
 
         <main className="flex-1 w-full">
@@ -72,7 +75,6 @@ export default function InstitutionShell({
             );
           })}
         </nav>
-      </div>
-    </DepthProvider>
+    </div>
   );
 }

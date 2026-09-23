@@ -165,8 +165,8 @@ export default function SourceDrawer({
   const refNum = source.referenceNumber;
   const arabicText = source.textAr || source.originalText || "";
   const englishText = source.textEn || source.translationExcerpt;
-  const rawStatus = (source.status || "verified") as EditorialStatus;
-  const statusInfo = STATUS_CONFIG[rawStatus] || STATUS_CONFIG.verified;
+  const rawStatus = source.status ?? "editorial_review_pending";
+  const statusInfo = STATUS_CONFIG[rawStatus] ?? STATUS_CONFIG.editorial_review_pending;
   const grade = source.hadithGrade || source.grade;
 
   // Generate standardized academic citation
