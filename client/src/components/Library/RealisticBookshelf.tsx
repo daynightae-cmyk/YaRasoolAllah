@@ -81,22 +81,33 @@ const LEATHER_PROFILES: Record<LeatherType, SpineStyle> = {
   },
 };
 
-// Deterministic spine generation from book data to ensure consistent visual identity
+// Deterministic spine generation from stable book identity to ensure
+// consistent visual identity regardless of result array order.
+function stableHash(value: string): number {
+  let hash = 0;
+  for (let i = 0; i < value.length; i++) {
+    hash = (hash * 31 + value.charCodeAt(i)) | 0;
+  }
+  return Math.abs(hash);
+}
+
 function getBookSpineProfile(book: LibraryBook, index: number): {
   profile: SpineStyle;
   height: number;
   width: number;
 } {
   const leatherTypes: LeatherType[] = ["oxblood", "emerald", "navy", "walnut", "parchment"];
-  const typeIndex = (index + (book.publishedYear % 5)) % leatherTypes.length;
+  const stableId = stableHash(book.id || book.title);
+  const typeIndex = (stableId + (book.publishedYear % 5)) % leatherTypes.length;
   const leather = leatherTypes[typeIndex];
 
   // Natural variations in physical height (240px - 285px) and thickness (38px - 54px)
   const heightVariations = [255, 270, 245, 280, 260, 265, 250];
   const widthVariations = [42, 48, 52, 40, 46, 54, 44];
 
-  const height = heightVariations[index % heightVariations.length];
-  const width = widthVariations[(index * 3) % widthVariations.length];
+  const height = heightVariations[stableId % heightVariations.length];
+  const width = widthVariations[(stableId * 3) % widthVariations.length];
+  void index;
 
   return {
     profile: LEATHER_PROFILES[leather],
@@ -112,9 +123,6 @@ interface RealisticBookshelfProps {
   categoryIcon?: string;
   books: LibraryBook[];
   onSelectBook: (book: LibraryBook) => void;
-  onReadBook: (book: LibraryBook) => void;
-  onDownloadBook: (book: LibraryBook) => void;
-  onInspectProvenance: (book: LibraryBook) => void;
 }
 
 export default function RealisticBookshelf({
@@ -123,9 +131,6 @@ export default function RealisticBookshelf({
   shelfDescriptionAr,
   books,
   onSelectBook,
-  onReadBook,
-  onDownloadBook,
-  onInspectProvenance,
 }: RealisticBookshelfProps) {
   const [hoveredBookId, setHoveredBookId] = useState<string | null>(null);
 

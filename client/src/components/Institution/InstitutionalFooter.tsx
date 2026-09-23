@@ -30,7 +30,7 @@ export default function InstitutionalFooter() {
               {BRAND.tagline.ar}
             </p>
             <div className="pt-2 text-xs font-mono text-emerald-400">
-              النطاق المعتمد: {BRAND.domain}
+              النطاق المعلن في وثيقة المشروع: {BRAND.domain}
             </div>
           </div>
 
@@ -107,10 +107,10 @@ export default function InstitutionalFooter() {
           <div className="space-y-2 text-xs font-cairo">
             <h4 className="font-cairo font-bold text-sm text-amber-400">الأمانة العلمية</h4>
             <p className="text-slate-400 leading-relaxed">
-              تعتمد المنصة على الروايات المحققة، والتفاسير المعتمدة، وكتب الصحاح والسنن، مع توثيق المصدر وعزل الشروح عن النصوص الأصلية المعصومة.
+              تميّز المنصة بين النص والمصدر والطبعة وقرار الحقوق. ما لم يكتمل توثيقه يظهر صراحةً بوصفه قيد المراجعة، ولا يُعرض النقص على أنه اعتماد مكتمل.
             </p>
             <div className="pt-2 text-[11px] text-slate-500">
-              البريد المؤسسي: {BRAND.contactEmail}
+              بريد المشروع المعلن: {BRAND.contactEmail}
             </div>
           </div>
         </div>

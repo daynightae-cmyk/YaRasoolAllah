@@ -10,9 +10,7 @@ import { ProgressProvider } from "./contexts/ProgressContext";
 import { BabAlsamaaProvider, useBabAlsamaa } from "./hooks/useBabAlsamaa";
 import AppLayout from "./components/Layout/AppLayout";
 import BabAlsamaa from "./components/BabAlsamaa/BabAlsamaa";
-import BabAlsamaaFAB, {
-  BabAlsamaaSmartNotifier,
-} from "./components/BabAlsamaa/BabAlsamaaFAB";
+import BabAlsamaaFAB from "./components/BabAlsamaa/BabAlsamaaFAB";
 import WelcomeModal from "./components/WelcomeModal";
 import GateOfLightPage from "./pages/GateOfLightPage";
 import WhoIsMuhammadPage from "./pages/WhoIsMuhammadPage";
@@ -31,6 +29,7 @@ import ChildrenTVPage from "./pages/ChildrenTVPage";
 import QuranAudioPage from "./pages/QuranAudioPage";
 import DailyVersePage from "./pages/DailyVersePage";
 import BabAlsamaaSettingsPage from "./pages/BabAlsamaaSettingsPage";
+import { DepthProvider } from "./components/Institution/LearningDepthSelector";
 import IslamicAIManagementPage from "./pages/IslamicAIManagementPage";
 import AlMubeenBotPage from "./pages/AlMubeenBotPage";
 import AlMuftiAlMubeenPage from "./pages/AlMuftiAlMubeenPage";
@@ -46,20 +45,22 @@ function AppContent() {
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
 
   useEffect(() => {
-    // إظهار نافذة الترحيب عند أول زيارة أو بعد فترة من عدم الاستخدام
-    const lastVisit = localStorage.getItem("lastVisit");
-    const now = Date.now();
-
-    if (!lastVisit || now - parseInt(lastVisit) > 24 * 60 * 60 * 1000) {
-      // إذا لم يزر التطبيق من قبل أو انقضى أكثر من 24 ساعة
-      setShowWelcomeModal(true);
+    try {
+      setShowWelcomeModal(
+        localStorage.getItem("institution-welcome-seen") !== "true",
+      );
+    } catch {
+      setShowWelcomeModal(false);
     }
-
-    localStorage.setItem("lastVisit", now.toString());
   }, []);
 
   const handleCloseWelcomeModal = () => {
     setShowWelcomeModal(false);
+    try {
+      localStorage.setItem("institution-welcome-seen", "true");
+    } catch {
+      // The dialog can still close when storage is unavailable.
+    }
   };
 
   return (
@@ -90,11 +91,7 @@ function AppContent() {
           {() => <PropheticDayPage />}
         </Route>
         <Route path="/library">
-          {() => (
-            <AppLayout showSidebar={true}>
-              <DigitalLibraryPage />
-            </AppLayout>
-          )}
+          {() => <DigitalLibraryPage />}
         </Route>
         <Route path="/daily">
           {() => (
@@ -107,11 +104,7 @@ function AppContent() {
           {() => <GateOfLightPage />}
         </Route>
         <Route path="/quran">
-          {() => (
-            <AppLayout>
-              <QuranPage />
-            </AppLayout>
-          )}
+          {() => <QuranPage />}
         </Route>
         <Route path="/quran-audio">
           {() => (
@@ -149,25 +142,13 @@ function AppContent() {
           )}
         </Route>
         <Route path="/digital-library">
-          {() => (
-            <AppLayout showSidebar={true}>
-              <DigitalLibraryPage />
-            </AppLayout>
-          )}
+          {() => <DigitalLibraryPage />}
         </Route>
         <Route path="/books">
-          {() => (
-            <AppLayout>
-              <DigitalLibraryPage />
-            </AppLayout>
-          )}
+          {() => <DigitalLibraryPage />}
         </Route>
         <Route path="/seerah">
-          {() => (
-            <AppLayout>
-              <SeerahPage />
-            </AppLayout>
-          )}
+          {() => <SeerahPage />}
         </Route>
         <Route path="/prayer-guide">
           {() => (
@@ -212,11 +193,7 @@ function AppContent() {
           )}
         </Route>
         <Route path="/children-tv">
-          {() => (
-            <AppLayout>
-              <ChildrenTVPage />
-            </AppLayout>
-          )}
+          {() => <ChildrenTVPage />}
         </Route>
         <Route path="/ai-assistant">
           {() => (
@@ -263,7 +240,6 @@ function AppContent() {
         triggeredBy={triggerContext ? "auto" : "manual"}
       />
       <BabAlsamaaFAB />
-      <BabAlsamaaSmartNotifier />
 
       {/* نافذة الترحيب المنبثقة */}
       <WelcomeModal
@@ -281,14 +257,16 @@ export default function App() {
         <LanguageProvider>
           <ProgressProvider>
             <BabAlsamaaProvider>
-              <TooltipProvider>
-                <div className="app font-cairo">
-                  <Router>
-                    <AppContent />
-                  </Router>
-                  <Toaster />
-                </div>
-              </TooltipProvider>
+              <DepthProvider>
+                <TooltipProvider>
+                  <div className="app font-cairo">
+                    <Router>
+                      <AppContent />
+                    </Router>
+                    <Toaster />
+                  </div>
+                </TooltipProvider>
+              </DepthProvider>
             </BabAlsamaaProvider>
           </ProgressProvider>
         </LanguageProvider>

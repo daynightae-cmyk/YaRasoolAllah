@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   useBabAlsamaa,
   useSmartSuggestions,
-  useEmotionalDetection,
 } from "@/hooks/useBabAlsamaa";
 import { useTheme } from "../ThemeProvider";
 import { Sparkles, X } from "lucide-react";
@@ -14,16 +12,13 @@ import { cn } from "@/lib/utils";
 interface BabAlsamaaFABProps {
   className?: string;
 }
-
 export default function BabAlsamaaFAB({ className }: BabAlsamaaFABProps) {
-  const { openBab, isNotificationsEnabled } = useBabAlsamaa();
+  const { openBab } = useBabAlsamaa();
   const { suggestions } = useSmartSuggestions();
-  const { getMoodAnalytics } = useEmotionalDetection();
   const { mode } = useTheme();
 
   const [isVisible, setIsVisible] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
-  const [showPulse, setShowPulse] = useState(false);
   const [suggestion, setSuggestion] = useState<string>("");
 
   useEffect(() => {
@@ -57,18 +52,6 @@ export default function BabAlsamaaFAB({ className }: BabAlsamaaFABProps) {
     const interval = setInterval(updateSuggestion, 60000);
     return () => clearInterval(interval);
   }, [suggestions]);
-
-  useEffect(() => {
-    // تفعيل النبضة بناءً على الحالة العاطفية
-    const analytics = getMoodAnalytics();
-    const sadMoods = ["sad", "fear", "confused", "anger"];
-
-    if (sadMoods.includes(analytics.lastMood)) {
-      setShowPulse(true);
-      const timer = setTimeout(() => setShowPulse(false), 10000);
-      return () => clearTimeout(timer);
-    }
-  }, []);
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -153,24 +136,9 @@ export default function BabAlsamaaFAB({ className }: BabAlsamaaFABProps) {
             onHoverEnd={() => setIsHovered(false)}
             className="relative"
           >
-            {/* تأثير النبضة */}
-            {showPulse && (
-              <motion.div
-                animate={{
-                  scale: [1, 1.4, 1],
-                  opacity: [0.7, 0, 0.7],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="absolute inset-0 bg-gradient-to-r from-rose-400 to-pink-500 rounded-full"
-              />
-            )}
-
             <Button
               onClick={() => openBab("manual")}
+              aria-label="فتح باب السماء"
               className={cn(
                 "relative w-14 h-14 rounded-full shadow-xl border-2 transition-all duration-300 group overflow-hidden",
                 mode === "heaven"
@@ -179,48 +147,11 @@ export default function BabAlsamaaFAB({ className }: BabAlsamaaFABProps) {
               )}
             >
               {/* الأيقونة - مبسطة */}
-              <motion.div
-                animate={{
-                  rotate: [0, 5, -5, 0],
-                  scale: [1, 1.1, 1],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="relative z-10"
-              >
-                <Sparkles className="w-6 h-6 text-white drop-shadow-lg" />
-              </motion.div>
-
-              {/* تأثير لمعان مبسط */}
-              <motion.div
-                animate={{
-                  x: [-50, 50],
-                  opacity: [0, 0.3, 0],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+              <Sparkles
+                className="relative z-10 h-6 w-6 text-white drop-shadow-lg"
+                aria-hidden="true"
               />
             </Button>
-
-            {/* إشعار ا��حالة */}
-            {isNotificationsEnabled && (
-              <motion.div
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 2, repeat: Infinity }}
-                className="absolute -top-1 -right-1"
-              >
-                <Badge className="w-3 h-3 p-0 bg-emerald-500 border-2 border-white rounded-full">
-                  <span className="sr-only">مفعل</span>
-                </Badge>
-              </motion.div>
-            )}
           </motion.div>
 
           {/* معلومات إضافية - مبسطة */}
@@ -255,45 +186,4 @@ export default function BabAlsamaaFAB({ className }: BabAlsamaaFABProps) {
       )}
     </AnimatePresence>
   );
-}
-
-// مكون إضافي للحصول على إشعارات ذكية - مبسط
-export function BabAlsamaaSmartNotifier() {
-  const { openBab } = useBabAlsamaa();
-  const [lastActivity, setLastActivity] = useState(Date.now());
-
-  useEffect(() => {
-    // تتبع نشاط المستخدم
-    const updateActivity = () => setLastActivity(Date.now());
-
-    const events = ["mousedown", "keypress", "scroll", "touchstart"];
-    events.forEach((event) => {
-      document.addEventListener(event, updateActivity, true);
-    });
-
-    // فحص فترات الخمول
-    const checkInactivity = () => {
-      const now = Date.now();
-      const inactiveTime = now - lastActivity;
-
-      // إذا كان خامل لأكثر من 15 دقيقة
-      if (inactiveTime > 15 * 60 * 1000) {
-        const shouldTrigger = Math.random() < 0.2; // 20% احتمال
-        if (shouldTrigger) {
-          openBab("auto");
-        }
-      }
-    };
-
-    const interval = setInterval(checkInactivity, 10 * 60 * 1000); // كل 10 دقائق
-
-    return () => {
-      clearInterval(interval);
-      events.forEach((event) => {
-        document.removeEventListener(event, updateActivity, true);
-      });
-    };
-  }, [lastActivity, openBab]);
-
-  return null; // مكون غير مرئي
 }

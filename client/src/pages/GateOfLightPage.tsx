@@ -288,10 +288,11 @@ export default function GateOfLightPage() {
                         setSelectedEvidence({
                           title: ch.title,
                           collectionOrWork: "سيرة ابن هشام والبداية والنهاية لابن كثير",
-                          status: "verified",
+                          status: "editorial_review_pending",
                           chapter: ch.title,
                           originalText: ch.details.slice(0, 200) + "...",
                           provenanceDataset: "سجل السيرة النبوية المعتمدة",
+                          reviewNote: "سجل تعريفي من بيانات العرض؛ لم تُطابق الطبعة والصفحة وسند المراجعة بعد.",
                         })
                       }
                       className="text-[11px] text-amber-700 dark:text-amber-400 hover:underline flex items-center gap-1 font-cairo"

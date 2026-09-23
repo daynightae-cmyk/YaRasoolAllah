@@ -33,6 +33,7 @@ import {
   Scroll,
   Sparkles,
   ShieldCheck,
+  AlertTriangle,
   Check,
   Share2,
 } from "lucide-react";
@@ -77,12 +78,15 @@ const tafsirScholars: TafsirScholar[] = [
   },
 ];
 
+// Foundation truth: only the English development sample exists locally.
+// Other languages are listed as explicitly unavailable until their
+// licensed resources are acquired, versioned, and rights-cleared.
 const translationLanguages = [
-  { code: "en", name: "English", arabicName: "الإنجليزية" },
-  { code: "fr", name: "French", arabicName: "الفرنسية" },
-  { code: "ur", name: "Urdu", arabicName: "الأردية" },
-  { code: "tr", name: "Turkish", arabicName: "التركية" },
-  { code: "es", name: "Spanish", arabicName: "الإسبانية" },
+  { code: "en", name: "English", arabicName: "الإنجليزية", available: true },
+  { code: "fr", name: "French", arabicName: "الفرنسية — غير متاحة بعد", available: false },
+  { code: "ur", name: "Urdu", arabicName: "الأردية — غير متاحة بعد", available: false },
+  { code: "tr", name: "Turkish", arabicName: "التركية — غير متاحة بعد", available: false },
+  { code: "es", name: "Spanish", arabicName: "الإسبانية — غير متاحة بعد", available: false },
 ];
 
 export default function QuranPage() {
@@ -168,9 +172,9 @@ export default function QuranPage() {
     localStorage.setItem("quran-bookmarks", JSON.stringify(next));
   };
 
-  const handleCopy = (text: string) => {
+  const handleCopy = async (text: string) => {
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(text);
       setCopiedVerse(true);
       setTimeout(() => setCopiedVerse(false), 2000);
     }
@@ -197,14 +201,15 @@ export default function QuranPage() {
                 </span>
                 <span className="text-slate-400 text-xs">·</span>
                 <span className="text-xs font-tajawal text-slate-300">
-                  114 سورة برسم المصحف العثماني
+                  فهرس 114 سورة · المتن المتاح حاليًا عينة تطوير محدودة
                 </span>
               </div>
               <h1 className="text-3xl md:text-5xl font-amiri font-bold tracking-tight text-white">
                 رِواق القرآن الكريم
               </h1>
               <p className="text-sm md:text-base font-tajawal text-slate-300 max-w-2xl leading-relaxed">
-                قراءة متأنية بالرسم العثماني المعتمد، مقرونة بترجمات دقيقة وتفاسير محققة لأكابر أئمة التفسير.
+                قراءة متأنية بالرسم العثماني المعتمد، مع عينة ترجمة إنجليزية للتطوير؛
+                والتفاسير المحققة لأئمة التفسير قيد الإدخال والمراجعة.
               </p>
             </div>
           </div>
@@ -341,16 +346,17 @@ export default function QuranPage() {
                     </div>
 
                     {/* Navigation between Ayahs */}
-                    <div className="flex items-center justify-between border-y border-border py-3">
+                    <div className="flex items-center justify-between gap-2 border-y border-border py-3">
                       <Button
                         variant="ghost"
                         size="sm"
                         disabled={currentVerse <= 1}
                         onClick={() => setCurrentVerse((v) => Math.max(1, v - 1))}
-                        className="text-xs font-cairo gap-1.5"
+                        className="text-xs font-cairo gap-1 px-2 sm:px-3"
+                        aria-label="الآية السابقة"
                       >
                         <ChevronRight className="w-4 h-4" />
-                        الآية السابقة
+                        <span className="hidden sm:inline">الآية السابقة</span>
                       </Button>
 
                       <div className="flex items-center gap-2">
@@ -382,9 +388,10 @@ export default function QuranPage() {
                             Math.min(selectedChapter.ayahCount, v + 1)
                           )
                         }
-                        className="text-xs font-cairo gap-1.5"
+                        className="text-xs font-cairo gap-1 px-2 sm:px-3"
+                        aria-label="الآية التالية"
                       >
-                        الآية التالية
+                        <span className="hidden sm:inline">الآية التالية</span>
                         <ChevronLeft className="w-4 h-4" />
                       </Button>
                     </div>
@@ -393,24 +400,31 @@ export default function QuranPage() {
                     <div className="p-6 rounded-2xl bg-white dark:bg-slate-800/50 border border-border space-y-3">
                       <div className="flex items-center justify-between border-b pb-2">
                         <span className="text-xs font-bold font-cairo text-foreground">
-                          معاني الآية بالترجمة المعتمدة
+                          ترجمة إنجليزية ضمن عينة التطوير
                         </span>
                         <Select
                           value={selectedTranslation}
-                          onValueChange={setSelectedTranslation}
+                          onValueChange={(v) => {
+                            const lang = translationLanguages.find((l) => l.code === v);
+                            if (lang?.available) setSelectedTranslation(v);
+                          }}
                         >
-                          <SelectTrigger className="w-36 h-8 text-xs font-cairo">
+                          <SelectTrigger className="w-44 h-8 text-xs font-cairo">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
                             {translationLanguages.map((l) => (
-                              <SelectItem key={l.code} value={l.code}>
+                              <SelectItem key={l.code} value={l.code} disabled={!l.available}>
                                 {l.arabicName}
                               </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                       </div>
+                      <p className="text-[11px] font-tajawal text-muted-foreground leading-relaxed">
+                        المتاح حاليًا الإنجليزية فقط ضمن عينة التطوير. بقية اللغات معطلة
+                        صراحة حتى إدخال مورد مرخص لكل لغة مع الإصدار والحقوق.
+                      </p>
                       <p className="text-sm font-inter text-foreground/90 leading-relaxed" dir="ltr">
                         {verse.translation}
                       </p>
@@ -424,7 +438,8 @@ export default function QuranPage() {
                             تفسير الآية الكريمة
                           </h4>
                           <p className="text-[11px] font-tajawal text-muted-foreground">
-                            {tafsirScholars.find((s) => s.id === selectedTafsir)?.compiler}
+                            عينة تطوير عامة — غير منسوبة لإمام بعينه. تفاسير ابن كثير
+                            والطبري والقرطبي والسعدي قيد الإدخال والمراجعة وغير متاحة بعد.
                           </p>
                         </div>
 
@@ -432,14 +447,15 @@ export default function QuranPage() {
                           <Select
                             value={selectedTafsir}
                             onValueChange={setSelectedTafsir}
+                            disabled
                           >
-                            <SelectTrigger className="w-40 h-8 text-xs font-cairo">
-                              <SelectValue />
+                            <SelectTrigger className="w-40 h-8 text-xs font-cairo" aria-disabled="true" title="اختيار المفسر معطل: لا يوجد تفسير محقق مدخل بعد">
+                              <SelectValue placeholder="التفسير قيد الإدخال" />
                             </SelectTrigger>
                             <SelectContent>
                               {tafsirScholars.map((s) => (
-                                <SelectItem key={s.id} value={s.id}>
-                                  {s.arabicName}
+                                <SelectItem key={s.id} value={s.id} disabled>
+                                  {s.arabicName} — غير متاح بعد
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -458,7 +474,7 @@ export default function QuranPage() {
 
                       {showTafsir && (
                         <div className="text-sm font-tajawal leading-relaxed text-foreground/90 whitespace-pre-line">
-                          {tafsirText || verse.tafsir || "جاري استرجاع نص التفسير المعتمد..."}
+                          {tafsirText || verse.tafsir || "لا يتوفر نص تفسير مراجع لهذه الآية."}
                         </div>
                       )}
                     </div>
@@ -511,13 +527,18 @@ export default function QuranPage() {
                         onClick={() =>
                           setSelectedEvidence({
                             title: `سورة ${selectedChapter.arabicName} — الآية ${verse.ayah}`,
-                            collectionOrWork: "القرآن الكريم — مصحف المدينة النبوية برواية حفص عن عاصم",
-                            authorOrCompiler: "مجمع الملك فهد لطباعة المصحف الشريف",
+                            collectionOrWork: "عينة تطوير محلية — مصدر الإنتاج لم يُربط بعد",
+                            authorOrCompiler: "غير محدد في سجل المصدر الحالي",
                             referenceNumber: `QUR-${selectedChapter.number}:${verse.ayah}`,
                             originalText: verse.arabic,
                             translationExcerpt: verse.translation,
-                            status: "verified",
-                            provenanceDataset: "رسم المصحف العثماني وقاعدة بيانات التفاسير المعتمدة",
+                            status: "editorial_review_pending",
+                            reviewNote: "لا يجوز اعتماد هذا السجل للنشر قبل ربط ملف المصدر، الإصدار، الترخيص، والبصمة الرقمية.",
+                            provenanceDataset: "QURAN-DEVELOPMENT-SAMPLE",
+                            sourceRegistryId: "src-quran-development-sample",
+                            rightsDecision: "development_only",
+                            allowedUsageLabel: "عرض تطوير محلي فقط؛ غير صالح للإنتاج أو إعادة التوزيع",
+                            rightsCheckedAt: "2026-09-23T00:00:00+04:00",
                           })
                         }
                         className="text-xs font-cairo text-emerald-700 dark:text-emerald-400 gap-1.5"
@@ -527,7 +548,21 @@ export default function QuranPage() {
                       </Button>
                     </div>
                   </div>
-                ) : null}
+                ) : (
+                  <div
+                    className="rounded-2xl border border-amber-500/30 bg-amber-50/70 p-8 text-center dark:bg-amber-950/20"
+                    role="status"
+                  >
+                    <AlertTriangle className="mx-auto mb-3 h-6 w-6 text-amber-700 dark:text-amber-300" aria-hidden="true" />
+                    <h3 className="font-cairo text-sm font-bold text-foreground">
+                      متن هذه الآية غير متاح في العينة المحلية
+                    </h3>
+                    <p className="mx-auto mt-2 max-w-prose-ar font-tajawal text-xs leading-6 text-muted-foreground">
+                      لم نضع نصًا بديلًا أو مولّدًا داخل متن الآية. يظل هذا الموضع
+                      غير متاح حتى إدخال Corpus موثّق مع المصدر والإصدار والبصمة الرقمية.
+                    </p>
+                  </div>
+                )}
               </article>
             )}
           </div>

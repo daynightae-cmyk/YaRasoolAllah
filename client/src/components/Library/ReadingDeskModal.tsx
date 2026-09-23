@@ -10,16 +10,11 @@ import { Button } from "@/components/ui/button";
 import { LibraryBook } from "./RealisticBookshelf";
 import {
   BookOpen,
-  Download,
   ShieldCheck,
   FileText,
-  User,
-  Calendar,
-  Layers,
   ExternalLink,
   Copy,
   Check,
-  Award,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -27,8 +22,7 @@ interface ReadingDeskModalProps {
   book: LibraryBook | null;
   isOpen: boolean;
   onClose: () => void;
-  onRead: (book: LibraryBook) => void;
-  onDownload: (book: LibraryBook) => void;
+  onOpenSource: (book: LibraryBook) => void;
   onInspectProvenance: (book: LibraryBook) => void;
 }
 
@@ -36,19 +30,22 @@ export default function ReadingDeskModal({
   book,
   isOpen,
   onClose,
-  onRead,
-  onDownload,
+  onOpenSource,
   onInspectProvenance,
 }: ReadingDeskModalProps) {
   const [copied, setCopied] = useState(false);
 
   if (!book) return null;
 
-  const handleCopyCitation = () => {
-    const citation = `${book.author}. ${book.title}. ${book.publisher || "طبعة محققة معتمدة"}، ${book.publishedYear}م. ${book.investigator ? `تحقيق: ${book.investigator}. ` : ""}مكتبة صرح يا رسول الله ﷺ الرقمية.`;
-    navigator.clipboard.writeText(citation);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
+  const handleCopyCitation = async () => {
+    const citation = `${book.author}. ${book.title}. ${book.publisher || "بيانات الناشر غير مسجلة"}، ${book.publishedYear}م. ${book.investigator ? `تحقيق: ${book.investigator}. ` : ""}فهرس يا رسول الله ﷺ — سجل أولي قيد مراجعة الحقوق والنسخة.`;
+    try {
+      await navigator.clipboard.writeText(citation);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      setCopied(false);
+    }
   };
 
   return (
@@ -61,11 +58,11 @@ export default function ReadingDeskModal({
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
                 <span className="text-xs font-mono text-amber-300">
-                  خزانة التراث والتحقيق العلمي
+                  سجل الفهرسة والمصدر الخارجي
                 </span>
                 <span className="text-slate-400 text-xs">·</span>
                 <span className="text-xs font-tajawal text-slate-300">
-                  طبعة رقمية محققة
+                  قيد مراجعة النسخة والحقوق
                 </span>
               </div>
               <DialogTitle className="text-2xl sm:text-3xl font-amiri font-bold text-white text-right">
@@ -104,7 +101,7 @@ export default function ReadingDeskModal({
                 المحقق / المعتني به
               </span>
               <p className="text-sm font-semibold font-cairo">
-                {book.investigator || "نخبة من العلماء المحققين"}
+                {book.investigator || "غير مسجل في بيانات الفهرس"}
               </p>
             </div>
             <div className="space-y-1">
@@ -112,7 +109,7 @@ export default function ReadingDeskModal({
                 دار النشر / الطبعة
               </span>
               <p className="text-sm font-semibold font-cairo">
-                {book.publisher || book.edition || "دار التراث الإسلامي"}
+                {book.publisher || book.edition || "غير مسجل في بيانات الفهرس"}
               </p>
             </div>
             <div className="space-y-1">
@@ -125,14 +122,15 @@ export default function ReadingDeskModal({
             </div>
           </div>
 
-          {/* Book Synopsis & Scholarly Value */}
+          {/* Rights-safe catalog status. Raw source descriptions are not rendered
+              before editorial and edition-level review. */}
           <div className="space-y-2">
             <h3 className="text-sm font-bold font-cairo text-primary flex items-center gap-2">
               <FileText className="w-4 h-4" />
-              التعريف بالمصنَّف وقيمته العلمية
+              حالة الوصف والنسخة
             </h3>
             <p className="text-sm font-tajawal text-foreground/90 leading-relaxed bg-background/50 p-4 rounded-xl border border-border/60">
-              {book.description}
+              هذا سجل فهرسي أولي فقط. لم يُعتمد بعد وصف العمل أو بيانات الطبعة أو حق الملف المرتبط به، لذلك لا تعرض المنصة نصًا أو ملخصًا منقولًا بوصفه مادة محققة.
             </p>
           </div>
 
@@ -158,11 +156,11 @@ export default function ReadingDeskModal({
                 )}
               </Button>
               <span className="text-xs font-tajawal text-muted-foreground">
-                صيغة الاستشهاد المعتمدة (Citation)
+                صيغة استشهاد أولية (Citation)
               </span>
             </div>
             <div className="p-3 bg-muted/30 border border-border/70 rounded-lg text-xs font-mono text-muted-foreground select-all leading-normal text-left" dir="ltr">
-              {book.author}. "{book.titleEn || book.title}." {book.publisher || "Critical Scholarly Edition"}, {book.publishedYear}. Ya Rasool Allah Digital Library.
+              {book.author}. "{book.titleEn || book.title}." {book.publisher || "Publisher not recorded"}, {book.publishedYear}. Ya Rasool Allah preliminary catalog record; edition and rights review pending.
             </div>
           </div>
 
@@ -180,25 +178,12 @@ export default function ReadingDeskModal({
 
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <Button
-                variant="secondary"
-                size="sm"
-                className="flex-1 sm:flex-none font-tajawal gap-1.5"
-                onClick={() => onDownload(book)}
-              >
-                <Download className="w-4 h-4" />
-                <span>تحميل النسخة ({book.size})</span>
-              </Button>
-
-              <Button
                 size="sm"
                 className="flex-1 sm:flex-none bg-primary text-primary-foreground font-tajawal font-semibold gap-1.5 shadow-md hover:brightness-105"
-                onClick={() => {
-                  onClose();
-                  onRead(book);
-                }}
+                onClick={() => onOpenSource(book)}
               >
-                <BookOpen className="w-4 h-4" />
-                <span>فتح كتاب المطالعة</span>
+                <ExternalLink className="w-4 h-4" />
+                <span>فتح المصدر الخارجي</span>
               </Button>
             </div>
           </div>

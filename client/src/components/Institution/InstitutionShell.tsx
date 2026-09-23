@@ -1,7 +1,6 @@
 import React from "react";
 import InstitutionalHeader from "./InstitutionalHeader";
 import InstitutionalFooter from "./InstitutionalFooter";
-import { DepthProvider } from "./LearningDepthSelector";
 import { Link, useLocation } from "wouter";
 import {
   Sparkles,
@@ -37,7 +36,6 @@ export default function InstitutionShell({
   const [location] = useLocation();
 
   return (
-    <DepthProvider>
       <div className="min-h-screen flex flex-col bg-slate-50/50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors pb-16 md:pb-0" dir="rtl">
         <InstitutionalHeader />
 
@@ -73,6 +71,5 @@ export default function InstitutionShell({
           })}
         </nav>
       </div>
-    </DepthProvider>
   );
 }

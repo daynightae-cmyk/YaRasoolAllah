@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useLocation } from "wouter";
 import {
   Dialog,
@@ -40,18 +40,6 @@ export default function InstitutionalSearchDialog({
 }: InstitutionalSearchDialogProps) {
   const [, setLocation] = useLocation();
   const [query, setQuery] = useState("");
-
-  // Hotkey support (Cmd+K / Ctrl+K)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        // Handled via parent state toggle if needed
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
 
   const results: SearchResultItem[] = [];
 
@@ -162,6 +150,9 @@ export default function InstitutionalSearchDialog({
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-w-2xl p-0 overflow-hidden border border-amber-900/30 dark:border-amber-500/20 bg-card text-card-foreground shadow-2xl">
+        <DialogHeader className="sr-only">
+          <DialogTitle>البحث المؤسسي</DialogTitle>
+        </DialogHeader>
         <div className="p-4 border-b border-border bg-muted/30">
           <div className="relative">
             <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -182,13 +173,21 @@ export default function InstitutionalSearchDialog({
               <Compass className="w-8 h-8 mx-auto text-muted-foreground/60" />
               <p className="text-sm font-tajawal">اكتب كلمتين أو أكثر للبحث في كامل الصرح المعرفي</p>
               <div className="flex flex-wrap justify-center gap-2 pt-2 text-xs font-tajawal text-muted-foreground">
-                <span className="cursor-pointer hover:text-primary" onClick={() => setQuery("بدر")}>غزوة بدر</span>
-                <span>•</span>
-                <span className="cursor-pointer hover:text-primary" onClick={() => setQuery("الشمائل")}>الشمائل المحمدية</span>
-                <span>•</span>
-                <span className="cursor-pointer hover:text-primary" onClick={() => setQuery("الخندق")}>غزوة الخندق</span>
-                <span>•</span>
-                <span className="cursor-pointer hover:text-primary" onClick={() => setQuery("زاد المعاد")}>زاد المعاد</span>
+                {[
+                  ["بدر", "غزوة بدر"],
+                  ["الشمائل", "الشمائل المحمدية"],
+                  ["الخندق", "غزوة الخندق"],
+                  ["زاد المعاد", "زاد المعاد"],
+                ].map(([value, label]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    className="hover:text-primary underline-offset-4 hover:underline"
+                    onClick={() => setQuery(value)}
+                  >
+                    {label}
+                  </button>
+                ))}
               </div>
             </div>
           ) : results.length === 0 ? (
@@ -200,10 +199,11 @@ export default function InstitutionalSearchDialog({
             results.slice(0, 12).map((item) => {
               const badge = getCategoryBadge(item.category);
               return (
-                <div
+                <button
                   key={item.id}
+                  type="button"
                   onClick={() => handleSelect(item.url)}
-                  className="p-3 rounded-xl hover:bg-muted/70 transition-colors cursor-pointer flex items-center justify-between gap-3 group border border-transparent hover:border-border"
+                  className="w-full p-3 rounded-xl hover:bg-muted/70 transition-colors cursor-pointer flex items-center justify-between gap-3 group border border-transparent hover:border-border text-right"
                 >
                   <ChevronLeft className="w-4 h-4 text-muted-foreground group-hover:-translate-x-1 transition-transform" />
                   <div className="space-y-0.5 flex-1">
@@ -219,7 +219,7 @@ export default function InstitutionalSearchDialog({
                       {item.subtitle}
                     </p>
                   </div>
-                </div>
+                </button>
               );
             })
           )}

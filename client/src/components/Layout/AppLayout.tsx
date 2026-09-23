@@ -22,7 +22,7 @@ export default function AppLayout({
       {/* Header */}
       <Header />
 
-      <div className="flex">
+      <div className="flex min-w-0">
         {/* Sidebar Toggle Button (Mobile) */}
         {showSidebar && (
           <Button
@@ -69,7 +69,7 @@ export default function AppLayout({
         {/* Main Content */}
         <main
           className={cn(
-            "flex-1 min-h-screen transition-all duration-300",
+            "w-full min-w-0 flex-1 min-h-screen transition-all duration-300",
             showSidebar ? "lg:ml-0" : "",
           )}
         >

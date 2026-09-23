@@ -283,13 +283,17 @@ export class IslamicAIService {
 
       // في بيئة الإنتاج، هنا سنرسل للنموذج الحقيقي
       const response = await this.callPhiModel(question, contextText);
+      const baseWarnings = this.generateWarnings(question, relevantEntries);
 
       return {
         answer: response.answer,
         sources: relevantEntries,
         confidence: response.confidence,
-        type: relevantEntries.length > 0 ? "direct" : "inference",
-        warnings: this.generateWarnings(question, relevantEntries),
+        type: "general",
+        warnings: [
+          "المزود الخادمي المعتمد غير مهيأ في شريحة الأساس؛ لا توجد إجابة مولدة موثقة.",
+          ...baseWarnings,
+        ],
         followUpQuestions: this.generateFollowUpQuestions(
           question,
           relevantEntries,
@@ -302,21 +306,16 @@ export class IslamicAIService {
   }
 
   private async callPhiModel(
-    question: string,
-    context: string,
+    _question: string,
+    _context: string,
   ): Promise<{ answer: string; confidence: number }> {
-    // محاكاة استدعاء نموذج Phi-3 - في الإنتاج سيكون استدعاء حقيقي
-    const prompt = this.buildIslamicPrompt(question, context);
-
-    // هنا سيكون الاستدعاء الحقيقي للنموذج
-    // const response = await fetch('/api/phi3', { method: 'POST', body: JSON.stringify({ prompt }) });
-
-    // محاكاة الإجابة
-    const mockResponse = this.generateMockResponse(question, context);
-
+    // Foundation gate: no local model endpoint and no approved server-side
+    // cited provider exist in this slice. Never return a simulated answer
+    // as if it were generated knowledge.
     return {
-      answer: mockResponse,
-      confidence: 0.85,
+      answer:
+        "خدمة الإجابة المعرفية غير متاحة في شريحة الأساس: لا يوجد مزود خادمي معتمد مع إسناد قابل للتتبع ومراجعة تحريرية. المعروض أدناه فهرس قاعدة المعرفة المحلية فقط.",
+      confidence: 0,
     };
   }
 
@@ -338,6 +337,10 @@ ${context}
 الإجابة:`;
   }
 
+  /**
+   * @deprecated Foundation gate: retained for reference only. It is no longer
+   * routed from any active response path (callPhiModel is blocked).
+   */
   private generateMockResponse(question: string, context: string): string {
     // محاكاة إجابات ذكية حسب نوع السؤال
     const questionLower = question.toLowerCase();

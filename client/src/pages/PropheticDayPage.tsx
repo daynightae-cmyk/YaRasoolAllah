@@ -226,7 +226,8 @@ export default function PropheticDayPage() {
                       referenceNumber: activeStation.id,
                       originalText: activeStation.hadithTextAr,
                       translationExcerpt: activeStation.hadithTextEn,
-                      status: "verified",
+                      status: "editorial_review_pending",
+                      reviewNote: "سجل عرض يومي؛ يتطلب مطابقة الطبعة والرقم ومراجعة تحريرية قبل الاعتماد.",
                       provenanceDataset: "صحيح السنة النبوية والدواوين المعتمدة",
                     })
                   }

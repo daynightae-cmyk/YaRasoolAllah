@@ -1,4 +1,4 @@
-import React, { useEffect, useState, Suspense, lazy } from "react";
+import { useState } from "react";
 import InstitutionShell from "@/components/Institution/InstitutionShell";
 import SourceDrawer, { SourceProvenanceItem } from "@/components/common/SourceDrawer";
 import RealisticBookshelf, { LibraryBook } from "@/components/Library/RealisticBookshelf";
@@ -16,23 +16,18 @@ import {
   Sparkles,
   ShieldCheck,
   Bookmark,
-  Download,
+  ExternalLink,
   Info,
   SlidersHorizontal,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const BookReader = lazy(() => import("@/components/Library/BookReader"));
-const DownloadManager = lazy(() => import("@/components/Library/DownloadManager"));
 
 export default function DigitalLibraryPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [activeMode, setActiveMode] = useState<"shelves" | "catalog">("shelves");
   const [selectedBookForDesk, setSelectedBookForDesk] = useState<LibraryBook | null>(null);
-  const [selectedBookForReader, setSelectedBookForReader] = useState<LibraryBook | null>(null);
   const [selectedSourceForDrawer, setSelectedSourceForDrawer] = useState<SourceProvenanceItem | null>(null);
-  const [showDownloadManager, setShowDownloadManager] = useState(false);
 
   const allBooks: LibraryBook[] = booksData.books as LibraryBook[];
 
@@ -66,39 +61,20 @@ export default function DigitalLibraryPage() {
       compilerAr: book.author,
       collectionNameAr: book.category,
       referenceNumber: `LIB-VOL-${book.id.toUpperCase()}`,
-      chapterNameAr: book.edition || "طبعة محققة معتمدة",
-      status: "verified",
-      reviewNote: `كتاب محقق معتمد برواية مضبوطة: «${book.title}» للمصنف ${book.author}. المحقق: ${book.investigator || "لجنة تحقيق متخصصة"}. الناشر: ${book.publisher || "دار التراث"}. عدد الصفحات: ${book.pages}.`,
-      textAr: book.description,
-      textEn: book.descriptionEn,
-      provenanceDataset: "خزانة الرفوف والمخطوطات — صرح يا رسول الله ﷺ",
+      chapterNameAr: book.edition,
+      status: "editorial_review_pending",
+      reviewNote: `هذا سجل فهرسة أولي لكتاب «${book.title}». بيانات النسخة والحقوق والرابط الخارجي تحتاج مراجعة على مستوى العنصر قبل اعتماد القراءة أو التنزيل داخل المنصة.`,
+      sourceUrl: book.downloadUrl,
+      provenanceDataset: "LIBRARY-CATALOG-DEVELOPMENT",
+      sourceRegistryId: "src-library-development-catalog",
+      rightsDecision: "reference_only",
+      allowedUsageLabel: "عرض بيانات الفهرس وفتح الرابط الخارجي؛ لا قراءة أو تنزيل داخل المنصة",
+      rightsCheckedAt: "2026-09-23T00:00:00+04:00",
     });
   };
 
-  const handleDownload = (book: LibraryBook) => {
-    const blob = new Blob(
-      [
-        `صرح يا رسول الله ﷺ — خزانة الرفوف الرقمية\n` +
-        `الكتاب: ${book.title}\n` +
-        `المؤلف: ${book.author}\n` +
-        `المحقق: ${book.investigator || "غير محدد"}\n` +
-        `سنة النشر: ${book.publishedYear}م\n` +
-        `عدد الصفحات: ${book.pages} صفحة\n` +
-        `التصنيف: ${book.category}\n\n` +
-        `نبذة عن الكتاب:\n${book.description}\n\n` +
-        `رابط المصدر الأكاديمي: https://yarasoolallah.org/digital-library\n` +
-        `جميع الحقوق محفوظة للمسلمين لوجه الله تعالى (وقف معرفي رقمي)`
-      ],
-      { type: "text/plain;charset=utf-8" }
-    );
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${book.title.replace(/\s+/g, "_")}_طبعة_محققة.txt`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+  const handleOpenExternalSource = (book: LibraryBook) => {
+    window.open(book.downloadUrl, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -117,18 +93,18 @@ export default function DigitalLibraryPage() {
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
                 <span className="text-xs font-mono text-amber-300">
-                  خزانة التراث والمخطوطات المعتمدة
+                  فهرس التراث والمصادر الخارجية
                 </span>
                 <span className="text-stone-500 text-xs">·</span>
                 <span className="text-xs font-tajawal text-stone-300">
-                  {allBooks.length} مجلداً ومصنفاً محققاً
+                  {allBooks.length} سجلًا ببليوغرافيًا أوليًا
                 </span>
               </div>
               <h1 className="text-3xl md:text-5xl font-amiri font-bold text-white tracking-tight leading-tight">
                 خزانة الرفوف الرقمية وأمهات المصادر
               </h1>
               <p className="text-sm md:text-base font-tajawal text-stone-300 leading-relaxed">
-                مكتبة مركزية عريقة لأمهات كتب السيرة والشمائل والحديث والفقه والتفسير، مصنفة على أرفف خشبية مهيبة تجسد وقار الخزائن الإسلامية وتتيح القراءة والتحقيق العلمي الأكاديمي.
+                فهرس استكشافي لأمهات كتب السيرة والحديث والفقه والتفسير. الروابط تقود إلى مصادر خارجية، ولا تعني أن النسخة أو حقوقها أو تحقيقها معتمد داخل المنصة.
               </p>
             </div>
 
@@ -173,60 +149,45 @@ export default function DigitalLibraryPage() {
             <RealisticBookshelf
               shelfTitleAr="رِواق السيرة النبوية والشمائل الشريفة"
               shelfTitleEn="Prophetic Seerah & Sublime Shama'il"
-              shelfDescriptionAr="أمهات المراجع التوثيقية لسيرة المصطفى ﷺ، من سيرة ابن هشام والروض الأنف إلى زاد المعاد والرحيق المختوم."
+              shelfDescriptionAr="سجلات ببليوغرافية أولية لأعمال في السيرة والشمائل؛ كل نسخة ورابط يخضعان لمراجعة مستقلة."
               books={seerahBooks}
               onSelectBook={(book) => setSelectedBookForDesk(book)}
-              onReadBook={(book) => setSelectedBookForReader(book)}
-              onDownloadBook={handleDownload}
-              onInspectProvenance={handleInspectProvenance}
             />
 
             {/* Shelf 2: Hadith & Sunnah */}
             <RealisticBookshelf
               shelfTitleAr="خزانة الحديث الشريف وصحيح الرواية"
               shelfTitleEn="Prophetic Sunnah & Canonical Compilations"
-              shelfDescriptionAr="الجوامع والسنن والمسانيد، في مقدمتها الصحيحان وسنن أبي داود والترمذي والنسائي وابن ماجه."
+              shelfDescriptionAr="سجلات فهرسية لمصنفات الحديث والسنن؛ لا تمثل متنًا محليًا مكتملًا ولا حكمًا على نسخة رقمية بعينها."
               books={hadithBooks}
               onSelectBook={(book) => setSelectedBookForDesk(book)}
-              onReadBook={(book) => setSelectedBookForReader(book)}
-              onDownloadBook={handleDownload}
-              onInspectProvenance={handleInspectProvenance}
             />
 
             {/* Shelf 3: Quran Sciences & Tafsir */}
             <RealisticBookshelf
               shelfTitleAr="رِواق التفسير وعلوم التنزيل العظيم"
               shelfTitleEn="Quranic Exegesis & Revelation Sciences"
-              shelfDescriptionAr="تفاسير أئمة أهل السنة المعتمدة: تفسير الطبري، ابن كثير، القرطبي، والسعدي، وعلوم القرآن للإتقان."
+              shelfDescriptionAr="سجلات فهرسية لأعمال في التفسير وعلوم القرآن؛ بيانات الطبعة والحقوق قيد المراجعة."
               books={quranBooks}
               onSelectBook={(book) => setSelectedBookForDesk(book)}
-              onReadBook={(book) => setSelectedBookForReader(book)}
-              onDownloadBook={handleDownload}
-              onInspectProvenance={handleInspectProvenance}
             />
 
             {/* Shelf 4: Fiqh & Usul */}
             <RealisticBookshelf
               shelfTitleAr="ديوان الفقه وأصول الاستنباط وقواعد الأحكام"
               shelfTitleEn="Jurisprudence, Legal Maxims & Foundations"
-              shelfDescriptionAr="المتون الفقهية الكبرى للمذاهب الأربعة وأصول الفقه المعتمدة في الاستنباط الشرعي الرصين."
+              shelfDescriptionAr="سجلات فهرسية لأعمال في الفقه وأصوله، دون اعتماد للنسخ الرقمية المرتبطة بها."
               books={fiqhBooks}
               onSelectBook={(book) => setSelectedBookForDesk(book)}
-              onReadBook={(book) => setSelectedBookForReader(book)}
-              onDownloadBook={handleDownload}
-              onInspectProvenance={handleInspectProvenance}
             />
 
             {/* Shelf 5: Tazkiyah, History & Arabic */}
             <RealisticBookshelf
               shelfTitleAr="خزانة التزكية والآداب وتاريخ الأمة واللغة"
               shelfTitleEn="Spiritual Purification, Islamic History & Lexicons"
-              shelfDescriptionAr="كتب الرقائق ومكارم الأخلاق النبوية وتاريخ صدر الإسلام والمعاجم اللغوية الشاملة."
+              shelfDescriptionAr="سجلات فهرسية أولية في التزكية والتاريخ واللغة؛ الروابط الخارجية لا تعني إجازة إعادة الاستخدام."
               books={tazkiyahHistoryBooks}
               onSelectBook={(book) => setSelectedBookForDesk(book)}
-              onReadBook={(book) => setSelectedBookForReader(book)}
-              onDownloadBook={handleDownload}
-              onInspectProvenance={handleInspectProvenance}
             />
           </div>
         )}
@@ -288,7 +249,7 @@ export default function DigitalLibraryPage() {
                     </>
                   )}
                 </div>
-                <span>التصنيف المعتمد: الخزانة التراثية الشاملة</span>
+                <span>التصنيف الحالي: فهرس تطويري أولي</span>
               </div>
             </div>
 
@@ -324,9 +285,9 @@ export default function DigitalLibraryPage() {
                       </div>
                     </div>
 
-                    {/* Book Synopsis */}
+                    {/* Rights-safe catalog note: raw descriptions remain unreviewed data. */}
                     <p className="text-xs font-tajawal text-muted-foreground line-clamp-3 leading-relaxed">
-                      {book.description}
+                      سجل ببليوغرافي أولي. يُراجع وصف العمل والطبعة والرابط وحقوق الاستخدام على مستوى هذا العنصر قبل أي اعتماد أو إتاحة داخلية.
                     </p>
 
                     {/* Investigator info if available */}
@@ -354,10 +315,10 @@ export default function DigitalLibraryPage() {
                         variant="secondary"
                         size="sm"
                         className="h-8 text-xs font-tajawal gap-1"
-                        onClick={() => handleDownload(book)}
+                        onClick={() => handleOpenExternalSource(book)}
                       >
-                        <Download className="w-3.5 h-3.5" />
-                        <span>تحميل</span>
+                        <ExternalLink className="w-3.5 h-3.5" />
+                        <span>المصدر الخارجي</span>
                       </Button>
 
                       <Button
@@ -366,7 +327,7 @@ export default function DigitalLibraryPage() {
                         onClick={() => setSelectedBookForDesk(book)}
                       >
                         <BookOpen className="w-3.5 h-3.5" />
-                        <span>المطالعة</span>
+                        <span>تفاصيل السجل</span>
                       </Button>
                     </div>
                   </div>
@@ -402,8 +363,7 @@ export default function DigitalLibraryPage() {
           book={selectedBookForDesk}
           isOpen={!!selectedBookForDesk}
           onClose={() => setSelectedBookForDesk(null)}
-          onRead={(book) => setSelectedBookForReader(book)}
-          onDownload={handleDownload}
+          onOpenSource={handleOpenExternalSource}
           onInspectProvenance={handleInspectProvenance}
         />
 
@@ -415,15 +375,6 @@ export default function DigitalLibraryPage() {
           viewMode="general"
         />
 
-        {/* In-Browser Book Reader */}
-        {selectedBookForReader && (
-          <Suspense fallback={null}>
-            <BookReader
-              book={selectedBookForReader as any}
-              onClose={() => setSelectedBookForReader(null)}
-            />
-          </Suspense>
-        )}
       </div>
     </InstitutionShell>
   );
