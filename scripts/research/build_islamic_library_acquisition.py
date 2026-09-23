@@ -73,7 +73,7 @@ def write_json(path,obj):
     path.write_text(json.dumps(obj,ensure_ascii=False,separators=(",",":"))+"\n",encoding="utf-8")
 
 def get_openiti():
-    p=INPUT/"OpenITI_metadata_2025-1-9.tsv"
+    p=Path("/tmp/OpenITI_metadata_2025-1-9.tsv")
     req=urllib.request.Request(URL,headers={"User-Agent":"YaRasoolAllah-Research/1.0"})
     with urllib.request.urlopen(req,timeout=240) as r: data=r.read()
     got=hashlib.md5(data).hexdigest()
@@ -134,7 +134,7 @@ def main():
             dvs.append({"digital_version_id":"openiti_dv_"+safe(r["version_uri"]),"work_id":w["work_id"],"edition_id_if_known":eid,"provider":"OpenITI / KITAB Project","provider_record_id":r["version_uri"],"canonical_landing_url":landing,"read_online_url":landing,"direct_file_url":"https://raw.githubusercontent.com/OpenITI/RELEASE/v2025.1.9/"+lp,"api_url":None,"repository_url":"https://github.com/OpenITI/RELEASE/tree/v2025.1.9","openiti_uri":r["version_uri"],"archive_identifier":None,"doi":None,"handle":None,"urn":None,"iiif_manifest":None,"format":"TXT_MARKDOWN","file_size_if_known":None,"page_count_if_known":None,"volume_number":None,"ocr_available":ocr,"ocr_quality":"OCR_NEEDS_REVIEW" if ocr else "NOT_OCR_FLAGGED_BY_PROVIDER","searchable_text":True,"table_of_contents_available":"UNVERIFIED","chapter_structure_available":"OPENITI_MARKUP_PRESENT_OR_UNVERIFIED_BY_VERSION","checksum_if_provider_gives_it":None,"reading_capability":"CAN_IMPORT_TEXT","reading_capability_reason":"Machine-readable OpenITI version; preserve original; not a critical-edition claim.","viewer_strategy":"TEXT_READER","download_capability":"DOWNLOAD_ALLOWED","rights_status":"CLEARED_WITH_ATTRIBUTION","rights_notes":"CC BY-NC-SA 4.0; no commercial permission by default.","local_storage_recommendation":"HOST_ON_PROJECT_STORAGE","storage_condition":"Only when deployment/use complies with CC BY-NC-SA 4.0.","ingestion_priority":"P2" if ocr else "P1","provider_status":r.get("status"),"source_tags":r.get("tags")})
     cnt=Counter(w["author_id"] for w in works if w["author_id"])
     for p in people.values(): p["works_count"]=cnt[p["person_id"]]
-    assert len(works)==9106 and len(people)==3618 and len(dvs)==13674
+    assert len(works)==9106 and len(dvs)==13674
 
     seed=read_csv(INPUT/"seed-works.csv"); index=defaultdict(list)
     for w in works:
@@ -238,7 +238,7 @@ def main():
     (ROOT/"21-source-by-category-counts.md").write_text("# Source by category counts\n\nVerified OpenITI works: **9106**\n\nSeed-only pending verification: **%d**\n\n| Category | Works |\n|---|---:|\n%s\n\nUNCLASSIFIED_OPENITI is retained rather than forcing a false shelf assignment.\n"%(len(pending),"\n".join(f"| {k} | {v} |" for k,v in cats.most_common())),encoding="utf-8")
     (ROOT/"22-recommended-ingestion-plan.md").write_text("# Recommended ingestion plan\n\nP0: provider/rights/work/person registries.\n\nP1: non-OCR OpenITI only under CC BY-NC-SA-compatible deployment; QDL Public Domain IIIF remote reading; OpenITI MSS transcriptions separate from images.\n\nP2: OCR remains flagged; HathiTrust content stays remote until HTID/digitizer rights clear.\n\nP3/P4: Google Books/WorldCat are enrichment; Internet Archive requires exact identity + item rights.\n\nHard gates: no fake readers, no fake downloads, no version-as-work inflation, no filename-derived editions, no rewriting source religious text.\n",encoding="utf-8")
 
-    manifest={"generated_at":"2026-09-23T22:00:00+04:00","baseline_main_sha":BASE,"research_branch":BRANCH,"schema_version":"1.0","source_release":{"openiti_version":"2025.1.9","zenodo_record":"https://zenodo.org/records/17767721","metadata_md5":MD5,"total_text_records":14107,"book_text_versions":13674,"unique_books":9106,"authors":3618,"manuscript_transcriptions":433},"license_warning":"OpenITI is CC BY-NC-SA 4.0; no commercial-use grant by default.","providers":providers,"people":list(people.values()),"works":allworks,"editions":list(editions.values()),"digital_versions":dvs,"audio":audio,"manuscripts":mss,"rights":rights,"datasets":datasets,"duplicates":dups,"ingestion_queue":queue,"continuation_checkpoint":{"verified_openiti_works":9106,"versions_discovered":len(dvs),"audio_records":len(audio),"audio_verified_item_versions":0,"manuscripts_discovered":len(mss),"providers_pending":["Princeton Islamic Manuscripts","Gallica/BnF","LOC systematic pass","Arabic Wikisource","Wikimedia Commons","Zenodo Islamic datasets","authority reconciliation"],"next_provider":"Princeton Islamic Manuscripts / Gallica-BnF"}}
+    manifest={"generated_at":"2026-09-23T22:00:00+04:00","baseline_main_sha":BASE,"research_branch":BRANCH,"schema_version":"1.0","source_release":{"openiti_version":"2025.1.9","zenodo_record":"https://zenodo.org/records/17767721","metadata_md5":MD5,"total_text_records":14107,"book_text_versions":13674,"unique_books":9106,"openiti_author_identifiers":3618,"person_registry_rows":len(people),"manuscript_transcriptions":433},"license_warning":"OpenITI is CC BY-NC-SA 4.0; no commercial-use grant by default.","providers":providers,"people":list(people.values()),"works":allworks,"editions":list(editions.values()),"digital_versions":dvs,"audio":audio,"manuscripts":mss,"rights":rights,"datasets":datasets,"duplicates":dups,"ingestion_queue":queue,"continuation_checkpoint":{"verified_openiti_works":9106,"versions_discovered":len(dvs),"audio_records":len(audio),"audio_verified_item_versions":0,"manuscripts_discovered":len(mss),"providers_pending":["Princeton Islamic Manuscripts","Gallica/BnF","LOC systematic pass","Arabic Wikisource","Wikimedia Commons","Zenodo Islamic datasets","authority reconciliation"],"next_provider":"Princeton Islamic Manuscripts / Gallica-BnF"}}
     write_json(ROOT/"23-machine-readable-import-manifest.json",manifest)
 
     report=f"""# Final research report
@@ -254,7 +254,7 @@ Application code/UI changes: NONE
 - Persian versions: 354
 - Manuscript transcriptions: 433
 - Unique books: 9,106
-- Unique authors: 3,618
+- OpenITI author identifiers: 3,618\n- Human/person registry rows after excluding non-person author-like identifiers: {len(people):,}
 - Book digital versions: 13,674
 - Edition-evidence records: {len(editions):,}
 - Uncorrected OCR book rows: {sum(1 for r in br if str(r.get("uncorrected_OCR","")).lower()=="true"):,}
