@@ -80,8 +80,12 @@ export default function InstitutionalHeader() {
               </div>
             </Link>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden xl:flex items-center gap-1 text-sm font-cairo">
+            {/* Desktop Navigation.
+                Collapse threshold is an explicit decision: full labels need
+                >=1280px; between xl and 2xl the bar densifies (tighter links,
+                icon-only search, depth selector deferred to 2xl) so 1280–1440
+                never overflows and never falls back to the mobile menu. */}
+            <nav className="hidden xl:flex items-center gap-1 2xl:gap-1 text-sm font-cairo">
               {NAV_ITEMS.map((item) => {
                 const Icon = item.icon;
                 const isActive = location === item.href;
@@ -90,7 +94,7 @@ export default function InstitutionalHeader() {
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      "flex items-center gap-1.5 px-3 py-1.5 rounded-xl transition-all duration-150 relative",
+                      "flex items-center gap-1.5 px-2 2xl:px-3 py-1.5 rounded-xl transition-all duration-150 relative",
                       isActive
                         ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-bold border border-emerald-200 dark:border-emerald-800"
                         : "text-slate-700 dark:text-slate-300 hover:text-emerald-800 dark:hover:text-emerald-300 hover:bg-slate-100 dark:hover:bg-slate-800/60",
@@ -109,8 +113,8 @@ export default function InstitutionalHeader() {
 
             {/* Action Controls */}
             <div className="flex items-center gap-2">
-              {/* Learning Depth Selector on Desktop */}
-              <div className="hidden lg:block">
+              {/* Learning Depth Selector on wide desktop only (drawer holds it below 2xl) */}
+              <div className="hidden 2xl:block">
                 <LearningDepthSelector compact />
               </div>
 
@@ -122,7 +126,7 @@ export default function InstitutionalHeader() {
                 className="rounded-xl border-slate-200 dark:border-slate-700 h-9 px-3 gap-2 text-xs font-cairo text-muted-foreground hover:text-foreground"
               >
                 <Search className="w-3.5 h-3.5" />
-                <span className="hidden md:inline">بحث جامع...</span>
+                <span className="hidden 2xl:inline">بحث جامع...</span>
               </Button>
 
               {/* Language Switcher */}

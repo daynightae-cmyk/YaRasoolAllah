@@ -210,6 +210,10 @@ export default function IslamicCalendarPage() {
                 {islamicDate.occasion}
               </Badge>
             )}
+            <p className="mt-3 text-[11px] font-tajawal text-white/60">
+              التاريخ الهجري محسوب حسابيًا وقد يختلف عن الرؤية المحلية بيوم؛
+              اعتمد إعلان جهة بلدك للعبادات.
+            </p>
           </CardContent>
         </Card>
 

@@ -30,6 +30,10 @@ export default function WhoIsMuhammadPage({ defaultChapterId }: { defaultChapter
   const activeChapterIndex = WHO_IS_MUHAMMAD_CHAPTERS.findIndex(
     (c) => c.id === activeChapterId
   );
+  // Unknown deep-link ids fall back to the first chapter AND say so openly
+  // instead of silently pretending the requested chapter exists.
+  const unknownChapterId =
+    params?.chapter && activeChapterIndex === -1 ? params.chapter : null;
   const activeChapter =
     activeChapterIndex !== -1
       ? WHO_IS_MUHAMMAD_CHAPTERS[activeChapterIndex]
@@ -45,6 +49,14 @@ export default function WhoIsMuhammadPage({ defaultChapterId }: { defaultChapter
   return (
     <InstitutionShell activeWing="prophetic-seerah">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10 text-right">
+        {unknownChapterId && (
+          <div
+            role="status"
+            className="rounded-2xl border border-amber-500/40 bg-amber-50 p-4 text-sm font-tajawal text-amber-900 dark:bg-amber-950/30 dark:text-amber-200"
+          >
+            الفصل المطلوب «{unknownChapterId}» غير موجود — يُعرض الفصل الأول بدلًا منه.
+          </div>
+        )}
         {/* Header Banner */}
         <div className="rounded-3xl p-8 bg-gradient-to-l from-emerald-950/80 via-slate-900 to-slate-950 border border-amber-500/20 text-white space-y-4 shadow-xl">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -53,7 +65,7 @@ export default function WhoIsMuhammadPage({ defaultChapterId }: { defaultChapter
                 <Badge className="bg-amber-400/20 text-amber-300 border-amber-400/30 text-xs font-tajawal">
                   مسار تعريفي جامع للإنسانية
                 </Badge>
-                <span className="text-xs text-slate-400 font-mono">12 فصلاً موثقاً</span>
+                <span className="text-xs text-slate-400 font-mono">{WHO_IS_MUHAMMAD_CHAPTERS.length} فصلًا تعريفيًا</span>
               </div>
               <h1 className="text-3xl md:text-5xl font-amiri font-bold text-white tracking-tight leading-tight">
                 من هو محمد بن عبد الله ﷺ؟
