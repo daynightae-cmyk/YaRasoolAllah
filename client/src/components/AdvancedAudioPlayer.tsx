@@ -631,9 +631,8 @@ export default function AdvancedAudioPlayer({
                       }}
                       className={cn(
                         "h-24 w-6 appearance-none bg-transparent cursor-pointer",
-                        "[-webkit-appearance:slider-vertical]",
                       )}
-                      style={{ writingMode: "vertical-lr" as any }}
+                      style={{ writingMode: "vertical-lr", direction: "rtl" }}
                     />
                   </div>
                   <div

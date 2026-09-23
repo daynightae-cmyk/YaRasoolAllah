@@ -58,12 +58,12 @@ export default function InstitutionalHeader() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-amber-900/10 dark:border-amber-500/10 shadow-xs transition-colors">
+      <header className="institution-header sticky top-0 z-50 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-18">
             {/* Brand Emblem */}
-            <Link href="/" className="flex items-center gap-3 group text-right">
-              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-800 to-emerald-950 dark:from-emerald-700 dark:to-emerald-900 flex items-center justify-center text-amber-300 shadow-md border border-amber-400/30 group-hover:scale-105 transition-transform">
+            <Link href="/" className="institution-brand flex items-center gap-3 group text-right">
+              <div className="institution-brand__seal flex items-center justify-center text-amber-300">
                 <span className="font-amiri font-bold text-lg leading-none select-none">
                   ﷺ
                 </span>
@@ -94,7 +94,7 @@ export default function InstitutionalHeader() {
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      "flex items-center gap-1.5 px-2 2xl:px-3 py-1.5 rounded-xl transition-all duration-150 relative",
+                      "institution-nav-link flex items-center gap-1.5 px-2 2xl:px-3 py-1.5 transition-all duration-150 relative",
                       isActive
                         ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 font-bold border border-emerald-200 dark:border-emerald-800"
                         : "text-slate-700 dark:text-slate-300 hover:text-emerald-800 dark:hover:text-emerald-300 hover:bg-slate-100 dark:hover:bg-slate-800/60",

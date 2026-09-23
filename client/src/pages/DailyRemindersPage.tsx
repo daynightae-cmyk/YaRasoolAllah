@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useProgress } from "../contexts/ProgressContext";
 import { CirclePlus, RotateCcw, ShieldAlert, DatabaseZap } from "lucide-react";
+import InstitutionShell from "@/components/Institution/InstitutionShell";
 
 export default function DailyRemindersPage() {
   const { updateLastVisited } = useProgress();
@@ -13,20 +14,26 @@ export default function DailyRemindersPage() {
   }, [updateLastVisited]);
 
   return (
-    <div className="min-h-screen py-8">
-      <div className="mx-auto w-full max-w-4xl space-y-8 px-4 sm:px-6 lg:px-8">
-        <header className="space-y-4 text-center">
-          <div className="mx-auto inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-2 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-200">
+    <InstitutionShell activeWing="daily-sanctuary">
+    <div className="institution-page institution-page--daily">
+      <div className="mx-auto w-full max-w-5xl space-y-8">
+        <header className="wing-hero wing-hero--daily text-center">
+          <div className="wing-hero__eyebrow mx-auto">
             <ShieldAlert className="h-4 w-4" aria-hidden="true" />
-            <span className="text-sm font-medium">محراب اليوم — حالة تطوير صريحة</span>
+            <span>محراب اليوم · سكينة بلا نقاط أو منافسة</span>
           </div>
-          <h1 className="font-amiri text-3xl font-bold text-foreground sm:text-5xl">
+          <h1>
             الذكر اليومي
           </h1>
-          <p className="mx-auto max-w-prose-ar font-tajawal text-sm leading-7 text-muted-foreground sm:text-base">
+          <p className="mx-auto max-w-prose-ar">
             أداة العد المحلية متاحة أدناه. أما نصوص الأذكار وفضائلها فمتوقفة مؤقتًا حتى
             يُربط كل سجل بمصدره، ومرجعه، ودرجة الحديث أو مقيّمه، وحالة المراجعة التحريرية.
           </p>
+          <div className="daily-source-line">
+            <span>المواقيت عند عرضها: AlAdhan API</span>
+            <span>طريقة الحساب يجب أن تظهر للمستخدم</span>
+            <a href="https://aladhan.com/calculation-methods" target="_blank" rel="noreferrer">منهج الحساب</a>
+          </div>
         </header>
 
         <Card className="relative overflow-hidden border-emerald-800/30 bg-gradient-to-br from-emerald-950 to-emerald-800 text-white">
@@ -102,5 +109,6 @@ export default function DailyRemindersPage() {
         </section>
       </div>
     </div>
+    </InstitutionShell>
   );
 }

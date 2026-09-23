@@ -1,380 +1,212 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import InstitutionShell from "@/components/Institution/InstitutionShell";
-import SourceDrawer, { SourceProvenanceItem } from "@/components/common/SourceDrawer";
-import RealisticBookshelf, { LibraryBook } from "@/components/Library/RealisticBookshelf";
-import ReadingDeskModal from "@/components/Library/ReadingDeskModal";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import booksData from "@/data/books.json";
+import { Button } from "@/components/ui/button";
 import {
+  digitalVersionRegistry,
+  workRegistry,
+  type WorkCategory,
+  type WorkRecord,
+} from "@shared/knowledge-registry";
+import {
+  Archive,
+  BookMarked,
+  ExternalLink,
+  FileSearch,
   Library,
   Search,
-  BookOpen,
-  Filter,
-  Grid3X3,
-  Layers,
-  Sparkles,
   ShieldCheck,
-  Bookmark,
-  ExternalLink,
-  Info,
-  SlidersHorizontal,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+const categoryLabels: Record<"all" | WorkCategory, string> = {
+  all: "جميع الخزائن",
+  seerah: "السيرة",
+  history: "التاريخ",
+  tafsir: "التفسير",
+  hadith: "الحديث",
+  adab: "الآداب",
+};
+
+const shelfOrder: WorkCategory[] = ["seerah", "tafsir", "hadith", "adab", "history"];
+
+function versionCount(workId: string) {
+  return digitalVersionRegistry.filter((version) => version.workId === workId).length;
+}
+
+function WorkSpine({ work, onSelect }: { work: WorkRecord; onSelect: () => void }) {
+  const count = versionCount(work.workId);
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      className="knowledge-spine group"
+      aria-label={`افتح سجل ${work.titleAr}`}
+    >
+      <span className="knowledge-spine__code" dir="ltr">
+        {work.openitiWorkUri ?? "CATALOG"}
+      </span>
+      <span className="knowledge-spine__title">{work.titleAr}</span>
+      <span className="knowledge-spine__author">{work.authorAr}</span>
+      <span className="knowledge-spine__status">
+        {count ? `${count} نسخ رقمية مسجلة` : "سجل عمل فقط"}
+      </span>
+    </button>
+  );
+}
+
 export default function DigitalLibraryPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [activeMode, setActiveMode] = useState<"shelves" | "catalog">("shelves");
-  const [selectedBookForDesk, setSelectedBookForDesk] = useState<LibraryBook | null>(null);
-  const [selectedSourceForDrawer, setSelectedSourceForDrawer] = useState<SourceProvenanceItem | null>(null);
+  const [category, setCategory] = useState<"all" | WorkCategory>("all");
+  const [mode, setMode] = useState<"shelves" | "catalog">("shelves");
+  const [selectedWork, setSelectedWork] = useState<WorkRecord>(workRegistry[0]);
 
-  const allBooks: LibraryBook[] = booksData.books as LibraryBook[];
-
-  // Filtered books for structured catalog view
-  const filteredBooks = allBooks.filter((book) => {
-    const matchesCategory =
-      selectedCategory === "all" || book.category === selectedCategory;
-    const matchesSearch =
-      !searchQuery ||
-      book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      book.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      book.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (book.investigator && book.investigator.toLowerCase().includes(searchQuery.toLowerCase()));
-
-    return matchesCategory && matchesSearch;
-  });
-
-  // Shelf group sets for the Living Shelves View
-  const seerahBooks = allBooks.filter((b) => b.category === "seerah");
-  const hadithBooks = allBooks.filter((b) => b.category === "hadith");
-  const quranBooks = allBooks.filter((b) => b.category === "quran");
-  const fiqhBooks = allBooks.filter((b) => b.category === "fiqh" || b.category === "aqeedah");
-  const tazkiyahHistoryBooks = allBooks.filter(
-    (b) => b.category === "tazkiyah" || b.category === "history" || b.category === "language"
-  );
-
-  const handleInspectProvenance = (book: LibraryBook) => {
-    setSelectedSourceForDrawer({
-      id: `LIB-${book.id}`,
-      title: book.title,
-      compilerAr: book.author,
-      collectionNameAr: book.category,
-      referenceNumber: `LIB-VOL-${book.id.toUpperCase()}`,
-      chapterNameAr: book.edition,
-      status: "editorial_review_pending",
-      reviewNote: `هذا سجل فهرسة أولي لكتاب «${book.title}». بيانات النسخة والحقوق والرابط الخارجي تحتاج مراجعة على مستوى العنصر قبل اعتماد القراءة أو التنزيل داخل المنصة.`,
-      sourceUrl: book.downloadUrl,
-      provenanceDataset: "LIBRARY-CATALOG-DEVELOPMENT",
-      sourceRegistryId: "src-library-development-catalog",
-      rightsDecision: "reference_only",
-      allowedUsageLabel: "عرض بيانات الفهرس وفتح الرابط الخارجي؛ لا قراءة أو تنزيل داخل المنصة",
-      rightsCheckedAt: "2026-09-23T00:00:00+04:00",
+  const filtered = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    return workRegistry.filter((work) => {
+      const categoryMatch = category === "all" || work.category === category;
+      const queryMatch =
+        !query ||
+        work.titleAr.toLowerCase().includes(query) ||
+        work.titleEn.toLowerCase().includes(query) ||
+        work.authorAr.toLowerCase().includes(query) ||
+        work.authorEn.toLowerCase().includes(query) ||
+        work.openitiWorkUri?.toLowerCase().includes(query);
+      return categoryMatch && queryMatch;
     });
-  };
+  }, [category, searchQuery]);
 
-  const handleOpenExternalSource = (book: LibraryBook) => {
-    window.open(book.downloadUrl, "_blank", "noopener,noreferrer");
-  };
+  const selectedVersions = digitalVersionRegistry.filter(
+    (version) => version.workId === selectedWork.workId,
+  );
 
   return (
     <InstitutionShell activeWing="library">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10 text-right">
-        {/* Institutional Grand Header */}
-        <div className="relative rounded-3xl p-8 sm:p-10 bg-gradient-to-r from-stone-950 via-[#18110b] to-stone-950 border border-amber-900/30 text-amber-50 shadow-2xl overflow-hidden space-y-6">
-          {/* Subtle Golden Radial Glow */}
-          <div
-            className="absolute top-0 right-1/4 w-96 h-96 opacity-15 pointer-events-none rounded-full blur-3xl"
-            style={{ background: "radial-gradient(circle, #d97706 0%, transparent 70%)" }}
-          />
-
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
-            <div className="space-y-3 max-w-2xl">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-                <span className="text-xs font-mono text-amber-300">
-                  فهرس التراث والمصادر الخارجية
-                </span>
-                <span className="text-stone-500 text-xs">·</span>
-                <span className="text-xs font-tajawal text-stone-300">
-                  {allBooks.length} سجلًا ببليوغرافيًا أوليًا
-                </span>
-              </div>
-              <h1 className="text-3xl md:text-5xl font-amiri font-bold text-white tracking-tight leading-tight">
-                خزانة الرفوف الرقمية وأمهات المصادر
-              </h1>
-              <p className="text-sm md:text-base font-tajawal text-stone-300 leading-relaxed">
-                فهرس استكشافي لأمهات كتب السيرة والحديث والفقه والتفسير. الروابط تقود إلى مصادر خارجية، ولا تعني أن النسخة أو حقوقها أو تحقيقها معتمد داخل المنصة.
+      <div className="institution-page institution-page--library">
+        <section className="wing-hero wing-hero--library" aria-labelledby="library-title">
+          <div className="wing-hero__eyebrow">
+            <Library className="h-4 w-4" />
+            مكتبة فهرسية مرتبطة بإصدارات حقيقية
+          </div>
+          <div className="wing-hero__grid">
+            <div>
+              <h1 id="library-title">مكتبة الرفوف</h1>
+              <p>
+                قاعة بحث هادئة للأعمال والنسخ الرقمية المثبتة. كل كعب كتاب هنا
+                يعود إلى سجل عمل حقيقي؛ لا تنزيلات مزعومة ولا قارئ نص كامل قبل
+                ثبوت حق النسخة.
               </p>
             </div>
-
-            {/* Seamless Dual-Mode Segmented Switch */}
-            <div className="p-1.5 rounded-2xl bg-black/60 border border-amber-500/25 inline-flex self-start lg:self-auto gap-1 shadow-lg backdrop-blur-md">
-              <button
-                type="button"
-                onClick={() => setActiveMode("shelves")}
-                className={cn(
-                  "px-5 py-2.5 rounded-xl text-xs sm:text-sm font-cairo font-semibold transition-all duration-200 flex items-center gap-2",
-                  activeMode === "shelves"
-                    ? "bg-amber-600 text-white shadow-md shadow-amber-950/40"
-                    : "text-stone-300 hover:text-white hover:bg-white/5"
-                )}
-              >
-                <Layers className="w-4 h-4 text-amber-300" />
-                <span>أروقة الرفوف الحية</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveMode("catalog")}
-                className={cn(
-                  "px-5 py-2.5 rounded-xl text-xs sm:text-sm font-cairo font-semibold transition-all duration-200 flex items-center gap-2",
-                  activeMode === "catalog"
-                    ? "bg-amber-600 text-white shadow-md shadow-amber-950/40"
-                    : "text-stone-300 hover:text-white hover:bg-white/5"
-                )}
-              >
-                <Grid3X3 className="w-4 h-4 text-amber-300" />
-                <span>الفهرس المصنف المنظم</span>
-              </button>
+            <div className="wing-hero__ledger" aria-label="ملخص الفهرس">
+              <span><strong>{workRegistry.length}</strong> عملاً</span>
+              <span><strong>{digitalVersionRegistry.length}</strong> نسخة رقمية</span>
+              <span><strong>0</strong> تنزيل غير موثق</span>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* ============================================================== */}
-        {/* MODE 1: LIVING SHELVES VIEW (Real Physical Shelves with 3D Spines) */}
-        {/* ============================================================== */}
-        {activeMode === "shelves" && (
-          <div className="space-y-14 animate-fade-in">
-            {/* Shelf 1: Seerah & Shama'il */}
-            <RealisticBookshelf
-              shelfTitleAr="رِواق السيرة النبوية والشمائل الشريفة"
-              shelfTitleEn="Prophetic Seerah & Sublime Shama'il"
-              shelfDescriptionAr="سجلات ببليوغرافية أولية لأعمال في السيرة والشمائل؛ كل نسخة ورابط يخضعان لمراجعة مستقلة."
-              books={seerahBooks}
-              onSelectBook={(book) => setSelectedBookForDesk(book)}
-            />
-
-            {/* Shelf 2: Hadith & Sunnah */}
-            <RealisticBookshelf
-              shelfTitleAr="خزانة الحديث الشريف وصحيح الرواية"
-              shelfTitleEn="Prophetic Sunnah & Canonical Compilations"
-              shelfDescriptionAr="سجلات فهرسية لمصنفات الحديث والسنن؛ لا تمثل متنًا محليًا مكتملًا ولا حكمًا على نسخة رقمية بعينها."
-              books={hadithBooks}
-              onSelectBook={(book) => setSelectedBookForDesk(book)}
-            />
-
-            {/* Shelf 3: Quran Sciences & Tafsir */}
-            <RealisticBookshelf
-              shelfTitleAr="رِواق التفسير وعلوم التنزيل العظيم"
-              shelfTitleEn="Quranic Exegesis & Revelation Sciences"
-              shelfDescriptionAr="سجلات فهرسية لأعمال في التفسير وعلوم القرآن؛ بيانات الطبعة والحقوق قيد المراجعة."
-              books={quranBooks}
-              onSelectBook={(book) => setSelectedBookForDesk(book)}
-            />
-
-            {/* Shelf 4: Fiqh & Usul */}
-            <RealisticBookshelf
-              shelfTitleAr="ديوان الفقه وأصول الاستنباط وقواعد الأحكام"
-              shelfTitleEn="Jurisprudence, Legal Maxims & Foundations"
-              shelfDescriptionAr="سجلات فهرسية لأعمال في الفقه وأصوله، دون اعتماد للنسخ الرقمية المرتبطة بها."
-              books={fiqhBooks}
-              onSelectBook={(book) => setSelectedBookForDesk(book)}
-            />
-
-            {/* Shelf 5: Tazkiyah, History & Arabic */}
-            <RealisticBookshelf
-              shelfTitleAr="خزانة التزكية والآداب وتاريخ الأمة واللغة"
-              shelfTitleEn="Spiritual Purification, Islamic History & Lexicons"
-              shelfDescriptionAr="سجلات فهرسية أولية في التزكية والتاريخ واللغة؛ الروابط الخارجية لا تعني إجازة إعادة الاستخدام."
-              books={tazkiyahHistoryBooks}
-              onSelectBook={(book) => setSelectedBookForDesk(book)}
+        <section className="reading-table" aria-label="أدوات استكشاف المكتبة">
+          <div className="reading-table__search">
+            <Search className="h-4 w-4" />
+            <Input
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+              placeholder="ابحث بالعنوان أو المؤلف أو معرّف OpenITI…"
+              aria-label="بحث المكتبة"
             />
           </div>
-        )}
+          <div className="reading-table__filters" aria-label="تصنيف الأعمال">
+            {(Object.keys(categoryLabels) as Array<"all" | WorkCategory>).map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => setCategory(item)}
+                className={cn("editorial-tab", category === item && "is-active")}
+              >
+                {categoryLabels[item]}
+              </button>
+            ))}
+          </div>
+          <div className="reading-table__mode">
+            <button type="button" className={cn("editorial-tab", mode === "shelves" && "is-active")} onClick={() => setMode("shelves")}>رفوف</button>
+            <button type="button" className={cn("editorial-tab", mode === "catalog" && "is-active")} onClick={() => setMode("catalog")}>فهرس</button>
+          </div>
+        </section>
 
-        {/* ============================================================== */}
-        {/* MODE 2: STRUCTURED SCHOLARLY CATALOG (Filterable Tabular Grid) */}
-        {/* ============================================================== */}
-        {activeMode === "catalog" && (
-          <div className="space-y-8 animate-fade-in">
-            {/* Search & Category Filter Bar */}
-            <div className="p-4 sm:p-6 rounded-2xl bg-card border border-border space-y-4 shadow-sm">
-              <div className="flex flex-col md:flex-row items-center gap-4">
-                <div className="relative flex-1 w-full">
-                  <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    type="search"
-                    placeholder="ابحث بالعنوان، أو اسم المصنّف، أو المحقق..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pr-10 font-tajawal text-sm bg-background border-border"
-                  />
-                </div>
-
-                {/* Categories Segmented Bar */}
-                <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-1 scrollbar-none">
-                  {[
-                    { id: "all", label: "جميع الأقسام" },
-                    { id: "seerah", label: "السيرة والشمائل" },
-                    { id: "hadith", label: "الحديث والسنة" },
-                    { id: "quran", label: "القرآن والتفسير" },
-                    { id: "fiqh", label: "الفقه وأصوله" },
-                    { id: "tazkiyah", label: "التزكية والأخلاق" },
-                  ].map((cat) => (
-                    <button
-                      key={cat.id}
-                      type="button"
-                      onClick={() => setSelectedCategory(cat.id)}
-                      className={cn(
-                        "px-3.5 py-1.5 rounded-lg text-xs font-tajawal font-medium whitespace-nowrap transition-colors",
-                        selectedCategory === cat.id
-                          ? "bg-primary text-primary-foreground font-bold"
-                          : "bg-muted/60 text-muted-foreground hover:text-foreground hover:bg-muted"
-                      )}
-                    >
-                      {cat.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Counter Indicator */}
-              <div className="flex items-center justify-between text-xs text-muted-foreground pt-1 border-t border-border/50">
-                <div className="flex items-center gap-2">
-                  <span>تم العثور على {filteredBooks.length} كتاباً</span>
-                  {searchQuery && (
-                    <>
-                      <span>·</span>
-                      <span>تصفية البحث: «{searchQuery}»</span>
-                    </>
-                  )}
-                </div>
-                <span>التصنيف الحالي: فهرس تطويري أولي</span>
-              </div>
-            </div>
-
-            {/* Catalog Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {filteredBooks.map((book) => (
-                <div
-                  key={book.id}
-                  className="rounded-2xl border border-border bg-card p-5 hover:border-amber-500/40 hover:shadow-lg transition-all duration-200 flex flex-col justify-between space-y-4 group"
-                >
-                  <div className="space-y-3">
-                    {/* Header info */}
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="space-y-1 flex-1">
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <span className="font-mono text-primary font-bold">{book.format.toUpperCase()}</span>
-                          <span>·</span>
-                          <span>{book.publishedYear}م</span>
-                          <span>·</span>
-                          <span>{book.pages} ص</span>
-                        </div>
-                        <h3 className="text-lg font-amiri font-bold text-foreground group-hover:text-primary transition-colors">
-                          {book.title}
-                        </h3>
-                        <p className="text-xs font-tajawal text-muted-foreground">
-                          {book.author}
-                        </p>
+        <div className="library-workspace">
+          <section className="library-collection" aria-live="polite">
+            {mode === "shelves" ? (
+              <div className="space-y-10">
+                {shelfOrder.map((shelfCategory) => {
+                  const books = filtered.filter((work) => work.category === shelfCategory);
+                  if (!books.length) return null;
+                  return (
+                    <div key={shelfCategory} className="knowledge-shelf">
+                      <header>
+                        <span>{books.length} أعمال</span>
+                        <h2>{categoryLabels[shelfCategory]}</h2>
+                      </header>
+                      <div className="knowledge-shelf__books">
+                        {books.map((work) => (
+                          <WorkSpine key={work.workId} work={work} onSelect={() => setSelectedWork(work)} />
+                        ))}
                       </div>
-
-                      {/* Mini Book Icon Emblem */}
-                      <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center justify-center font-amiri font-bold text-base flex-shrink-0">
-                        📖
-                      </div>
+                      <div className="knowledge-shelf__board" />
                     </div>
-
-                    {/* Rights-safe catalog note: raw descriptions remain unreviewed data. */}
-                    <p className="text-xs font-tajawal text-muted-foreground line-clamp-3 leading-relaxed">
-                      سجل ببليوغرافي أولي. يُراجع وصف العمل والطبعة والرابط وحقوق الاستخدام على مستوى هذا العنصر قبل أي اعتماد أو إتاحة داخلية.
-                    </p>
-
-                    {/* Investigator info if available */}
-                    {book.investigator && (
-                      <p className="text-[11px] font-tajawal text-stone-500 dark:text-stone-400 pt-1">
-                        المحقق: {book.investigator}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex items-center justify-between gap-2 pt-3 border-t border-border/70">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 text-xs font-tajawal gap-1 text-muted-foreground hover:text-foreground"
-                      onClick={() => handleInspectProvenance(book)}
-                    >
-                      <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-                      <span>المصدر</span>
-                    </Button>
-
-                    <div className="flex items-center gap-1.5">
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        className="h-8 text-xs font-tajawal gap-1"
-                        onClick={() => handleOpenExternalSource(book)}
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                        <span>المصدر الخارجي</span>
-                      </Button>
-
-                      <Button
-                        size="sm"
-                        className="h-8 text-xs font-tajawal font-bold gap-1 bg-primary text-primary-foreground"
-                        onClick={() => setSelectedBookForDesk(book)}
-                      >
-                        <BookOpen className="w-3.5 h-3.5" />
-                        <span>تفاصيل السجل</span>
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {filteredBooks.length === 0 && (
-              <div className="p-12 text-center rounded-2xl border border-dashed border-border bg-card space-y-3">
-                <BookOpen className="w-10 h-10 mx-auto text-muted-foreground/50" />
-                <h3 className="text-base font-bold font-cairo">لا توجد مصنفات مطابقة لبحثك</h3>
-                <p className="text-xs font-tajawal text-muted-foreground max-w-sm mx-auto">
-                  حاول تغيير مصطلح البحث أو اختيار قسم مختلف للوصول إلى سجلات الفهرس.
-                </p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => {
-                    setSearchQuery("");
-                    setSelectedCategory("all");
-                  }}
-                  className="font-tajawal text-xs"
-                >
-                  إعادة ضبط البحث
-                </Button>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="catalog-ledger">
+                {filtered.map((work) => (
+                  <button key={work.workId} type="button" onClick={() => setSelectedWork(work)} className="catalog-ledger__row">
+                    <span className="catalog-ledger__mark"><BookMarked className="h-4 w-4" /></span>
+                    <span><strong>{work.titleAr}</strong><small>{work.authorAr}</small></span>
+                    <span className="font-mono" dir="ltr">{work.openitiWorkUri ?? "catalog-only"}</span>
+                    <span>{versionCount(work.workId)} نسخة</span>
+                  </button>
+                ))}
+                {!filtered.length && <p className="empty-state">لا توجد سجلات تطابق البحث الحالي.</p>}
               </div>
             )}
-          </div>
-        )}
+          </section>
 
-        {/* Reading Desk Modal (Opened when book is selected from shelf or catalog) */}
-        <ReadingDeskModal
-          book={selectedBookForDesk}
-          isOpen={!!selectedBookForDesk}
-          onClose={() => setSelectedBookForDesk(null)}
-          onOpenSource={handleOpenExternalSource}
-          onInspectProvenance={handleInspectProvenance}
-        />
-
-        {/* Academic SourceDrawer */}
-        <SourceDrawer
-          source={selectedSourceForDrawer}
-          isOpen={!!selectedSourceForDrawer}
-          onClose={() => setSelectedSourceForDrawer(null)}
-          viewMode="general"
-        />
-
+          <aside className="catalog-desk" aria-label="سجل العمل المحدد">
+            <div className="catalog-desk__seal"><Archive className="h-5 w-5" /></div>
+            <p className="catalog-desk__kicker">بطاقة الفهرسة</p>
+            <h2>{selectedWork.titleAr}</h2>
+            <p className="catalog-desk__latin" dir="ltr">{selectedWork.titleEn}</p>
+            <dl>
+              <div><dt>المؤلف</dt><dd>{selectedWork.authorAr}</dd></div>
+              <div><dt>معرّف العمل</dt><dd dir="ltr">{selectedWork.openitiWorkUri ?? "غير مثبت"}</dd></div>
+              <div><dt>الحالة</dt><dd>فهرس/رابط خارجي فقط</dd></div>
+              <div><dt>المراجعة</dt><dd>مراجعة علمية مطلوبة</dd></div>
+            </dl>
+            <p className="catalog-desk__caveat">{selectedWork.attributionCaveat}</p>
+            <div className="catalog-desk__versions">
+              <h3>النسخ المسجلة</h3>
+              {selectedVersions.length ? selectedVersions.map((version) => (
+                <a
+                  key={version.versionId}
+                  href={version.versionMetadataUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="version-slip"
+                >
+                  <span dir="ltr">{version.openitiUri}</span>
+                  <small>{version.contentAvailability === "catalog_only" ? "فهرس فقط" : version.contentAvailability}</small>
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+              )) : (
+                <p className="empty-state">سجل عمل فقط؛ لا توجد نسخة رقمية مثبتة.</p>
+              )}
+            </div>
+            <Button variant="outline" className="w-full gap-2" asChild>
+              <a href="/sources"><FileSearch className="h-4 w-4" /> افحص سجل المصدر والحقوق</a>
+            </Button>
+            <p className="catalog-desk__integrity"><ShieldCheck className="h-4 w-4" /> لا تنزيل أو نص كامل دون قرار حقوق صريح.</p>
+          </aside>
+        </div>
       </div>
     </InstitutionShell>
   );

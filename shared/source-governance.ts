@@ -10,6 +10,9 @@ export const sourceKindSchema = z.enum([
   "audio_recording",
   "geodata",
   "font",
+  "provider_policy",
+  "media_catalog",
+  "educational_adaptation",
   "internal_development_sample",
 ]);
 

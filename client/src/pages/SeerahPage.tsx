@@ -39,6 +39,7 @@ import {
   Mountain,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { workRegistry } from "@shared/knowledge-registry";
 
 // Historical geographic places in Seerah (responsible historical coordinates & context)
 const HISTORICAL_LOCATIONS = [
@@ -152,12 +153,15 @@ export default function SeerahPage() {
       chapterId: ch.id,
     }))
   );
+  const seerahSourceWorks = workRegistry.filter((work) =>
+    ["work-ibn-hisham-sira", "work-ibn-sad-tabaqat", "work-waqidi-maghazi"].includes(work.workId),
+  );
 
   return (
     <InstitutionShell activeWing="prophetic-seerah">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 text-right">
         {/* Header Banner */}
-        <div className="rounded-3xl p-8 bg-gradient-to-r from-emerald-950 via-slate-900 to-slate-950 border border-emerald-900/40 text-white shadow-xl space-y-4">
+        <div className="wing-hero wing-hero--seerah">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
@@ -167,14 +171,15 @@ export default function SeerahPage() {
                 </span>
                 <span className="text-slate-500 text-xs">·</span>
                 <span className="text-xs text-slate-300 font-mono">
-                  {seerahChapters.length} فصول · {allTimelineEvents.length} محطة موثقة
+                  {seerahChapters.length} فصول · {allTimelineEvents.length} محطة في سجل المنصة
                 </span>
               </div>
               <h1 className="text-3xl md:text-5xl font-amiri font-bold tracking-tight">
                 درب السيرة النبوية الشريفة
               </h1>
               <p className="text-sm md:text-base font-tajawal text-slate-300 max-w-2xl leading-relaxed">
-                استكشف السيرة العطرة لخير الأنام ﷺ عبر تسلسل زمني دقيق، وأطلس تضاريسي متحرك لغزوات النبي ﷺ، وخرائط للمواقع التاريخية، وشواهد موثقة من أمهات كتب الحديث والسير، خالية تماماً من أي تجسيد.
+                استكشف السيرة العطرة عبر سرد تحريري، وتسلسل زمني، وأطلس تضاريسي
+                تفسيري، مع فصل واضح بين الرواية والمصدر والثقة والخلاف، ومن دون أي تجسيد.
               </p>
             </div>
 
@@ -236,7 +241,7 @@ export default function SeerahPage() {
               )}
             >
               <Mountain className="w-4 h-4 text-amber-300" />
-              <span>أطلس الغزوات التضاريسي المتحرك</span>
+              <span>الأطلس التضاريسي التفسيري</span>
             </button>
 
             <button
@@ -276,6 +281,20 @@ export default function SeerahPage() {
             </button>
           </div>
         </div>
+
+        <section className="seerah-source-rail" aria-label="أعمال السيرة المرتبطة">
+          <div>
+            <span>مصادر العمل</span>
+            <strong>أعمال مرتبطة، لا شهادة صحة جماعية</strong>
+          </div>
+          {seerahSourceWorks.map((work) => (
+            <Link key={work.workId} href="/sources">
+              <small>{work.openitiWorkUri}</small>
+              <strong>{work.titleAr}</strong>
+              <span>{work.workId === "work-waqidi-maghazi" ? "مصدر تاريخي منسوب · مراجعة علمية" : "فهرس ونسخ رقمية · مراجعة علمية"}</span>
+            </Link>
+          ))}
+        </section>
 
         {/* ========================================================
             VIEW 1: SINGLE CHAPTER READER (WHEN SELECTED)

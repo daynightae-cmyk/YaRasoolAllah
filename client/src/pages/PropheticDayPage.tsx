@@ -67,7 +67,7 @@ export default function PropheticDayPage() {
     <InstitutionShell activeWing="prophetic-day">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10 text-right">
         {/* Banner */}
-        <div className="rounded-3xl p-8 bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 border border-emerald-800/40 text-white shadow-xl space-y-4">
+        <div className="wing-hero wing-hero--daily">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-2 max-w-2xl">
               <div className="flex items-center gap-2">

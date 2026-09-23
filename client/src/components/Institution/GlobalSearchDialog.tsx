@@ -10,20 +10,16 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
   Search,
-  BookOpen,
   Compass,
-  FileText,
-  Baby,
-  Sun,
   ShieldCheck,
-  User,
-  MapPin,
   X,
 } from "lucide-react";
 import { seerahChapters } from "@/data/seerahData";
-import booksData from "@/data/books.json";
-import { childrenVideos } from "@/data/childrenVideos";
 import { azkarData } from "@/data/azkarData";
+import {
+  childrenAdaptationRegistry,
+  workRegistry,
+} from "@shared/knowledge-registry";
 
 export type SearchResultCategory =
   | "quran"
@@ -102,32 +98,32 @@ export default function GlobalSearchDialog({ isOpen, onClose }: GlobalSearchDial
       });
     });
 
-    // 2. Curated Books
-    const books = (booksData as any).books || [];
-    books.forEach((b: any) => {
+    // 2. Bibliographic works from the governed knowledge registry.
+    workRegistry.forEach((work) => {
       items.push({
-        id: `book-${b.id}`,
+        id: work.workId,
         category: "book",
-        categoryLabelAr: "كتاب في مكتبة الرفوف",
-        title: b.title,
-        excerpt: `${b.author} — ${b.description?.slice(0, 100)}...`,
+        categoryLabelAr: "سجل ببليوغرافي",
+        title: work.titleAr,
+        excerpt: `${work.authorAr} — ${work.attributionCaveat}`,
         path: `/library`,
-        sourceIdentifier: b.category,
-        provenance: `مكتبة الرفوف — طبعة معتمدة (${b.pages || 0} ص)`,
+        sourceIdentifier: work.openitiWorkUri || work.category,
+        provenance: `سجل الأعمال — ${work.bibliographicStatus}`,
       });
     });
 
-    // 3. Children content
-    childrenVideos.forEach((v) => {
+    // 3. Platform-original educational adaptations. These are deliberately
+    // labelled as adaptations rather than direct Qur'an/Hadith quotations.
+    childrenAdaptationRegistry.forEach((adaptation) => {
       items.push({
-        id: `kids-${v.id}`,
+        id: adaptation.adaptationId,
         category: "kids",
-        categoryLabelAr: "واحة الأطفال والأسرة",
-        title: v.title,
-        excerpt: v.description,
+        categoryLabelAr: "مادة تعليمية أصلية",
+        title: adaptation.titleAr,
+        excerpt: adaptation.summaryAr,
         path: `/kids`,
-        sourceIdentifier: v.ageRange,
-        provenance: "المحتوى التربوي للطفل المسلم",
+        sourceIdentifier: `الفئة ${adaptation.ageBand}`,
+        provenance: `تكييف أصلي للمنصة — ${adaptation.editorialStatus}`,
       });
     });
 

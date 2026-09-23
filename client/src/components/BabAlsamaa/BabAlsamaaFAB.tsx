@@ -142,7 +142,7 @@ export default function BabAlsamaaFAB({ className }: BabAlsamaaFABProps) {
               className={cn(
                 "relative w-14 h-14 rounded-full shadow-xl border-2 transition-all duration-300 group overflow-hidden",
                 mode === "heaven"
-                  ? "bg-purple-600 hover:bg-purple-500 border-purple-400/30 hover:shadow-purple-500/25"
+                  ? "bg-emerald-700 hover:bg-emerald-600 border-amber-400/30 hover:shadow-emerald-950/40"
                   : "bg-emerald-500 hover:bg-emerald-600 border-emerald-400/30 hover:shadow-emerald-500/25",
               )}
             >

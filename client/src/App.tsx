@@ -25,7 +25,6 @@ import DailyRemindersPage from "./pages/DailyRemindersPage";
 import IslamicKnowledgePage from "./pages/IslamicKnowledgePage";
 import FivePillarsPage from "./pages/FivePillarsPage";
 import WomenInIslamPage from "./pages/WomenInIslamPage";
-import SeerahForChildrenPage from "./pages/SeerahForChildrenPage";
 import ChildrenTVPage from "./pages/ChildrenTVPage";
 import QuranAudioPage from "./pages/QuranAudioPage";
 import DailyVersePage from "./pages/DailyVersePage";
@@ -95,11 +94,7 @@ function AppContent() {
           {() => <DigitalLibraryPage />}
         </Route>
         <Route path="/daily">
-          {() => (
-            <AppLayout>
-              <DailyRemindersPage />
-            </AppLayout>
-          )}
+          {() => <DailyRemindersPage />}
         </Route>
         <Route path="/home">
           {() => <Redirect to="/" />}
@@ -159,11 +154,7 @@ function AppContent() {
           )}
         </Route>
         <Route path="/daily-reminders">
-          {() => (
-            <AppLayout>
-              <DailyRemindersPage />
-            </AppLayout>
-          )}
+          {() => <Redirect to="/daily" />}
         </Route>
         <Route path="/islamic-knowledge">
           {() => (
@@ -187,11 +178,7 @@ function AppContent() {
           )}
         </Route>
         <Route path="/kids">
-          {() => (
-            <AppLayout>
-              <SeerahForChildrenPage />
-            </AppLayout>
-          )}
+          {() => <ChildrenTVPage />}
         </Route>
         <Route path="/children-tv">
           {() => <ChildrenTVPage />}
