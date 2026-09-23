@@ -345,12 +345,11 @@ export default function SeerahPage() {
                     title: `توثيق الفصل: ${selectedChapter.title}`,
                     collectionNameAr: "سيرة ابن هشام، وصحيح البخاري، والبداية والنهاية لابن كثير",
                     compilerAr: "ابن هشام (ت 218 هـ) · الإمام البخاري (ت 256 هـ) · ابن كثير (ت 774 هـ)",
-                    status: "verified",
+                    status: "editorial_review_pending",
                     chapterNameAr: selectedChapter.title,
                     textAr: selectedChapter.details.slice(0, 300) + "...",
-                    editionTahqiq: "تحقيق جماعة من كبار المحققين بمقابلة المخطوطات المعتمدة",
                     provenanceDataset: "سجل السيرة النبوية المؤسسي — صرح يا رسول الله ﷺ v1.0",
-                    reviewNote: "مستند إلى الروايات المتصلة في الصحاح والمسانيد وكتب السير المعتمدة دون تضمين المراسيل المنكرة أو الروايات الضعيفة.",
+                    reviewNote: "عرض تحريري أولي من بيانات المنصة؛ لم تُطابق الطبعة والصفحة وسند المراجعة لكل فقرة بعد، ولا يُعتمد بوصفه توثيقًا محققًا.",
                   })
                 }
                 className="font-cairo text-xs gap-1.5"
@@ -497,11 +496,12 @@ export default function SeerahPage() {
               <div className="flex items-center gap-2">
                 <Mountain className="w-5 h-5 text-amber-600 dark:text-amber-400" />
                 <h2 className="text-xl font-amiri font-bold text-foreground">
-                  أطلس الغزوات التضاريسي المحقق
+                  أطلس الغزوات التضاريسي (رسم تعليمي)
                 </h2>
               </div>
               <p className="text-xs text-muted-foreground font-tajawal leading-relaxed">
                 خرائط تضاريسية جبلية ثلاثية الأبعاد لغزوات النبي ﷺ الكبرى، توضح طبيعة التضاريس (جبال، أودية، حرات، خنادق، آبار مياه) ومسارات الزحف والتحركات التكتيكية والمراحل العسكرية التاريخية دون أي تمثيل تصويري للمصطفى ﷺ.
+                تنبيه منهجي: المسارات والمواضع رسوم توضيحية تعليمية تقريبية وليست إحداثيات مساحية؛ وكل مرحلة مشروحة نصيًا أسفل الرسم لغير القادرين على قراءة الخريطة.
               </p>
             </div>
             <MountainousBattlefieldMap />
