@@ -267,7 +267,7 @@ export default function GateOfLightPage() {
                 محطات خالدة من السيرة النبوية
               </h2>
               <p className="text-xs text-muted-foreground font-cairo">
-                محطات موثقة بروايات الصحاح وكتب المغازي والسير المعتمدة
+                محطات من السيرة النبوية — حالة المراجعة موضحة في بطاقة مصدر كل محطة
               </p>
             </div>
           </div>
@@ -351,9 +351,9 @@ export default function GateOfLightPage() {
                   className="p-6 rounded-3xl bg-amber-950/5 dark:bg-amber-950/20 border border-amber-900/15 dark:border-amber-500/15 space-y-4"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-tajawal text-muted-foreground">
-                      {catBooks.length} كتب معتمدة
-                    </span>
+                      <span className="text-xs font-tajawal text-muted-foreground">
+                        {catBooks.length} كتب في الفهرس
+                      </span>
                     <div className="flex items-center gap-2">
                       <h3 className="font-amiri font-bold text-lg text-foreground">{cat.name}</h3>
                       <Library className="w-4 h-4 text-amber-700 dark:text-amber-400" />
@@ -402,6 +402,7 @@ export default function GateOfLightPage() {
               </h2>
               <p className="text-xs text-slate-400 font-cairo">
                 منهج علمي صارم في عرض الأحاديث مع تصنيف درجات الصحة، وبيان الرواة، والربط العضوي بأحداث السيرة، مع حظر كامل للأحاديث الموضوعة والمختلقة.
+                الأعداد أدناه أحجام المدونات الست المعتمدة عالميًا؛ التغطية النصية المحلية المعروضة حاليًا عينة قيد الإدخال والمراجعة.
               </p>
             </div>
             <Link href="/sunnah" asChild>
