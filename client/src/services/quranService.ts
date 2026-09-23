@@ -11,7 +11,11 @@ export interface QuranVerse {
   surah: number;
   ayah: number;
   arabic: string;
-  translation: string;
+  /**
+   * English development-sample translation. Present only for sample verses;
+   * null everywhere else until licensed translation resources are acquired.
+   */
+  translation: string | null;
   transliteration?: string;
   tafsir?: string;
   surahName: string;
@@ -21,7 +25,7 @@ export interface SearchResult {
   surah: number;
   ayah: number;
   arabic: string;
-  translation: string;
+  translation: string | null;
   surahName: string;
 }
 
@@ -29,8 +33,21 @@ export interface DailyVerse {
   surah: number;
   ayah: number;
   arabic: string;
-  translation: string;
+  translation: string | null;
   surahName: string;
+}
+
+// Full Uthmani Arabic corpus (Tanzil v1.1, verbatim). Loaded lazily so the
+// ~1.2MB text is code-split away from the initial bundle. Display text is
+// never modified; translations/tafsir remain separate pending resources.
+let corpusCache: Record<string, string> | null = null;
+
+async function getCorpus(): Promise<Record<string, string>> {
+  if (!corpusCache) {
+    const module = await import("@/data/quranCorpus");
+    corpusCache = module.UTHMANI_VERSES as Record<string, string>;
+  }
+  return corpusCache;
 }
 
 // Authentic Quran chapter data based on the actual Quran
@@ -1155,61 +1172,83 @@ export async function getQuranVerse(
   ayah: number,
   _language?: string,
 ): Promise<QuranVerse | null> {
-  const key = `${surah}-${ayah}`;
-  const verse = sampleVerses[key];
-
-  if (verse) {
-    return Promise.resolve(verse);
+  const chapter = quranChapters.find((c) => c.number === surah);
+  if (!chapter || ayah < 1 || ayah > chapter.ayahCount) {
+    return Promise.resolve(null);
   }
 
-  // Absence is represented as absence. Never place a status message inside
-  // the sacred-text field or synthesize a verse to fill a corpus gap.
-  return Promise.resolve(null);
+  const corpus = await getCorpus();
+  // Corpus keys are canonical `surah:ayah`; legacy sample keys use a dash.
+  const arabic = corpus[`${surah}:${ayah}`];
+  if (!arabic) {
+    // Genuinely absent from the corpus (should not happen after range
+    // validation): absence stays absence, never a status sentence.
+    return Promise.resolve(null);
+  }
+
+  const sample = sampleVerses[`${surah}-${ayah}`];
+  return Promise.resolve({
+    surah,
+    ayah,
+    arabic,
+    translation: sample?.translation ?? null,
+    transliteration: sample?.transliteration,
+    tafsir: sample?.tafsir,
+    surahName: sample?.surahName ?? chapter.arabicName,
+  });
 }
 
 export async function searchQuran(query: string): Promise<SearchResult[]> {
   if (query.length < 2) return [];
 
-  // In a real implementation, this would search through a complete Quran database
-  // For now, searching through sample verses
+  const q = query.toLowerCase();
+  const corpus = await getCorpus();
   const results: SearchResult[] = [];
 
-  Object.values(sampleVerses).forEach((verse) => {
-    if (
-      verse.arabic.includes(query) ||
-      verse.translation.toLowerCase().includes(query.toLowerCase()) ||
-      (verse.transliteration &&
-        verse.transliteration.toLowerCase().includes(query.toLowerCase()))
-    ) {
+  for (const key of Object.keys(corpus)) {
+    if (results.length >= 50) break;
+    const [surah, ayah] = key.split(":").map(Number);
+    const arabic = corpus[key];
+    const sample = sampleVerses[`${surah}-${ayah}`];
+    const matchesArabic = arabic.includes(query);
+    const matchesTranslation =
+      (sample?.translation ?? "").toLowerCase().includes(q);
+    const matchesTransliteration =
+      sample?.transliteration?.toLowerCase().includes(q) ?? false;
+    if (matchesArabic || matchesTranslation || matchesTransliteration) {
+      const chapter = quranChapters.find((c) => c.number === surah);
       results.push({
-        surah: verse.surah,
-        ayah: verse.ayah,
-        arabic: verse.arabic,
-        translation: verse.translation,
-        surahName: verse.surahName,
+        surah,
+        ayah,
+        arabic,
+        translation: sample?.translation ?? null,
+        surahName: sample?.surahName ?? chapter?.arabicName ?? "",
       });
     }
-  });
+  }
 
   return Promise.resolve(results);
 }
 
 export async function getDailyVerse(): Promise<DailyVerse> {
-  // Get a different verse based on the current day of year
+  // Deterministic rotation over the full corpus by day of year.
   const dayOfYear = Math.floor(
     (Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) /
       (1000 * 60 * 60 * 24),
   );
-  const verseKeys = Object.keys(sampleVerses);
-  const selectedKey = verseKeys[dayOfYear % verseKeys.length];
-  const verse = sampleVerses[selectedKey];
+  const corpus = await getCorpus();
+  const keys = Object.keys(corpus);
+  const selectedKey = keys[dayOfYear % keys.length];
+  const [surah, ayah] = selectedKey.split(":").map(Number);
+  const sample = sampleVerses[`${surah}-${ayah}`];
+  const chapter = quranChapters.find((c) => c.number === surah);
 
   return Promise.resolve({
-    surah: verse.surah,
-    ayah: verse.ayah,
-    arabic: verse.arabic,
-    translation: verse.translation,
-    surahName: verse.surahName,
+    surah,
+    ayah,
+    arabic: corpus[selectedKey],
+    translation: sample?.translation ?? null,
+    surahName: sample?.surahName ?? chapter?.arabicName ?? "",
   });
 }
 

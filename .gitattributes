@@ -1,0 +1,3 @@
+# Ingested source artifacts are immutable: any line-ending conversion would
+# invalidate their recorded SHA-256 checksums, so they are stored binary.
+data-sources/tanzil/quran-uthmani-min-1.1.txt binary

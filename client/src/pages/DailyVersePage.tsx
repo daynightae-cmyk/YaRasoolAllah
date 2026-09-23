@@ -154,12 +154,12 @@ export default function DailyVersePage() {
 
 ${dailyVerse.arabic}
 
-"${dailyVerse.translation}"
+"${dailyVerse.translation ? `"${dailyVerse.translation}"` : "(لا توجد ترجمة إنجليزية لهذه الآية بعد)"}
 
 📖 ${dailyVerse.surahName} - آية ${dailyVerse.ayah}
 
-💡 تفسير مبسط:
-${getDailyTafsir(dailyVerse)}
+💡 عن التفسير:
+التفسير المحقق قيد الإدخال والمراجعة.
 
 🤲 دعاء اليوم:
 ${getDailyDua()}
@@ -197,15 +197,10 @@ https://yarasoolallah.org
     }
   };
 
-  const getDailyTafsir = (verse: any) => {
-    const tafsirs = [
-      "هذه الآية تذكرنا بعظمة الله وقدرته على كل شيء",
-      "آية كريمة تبين لنا أهمية التوكل على الله في جميع أمورنا",
-      "تدعونا هذه الآية إلى التأمل في خلق الله وعجائب قدرته",
-      "آية مباركة تحثنا على الصبر والثبات على الحق",
-      "تذكرنا بأهمية الذكر والدعاء في حياتنا اليومية",
-    ];
-    return tafsirs[Math.floor(Math.random() * tafsirs.length)];
+  // No attributed tafsir is available for arbitrary corpus verses: a random
+  // devotional sentence must never be presented as "tafsir" of the verse.
+  const getDailyTafsir = (_verse: any) => {
+    return "التفسير المحقق لهذه الآية قيد الإدخال والمراجعة — لا يُعرض هنا أي نص منسوب لمفسر.";
   };
 
   const getDailyDua = () => {
@@ -260,41 +255,41 @@ https://yarasoolallah.org
               </div>
             </div>
 
-            {/* Global Stats */}
+            {/* Corpus facts (verified): no invented audience metrics. */}
             <div className="flex justify-center gap-8 mb-8">
               <div className="text-center">
-                <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
-                  1.2M+
+                <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400 font-mono">
+                  114
                 </div>
                 <div className="text-sm text-gray-500 dark:text-gray-400">
-                  مستخدم عالمي
+                  سورة في المتن الموثق
                 </div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                  30
+                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 font-mono">
+                  6236
                 </div>
                 <div className="text-sm text-gray-500 dark:text-gray-400">
-                  لغة مدعومة
+                  آية يتناوب عليها الاختيار اليومي
                 </div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+                <div className="text-3xl font-bold text-purple-600 dark:text-purple-400 font-mono">
                   {shareStats.total}
                 </div>
                 <div className="text-sm text-gray-500 dark:text-gray-400">
-                  مشاركة اليوم
+                  مشاركاتك المحفوظة محليًا
                 </div>
               </div>
             </div>
 
             <div className="bg-gradient-to-r from-emerald-100 to-blue-100 dark:from-emerald-900/30 dark:to-blue-900/30 rounded-2xl p-6 border border-emerald-200 dark:border-emerald-700">
               <h2 className="text-2xl font-amiri font-bold text-emerald-700 dark:text-emerald-400 mb-2">
-                🎯 الفكرة الذهبية
+                🎯 فكرة الصفحة
               </h2>
               <p className="text-gray-700 dark:text-gray-300 font-inter leading-relaxed">
-                كل هاتف بالعالم يستقبل آية مباركة + تفسير مبسط + دعاء صغير =
-                حسنة مضمونة يومياً
+                آية يومية من المتن الموثق مع بيان حال الترجمة والتفسير، ودعاء
+                عام — دون ادعاء ثواب مضمون أو إحصاءات جمهور.
               </p>
             </div>
           </div>
@@ -385,7 +380,9 @@ https://yarasoolallah.org
                               </h4>
                             </div>
                             <p className="text-lg font-inter leading-relaxed text-gray-700 dark:text-gray-300">
-                              "{dailyVerse.translation}"
+                              {dailyVerse.translation
+                                ? `"${dailyVerse.translation}"`
+                                : "لا توجد ترجمة إنجليزية لهذه الآية بعد — النص العربي أعلاه هو المتن الكامل الموثق."}
                             </p>
                           </div>
 
@@ -396,7 +393,7 @@ https://yarasoolallah.org
                                 lightbulb
                               </span>
                               <h4 className="font-amiri font-semibold text-amber-700 dark:text-amber-400">
-                                تفسير مبسط
+                                عن التفسير
                               </h4>
                             </div>
                             <p className="text-gray-700 dark:text-gray-300 font-inter leading-relaxed">

@@ -37,7 +37,12 @@ No handcrafted SVG point, modern map point, or generated coordinate may be promo
 
 ## Quran and library capability truth
 
-The Quran chapter list is navigation metadata; it is not evidence of a complete local verse corpus. Missing verse text resolves to an explicit unavailable state, never a status sentence inside the verse field. The current local records remain a development sample with editorial review pending.
+The Quran chapter list is navigation metadata; verse text resolves against the
+ingested Tanzil Uthmani-min v1.1 corpus (114 surahs / 6236 verses, SHA-256
+verified at ingestion — see `data-sources/tanzil/`). Missing verse text
+resolves to an explicit unavailable state, never a status sentence inside the
+verse field. English translation remains a development sample and tafsir
+remains pending per verse.
 
 The library is catalog-only in this slice. External URLs are labeled as external sources. The placeholder reader, simulated download manager, and simulated download service were archived outside active source code. In-app reading and downloading remain blocked until item-level file availability and rights evidence exist.
 

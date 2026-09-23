@@ -201,7 +201,7 @@ export default function QuranPage() {
                 </span>
                 <span className="text-slate-400 text-xs">·</span>
                 <span className="text-xs font-tajawal text-slate-300">
-                  فهرس 114 سورة · المتن المتاح حاليًا عينة تطوير محدودة
+                  المصحف الكامل · 114 سورة · النص العربي من مشروع تنزيل
                 </span>
               </div>
               <h1 className="text-3xl md:text-5xl font-amiri font-bold tracking-tight text-white">
@@ -422,12 +422,19 @@ export default function QuranPage() {
                         </Select>
                       </div>
                       <p className="text-[11px] font-tajawal text-muted-foreground leading-relaxed">
-                        المتاح حاليًا الإنجليزية فقط ضمن عينة التطوير. بقية اللغات معطلة
-                        صراحة حتى إدخال مورد مرخص لكل لغة مع الإصدار والحقوق.
+                        المتاح حاليًا الإنجليزية فقط، ولآيات العينة فقط. بقية اللغات
+                        معطلة صراحة حتى إدخال مورد مرخص لكل لغة مع الإصدار والحقوق.
                       </p>
-                      <p className="text-sm font-inter text-foreground/90 leading-relaxed" dir="ltr">
-                        {verse.translation}
-                      </p>
+                      {verse.translation ? (
+                        <p className="text-sm font-inter text-foreground/90 leading-relaxed" dir="ltr">
+                          {verse.translation}
+                        </p>
+                      ) : (
+                        <p className="text-xs font-tajawal text-muted-foreground leading-relaxed" role="status">
+                          لا توجد ترجمة إنجليزية لهذه الآية بعد — النص العربي أعلاه
+                          هو المتن الكامل الموثق، والترجمة قيد استكمال الموارد المرخصة.
+                        </p>
+                      )}
                     </div>
 
                     {/* Tafsir Panel */}
@@ -527,17 +534,17 @@ export default function QuranPage() {
                         onClick={() =>
                           setSelectedEvidence({
                             title: `سورة ${selectedChapter.arabicName} — الآية ${verse.ayah}`,
-                            collectionOrWork: "عينة تطوير محلية — مصدر الإنتاج لم يُربط بعد",
-                            authorOrCompiler: "غير محدد في سجل المصدر الحالي",
+                            collectionOrWork: "النص القرآني العربي: مشروع تنزيل (tanzil.net) — Uthmani-min v1.1",
+                            authorOrCompiler: "غير منطبق — نص قرآني موثق المصدر",
                             referenceNumber: `QUR-${selectedChapter.number}:${verse.ayah}`,
                             originalText: verse.arabic,
-                            translationExcerpt: verse.translation,
+                            translationExcerpt: verse.translation ?? undefined,
                             status: "editorial_review_pending",
-                            reviewNote: "لا يجوز اعتماد هذا السجل للنشر قبل ربط ملف المصدر، الإصدار، الترخيص، والبصمة الرقمية.",
-                            provenanceDataset: "QURAN-DEVELOPMENT-SAMPLE",
-                            sourceRegistryId: "src-quran-development-sample",
-                            rightsDecision: "development_only",
-                            allowedUsageLabel: "عرض تطوير محلي فقط؛ غير صالح للإنتاج أو إعادة التوزيع",
+                            reviewNote: "النص العربي متحقق السلامة والاكتمال (بصمة SHA-256 ومطابقة 114/6236). الترجمة الإنجليزية عينة تطوير فقط، والتفسير المحقق قيد الإدخال.",
+                            provenanceDataset: "TANZIL-UTHMANI-MIN-1.1",
+                            sourceRegistryId: "src-tanzil-uthmani-min-1-1-acquired",
+                            rightsDecision: "cleared",
+                            allowedUsageLabel: "النص العربي: عرض كامل مسموح مع النسبة؛ الترجمة والتفسير: قيد المراجعة",
                             rightsCheckedAt: "2026-09-23T00:00:00+04:00",
                           })
                         }
@@ -555,11 +562,11 @@ export default function QuranPage() {
                   >
                     <AlertTriangle className="mx-auto mb-3 h-6 w-6 text-amber-700 dark:text-amber-300" aria-hidden="true" />
                     <h3 className="font-cairo text-sm font-bold text-foreground">
-                      متن هذه الآية غير متاح في العينة المحلية
+                      تعذر استرجاع هذه الآية
                     </h3>
                     <p className="mx-auto mt-2 max-w-prose-ar font-tajawal text-xs leading-6 text-muted-foreground">
-                      لم نضع نصًا بديلًا أو مولّدًا داخل متن الآية. يظل هذا الموضع
-                      غير متاح حتى إدخال Corpus موثّق مع المصدر والإصدار والبصمة الرقمية.
+                      لم يُعثر على النص في المتن الموثق. لا يُعرض نص بديل أو مولّد
+                      داخل متن الآية إطلاقًا.
                     </p>
                   </div>
                 )}
