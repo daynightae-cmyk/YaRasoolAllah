@@ -8,9 +8,9 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useTheme } from "@/components/ThemeProvider";
 import { BRAND } from "@/config/brand";
 import EvidenceDrawer, { EvidenceSource } from "@/components/Institution/EvidenceDrawer";
-import { INITIAL_VERIFIED_HADITHS } from "@/data/hadithData";
+import { HADITH_DEVELOPMENT_SAMPLES } from "@/data/hadithData";
 import { WHO_IS_MUHAMMAD_CHAPTERS } from "@/data/whoIsMuhammadData";
-import booksData from "@/data/books.json";
+import { workRegistry } from "@shared/knowledge-registry";
 import {
   Send,
   BookOpen,
@@ -90,7 +90,7 @@ export default function AlMuftiAlMubeenPage() {
 
     // Perform genuine discovery across our actual data index
     const lowerQ = q.toLowerCase();
-    const matchedHadiths = INITIAL_VERIFIED_HADITHS.filter(
+    const matchedHadiths = HADITH_DEVELOPMENT_SAMPLES.filter(
       (h) =>
         h.textAr.includes(lowerQ) ||
         h.narratorAr.includes(lowerQ) ||
@@ -105,11 +105,12 @@ export default function AlMuftiAlMubeenPage() {
         c.historicalContextAr.includes(lowerQ),
     );
 
-    const matchedBooks = (booksData.books || []).filter(
-      (b: any) =>
-        b.title.toLowerCase().includes(lowerQ) ||
-        b.author.toLowerCase().includes(lowerQ) ||
-        b.description.toLowerCase().includes(lowerQ),
+    const matchedBooks = workRegistry.filter(
+      (work) =>
+        work.titleAr.toLowerCase().includes(lowerQ) ||
+        work.titleEn.toLowerCase().includes(lowerQ) ||
+        work.authorAr.toLowerCase().includes(lowerQ) ||
+        work.authorEn.toLowerCase().includes(lowerQ),
     ).slice(0, 2);
 
     let answerText = "";
@@ -133,7 +134,7 @@ export default function AlMuftiAlMubeenPage() {
       }
 
       if (matchedHadiths.length > 0) {
-        answerText += `🔹 في المرويات المسندة:\n`;
+        answerText += `🔹 في عينات المرويات قيد المراجعة:\n`;
         matchedHadiths.forEach((h) => {
           answerText += `• ${h.textAr}\n(الراوي: ${h.narratorAr} — التخريج: ${h.gradeSource})\n`;
           matchedSources.push({
@@ -148,12 +149,12 @@ export default function AlMuftiAlMubeenPage() {
 
       if (matchedBooks.length > 0) {
         answerText += `🔹 في المراجع والمكتبة:\n`;
-        matchedBooks.forEach((b: any) => {
-          answerText += `• كتاب: ${b.title} للمؤلف ${b.author}\n`;
+        matchedBooks.forEach((work) => {
+          answerText += `• عمل مفهرس: ${work.titleAr} — ${work.authorAr}\n`;
           matchedSources.push({
-            title: b.title,
+            title: work.titleAr,
             wing: "المكتبة الرقمية",
-            reference: `${b.author} (${b.publishedYear}م)`,
+            reference: `${work.openitiWorkUri ?? "سجل فهرسي بلا نسخة رقمية مثبتة"} — ${work.bibliographicStatus}`,
             link: "/digital-library",
           });
         });

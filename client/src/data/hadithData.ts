@@ -24,6 +24,9 @@ export interface HadithRecord {
   gradeAr: string;
   gradeEn: string;
   gradeSource: string;
+  gradeAssessor: string | null;
+  editorialReviewStatus: "editorial_review_pending";
+  contentAvailability: "development_sample";
   relatedSeerahTopic?: string;
   relatedQuranAyah?: string;
   provenance: string;
@@ -39,7 +42,7 @@ export const HADITH_COLLECTIONS: HadithCollection[] = [
     totalHadithCount: 7563,
     descriptionAr: "الجامع المسند الصحيح المختصر من أمور رسول الله ﷺ وسننه وأيامه. أصح كتاب بعد كتاب الله بإجماع الأمة.",
     descriptionEn: "The most authoritative collection of prophetic traditions, rigorously compiled by Imam al-Bukhari.",
-    isAvailable: true,
+    isAvailable: false,
   },
   {
     id: "muslim",
@@ -50,7 +53,7 @@ export const HADITH_COLLECTIONS: HadithCollection[] = [
     totalHadithCount: 3033,
     descriptionAr: "المسند الصحيح المختصر بنقل العدل عن العدل إلى رسول الله ﷺ. امتاز بدقة التبويب وجمع طرق الحديث في موضع واحد.",
     descriptionEn: "Second only to Bukhari in authenticity, renowned for thematic organization and precise isnad clustering.",
-    isAvailable: true,
+    isAvailable: false,
   },
   {
     id: "abu-dawud",
@@ -61,7 +64,7 @@ export const HADITH_COLLECTIONS: HadithCollection[] = [
     totalHadithCount: 5274,
     descriptionAr: "أحد أصول كتب السنة، عُني خصوصاً بأحاديث الأحكام الفقهية وتفريعها.",
     descriptionEn: "A foundational Sunan collection specializing in legal rulings (ahkam) and prophetic jurisprudence.",
-    isAvailable: true,
+    isAvailable: false,
   },
   {
     id: "tirmidhi",
@@ -72,7 +75,7 @@ export const HADITH_COLLECTIONS: HadithCollection[] = [
     totalHadithCount: 3956,
     descriptionAr: "الجامع المختصر الذي امتاز ببيان درجات الأحاديث (صحيح، حسن، غريب) ومذاهب فقهاء الصحابة والتابعين.",
     descriptionEn: "Celebrated for explicit hadith grading terminology and recording comparative scholarly viewpoints.",
-    isAvailable: true,
+    isAvailable: false,
   },
   {
     id: "nasai",
@@ -83,7 +86,7 @@ export const HADITH_COLLECTIONS: HadithCollection[] = [
     totalHadithCount: 5758,
     descriptionAr: "من أدق كتب السنن شرطاً في نقد الرواة وبيان علل الأسانيد والاختلاف في ألفاظ الروايات.",
     descriptionEn: "Renowned for its rigorous transmission standards and deep critique of hidden narrational defects (ilal).",
-    isAvailable: true,
+    isAvailable: false,
   },
   {
     id: "ibn-majah",
@@ -94,11 +97,11 @@ export const HADITH_COLLECTIONS: HadithCollection[] = [
     totalHadithCount: 4341,
     descriptionAr: "سادس الكتب الستة المعتمدة، تميز بحسن الترتيب وكثرة الأبواب الفقهية والزوائد.",
     descriptionEn: "The sixth of the canonical Six Books, distinguished by excellent chaptering and unique supplementary narrations.",
-    isAvailable: true,
+    isAvailable: false,
   },
 ];
 
-export const INITIAL_VERIFIED_HADITHS: HadithRecord[] = [
+export const HADITH_DEVELOPMENT_SAMPLES: HadithRecord[] = [
   {
     id: "bukhari-1",
     collectionId: "bukhari",
@@ -113,8 +116,11 @@ export const INITIAL_VERIFIED_HADITHS: HadithRecord[] = [
     gradeAr: "صحيح متفق عليه",
     gradeEn: "Sahih (Muttafaq Alayh)",
     gradeSource: "أخرجه البخاري (1) ومسلم (1907)",
+    gradeAssessor: null,
+    editorialReviewStatus: "editorial_review_pending",
+    contentAvailability: "development_sample",
     relatedSeerahTopic: "الهجرة النبوية إلى المدينة وإخلاص العمل",
-    provenance: "الجامع الصحيح للبخاري — طبعة دار التأصيل المحققة",
+    provenance: "سجل تطوير محلي؛ بيانات الطبعة والمقابلة الخطية غير مثبتة بعد.",
   },
   {
     id: "bukhari-13",
@@ -130,16 +136,19 @@ export const INITIAL_VERIFIED_HADITHS: HadithRecord[] = [
     gradeAr: "صحيح متفق عليه",
     gradeEn: "Sahih (Muttafaq Alayh)",
     gradeSource: "البخاري (13) ومسلم (45)",
+    gradeAssessor: null,
+    editorialReviewStatus: "editorial_review_pending",
+    contentAvailability: "development_sample",
     relatedSeerahTopic: "المؤاخاة بين المهاجرين والأنصار",
-    provenance: "الجامع الصحيح للبخاري — طبعة دار التأصيل",
+    provenance: "سجل تطوير محلي؛ بيانات الطبعة والمقابلة الخطية غير مثبتة بعد.",
   },
   {
-    id: "muslim-2564",
+    id: "muslim-2577",
     collectionId: "muslim",
     bookNumber: 45,
     bookNameAr: "كتاب البر والصلة والآداب",
     chapterNameAr: "باب تحريم الظلم",
-    hadithNumber: 2564,
+    hadithNumber: 2577,
     narratorAr: "أبو ذر الغفاري رضي الله عنه عن النبي ﷺ فيما يروي عن ربه تبارك وتعالى",
     narratorEn: "Abu Dharr al-Ghifari from the Prophet narrating from his Lord",
     textAr: "«يا عبادي إني حرمت الظلم على نفسي، وجعلته بينكم محرماً، فلا تظالموا، يا عبادي كلكم ضال إلا من هديته، فاستهدوني أهدكم...».",
@@ -147,8 +156,11 @@ export const INITIAL_VERIFIED_HADITHS: HadithRecord[] = [
     gradeAr: "حديث قدسي صحيح",
     gradeEn: "Hadith Qudsi - Sahih",
     gradeSource: "أخرجه مسلم في صحيحه برقم (2577)",
+    gradeAssessor: null,
+    editorialReviewStatus: "editorial_review_pending",
+    contentAvailability: "development_sample",
     relatedSeerahTopic: "إقامة العدل ونبذ الظلم",
-    provenance: "صحيح مسلم — طبعة دار المنهاج",
+    provenance: "سجل تطوير محلي؛ بيانات الطبعة والمقابلة الخطية غير مثبتة بعد.",
   },
   {
     id: "tirmidhi-1924",
@@ -164,7 +176,10 @@ export const INITIAL_VERIFIED_HADITHS: HadithRecord[] = [
     gradeAr: "حسن صحيح",
     gradeEn: "Hasan Sahih",
     gradeSource: "جامع الترمذي برقم (1924)",
+    gradeAssessor: null,
+    editorialReviewStatus: "editorial_review_pending",
+    contentAvailability: "development_sample",
     relatedSeerahTopic: "الرحمة المهداة للعالمين",
-    provenance: "جامع الترمذي — تحقيق أحمد شاكر",
+    provenance: "سجل تطوير محلي؛ نص الحكم ومقيّمه يحتاجان مقابلة نسخة قبل النشر.",
   },
 ];

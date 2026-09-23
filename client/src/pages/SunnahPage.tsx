@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import InstitutionShell from "@/components/Institution/InstitutionShell";
 import SourceDrawer, { SourceProvenanceItem } from "@/components/common/SourceDrawer";
 import LearningDepthSelector, { useLearningDepth } from "@/components/Institution/LearningDepthSelector";
-import { HADITH_COLLECTIONS, INITIAL_VERIFIED_HADITHS, HadithCollection, HadithRecord } from "@/data/hadithData";
+import { HADITH_COLLECTIONS, HADITH_DEVELOPMENT_SAMPLES, HadithCollection, HadithRecord } from "@/data/hadithData";
+import { providerPolicyRegistry } from "@shared/knowledge-registry";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -26,7 +27,7 @@ export default function SunnahPage() {
   const [selectedEvidence, setSelectedEvidence] = useState<SourceProvenanceItem | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const filteredHadiths = INITIAL_VERIFIED_HADITHS.filter((h) => {
+  const filteredHadiths = HADITH_DEVELOPMENT_SAMPLES.filter((h) => {
     const matchesCol = selectedCollection === "all" || h.collectionId === selectedCollection;
     const q = searchQuery.trim().toLowerCase();
     const matchesQuery =
@@ -57,7 +58,7 @@ export default function SunnahPage() {
     <InstitutionShell activeWing="dar-al-hadith">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10 text-right">
         {/* Header Banner */}
-        <div className="rounded-3xl p-8 bg-gradient-to-r from-cyan-950 via-slate-900 to-slate-950 border border-cyan-800/40 text-white shadow-xl space-y-4">
+        <div className="wing-hero wing-hero--hadith">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-2 max-w-2xl">
               <div className="flex items-center gap-2 text-xs font-tajawal text-cyan-300">
@@ -65,14 +66,15 @@ export default function SunnahPage() {
                 <span className="font-semibold">الرواق الرابع في الصرح</span>
                 <span className="text-slate-500">·</span>
                 <span className="text-slate-300 font-mono">
-                  الكتب الستة والأسانيد المحققة
+                  سجل الأعمال · الحكم · مصدر الحكم · المراجعة
                 </span>
               </div>
               <h1 className="text-3xl md:text-5xl font-amiri font-bold tracking-tight">
                 دار الحديث وصحيح السنّة
               </h1>
               <p className="text-sm md:text-base font-tajawal text-slate-300 leading-relaxed">
-                منظومة موثقة لكلمات وتوجيهات النبي ﷺ مع بيان درجات الصحة، وأسماء الرواة، والربط الموضوعي بأحداث السيرة والقرآن الكريم، مع حظر كامل للأحاديث الموضوعة والمختلقة.
+                دار أرشيفية تفصل بين نص الرواية، والعمل، والراوي، والحكم، ومصدر الحكم،
+                والمقيّم، وحالة المراجعة. السجلات النصية أدناه عينات تطويرية غير منشورة.
               </p>
             </div>
 
@@ -81,6 +83,23 @@ export default function SunnahPage() {
             </div>
           </div>
         </div>
+
+        <section className="hadith-provider-band" aria-label="حالة مزودي الحديث">
+          {providerPolicyRegistry.filter((provider) => provider.domain === "hadith").map((provider) => (
+            <article key={provider.providerId}>
+              <span>{provider.provider}</span>
+              <strong>{provider.rightsState.replaceAll("_", " ")}</strong>
+              <p>{provider.productionUse}</p>
+              <a href={provider.canonicalUrl} target="_blank" rel="noreferrer">فتح سجل المزود</a>
+            </article>
+          ))}
+          <article>
+            <span>OpenITI</span>
+            <strong>CATALOG ONLY</strong>
+            <p>سجلات الأعمال والنسخ الرقمية متاحة للفهرسة؛ النص الكامل يخضع لمراجعة النسخة والحقوق.</p>
+            <a href="/sources">فتح سجل الأعمال</a>
+          </article>
+        </section>
 
         {/* The Six Canonical Collections Shelf */}
         <section className="space-y-4">
@@ -112,7 +131,7 @@ export default function SunnahPage() {
                       توفي {col.deathHijri} هـ
                     </span>
                     <span className="font-mono font-bold text-cyan-700 dark:text-cyan-400">
-                      {col.totalHadithCount} حديثاً
+                      سجل عمل · فهرس فقط
                     </span>
                   </div>
 
@@ -147,7 +166,8 @@ export default function SunnahPage() {
               ميثاق النزاهة الحديثية والأمانة العلمية:
             </span>
             <p className="text-muted-foreground leading-relaxed">
-              تُعرض نصوص الأحاديث مع بيان المصدر والراوي ودرجة الحديث ومصدر الحكم. التغطية النصية المحلية حاليًا عينة أولية من الكتب الستة، وتُستكمل تدريجيًا مع مراجعة الأسانيد وحظر أي مرويات ضعيفة أو موضوعة دون بيان درجتها.
+              العينات المحلية أدناه قيد المراجعة وليست Corpus منشورًا. لا اتصال حاليًا
+              بواجهة Sunnah.com لغياب بيانات الاعتماد، ولا كشط للموقع. Dorar مرجع تحريري خارجي فقط.
             </p>
           </div>
         </div>
@@ -180,7 +200,7 @@ export default function SunnahPage() {
           </div>
         </div>
 
-        {/* Authenticated Hadith List */}
+        {/* Development samples with explicit review state */}
         <div className="space-y-4">
           {filteredHadiths.map((item) => (
             <article
@@ -191,7 +211,7 @@ export default function SunnahPage() {
                 <div className="flex items-center gap-2 text-xs font-tajawal">
                   <span className="font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1">
                     <ShieldCheck className="w-3.5 h-3.5 inline" />
-                    {item.gradeAr}
+                    حكم مسجل: {item.gradeAr}
                   </span>
                   <span className="text-muted-foreground">·</span>
                   <span className="text-muted-foreground font-cairo">
@@ -203,6 +223,13 @@ export default function SunnahPage() {
                   حديث #{item.hadithNumber}
                 </span>
               </div>
+
+              <dl className="hadith-review-ledger">
+                <div><dt>مصدر الحكم</dt><dd>{item.gradeSource}</dd></div>
+                <div><dt>مقيّم الحكم</dt><dd>{item.gradeAssessor ?? "غير مسجل — يحتاج مراجعة"}</dd></div>
+                <div><dt>المراجعة التحريرية</dt><dd>{item.editorialReviewStatus}</dd></div>
+                <div><dt>الإتاحة</dt><dd>{item.contentAvailability}</dd></div>
+              </dl>
 
               {/* Narrator */}
               <div className="text-xs font-cairo text-muted-foreground">
@@ -276,18 +303,18 @@ export default function SunnahPage() {
                       referenceNumber: `HADITH-${item.hadithNumber}`,
                       textAr: item.textAr,
                       textEn: item.textEn,
-                      status: "verified",
+                      status: "editorial_review_pending",
                       hadithGrade: item.gradeAr,
-                      gradeAssessor: item.gradeSource,
+                      gradeAssessor: item.gradeAssessor ?? undefined,
                       chapterNameAr: item.chapterNameAr,
                       provenanceDataset: item.provenance || "صحيح السنة النبوية — صرح يا رسول الله ﷺ",
-                      reviewNote: "بيانات الطبعة والمقابلة الخطية غير مسجلة على مستوى هذا العنصر؛ الاعتماد الحالي على نص الحديث ودرجته ومصدر الحكم فقط.",
+                      reviewNote: `مصدر الحكم: ${item.gradeSource}. بيانات الطبعة والمقابلة الخطية ومقيّم الحكم غير مكتملة؛ السجل عينة تطويرية قيد المراجعة.`,
                     });
                   }}
                   className="text-xs text-amber-700 dark:text-amber-400 gap-1 font-cairo"
                 >
                   <ShieldCheck className="w-3.5 h-3.5" />
-                  توثيق المصدر والإسناد
+                  سجل المصدر والمراجعة
                 </Button>
               </div>
             </article>
