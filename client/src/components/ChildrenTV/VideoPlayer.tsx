@@ -1,19 +1,9 @@
-import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ChildrenVideo } from "@/data/childrenVideos";
-import {
-  Play,
-  Pause,
-  Volume2,
-  VolumeX,
-  Maximize,
-  Star,
-  Eye,
-  Clock,
-} from "lucide-react";
+import { Play } from "lucide-react";
 
 interface VideoPlayerProps {
   video: ChildrenVideo | null;
@@ -22,9 +12,6 @@ interface VideoPlayerProps {
 
 export default function VideoPlayer({ video, onClose }: VideoPlayerProps) {
   const { t, isRTL } = useLanguage();
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [volume, setVolume] = useState(50);
 
   if (!video) {
     return (
@@ -77,18 +64,11 @@ export default function VideoPlayer({ video, onClose }: VideoPlayerProps) {
               >
                 {video.category}
               </Badge>
-              <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                <Clock className="w-4 h-4" />
-                <span>{video.duration}</span>
-              </div>
-              <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                <Eye className="w-4 h-4" />
-                <span>{(video.views || 0).toLocaleString()}</span>
-              </div>
-              <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                <Star className="w-4 h-4 fill-current" />
-                <span>{video.rating}</span>
-              </div>
+              {/* Engagement figures are not collected; playback runs on the
+                  producer's YouTube page, which owns the content. */}
+              <span className="text-white/85 text-xs font-tajawal">
+                عرض خارجي عبر يوتيوب · {video.producer}
+              </span>
             </div>
           </div>
           {onClose && (
@@ -127,57 +107,8 @@ export default function VideoPlayer({ video, onClose }: VideoPlayerProps) {
           </div>
         )}
 
-        {/* Custom Controls Overlay */}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
-          <div className="flex items-center justify-between text-white">
-            <div className="flex items-center space-x-3 rtl:space-x-reverse">
-              <Button
-                size="sm"
-                variant="ghost"
-                className="text-white hover:bg-white/20 p-2"
-                onClick={() => setIsPlaying(!isPlaying)}
-              >
-                {isPlaying ? (
-                  <Pause className="w-5 h-5" />
-                ) : (
-                  <Play className="w-5 h-5" />
-                )}
-              </Button>
-
-              <Button
-                size="sm"
-                variant="ghost"
-                className="text-white hover:bg-white/20 p-2"
-                onClick={() => setIsMuted(!isMuted)}
-              >
-                {isMuted ? (
-                  <VolumeX className="w-5 h-5" />
-                ) : (
-                  <Volume2 className="w-5 h-5" />
-                )}
-              </Button>
-
-              <div className="flex items-center space-x-2 rtl:space-x-reverse">
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={volume}
-                  onChange={(e) => setVolume(Number(e.target.value))}
-                  className="w-20 h-2 bg-white/30 rounded-lg appearance-none cursor-pointer"
-                />
-              </div>
-            </div>
-
-            <Button
-              size="sm"
-              variant="ghost"
-              className="text-white hover:bg-white/20 p-2"
-            >
-              <Maximize className="w-5 h-5" />
-            </Button>
-          </div>
-        </div>
+        {/* Native YouTube controls drive playback; no overlay controls are
+            presented because they cannot actuate the cross-origin frame. */}
       </div>
 
       {/* Video Info */}
