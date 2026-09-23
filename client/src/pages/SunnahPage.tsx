@@ -140,7 +140,7 @@ export default function SunnahPage() {
               ميثاق النزاهة الحديثية والأمانة العلمية:
             </span>
             <p className="text-muted-foreground leading-relaxed">
-              تُعرض نصوص الأحاديث بدقة لفظية تامة مع بيان المصدر ورقم الباب. يجري حالياً استكمال رقمنة كافة مجلدات الكتب الستة تدريجياً لضمان مراجعة الأسانيد وحظر أي مرويات ضعيفة أو موضوعة دون بيان درجتها.
+              تُعرض نصوص الأحاديث مع بيان المصدر والراوي ودرجة الحديث ومصدر الحكم. التغطية النصية المحلية حاليًا عينة أولية من الكتب الستة، وتُستكمل تدريجيًا مع مراجعة الأسانيد وحظر أي مرويات ضعيفة أو موضوعة دون بيان درجتها.
             </p>
           </div>
         </div>
@@ -160,7 +160,7 @@ export default function SunnahPage() {
           <div className="flex items-center gap-2 text-xs font-tajawal text-muted-foreground self-start sm:self-auto">
             <span>المعروض:</span>
             <span className="font-mono font-bold text-foreground">{filteredHadiths.length}</span>
-            <span>حديثاً محققاً</span>
+            <span>حديثاً ببيان درجته ومصدر الحكم</span>
             {selectedCollection !== "all" && (
               <button
                 type="button"
@@ -247,11 +247,20 @@ export default function SunnahPage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() =>
+                  onClick={() => {
+                    const collection = HADITH_COLLECTIONS.find(
+                      (c) => c.id === item.collectionId,
+                    );
                     setSelectedEvidence({
                       title: `حديث رقم ${item.hadithNumber} — ${item.bookNameAr}`,
-                      collectionNameAr: item.bookNameAr,
-                      compilerAr: item.narratorAr,
+                      collectionNameAr: collection
+                        ? `${collection.nameAr} — ${item.bookNameAr}`
+                        : item.bookNameAr,
+                      compilerAr: collection?.compiler ?? "غير محدد في سجل المصدر",
+                      compilerDeathHijri: collection?.deathHijri,
+                      // Narrator (ruler of the report) is distinct from the
+                      // compiler (author of the collection) and is kept here.
+                      isnadChainAr: `راوي الحديث: ${item.narratorAr}`,
                       referenceNumber: `HADITH-${item.hadithNumber}`,
                       textAr: item.textAr,
                       textEn: item.textEn,
@@ -259,10 +268,10 @@ export default function SunnahPage() {
                       hadithGrade: item.gradeAr,
                       gradeAssessor: item.gradeSource,
                       chapterNameAr: item.chapterNameAr,
-                      editionTahqiq: "دار التأصيل — مقابلة على أصول خطية معتمدة",
                       provenanceDataset: item.provenance || "صحيح السنة النبوية — صرح يا رسول الله ﷺ",
-                    })
-                  }
+                      reviewNote: "بيانات الطبعة والمقابلة الخطية غير مسجلة على مستوى هذا العنصر؛ الاعتماد الحالي على نص الحديث ودرجته ومصدر الحكم فقط.",
+                    });
+                  }}
                   className="text-xs text-amber-700 dark:text-amber-400 gap-1 font-cairo"
                 >
                   <ShieldCheck className="w-3.5 h-3.5" />
