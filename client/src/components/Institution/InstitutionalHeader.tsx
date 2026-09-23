@@ -144,6 +144,8 @@ export default function InstitutionalHeader() {
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="xl:hidden w-9 h-9 rounded-xl"
                 aria-label="القائمة الرئيسية"
+                aria-expanded={isMobileMenuOpen}
+                aria-controls={isMobileMenuOpen ? "institution-mobile-menu" : undefined}
               >
                 {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </Button>
@@ -153,7 +155,7 @@ export default function InstitutionalHeader() {
 
         {/* Mobile Navigation Drawer */}
         {isMobileMenuOpen && (
-          <div className="xl:hidden border-t border-slate-200 dark:border-slate-800 bg-white/98 dark:bg-slate-900/98 p-4 space-y-4 shadow-xl animate-in slide-in-from-top-2">
+          <div id="institution-mobile-menu" className="xl:hidden border-t border-slate-200 dark:border-slate-800 bg-white/98 dark:bg-slate-900/98 p-4 space-y-4 shadow-xl animate-in slide-in-from-top-2">
             <div className="flex items-center justify-between pb-2 border-b">
               <span className="text-xs font-cairo text-muted-foreground">عمق المعرفة:</span>
               <LearningDepthSelector compact />
@@ -168,6 +170,7 @@ export default function InstitutionalHeader() {
                     key={item.href}
                     href={item.href}
                     onClick={() => setIsMobileMenuOpen(false)}
+                    aria-current={isActive ? "page" : undefined}
                     className={cn(
                       "flex items-center gap-2 p-2.5 rounded-xl border transition-colors",
                       isActive

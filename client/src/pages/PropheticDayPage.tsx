@@ -5,19 +5,16 @@ import LearningDepthSelector, { useLearningDepth } from "@/components/Institutio
 import { PROPHETIC_DAY_STATIONS, DailyStation } from "@/data/propheticDailyData";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Sun,
   Sunrise,
   Sunset,
   Moon,
-  Clock,
   Sparkles,
   ShieldCheck,
   Heart,
   ChevronLeft,
   ChevronRight,
-  Share2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -49,234 +46,202 @@ export default function PropheticDayPage() {
   const getStationIcon = (period: DailyStation["period"]) => {
     switch (period) {
       case "fajr":
-        return <Sunrise className="w-5 h-5 text-amber-500" />;
+        return <Sunrise className="w-5 h-5" />;
       case "morning":
-        return <Sun className="w-5 h-5 text-yellow-500" />;
+        return <Sun className="w-5 h-5" />;
       case "noon":
-        return <Sun className="w-5 h-5 text-orange-500" />;
+        return <Sun className="w-5 h-5" />;
       case "afternoon":
-        return <Sunset className="w-5 h-5 text-rose-500" />;
+        return <Sunset className="w-5 h-5" />;
       case "maghrib":
-        return <Sunset className="w-5 h-5 text-purple-500" />;
+        return <Sunset className="w-5 h-5" />;
       case "night":
-        return <Moon className="w-5 h-5 text-indigo-400" />;
+        return <Moon className="w-5 h-5" />;
     }
   };
 
   return (
     <InstitutionShell activeWing="prophetic-day">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10 text-right">
+      <div className="prophetic-journey text-right">
         {/* Banner */}
-        <div className="wing-hero wing-hero--daily">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-            <div className="space-y-2 max-w-2xl">
-              <div className="flex items-center gap-2">
-                <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-400/30 text-xs font-tajawal">
-                  منظومة التطبيق المعاصر
-                </Badge>
-                <span className="text-xs text-slate-400 font-mono">
-                  من الفجر إلى سكون الليل
-                </span>
+        <section className="wing-hero wing-hero--daily" aria-labelledby="prophetic-day-title">
+          <div className="wing-hero__grid">
+            <div>
+              <div className="wing-hero__eyebrow">
+                <Sun className="h-4 w-4" />
+                من الفجر إلى سكون الليل — معايشة الهدي النبوي
               </div>
-              <h1 className="text-3xl md:text-5xl font-amiri font-bold tracking-tight">
-                24 ساعة في رحاب الهدي النبوي
-              </h1>
-              <p className="text-sm md:text-base font-tajawal text-slate-300 leading-relaxed">
-                معايشة يومية دقيقة لأخلاق النبي ﷺ وتعامله في بيته، وسوقه، ومجتمعه، ومحرابه؛ وكيف نترجم هذا الهدي الرفيع إلى ممارسة أخلاقية حيّة في واقعنا المعاصر.
+              <h1 id="prophetic-day-title">24 ساعة في رحاب الهدي النبوي</h1>
+              <p>
+                معايشة يومية دقيقة لأخلاق النبي ﷺ وتعامله في بيته، وسوقه، ومجتمعه، ومحرابه؛
+                وكيف نترجم هذا الهدي الرفيع إلى ممارسة أخلاقية حيّة في واقعنا المعاصر.
               </p>
             </div>
-
-            <div className="shrink-0 flex items-center gap-3">
+            <div className="shrink-0 flex items-center gap-3 self-end">
               <LearningDepthSelector compact />
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Stations Navigation Bar */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        {/* Sundial Timeline — the hours of the prophetic day */}
+        <div className="sundial" role="group" aria-label="محطات اليوم النبوي">
           {PROPHETIC_DAY_STATIONS.map((station) => {
             const isActive = station.id === activeStationId;
             return (
               <button
                 key={station.id}
+                type="button"
+                id={`station-control-${station.id}`}
+                aria-pressed={isActive}
+                aria-controls="prophetic-day-station-panel"
+                data-period={station.period}
+                className={cn("sundial-node", isActive && "is-active")}
                 onClick={() => setActiveStationId(station.id)}
-                className={cn(
-                  "p-3.5 rounded-2xl border text-right transition-all flex flex-col justify-between gap-2",
-                  isActive
-                    ? "bg-emerald-500/10 border-emerald-500/50 shadow-md ring-1 ring-emerald-500/30"
-                    : "bg-white dark:bg-slate-900 border-border hover:border-emerald-600/50"
-                )}
               >
-                <div className="flex items-center justify-between w-full">
-                  {getStationIcon(station.period)}
-                  <span className="text-[10px] font-mono text-muted-foreground">
-                    {station.period.toUpperCase()}
-                  </span>
-                </div>
-                <div>
-                  <span className="text-xs font-tajawal text-muted-foreground block">
-                    {station.timeframeAr}
-                  </span>
-                  <span className="font-amiri font-bold text-sm text-foreground line-clamp-1">
-                    {station.titleAr}
-                  </span>
-                </div>
+                <span className="sundial-node__orb">{getStationIcon(station.period)}</span>
+                <span className="sundial-node__label">{station.titleAr}</span>
+                <span className="sundial-node__time" dir="ltr">{station.timeframeEn}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Active Station Deep Dive */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Main Card (8 cols) */}
-          <div className="lg:col-span-8 space-y-6">
-            <article className="p-6 md:p-10 rounded-3xl bg-white dark:bg-slate-900 border border-border shadow-xs space-y-6">
-              <div className="flex items-center justify-between border-b pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/30 flex items-center justify-center">
-                    {getStationIcon(activeStation.period)}
-                  </div>
-                  <div>
-                    <span className="text-xs font-mono text-emerald-700 dark:text-emerald-400 font-bold block">
-                      {activeStation.timeframeAr}
-                    </span>
-                    <h2 className="text-xl md:text-2xl font-amiri font-bold text-foreground">
-                      {activeStation.titleAr}
-                    </h2>
-                  </div>
-                </div>
-
-                <Badge variant="outline" className="text-xs font-mono">
-                  {activeStation.sourceReference}
-                </Badge>
+        {/* Reading Alcove — the active station deep dive */}
+        <div className="alcove">
+          <article
+            id="prophetic-day-station-panel"
+            aria-labelledby={`station-control-${activeStation.id}`}
+            className="alcove__stage"
+            data-period={activeStation.period}
+            style={{ ["--alcove-wash" as string]: `hsl(${activeStation.period === "fajr" ? "35 75% 50%" : activeStation.period === "morning" ? "45 85% 45%" : activeStation.period === "noon" ? "28 80% 48%" : activeStation.period === "afternoon" ? "15 70% 48%" : activeStation.period === "maghrib" ? "330 45% 50%" : "240 45% 58%"} / 0.06)` }}
+          >
+            <header className="alcove__header">
+              <div
+                className="alcove__icon"
+                data-period={activeStation.period}
+                style={{ ["--time-color" as string]: activeStation.period === "fajr" ? "hsl(35 75% 50%)" : activeStation.period === "morning" ? "hsl(45 85% 45%)" : activeStation.period === "noon" ? "hsl(28 80% 48%)" : activeStation.period === "afternoon" ? "hsl(15 70% 48%)" : activeStation.period === "maghrib" ? "hsl(330 45% 50%)" : "hsl(240 45% 58%)" }}
+              >
+                {getStationIcon(activeStation.period)}
               </div>
-
-              {/* Hadith Section */}
-              <div className="p-6 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-500/20 space-y-3">
-                <div className="flex items-center justify-between text-xs font-cairo text-emerald-800 dark:text-emerald-300">
-                  <span className="font-bold flex items-center gap-1.5">
-                    <Sparkles className="w-4 h-4 text-emerald-600" />
-                    النص النبوي المسند
-                  </span>
-                  <span className="font-mono text-[11px]">{activeStation.sourceReference}</span>
-                </div>
-                <p className="font-amiri text-xl md:text-2xl leading-relaxed text-foreground font-semibold">
-                  {activeStation.hadithTextAr}
-                </p>
-                <p className="text-xs font-inter text-muted-foreground" dir="ltr">
-                  "{activeStation.hadithTextEn}"
-                </p>
+              <div>
+                <span className="alcove__timeframe">{activeStation.timeframeAr}</span>
+                <h2 className="alcove__title">{activeStation.titleAr}</h2>
               </div>
+              <Badge variant="outline" className="alcove__source ms-auto font-mono text-[10px]">
+                {activeStation.sourceReference}
+              </Badge>
+            </header>
 
-              {/* Ethical Principle */}
-              <div className="space-y-2">
-                <h3 className="text-sm font-cairo font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4" />
-                  المبدأ القيمي والأخلاقي
-                </h3>
-                <p className="text-sm font-tajawal text-foreground leading-relaxed">
-                  {activeStation.ethicalPrincipleAr}
-                </p>
+            {/* Manuscript Cartouche — the hadith */}
+            <div className="prophetic-cartouche">
+              <div className="prophetic-cartouche__label">
+                <span>
+                  <Sparkles className="w-4 h-4" />
+                  النص النبوي المسند
+                </span>
+                <span className="font-mono text-[11px]">{activeStation.sourceReference}</span>
               </div>
+              <p className="prophetic-cartouche__arabic">{activeStation.hadithTextAr}</p>
+              <p className="prophetic-cartouche__translation" dir="ltr">
+                "{activeStation.hadithTextEn}"
+              </p>
+            </div>
 
-              {/* Modern Application */}
-              <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-border space-y-2">
-                <h3 className="text-sm font-cairo font-bold text-foreground flex items-center gap-1.5">
-                  <Heart className="w-4 h-4 text-rose-500" />
-                  التطبيق العملي في حياتنا المعاصرة
-                </h3>
-                <p className="text-xs md:text-sm font-tajawal text-muted-foreground leading-relaxed">
-                  {activeStation.modernApplicationAr}
-                </p>
-              </div>
+            {/* Ethical Principle */}
+            <div className="alcove__principle">
+              <h3>
+                <ShieldCheck className="w-4 h-4" />
+                المبدأ القيمي والأخلاقي
+              </h3>
+              <p>{activeStation.ethicalPrincipleAr}</p>
+            </div>
 
-              {/* Footer Controls */}
-              <div className="pt-4 border-t flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={currentIndex === 0}
-                    onClick={handlePrev}
-                    className="gap-1.5 text-xs font-cairo"
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                    المحطة السابقة
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={currentIndex === PROPHETIC_DAY_STATIONS.length - 1}
-                    onClick={handleNext}
-                    className="gap-1.5 text-xs font-cairo"
-                  >
-                    المحطة التالية
-                    <ChevronLeft className="w-4 h-4" />
-                  </Button>
-                </div>
+            {/* Modern Application */}
+            <div className="alcove__application">
+              <h3>
+                <Heart className="w-4 h-4" />
+                التطبيق العملي في حياتنا المعاصرة
+              </h3>
+              <p>{activeStation.modernApplicationAr}</p>
+            </div>
 
+            {/* Navigation */}
+            <div className="alcove__nav">
+              <div className="flex items-center gap-2">
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   size="sm"
-                  onClick={() =>
-                    setSelectedEvidence({
-                      title: activeStation.titleAr,
-                      collectionOrWork: activeStation.sourceReference,
-                      authorOrCompiler: "الأئمة المحدثون",
-                      referenceNumber: activeStation.id,
-                      originalText: activeStation.hadithTextAr,
-                      translationExcerpt: activeStation.hadithTextEn,
-                      status: "editorial_review_pending",
-                      reviewNote: "سجل عرض يومي؛ يتطلب مطابقة الطبعة والرقم ومراجعة تحريرية قبل الاعتماد.",
-                      provenanceDataset: "صحيح السنة النبوية والدواوين المعتمدة",
-                    })
-                  }
-                  className="gap-1.5 text-xs font-cairo text-emerald-700 dark:text-emerald-400"
+                  disabled={currentIndex === 0}
+                  onClick={handlePrev}
+                  className="gap-1.5 text-xs font-cairo"
                 >
-                  <ShieldCheck className="w-4 h-4" />
-                  توثيق المحطة
+                  <ChevronRight className="w-4 h-4" />
+                  المحطة السابقة
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={currentIndex === PROPHETIC_DAY_STATIONS.length - 1}
+                  onClick={handleNext}
+                  className="gap-1.5 text-xs font-cairo"
+                >
+                  المحطة التالية
+                  <ChevronLeft className="w-4 h-4" />
                 </Button>
               </div>
-            </article>
-          </div>
 
-          {/* Reflection & Study Card (4 cols) */}
-          <div className="lg:col-span-4 space-y-6">
-            <Card className="p-6 rounded-3xl border-amber-500/30 bg-gradient-to-br from-amber-500/5 to-transparent text-right space-y-4">
-              <div className="flex items-center gap-2 text-amber-700 dark:text-amber-300 font-cairo font-bold text-sm">
-                <Sparkles className="w-4 h-4 text-amber-600" />
-                سؤال التأمل اليومي
-              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() =>
+                  setSelectedEvidence({
+                    title: activeStation.titleAr,
+                    collectionOrWork: activeStation.sourceReference,
+                    authorOrCompiler: "الأئمة المحدثون",
+                    referenceNumber: activeStation.id,
+                    originalText: activeStation.hadithTextAr,
+                    translationExcerpt: activeStation.hadithTextEn,
+                    status: "editorial_review_pending",
+                    reviewNote: "سجل عرض يومي؛ يتطلب مطابقة الطبعة والرقم ومراجعة تحريرية قبل الاعتماد.",
+                    provenanceDataset: "صحيح السنة النبوية والدواوين المعتمدة",
+                  })
+                }
+                className="gap-1.5 text-xs font-cairo text-emerald-700 dark:text-emerald-400"
+              >
+                <ShieldCheck className="w-4 h-4" />
+                توثيق المحطة
+              </Button>
+            </div>
+          </article>
 
-              <blockquote className="font-amiri text-lg text-foreground italic leading-relaxed border-r-2 border-amber-500 pr-3">
-                "{activeStation.reflectivePromptAr}"
-              </blockquote>
-
-              <p className="text-xs font-tajawal text-muted-foreground leading-relaxed">
-                خذ دقيقة من يومك، وأوقف التشتت الرقمي، وتأمل كيف يمكن لهذا المبدأ النبوي أن يغير طريقتك في العيش والتعامل مع من حولك.
-              </p>
-            </Card>
-
-            <Card className="p-6 rounded-3xl border-border bg-white dark:bg-slate-900 text-right space-y-3">
-              <h3 className="font-cairo font-bold text-sm text-foreground">
-                المسار اليومي المتكامل
-              </h3>
-              <ul className="space-y-2 text-xs font-tajawal text-muted-foreground">
-                <li className="flex items-center justify-between border-b pb-1.5">
-                  <span>محطات اليوم:</span>
-                  <span className="font-mono font-bold text-foreground">6 محطات هدي</span>
-                </li>
-                <li className="flex items-center justify-between border-b pb-1.5">
-                  <span>درجة التحقيق:</span>
-                  <span className="text-emerald-700 dark:text-emerald-400 font-bold">صحيح متفق عليه</span>
-                </li>
-                <li className="flex items-center justify-between">
-                  <span>الهدف التربوي:</span>
-                  <span>التحول من المعرفة النظرية إلى السلوك الحي</span>
-                </li>
-              </ul>
-            </Card>
-          </div>
+          {/* Reflection Nook */}
+          <aside className="reflection-nook">
+            <span className="reflection-nook__label">
+              <Sparkles className="w-4 h-4 text-amber-600" />
+              سؤال التأمل اليومي
+            </span>
+            <blockquote className="reflection-nook__prompt">
+              "{activeStation.reflectivePromptAr}"
+            </blockquote>
+            <p className="reflection-nook__hint">
+              خذ دقيقة من يومك، وأوقف التشتت الرقمي، وتأمل كيف يمكن لهذا المبدأ النبوي
+              أن يغير طريقتك في العيش والتعامل مع من حولك.
+            </p>
+            <ul className="reflection-nook__summary">
+              <li>
+                <span>محطات اليوم:</span>
+                <strong className="font-mono">6 محطات هدي</strong>
+              </li>
+              <li>
+                <span>درجة التحقيق:</span>
+                <strong className="text-amber-700 dark:text-amber-300">قيد المراجعة التحريرية</strong>
+              </li>
+              <li>
+                <span>الهدف التربوي:</span>
+                <strong>التحول من المعرفة إلى السلوك</strong>
+              </li>
+            </ul>
+          </aside>
         </div>
       </div>
 
