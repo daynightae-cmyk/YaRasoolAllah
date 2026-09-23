@@ -145,7 +145,7 @@ export default function InstitutionalHeader() {
                 className="xl:hidden w-9 h-9 rounded-xl"
                 aria-label="القائمة الرئيسية"
                 aria-expanded={isMobileMenuOpen}
-                aria-controls="institution-mobile-menu"
+                aria-controls={isMobileMenuOpen ? "institution-mobile-menu" : undefined}
               >
                 {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </Button>

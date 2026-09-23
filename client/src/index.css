@@ -901,7 +901,7 @@ body {
 
 .catalog-desk {
   position: sticky;
-  top: 6.5rem;
+  top: 8.5rem;
   padding: 1.5rem;
   background: hsl(var(--card));
   border: 1px solid hsl(var(--primary) / 0.22);
@@ -1133,7 +1133,7 @@ dd { font-size: .72rem; overflow-wrap: anywhere; }
 
 @media (max-width: 767px) {
   .institution-truth-rail__inner { width: min(100% - 1.25rem, 90rem); min-height: 0; padding-block: 0.65rem; }
-  .institution-truth-rail p { display: none; }
+  .institution-truth-rail p { display: block; font-size: 0.62rem; line-height: 1.6; }
   .institution-page { width: min(100% - 1.25rem, 90rem); padding-top: 1rem; }
   .gate-page { padding-inline: .625rem; }
   .gate-stage { min-height: 0; }
@@ -1392,7 +1392,7 @@ dd { font-size: .72rem; overflow-wrap: anywhere; }
 /* --- Reflection nook (sidebar) --- */
 .reflection-nook {
   position: sticky;
-  top: 6.5rem;
+  top: 8.5rem;
   padding: clamp(1.5rem, 3vw, 2rem);
   background: hsl(var(--card));
   border: 1px solid hsl(var(--primary) / 0.22);
@@ -1425,10 +1425,10 @@ dd { font-size: .72rem; overflow-wrap: anywhere; }
 }
 
 .institution-header {
-  background: hsl(var(--background) / 0.9);
+  background: var(--institution-glass-strong);
   border-bottom: 1px solid hsl(var(--primary) / 0.2);
   box-shadow: 0 14px 38px -30px hsl(215 45% 8% / 0.55);
-  backdrop-filter: blur(18px) saturate(120%);
+  backdrop-filter: blur(20px) saturate(125%);
 }
 
 .institution-header::after {
@@ -1459,10 +1459,10 @@ dd { font-size: .72rem; overflow-wrap: anywhere; }
 }
 
 .institution-mobile-dock {
-  background: hsl(var(--background) / 0.94);
+  background: var(--institution-glass-strong);
   border-top: 1px solid hsl(var(--primary) / 0.28);
   box-shadow: 0 -18px 34px -26px hsl(215 45% 8% / 0.7);
-  backdrop-filter: blur(18px);
+  backdrop-filter: blur(20px) saturate(125%);
 }
 
 .institution-page {
@@ -1900,7 +1900,7 @@ dd { font-size: .72rem; overflow-wrap: anywhere; }
 
 .catalog-desk {
   position: sticky;
-  top: 6.5rem;
+  top: 8.5rem;
   padding: 1.5rem;
   background: hsl(var(--card));
   border: 1px solid hsl(var(--primary) / 0.22);
@@ -2133,7 +2133,6 @@ dd { font-size: .72rem; overflow-wrap: anywhere; }
   box-shadow:
     0 18px 40px -22px hsl(215 40% 10% / 0.4),
     0 0 0 1px var(--wing-ring, hsl(var(--primary) / 0.3));
-  outline: none;
 }
 
 /* Ambient glow band — fills on hover */
@@ -2209,7 +2208,7 @@ dd { font-size: .72rem; overflow-wrap: anywhere; }
 
 .wing-chamber__badge {
   font: 600 0.58rem "Cairo", sans-serif;
-  color: var(--wing-text, hsl(var(--primary)));
+  color: hsl(var(--foreground));
   border: 1px solid var(--wing-ring, hsl(var(--primary) / 0.25));
   padding: 0.1rem 0.4rem;
   border-radius: 999px;
@@ -2228,7 +2227,7 @@ dd { font-size: .72rem; overflow-wrap: anywhere; }
   gap: 0.35rem;
   padding-top: 0.6rem;
   border-top: 1px solid hsl(var(--border));
-  color: var(--wing-text, hsl(var(--primary)));
+  color: hsl(var(--foreground));
   font: 600 0.65rem "Cairo", sans-serif;
   z-index: 1;
   transition: gap 220ms ease;

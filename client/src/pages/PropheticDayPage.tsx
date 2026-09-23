@@ -84,15 +84,16 @@ export default function PropheticDayPage() {
         </section>
 
         {/* Sundial Timeline — the hours of the prophetic day */}
-        <div className="sundial" role="tablist" aria-label="محطات اليوم النبوي">
+        <div className="sundial" role="group" aria-label="محطات اليوم النبوي">
           {PROPHETIC_DAY_STATIONS.map((station) => {
             const isActive = station.id === activeStationId;
             return (
               <button
                 key={station.id}
                 type="button"
-                role="tab"
-                aria-selected={isActive}
+                id={`station-control-${station.id}`}
+                aria-pressed={isActive}
+                aria-controls="prophetic-day-station-panel"
                 data-period={station.period}
                 className={cn("sundial-node", isActive && "is-active")}
                 onClick={() => setActiveStationId(station.id)}
@@ -108,6 +109,8 @@ export default function PropheticDayPage() {
         {/* Reading Alcove — the active station deep dive */}
         <div className="alcove">
           <article
+            id="prophetic-day-station-panel"
+            aria-labelledby={`station-control-${activeStation.id}`}
             className="alcove__stage"
             data-period={activeStation.period}
             style={{ ["--alcove-wash" as string]: `hsl(${activeStation.period === "fajr" ? "35 75% 50%" : activeStation.period === "morning" ? "45 85% 45%" : activeStation.period === "noon" ? "28 80% 48%" : activeStation.period === "afternoon" ? "15 70% 48%" : activeStation.period === "maghrib" ? "330 45% 50%" : "240 45% 58%"} / 0.06)` }}
@@ -231,7 +234,7 @@ export default function PropheticDayPage() {
               </li>
               <li>
                 <span>درجة التحقيق:</span>
-                <strong className="text-emerald-700 dark:text-emerald-400">صحيح متفق عليه</strong>
+                <strong className="text-amber-700 dark:text-amber-300">قيد المراجعة التحريرية</strong>
               </li>
               <li>
                 <span>الهدف التربوي:</span>

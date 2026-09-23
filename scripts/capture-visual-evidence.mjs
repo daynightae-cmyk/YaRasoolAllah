@@ -24,10 +24,13 @@ const cases = [
   { name: "children-360-light-rtl", path: "/kids", width: 360, height: 900, theme: "light", language: "ar" },
   { name: "children-1440-dark-ltr", path: "/children-tv", width: 1440, height: 1000, theme: "dark", language: "en" },
   { name: "hadith-768-dark-rtl", path: "/sunnah", width: 768, height: 1024, theme: "dark", language: "ar" },
+  { name: "hadith-360-dark-rtl", path: "/sunnah", width: 360, height: 900, theme: "dark", language: "ar" },
   { name: "sources-1440-light-ltr", path: "/sources", width: 1440, height: 1000, theme: "light", language: "en" },
   { name: "sources-360-dark-rtl", path: "/sources", width: 360, height: 900, theme: "dark", language: "ar" },
   { name: "daily-768-light-rtl", path: "/daily", width: 768, height: 1024, theme: "light", language: "ar" },
   { name: "daily-360-dark-ltr", path: "/daily", width: 360, height: 900, theme: "dark", language: "en" },
+  { name: "prophetic-day-360-light-rtl", path: "/prophetic-day", width: 360, height: 900, theme: "light", language: "ar" },
+  { name: "prophetic-day-status-360-dark-rtl", path: "/prophetic-day", width: 360, height: 900, theme: "dark", language: "ar", scrollSelector: ".reflection-nook__summary", scrollOffset: -120 },
 ];
 
 mkdirSync(evidenceDir, { recursive: true });

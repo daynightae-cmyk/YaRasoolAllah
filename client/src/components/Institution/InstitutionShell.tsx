@@ -151,20 +151,23 @@ export default function InstitutionShell({
   // Shell direction follows the active language (ar/ur RTL, en/fr LTR).
   // Arabic Quran/Hadith excerpts keep their own local RTL containers.
   const { direction, language } = useLanguage();
-  const truthRail = getTruthRail(location, activeWing, language === "en" || language === "fr");
+  const isLtrLanguage = language === "en" || language === "fr";
+  const truthRail = getTruthRail(location, activeWing, isLtrLanguage);
+  const truthRailLabel = isLtrLanguage ? "Wing status and experience sources" : "حالة الجناح ومصدر التجربة";
+  const truthFactsLabel = isLtrLanguage ? "Verified indicators" : "مؤشرات موثقة";
 
   return (
       <div className="institution-shell min-h-screen flex flex-col text-slate-900 dark:text-slate-100 transition-colors pb-16 md:pb-0" dir={direction} data-wing={activeWing}>
         <InstitutionalHeader />
 
-        <aside className="institution-truth-rail" aria-label="حالة الجناح ومصدر التجربة">
+        <aside className="institution-truth-rail" aria-label={truthRailLabel}>
           <div className="institution-truth-rail__inner">
             <div className="institution-truth-rail__identity">
               <span className="institution-truth-rail__wing">{truthRail.wing}</span>
               <strong>{truthRail.status}</strong>
             </div>
             <p>{truthRail.summary}</p>
-            <div className="institution-truth-rail__facts" aria-label="مؤشرات موثقة">
+            <div className="institution-truth-rail__facts" role="group" aria-label={truthFactsLabel}>
               {truthRail.facts.map((fact) => (
                 <span key={fact}>{fact}</span>
               ))}
