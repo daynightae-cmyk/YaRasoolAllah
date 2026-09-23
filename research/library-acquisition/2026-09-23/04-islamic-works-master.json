@@ -1,0 +1,42 @@
+{
+  "generated_at": "2026-09-23T20:36:00+04:00",
+  "format": "SHARDED_JSON_ARRAY",
+  "record_count": 9106,
+  "source": "OpenITI 2025.1.9",
+  "schema": [
+    "work_id",
+    "canonical_title_ar",
+    "canonical_title_en",
+    "alternate_titles",
+    "author_id",
+    "author_name_ar",
+    "author_name_en",
+    "author_death_hijri",
+    "language_original",
+    "work_status",
+    "bibliographic_source",
+    "bibliographic_source_url"
+  ],
+  "shards": [
+    {
+      "file": "04-islamic-works-master.part-001.json",
+      "record_count": 1900
+    },
+    {
+      "file": "04-islamic-works-master.part-002.json",
+      "record_count": 1900
+    },
+    {
+      "file": "04-islamic-works-master.part-003.json",
+      "record_count": 1900
+    },
+    {
+      "file": "04-islamic-works-master.part-004.json",
+      "record_count": 1900
+    },
+    {
+      "file": "04-islamic-works-master.part-005.json",
+      "record_count": 1506
+    }
+  ]
+}
