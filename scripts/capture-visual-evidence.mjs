@@ -104,13 +104,17 @@ class DevToolsSession {
   }
 }
 
-async function waitForDocument(session) {
+async function waitForDocument(session, expectedPath = null) {
   for (let attempt = 0; attempt < 100; attempt += 1) {
     const state = await session.send("Runtime.evaluate", {
-      expression: "document.readyState",
+      expression: expectedPath
+        ? `({ readyState: document.readyState, pathname: location.pathname })`
+        : "({ readyState: document.readyState })",
       returnByValue: true,
     });
-    if (state.result.value === "complete") break;
+    const value = state.result.value;
+    const pathReady = !expectedPath || value.pathname === expectedPath;
+    if (value.readyState === "complete" && pathReady) break;
     await delay(100);
   }
   await session.send("Runtime.evaluate", {
@@ -156,7 +160,7 @@ try {
       expression: `localStorage.setItem("divine-mode", ${JSON.stringify(testCase.theme === "dark" ? "heaven" : "earth")}); localStorage.setItem("preferred-language", ${JSON.stringify(testCase.language)}); localStorage.setItem("institution-welcome-seen", "true");`,
     });
     await session.send("Page.navigate", { url: `${origin}${testCase.path}` });
-    await waitForDocument(session);
+    await waitForDocument(session, testCase.path === "/home" ? "/" : testCase.path);
 
     if (testCase.clickText) {
       const actionResult = await session.send("Runtime.evaluate", {
