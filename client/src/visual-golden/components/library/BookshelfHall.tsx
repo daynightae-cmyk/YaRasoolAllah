@@ -24,7 +24,7 @@ interface Props {
 const modeIcon: Record<BookMode, typeof Eye> = {
   عرض: Eye,
   قراءة: BookOpen,
-  استماع: Headphones,
+  Audiobook: Headphones,
 };
 
 export function BookshelfHall({ activeShelf, onShelf, selected, onSelect, onOpen, query }: Props) {
@@ -40,7 +40,7 @@ export function BookshelfHall({ activeShelf, onShelf, selected, onSelect, onOpen
           <div>
             <h2>قاعة الرفوف</h2>
             <p>
-              THE READING HALL · {LIBRARY_COUNTS.works} عملًا · {LIBRARY_COUNTS.readableWorks} متاحًا للقراءة
+              THE READING HALL · {LIBRARY_COUNTS.works} عملًا · {LIBRARY_COUNTS.readableWorks} للقراءة · {LIBRARY_COUNTS.audiobookWorks} Audiobook موثق
             </p>
           </div>
           <div className={styles.cats} aria-label="اختيار خزانة">
@@ -123,7 +123,8 @@ export function BookshelfHall({ activeShelf, onShelf, selected, onSelect, onOpen
               {current.author} · {current.versionCount} نسخة رقمية ·{" "}
               {current.contentAvailability === "full_text_cleared"
                 ? "نص تاريخي متاح للقراءة داخل المنصة"
-                : "سجل فهرسي فقط"}
+                : "سجل فهرسي فقط"}{" "}
+              {current.audiobook ? "· Audiobook بشري موثق" : ""}
             </p>
           </div>
           <div className={styles.modes} aria-label="طرق فتح الكتاب">
