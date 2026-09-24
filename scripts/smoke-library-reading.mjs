@@ -238,70 +238,78 @@ try {
   }
   await screenshot(session, "library-reading.jpg");
 
-  await evaluate(
+  const audiobookGate = await evaluate(
     session,
     `(() => {
       const dialog = document.querySelector("[role=dialog]");
-      const tab = [...dialog.querySelectorAll('[role="tab"]')].find((item) => item.textContent?.trim() === "استماع");
-      if (!tab) throw new Error("Listening tab missing");
-      tab.click();
-      return true;
+      const tabs = [...dialog.querySelectorAll('[role="tab"]')].map((item) => item.textContent?.trim());
+      return {
+        oldListeningTabAbsent: !tabs.includes("استماع"),
+        audiobookHiddenWithoutClearedRecording: !tabs.includes("Audiobook"),
+        tabs,
+      };
     })()`,
   );
+  if (!audiobookGate.oldListeningTabAbsent) {
+    throw new Error("Legacy listening tab must not exist");
+  }
+  if (!audiobookGate.audiobookHiddenWithoutClearedRecording) {
+    throw new Error("Audiobook appeared without a rights-cleared recording");
+  }
 
   await waitFor(
     session,
-    `(() => {
-      const dialog = document.querySelector("[role=dialog]");
-      return Boolean(dialog?.textContent?.includes("قراءة صوتية آلية من جهازك"));
-    })()`,
-    "listening desk",
+    `Boolean(document.querySelector("[role=dialog] [data-device-tts-fallback]"))`,
+    "device TTS accessibility fallback",
   );
 
-  const listening = await evaluate(
+  const ttsFallback = await evaluate(
     session,
     `(() => {
       const dialog = document.querySelector("[role=dialog]");
-      const play = [...dialog.querySelectorAll("button")].find((item) => item.textContent?.includes("استمع للمقطع"));
-      const unsupported = dialog.textContent?.includes("لا يوفر Speech Synthesis") ?? false;
-      const disclaimer = dialog.textContent?.includes("ليست نسخة صوتية أصلية") ?? false;
+      const details = dialog?.querySelector("[data-device-tts-fallback]");
+      if (details) details.open = true;
+      const play = details?.querySelector("[data-tts-play]");
+      const disclaimer = details?.textContent?.includes("ليست Audiobook") ?? false;
       if (play) play.click();
       return {
+        present: Boolean(details),
         speechApi: "speechSynthesis" in window && "SpeechSynthesisUtterance" in window,
         playControl: Boolean(play),
-        unsupported,
         disclaimer,
       };
     })()`,
   );
   await delay(350);
 
-  const listeningAfterClick = await evaluate(
+  const ttsAfterClick = await evaluate(
     session,
     `(() => {
-      const dialog = document.querySelector("[role=dialog]");
+      const details = document.querySelector("[role=dialog] [data-device-tts-fallback]");
       return {
         speaking: "speechSynthesis" in window ? speechSynthesis.speaking : false,
         paused: "speechSynthesis" in window ? speechSynthesis.paused : false,
-        hasPauseControl: [...dialog.querySelectorAll("button")].some((item) => item.textContent?.includes("إيقاف مؤقت")),
-        handledError: dialog.textContent?.includes("تعذر تشغيل القراءة الآلية") ?? false,
+        hasPauseControl: [...details.querySelectorAll("button")].some((item) => item.textContent?.includes("إيقاف مؤقت")),
+        handledError: details.textContent?.includes("تعذر تشغيل القراءة الآلية") ?? false,
       };
     })()`,
   );
-
-  if (!listening.disclaimer) throw new Error("Listening mode is missing the automatic-speech disclaimer");
-  if (listening.speechApi && !listening.playControl) throw new Error("Speech API exists but the play control is missing");
-  if (!listening.speechApi && !listening.unsupported) throw new Error("Unsupported speech state is not explained");
+  if (!ttsFallback.present || !ttsFallback.disclaimer) {
+    throw new Error("Device TTS must be presented only as an accessibility fallback");
+  }
+  if (ttsFallback.speechApi && !ttsFallback.playControl) {
+    throw new Error("Speech API exists but accessibility play control is missing");
+  }
   if (
-    listening.speechApi &&
-    !listeningAfterClick.speaking &&
-    !listeningAfterClick.hasPauseControl &&
-    !listeningAfterClick.handledError
+    ttsFallback.speechApi &&
+    !ttsAfterClick.speaking &&
+    !ttsAfterClick.hasPauseControl &&
+    !ttsAfterClick.handledError
   ) {
-    throw new Error("Listening action produced no observable browser state");
+    throw new Error("Accessibility TTS action produced no observable browser state");
   }
 
-  await screenshot(session, "library-listening.jpg");
+  await screenshot(session, "library-reading-accessibility.jpg");
 
   const runtimeErrors = session.events
     .filter((event) =>
@@ -322,7 +330,8 @@ try {
     origin,
     shelf: shelfDiagnostics,
     reading,
-    listening: { ...listening, ...listeningAfterClick },
+    audiobookGate,
+    ttsFallback: { ...ttsFallback, ...ttsAfterClick },
     runtimeErrors,
   };
   writeFileSync(join(evidenceDir, "report.json"), `${JSON.stringify(report, null, 2)}\n`);
