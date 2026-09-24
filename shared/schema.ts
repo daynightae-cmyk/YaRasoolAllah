@@ -196,6 +196,7 @@ export const providerResourceRegistryEntries = pgTable(
       .notNull(),
     provider: text("provider").notNull(),
     resourceType: text("resource_type").notNull(),
+    integrationMode: text("integration_mode").notNull(),
     endpoint: text("endpoint"),
     acquisitionStatus: text("acquisition_status").notNull(),
     credentialsRequired: boolean("credentials_required").notNull().default(false),
