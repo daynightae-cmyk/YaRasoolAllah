@@ -1,4 +1,4 @@
-import { useState, useEffect, type ReactNode } from "react";
+import { lazy, Suspense, useState, useEffect, type ReactNode } from "react";
 import { Switch, Route, Router, Redirect, useLocation } from "wouter";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
@@ -40,19 +40,19 @@ import DigitalTasbihPage from "./pages/DigitalTasbihPage";
 import QiblaCompassPage from "./pages/QiblaCompassPage";
 import DashboardPage from "./pages/DashboardPage";
 import { InstitutionShell as VisualInstitutionShell } from "@/visual-golden/components/shell/InstitutionShell";
-import { HomePage as VisualHomePage } from "@/visual-golden/pages/HomePage";
-import { LibraryPage as VisualLibraryPage } from "@/visual-golden/pages/LibraryPage";
-import { QuranPage as VisualQuranPage } from "@/visual-golden/pages/QuranPage";
-import { TafsirPage as VisualTafsirPage } from "@/visual-golden/pages/TafsirPage";
-import { SeerahPage as VisualSeerahPage } from "@/visual-golden/pages/SeerahPage";
-import { AtlasPage as VisualAtlasPage } from "@/visual-golden/pages/AtlasPage";
-import { HadithPage as VisualHadithPage } from "@/visual-golden/pages/HadithPage";
-import { KidsPage as VisualKidsPage } from "@/visual-golden/pages/KidsPage";
-import { DailyPage as VisualDailyPage } from "@/visual-golden/pages/DailyPage";
-import { AudioPage as VisualAudioPage } from "@/visual-golden/pages/AudioPage";
-import { BasirahPage as VisualBasirahPage } from "@/visual-golden/pages/BasirahPage";
 import "@/visual-golden/visual-base.css";
 
+const VisualHomePage = lazy(() => import("@/visual-golden/pages/HomePage").then((m) => ({ default: m.HomePage })));
+const VisualLibraryPage = lazy(() => import("@/visual-golden/pages/LibraryPage").then((m) => ({ default: m.LibraryPage })));
+const VisualQuranPage = lazy(() => import("@/visual-golden/pages/QuranPage").then((m) => ({ default: m.QuranPage })));
+const VisualTafsirPage = lazy(() => import("@/visual-golden/pages/TafsirPage").then((m) => ({ default: m.TafsirPage })));
+const VisualSeerahPage = lazy(() => import("@/visual-golden/pages/SeerahPage").then((m) => ({ default: m.SeerahPage })));
+const VisualAtlasPage = lazy(() => import("@/visual-golden/pages/AtlasPage").then((m) => ({ default: m.AtlasPage })));
+const VisualHadithPage = lazy(() => import("@/visual-golden/pages/HadithPage").then((m) => ({ default: m.HadithPage })));
+const VisualKidsPage = lazy(() => import("@/visual-golden/pages/KidsPage").then((m) => ({ default: m.KidsPage })));
+const VisualDailyPage = lazy(() => import("@/visual-golden/pages/DailyPage").then((m) => ({ default: m.DailyPage })));
+const VisualAudioPage = lazy(() => import("@/visual-golden/pages/AudioPage").then((m) => ({ default: m.AudioPage })));
+const VisualBasirahPage = lazy(() => import("@/visual-golden/pages/BasirahPage").then((m) => ({ default: m.BasirahPage })));
 
 
 const VISUAL_PATHS = new Set([
@@ -62,7 +62,7 @@ const VISUAL_PATHS = new Set([
 ]);
 
 function VisualRoute({ children }: { children: ReactNode }) {
-  return <VisualInstitutionShell>{children}</VisualInstitutionShell>;
+  return <VisualInstitutionShell><Suspense fallback={<div className="vg-page-loading" role="status">جاري فتح الباب…</div>}>{children}</Suspense></VisualInstitutionShell>;
 }
 
 function AppContent() {
