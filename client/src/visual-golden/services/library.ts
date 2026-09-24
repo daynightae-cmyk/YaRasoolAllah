@@ -12,6 +12,7 @@ import {
   type WorkCategory,
   type WorkRecord,
 } from "@shared/knowledge-registry";
+import { qualifiesForArchitecturalShelf } from "./library-catalog-presentation";
 
 export type BookMode = "عرض" | "قراءة" | "Audiobook";
 
@@ -142,10 +143,28 @@ function toLibraryBook(record: WorkRecord): LibraryBook {
   };
 }
 
-export const catalog: LibraryBook[] = workRegistry.map(toLibraryBook);
+const shelfCandidates = workRegistry.map(toLibraryBook);
+
+export const catalog: LibraryBook[] = shelfCandidates.filter((book) =>
+  qualifiesForArchitecturalShelf({
+    titleAr: book.title,
+    titleEn: book.titleEn,
+    authorAr: book.author,
+    authorEn: book.authorEn,
+    category: book.category,
+    sourceIds: book.sourceIds,
+    bibliographicStatus: book.bibliographicStatus,
+    versionCount: book.versionCount,
+  }),
+);
 
 export function getLibraryBook(workId: string): LibraryBook | null {
   return catalog.find((book) => book.workId === workId) ?? null;
+}
+
+export function getLibraryBookByOpenitiUri(openitiWorkUri: string | null): LibraryBook | null {
+  if (!openitiWorkUri) return null;
+  return catalog.find((book) => book.openitiWorkUri === openitiWorkUri) ?? null;
 }
 
 export function searchLibrary(query: string, activeShelf: string | "الكل"): LibraryBook[] {
@@ -164,7 +183,7 @@ export function searchLibrary(query: string, activeShelf: string | "الكل"): 
 }
 
 export const LIBRARY_COUNTS = {
-  works: workRegistry.length,
+  works: catalog.length,
   versions: digitalVersionRegistry.length,
   readableWorks: catalog.filter((book) => book.contentAvailability === "full_text_cleared").length,
   readableVersions: digitalVersionRegistry.filter(

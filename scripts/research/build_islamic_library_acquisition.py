@@ -49,10 +49,11 @@ def category(tags,title):
     if "_ZUHD" in t or any(x in a for x in ["الزهد","الأذكار","الأخلاق","الرقائق"]): return "M-الزهد والرقائق والأخلاق","زهد وآداب"
     if "_TARIKH" in t or "HISTORY" in t or "تاريخ" in a: return "N-التاريخ الإسلامي","تاريخ"
     if "_BULDAN" in t or any(x in a for x in ["البلدان","رحلة","المسالك","الممالك"]): return "O-الجغرافيا والرحلات","جغرافيا ورحلات"
-    if any(x in t for x in ["_NAHW","_SARF","_LUGHA","_BALAGHA","_GHARIB"]) or any(x in a for x in ["النحو","الصرف","معجم"]): return "P-اللغة العربية","لغة عربية"
     if any(x in a for x in ["المرأة","النساء","الأسرة"]): return "R-المرأة والأسرة","المرأة والأسرة"
     if any(x in a for x in ["الأطفال","الطفل"]): return "S-الطفل","تعليم الطفل"
     if any(x in a for x in ["فهرس","فهارس","كشاف","موسوعة"]): return "T-الموسوعات والفهارس","فهارس وموسوعات"
+    if any(x in t for x in ["_NAHW","_SARF","_LUGHA","_BALAGHA","_GHARIB","_SHICR","_ADAB"]) or any(x in a for x in ["النحو","الصرف","معجم"]): return "P-اللغة العربية","لغة وأدب"
+    if any(x in t for x in ["_AKHLAQ","_ADHKAR","_RAQAIQ"]): return "M-الزهد والرقائق والأخلاق","زهد وآداب"
     return "UNCLASSIFIED_OPENITI",None
 
 def read_csv(path):

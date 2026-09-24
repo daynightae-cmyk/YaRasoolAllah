@@ -1,17 +1,23 @@
 import { useEffect, useMemo, useState } from "react";
-import { ExternalLink, Search } from "lucide-react";
+import { BookOpen, ExternalLink, Info, Search, ShieldCheck } from "lucide-react";
 import { Link } from "wouter";
+import { useInstitution } from "@/visual-golden/lib/institution/store";
+import {
+  availabilityLabel,
+  availabilityState,
+  categoryLabel,
+  formatLabel,
+  rightsLabel,
+  type AvailabilityState,
+  type CatalogDigitalEvidence,
+  type LibraryUiLanguage,
+} from "@/visual-golden/services/library-catalog-presentation";
 import styles from "./LibraryCatalog.module.css";
 
-interface CatalogDigitalVersion {
+interface CatalogDigitalVersion extends CatalogDigitalEvidence {
   id: string;
   provider: string;
-  itemUrl: string | null;
-  fileUrl: string | null;
-  format: string;
-  rights: string;
   download: string;
-  reading: string;
 }
 
 interface CatalogWork {
@@ -47,7 +53,110 @@ interface CatalogPayload {
   works: CatalogWork[];
 }
 
+interface Props {
+  initialWorkId?: string;
+  onOpenReader?: (work: CatalogWork) => void;
+  canOpenReader?: (work: CatalogWork) => boolean;
+}
+
 const PAGE_SIZE = 80;
+
+const copy = {
+  ar: {
+    record: "سجل فهرسي",
+    back: "العودة إلى المكتبة",
+    unknownTitle: "عنوان غير متاح",
+    unknownAuthor: "المؤلف غير مثبت في السجل",
+    category: "القسم",
+    language: "لغة الأصل",
+    death: "وفاة المؤلف",
+    unknown: "غير معلومة",
+    editions: "الطبعات الموصولة",
+    versions: "النسخ الرقمية",
+    sourceDetails: "تفاصيل المصدر والمصدر التقني",
+    source: "مصدر البيانات",
+    catalogVersion: "إصدار الفهرس",
+    review: "حالة المراجعة",
+    reviewValue: "فهرسة آلية موثقة؛ المراجعة الببليوغرافية مستمرة",
+    rights: "حقوق الاستخدام",
+    openSource: "فتح سجل المصدر",
+    openReader: "فتح غرفة القراءة",
+    unavailable: "بيانات فهرسية فقط — لا تتوفر نسخة رقمية صالحة للقراءة لهذا السجل.",
+    notFound: "السجل غير موجود",
+    notFoundBody: "لا يوجد عمل بهذا المعرّف في إصدار الفهرس الحالي.",
+    backCatalog: "العودة إلى فهرس المكتبة",
+    loading: "جاري تحميل الفهرس المؤسسي…",
+    loadError: "تعذر تحميل الفهرس المحلي. تبقى الرفوف المنقحة متاحة.",
+    title: "الفهرس العلمي",
+    versionLabel: "إصدار الفهرس",
+    dataSource: "مصدر البيانات",
+    dataSourceValue: "مشروع OpenITI / KITAB مع سجلات البذور المراجعة",
+    reviewState: "حالة المراجعة",
+    reviewStateValue: "مراجعة ببليوغرافية مستمرة",
+    rightsStateValue: "تختلف بحسب النسخة؛ التفاصيل داخل سجل العمل",
+    counts: (works: string, editions: string, versions: string) => `${works} عملًا · ${editions} سجل طبعة · ${versions} نسخة رقمية`,
+    search: "العنوان أو المؤلف",
+    searchPlaceholder: "ابحث في العناوين وأسماء المؤلفين…",
+    allCategories: "كل الأقسام",
+    availability: "الإتاحة",
+    allAvailability: "كل حالات الإتاحة",
+    results: (count: string) => `${count} نتيجة`,
+    work: "العمل",
+    author: "المؤلف",
+    next: "التالي",
+    previous: "السابق",
+    page: (page: string, pages: string) => `صفحة ${page} من ${pages}`,
+    provider: "الجهة الحافظة",
+    format: "صيغة النسخة",
+  },
+  en: {
+    record: "Catalog record",
+    back: "Back to Library",
+    unknownTitle: "Title unavailable",
+    unknownAuthor: "Author not established in this record",
+    category: "Subject",
+    language: "Original language",
+    death: "Author's death",
+    unknown: "Unknown",
+    editions: "Linked editions",
+    versions: "Digital versions",
+    sourceDetails: "Source and technical provenance",
+    source: "Data source",
+    catalogVersion: "Catalog release",
+    review: "Review state",
+    reviewValue: "Verified machine cataloguing; bibliographic review continues",
+    rights: "Usage rights",
+    openSource: "Open source record",
+    openReader: "Open Reading Chamber",
+    unavailable: "Catalog metadata only — no readable digital version is connected to this record.",
+    notFound: "Record not found",
+    notFoundBody: "No work with this identifier exists in the current catalog release.",
+    backCatalog: "Back to Library catalog",
+    loading: "Loading the institutional catalog…",
+    loadError: "The local catalog could not be loaded. Curated shelves remain available.",
+    title: "Scholarly Catalog",
+    versionLabel: "Catalog release",
+    dataSource: "Data source",
+    dataSourceValue: "OpenITI / KITAB with reviewed seed records",
+    reviewState: "Review state",
+    reviewStateValue: "Bibliographic review in progress",
+    rightsStateValue: "Version-specific; see each work record",
+    counts: (works: string, editions: string, versions: string) => `${works} works · ${editions} edition records · ${versions} digital versions`,
+    search: "Title or author",
+    searchPlaceholder: "Search titles and author names…",
+    allCategories: "All subjects",
+    availability: "Availability",
+    allAvailability: "All availability states",
+    results: (count: string) => `${count} results`,
+    work: "Work",
+    author: "Author",
+    next: "Next",
+    previous: "Previous",
+    page: (page: string, pages: string) => `Page ${page} of ${pages}`,
+    provider: "Holding provider",
+    format: "Digital format",
+  },
+};
 
 function normalize(value: string): string {
   return value
@@ -58,56 +167,105 @@ function normalize(value: string): string {
     .toLocaleLowerCase("ar");
 }
 
-function WorkDetail({ work, rightsNotice }: { work: CatalogWork; rightsNotice: string }) {
-  const title = work.titleAr || work.titleEn || "عنوان غير متاح";
+function languageLabel(language: string | null, lang: LibraryUiLanguage): string {
+  if (language === "ara") return lang === "ar" ? "العربية" : "Arabic";
+  if (language === "per") return lang === "ar" ? "الفارسية" : "Persian";
+  return copy[lang].unknown;
+}
+
+function WorkDetail({
+  work,
+  payload,
+  lang,
+  onOpenReader,
+  canOpenReader,
+}: {
+  work: CatalogWork;
+  payload: CatalogPayload;
+  lang: LibraryUiLanguage;
+  onOpenReader?: (work: CatalogWork) => void;
+  canOpenReader?: (work: CatalogWork) => boolean;
+}) {
+  const c = copy[lang];
+  const title = (lang === "en" ? work.titleEn || work.titleAr : work.titleAr || work.titleEn) || c.unknownTitle;
+  const author = (lang === "en" ? work.authorEn || work.authorAr : work.authorAr || work.authorEn) || c.unknownAuthor;
+  const availability = availabilityState(work.digital, work.versionCount);
+  const readerAvailable = Boolean(onOpenReader && canOpenReader?.(work));
+
   return (
     <article className={styles.detail} aria-labelledby="catalog-work-title">
       <div className={styles.detailHead}>
         <div>
-          <span>CATALOG RECORD · سجل فهرسي</span>
+          <span>{c.record}</span>
           <h2 id="catalog-work-title">{title}</h2>
-          <p>{work.authorAr || work.authorEn || "المؤلف غير مثبت في السجل"}</p>
+          <p>{author}</p>
         </div>
-        <Link href="/library" className={styles.back}>العودة إلى المكتبة</Link>
+        <Link href="/library" className={styles.back}>{c.back}</Link>
       </div>
 
       <dl className={styles.facts}>
-        <div><dt>المعرّف الثابت</dt><dd dir="ltr">{work.id}</dd></div>
-        <div><dt>القسم</dt><dd>{work.category || "غير مصنف"}</dd></div>
-        <div><dt>لغة الأصل</dt><dd>{work.language || "غير معلومة"}</dd></div>
-        <div><dt>وفاة المؤلف</dt><dd>{work.deathHijri ? `${work.deathHijri} هـ` : "غير معلومة"}</dd></div>
-        <div><dt>الطبعات الموصولة</dt><dd>{work.editionCount}</dd></div>
-        <div><dt>النسخ الرقمية</dt><dd>{work.versionCount}</dd></div>
+        <div><dt>{c.category}</dt><dd>{categoryLabel(work.category, lang)}</dd></div>
+        <div><dt>{c.language}</dt><dd>{languageLabel(work.language, lang)}</dd></div>
+        <div><dt>{c.death}</dt><dd>{work.deathHijri ? `${work.deathHijri} ${lang === "ar" ? "هـ" : "AH"}` : c.unknown}</dd></div>
+        <div><dt>{c.editions}</dt><dd>{work.editionCount.toLocaleString(lang)}</dd></div>
+        <div><dt>{c.versions}</dt><dd>{work.versionCount.toLocaleString(lang)}</dd></div>
+        <div><dt>{c.availability}</dt><dd><span className={`${styles.availability} ${styles[`availability_${availability}`]}`}>{availabilityLabel(availability, lang)}</span></dd></div>
       </dl>
 
       {work.digital ? (
-        <section className={styles.version} aria-label="نسخة رقمية">
-          <div>
-            <strong>{work.digital.provider}</strong>
-            <span>{work.digital.format} · {work.digital.reading}</span>
+        <section className={styles.version} aria-label={c.versions}>
+          <div className={styles.versionHead}>
+            <div>
+              <small>{c.provider}</small>
+              <strong>{work.digital.provider}</strong>
+            </div>
+            <div>
+              <small>{c.format}</small>
+              <strong>{formatLabel(work.digital.format, lang)}</strong>
+            </div>
           </div>
-          <p><b>الحقوق:</b> {work.digital.rights}. {rightsNotice}</p>
-          {work.digital.itemUrl ? (
-            <a href={work.digital.itemUrl} target="_blank" rel="noopener noreferrer">
-              افتح سجل المصدر <ExternalLink size={15} aria-hidden="true" />
-            </a>
-          ) : null}
+          <p className={styles.rights}><ShieldCheck size={16} aria-hidden="true" /><span><b>{c.rights}:</b> {rightsLabel(work.digital.rights, lang)}</span></p>
+          <div className={styles.versionActions}>
+            {readerAvailable ? (
+              <button type="button" onClick={() => onOpenReader?.(work)}>
+                <BookOpen size={15} aria-hidden="true" /> {c.openReader}
+              </button>
+            ) : null}
+            {work.digital.itemUrl ? (
+              <a href={work.digital.itemUrl} target="_blank" rel="noopener noreferrer">
+                {c.openSource} <ExternalLink size={15} aria-hidden="true" />
+              </a>
+            ) : null}
+          </div>
         </section>
       ) : (
-        <p className={styles.unavailable}>
-          سجل فهرسي — لا يتوفر نص رقمي موصول ومصرح به لهذا السجل.
-        </p>
+        <p className={styles.unavailable}>{c.unavailable}</p>
       )}
+
+      <details className={styles.provenance}>
+        <summary><Info size={15} aria-hidden="true" /> {c.sourceDetails}</summary>
+        <dl>
+          <div><dt>{c.source}</dt><dd>{work.source}</dd></div>
+          <div><dt>{c.catalogVersion}</dt><dd>{payload.sourceVersion}</dd></div>
+          <div><dt>{c.review}</dt><dd>{c.reviewValue}</dd></div>
+          <div><dt>{c.rights}</dt><dd>{payload.rightsNotice}</dd></div>
+          <div><dt>Work ID</dt><dd dir="ltr">{work.id}</dd></div>
+          {work.openitiUri ? <div><dt>OpenITI URI</dt><dd dir="ltr">{work.openitiUri}</dd></div> : null}
+          {work.digital ? <div><dt>Digital version ID</dt><dd dir="ltr">{work.digital.id}</dd></div> : null}
+        </dl>
+      </details>
     </article>
   );
 }
 
-export function LibraryCatalog({ initialWorkId }: { initialWorkId?: string }) {
+export function LibraryCatalog({ initialWorkId, onOpenReader, canOpenReader }: Props) {
+  const lang = useInstitution((state) => state.lang);
+  const c = copy[lang];
   const [data, setData] = useState<CatalogPayload | null>(null);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("all");
-  const [availability, setAvailability] = useState("all");
+  const [availability, setAvailability] = useState<"all" | AvailabilityState>("all");
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -120,94 +278,116 @@ export function LibraryCatalog({ initialWorkId }: { initialWorkId?: string }) {
       .then(setData)
       .catch((reason: unknown) => {
         if (reason instanceof DOMException && reason.name === "AbortError") return;
-        setError("تعذر تحميل الفهرس المحلي. تبقى الرفوف المنقحة متاحة.");
+        setError(c.loadError);
       });
     return () => controller.abort();
-  }, []);
+  }, [c.loadError]);
 
   const categories = useMemo(
-    () => [...new Set((data?.works ?? []).map((work) => work.category || "غير مصنف"))].sort(),
+    () => [...new Set((data?.works ?? []).map((work) => work.category || "UNCLASSIFIED_OPENITI"))]
+      .sort((a, b) => categoryLabel(a, lang).localeCompare(categoryLabel(b, lang), lang)),
+    [data, lang],
+  );
+
+  const availabilityOptions = useMemo(
+    () => [...new Set((data?.works ?? []).map((work) => availabilityState(work.digital, work.versionCount)))],
     [data],
   );
 
   const filtered = useMemo(() => {
     const needle = normalize(query.trim());
     return (data?.works ?? []).filter((work) => {
-      if (category !== "all" && (work.category || "غير مصنف") !== category) return false;
-      if (availability === "digital" && !work.digital) return false;
-      if (availability === "metadata" && work.digital) return false;
+      const rawCategory = work.category || "UNCLASSIFIED_OPENITI";
+      if (category !== "all" && rawCategory !== category) return false;
+      if (availability !== "all" && availabilityState(work.digital, work.versionCount) !== availability) return false;
       if (!needle) return true;
       return normalize([
         work.titleAr,
         work.titleEn,
         work.authorAr,
         work.authorEn,
-        work.openitiUri,
+        categoryLabel(work.category, lang),
       ].filter(Boolean).join(" ")).includes(needle);
     });
-  }, [availability, category, data, query]);
+  }, [availability, category, data, lang, query]);
 
   useEffect(() => setPage(1), [availability, category, query]);
 
   if (error) return <p className={styles.state} role="alert">{error}</p>;
-  if (!data) return <p className={styles.state} role="status">جاري تحميل الفهرس المؤسسي…</p>;
+  if (!data) return <p className={styles.state} role="status">{c.loading}</p>;
 
   if (initialWorkId) {
     const work = data.works.find((candidate) => candidate.id === initialWorkId);
     return work ? (
-      <WorkDetail work={work} rightsNotice={data.rightsNotice} />
+      <WorkDetail
+        work={work}
+        payload={data}
+        lang={lang}
+        onOpenReader={onOpenReader}
+        canOpenReader={canOpenReader}
+      />
     ) : (
       <section className={styles.notFound}>
-        <h2>السجل غير موجود</h2>
-        <p>لا يوجد عمل بهذا المعرّف في إصدار الفهرس الحالي.</p>
-        <Link href="/library">العودة إلى فهرس المكتبة</Link>
+        <h2>{c.notFound}</h2>
+        <p>{c.notFoundBody}</p>
+        <Link href="/library">{c.backCatalog}</Link>
       </section>
     );
   }
 
   const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const visible = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const locale = lang === "ar" ? "ar" : "en";
 
   return (
     <section className={styles.catalog} aria-labelledby="serious-catalog-title">
       <header className={styles.header}>
         <div>
-          <span>VERSIONED CATALOG · {data.sourceVersion}</span>
-          <h2 id="serious-catalog-title">الفهرس العلمي</h2>
-          <p>{data.counts.works.toLocaleString("ar")} عملًا · {data.counts.editions.toLocaleString("ar")} سجل طبعة · {data.counts.digitalVersions.toLocaleString("ar")} نسخة رقمية</p>
+          <span>{c.versionLabel} · 2025.1.9</span>
+          <h2 id="serious-catalog-title">{c.title}</h2>
+          <p>{c.counts(data.counts.works.toLocaleString(locale), data.counts.editions.toLocaleString(locale), data.counts.digitalVersions.toLocaleString(locale))}</p>
         </div>
-        <p className={styles.notice}>{data.rightsNotice}</p>
+        <dl className={styles.catalogStatus}>
+          <div><dt>{c.dataSource}</dt><dd>{c.dataSourceValue}</dd></div>
+          <div><dt>{c.reviewState}</dt><dd>{c.reviewStateValue}</dd></div>
+          <div><dt>{c.rights}</dt><dd>{c.rightsStateValue}</dd></div>
+        </dl>
       </header>
 
       <div className={styles.filters}>
         <label>
-          <span>العنوان أو المؤلف أو المعرّف</span>
-          <span className={styles.searchBox}><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} /></span>
+          <span>{c.search}</span>
+          <span className={styles.searchBox}><Search size={16} aria-hidden="true" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={c.searchPlaceholder} /></span>
         </label>
-        <label><span>القسم</span><select value={category} onChange={(event) => setCategory(event.target.value)}><option value="all">كل الأقسام</option>{categories.map((item) => <option key={item}>{item}</option>)}</select></label>
-        <label><span>الإتاحة</span><select value={availability} onChange={(event) => setAvailability(event.target.value)}><option value="all">الكل</option><option value="digital">نسخة رقمية موصولة</option><option value="metadata">بيانات فهرسية فقط</option></select></label>
+        <label><span>{c.category}</span><select value={category} onChange={(event) => setCategory(event.target.value)}><option value="all">{c.allCategories}</option>{categories.map((item) => <option key={item} value={item}>{categoryLabel(item, lang)}</option>)}</select></label>
+        <label><span>{c.availability}</span><select value={availability} onChange={(event) => setAvailability(event.target.value as "all" | AvailabilityState)}><option value="all">{c.allAvailability}</option>{availabilityOptions.map((item) => <option key={item} value={item}>{availabilityLabel(item, lang)}</option>)}</select></label>
       </div>
 
-      <p className={styles.resultCount} aria-live="polite">{filtered.length.toLocaleString("ar")} نتيجة</p>
+      <p className={styles.resultCount} aria-live="polite">{c.results(filtered.length.toLocaleString(locale))}</p>
       <div className={styles.tableWrap}>
         <table>
-          <thead><tr><th>العمل</th><th>المؤلف</th><th>القسم</th><th>النسخ</th><th>الإتاحة</th></tr></thead>
-          <tbody>{visible.map((work) => (
-            <tr key={work.id}>
-              <td><Link href={`/library/work/${encodeURIComponent(work.id)}`}>{work.titleAr || work.titleEn || "عنوان غير متاح"}</Link><small dir="ltr">{work.openitiUri || work.id}</small></td>
-              <td>{work.authorAr || work.authorEn || "غير مثبت"}</td>
-              <td>{work.category || "غير مصنف"}</td>
-              <td>{work.versionCount}</td>
-              <td>{work.digital ? "مصدر رقمي" : "فهرس فقط"}</td>
-            </tr>
-          ))}</tbody>
+          <thead><tr><th>{c.work}</th><th>{c.author}</th><th>{c.category}</th><th>{c.versions}</th><th>{c.availability}</th></tr></thead>
+          <tbody>{visible.map((work) => {
+            const title = (lang === "en" ? work.titleEn || work.titleAr : work.titleAr || work.titleEn) || c.unknownTitle;
+            const author = (lang === "en" ? work.authorEn || work.authorAr : work.authorAr || work.authorEn) || c.unknownAuthor;
+            const state = availabilityState(work.digital, work.versionCount);
+            return (
+              <tr key={work.id}>
+                <td data-label={c.work}><Link href={`/library/work/${encodeURIComponent(work.id)}`}>{title}</Link></td>
+                <td data-label={c.author}>{author}</td>
+                <td data-label={c.category}>{categoryLabel(work.category, lang)}</td>
+                <td data-label={c.versions}>{work.versionCount.toLocaleString(locale)}</td>
+                <td data-label={c.availability}><span className={`${styles.availability} ${styles[`availability_${state}`]}`}>{availabilityLabel(state, lang)}</span></td>
+              </tr>
+            );
+          })}</tbody>
         </table>
       </div>
 
-      <nav className={styles.pagination} aria-label="صفحات نتائج الفهرس">
-        <button type="button" disabled={page === 1} onClick={() => setPage((current) => current - 1)}>السابق</button>
-        <span>صفحة {page.toLocaleString("ar")} من {pageCount.toLocaleString("ar")}</span>
-        <button type="button" disabled={page === pageCount} onClick={() => setPage((current) => current + 1)}>التالي</button>
+      <nav className={styles.pagination} aria-label={lang === "ar" ? "صفحات نتائج الفهرس" : "Catalog result pages"}>
+        <button type="button" disabled={page === 1} onClick={() => setPage((current) => current - 1)}>{c.previous}</button>
+        <span>{c.page(page.toLocaleString(locale), pageCount.toLocaleString(locale))}</span>
+        <button type="button" disabled={page === pageCount} onClick={() => setPage((current) => current + 1)}>{c.next}</button>
       </nav>
     </section>
   );

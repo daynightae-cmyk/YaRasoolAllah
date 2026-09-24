@@ -65,10 +65,13 @@ def main() -> None:
                     "provider": preferred["provider"],
                     "itemUrl": value(preferred["canonical_landing_url"]),
                     "fileUrl": value(preferred["direct_file_url"]),
+                    "iiifUrl": value(preferred["iiif_manifest"]),
                     "format": preferred["format"],
                     "rights": preferred["rights_status"],
                     "download": preferred["download_capability"],
                     "reading": preferred["reading_capability"],
+                    "ocrAvailable": preferred["ocr_available"].lower() == "true",
+                    "searchableText": preferred["searchable_text"].lower() == "true",
                 },
             }
         )
