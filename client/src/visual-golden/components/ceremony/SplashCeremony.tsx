@@ -9,6 +9,11 @@ export function SplashCeremony({ onDone }: Props) {
   const [phase, setPhase] = useState<"enter" | "hold" | "exit">("enter");
   const [canSkip, setCanSkip] = useState(false);
   const finishTimer = useRef<number | null>(null);
+  const phaseClass = {
+    enter: styles.phaseEntering,
+    hold: styles.phaseHolding,
+    exit: styles.phaseLeaving,
+  }[phase];
 
   const leave = () => {
     setPhase("exit");
@@ -40,7 +45,7 @@ export function SplashCeremony({ onDone }: Props) {
 
   return (
     <div
-      className={`${styles.splash} ${styles[phase]}`}
+      className={`${styles.splash} ${phaseClass}`}
       role="dialog"
       aria-label="يا رسول الله"
       data-ceremony="splash"
@@ -70,7 +75,7 @@ export function SplashCeremony({ onDone }: Props) {
       </div>
 
       {canSkip && phase !== "exit" ? (
-        <button type="button" className={styles.enter} onClick={leave}>
+        <button type="button" className={styles.enterButton} onClick={leave}>
           ادخل
         </button>
       ) : null}

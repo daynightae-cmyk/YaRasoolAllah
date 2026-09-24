@@ -10,6 +10,12 @@
   background: #020c0c;
 }
 
+.phaseEntering,
+.phaseHolding {
+  position: fixed;
+  inset: 0;
+}
+
 .void {
   position: absolute;
   inset: 0;
@@ -71,6 +77,7 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
+  opacity: 0.38;
 }
 
 .ribbonA,
@@ -115,7 +122,7 @@
   z-index: 2;
   text-align: center;
   padding: 2rem 1.5rem 4rem;
-  max-width: min(96vw, 1200px);
+  max-width: min(92vw, 960px);
   animation: stageApproach 5.4s cubic-bezier(0.18, 0.65, 0.22, 1) both;
 }
 
@@ -133,7 +140,7 @@
   margin: 0;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(3.4rem, 12vw, 8.4rem);
+  font-size: clamp(3rem, 8vw, 6.5rem);
   line-height: 1.18;
   letter-spacing: 0.06em;
   white-space: nowrap;
@@ -176,7 +183,7 @@
   animation: rise 800ms ease 1.15s forwards;
 }
 
-.enter {
+.enterButton {
   position: absolute;
   bottom: 1.6rem;
   left: 50%;
@@ -189,23 +196,23 @@
   color: #f8efc2;
   font-family: var(--font-ui);
   letter-spacing: 0.18em;
-  animation: rise 500ms ease both;
+  animation: buttonReveal 700ms ease both;
 }
 
-.enter:hover {
+.enterButton:hover {
   background: rgba(232, 197, 71, 0.16);
 }
 
-.enter,
-.hold .invocation {
+.enterButton,
+.phaseHolding .invocation {
   animation-play-state: running;
 }
 
-.exit {
+.phaseLeaving {
   animation: fadeOut 1.3s ease-in-out forwards;
 }
 
-.exit .stage {
+.phaseLeaving .stage {
   animation: stageLeave 1.3s ease-in-out forwards;
 }
 
@@ -236,6 +243,11 @@
   }
 }
 
+@keyframes buttonReveal {
+  from { opacity: 0; transform: translate(-50%, 12px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
 @keyframes goldFlow {
   from { background-position: 0% 50%; }
   to { background-position: 220% 50%; }
@@ -256,6 +268,7 @@
 
 @media (max-width: 720px) {
   .arch { width: 92vw; height: 67vh; top: 16%; }
+  .ribbons { opacity: 0.2; }
   .invocation {
     white-space: normal;
     font-size: clamp(2.6rem, 16vw, 4.2rem);
