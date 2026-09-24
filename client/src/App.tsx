@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Switch, Route, Router, Redirect } from "wouter";
+import { useState, useEffect, type ReactNode } from "react";
+import { Switch, Route, Router, Redirect, useLocation } from "wouter";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./lib/queryClient";
 import { Toaster } from "@/components/ui/toaster";
@@ -39,9 +39,36 @@ import NotFound from "@/pages/not-found";
 import DigitalTasbihPage from "./pages/DigitalTasbihPage";
 import QiblaCompassPage from "./pages/QiblaCompassPage";
 import DashboardPage from "./pages/DashboardPage";
+import { InstitutionShell as VisualInstitutionShell } from "@/visual-golden/components/shell/InstitutionShell";
+import { HomePage as VisualHomePage } from "@/visual-golden/pages/HomePage";
+import { LibraryPage as VisualLibraryPage } from "@/visual-golden/pages/LibraryPage";
+import { QuranPage as VisualQuranPage } from "@/visual-golden/pages/QuranPage";
+import { TafsirPage as VisualTafsirPage } from "@/visual-golden/pages/TafsirPage";
+import { SeerahPage as VisualSeerahPage } from "@/visual-golden/pages/SeerahPage";
+import { AtlasPage as VisualAtlasPage } from "@/visual-golden/pages/AtlasPage";
+import { HadithPage as VisualHadithPage } from "@/visual-golden/pages/HadithPage";
+import { KidsPage as VisualKidsPage } from "@/visual-golden/pages/KidsPage";
+import { DailyPage as VisualDailyPage } from "@/visual-golden/pages/DailyPage";
+import { AudioPage as VisualAudioPage } from "@/visual-golden/pages/AudioPage";
+import { BasirahPage as VisualBasirahPage } from "@/visual-golden/pages/BasirahPage";
+import "@/visual-golden/visual-base.css";
+
+
+
+const VISUAL_PATHS = new Set([
+  "/", "/library", "/digital-library", "/books", "/quran", "/tafsir", "/seerah", "/atlas",
+  "/sunnah", "/hadith", "/kids", "/children-tv", "/daily", "/quran-audio", "/audio", "/basirah",
+  "/ai-assistant", "/al-mufti-al-mubeen"
+]);
+
+function VisualRoute({ children }: { children: ReactNode }) {
+  return <VisualInstitutionShell>{children}</VisualInstitutionShell>;
+}
 
 function AppContent() {
   const { isOpen, closeBab, triggerContext } = useBabAlsamaa();
+  const [location] = useLocation();
+  const isVisualRoute = VISUAL_PATHS.has(location);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
 
   useEffect(() => {
@@ -67,7 +94,7 @@ function AppContent() {
     <>
       <Switch>
         <Route path="/">
-          {() => <GateOfLightPage />}
+          {() => <VisualRoute><VisualHomePage /></VisualRoute>}
         </Route>
         <Route path="/who-is-muhammad">
           {() => <WhoIsMuhammadPage />}
@@ -76,7 +103,10 @@ function AppContent() {
           {() => <WhoIsMuhammadPage />}
         </Route>
         <Route path="/sunnah">
-          {() => <SunnahPage />}
+          {() => <VisualRoute><VisualHadithPage /></VisualRoute>}
+        </Route>
+        <Route path="/hadith">
+          {() => <VisualRoute><VisualHadithPage /></VisualRoute>}
         </Route>
         <Route path="/sources">
           {() => <SourcesPage />}
@@ -91,23 +121,25 @@ function AppContent() {
           {() => <PropheticDayPage />}
         </Route>
         <Route path="/library">
-          {() => <DigitalLibraryPage />}
+          {() => <VisualRoute><VisualLibraryPage /></VisualRoute>}
         </Route>
         <Route path="/daily">
-          {() => <DailyRemindersPage />}
+          {() => <VisualRoute><VisualDailyPage /></VisualRoute>}
         </Route>
         <Route path="/home">
           {() => <Redirect to="/" />}
         </Route>
         <Route path="/quran">
-          {() => <QuranPage />}
+          {() => <VisualRoute><VisualQuranPage /></VisualRoute>}
+        </Route>
+        <Route path="/tafsir">
+          {() => <VisualRoute><VisualTafsirPage /></VisualRoute>}
         </Route>
         <Route path="/quran-audio">
-          {() => (
-            <AppLayout>
-              <QuranAudioPage />
-            </AppLayout>
-          )}
+          {() => <VisualRoute><VisualAudioPage /></VisualRoute>}
+        </Route>
+        <Route path="/audio">
+          {() => <VisualRoute><VisualAudioPage /></VisualRoute>}
         </Route>
         <Route path="/daily-verse">
           {() => (
@@ -131,20 +163,22 @@ function AppContent() {
           )}
         </Route>
         <Route path="/al-mufti-al-mubeen">
-          {() => (
-            <AppLayout>
-              <AlMuftiAlMubeenPage />
-            </AppLayout>
-          )}
+          {() => <Redirect to="/basirah" />}
+        </Route>
+        <Route path="/basirah">
+          {() => <VisualRoute><VisualBasirahPage /></VisualRoute>}
         </Route>
         <Route path="/digital-library">
-          {() => <DigitalLibraryPage />}
+          {() => <VisualRoute><VisualLibraryPage /></VisualRoute>}
         </Route>
         <Route path="/books">
-          {() => <DigitalLibraryPage />}
+          {() => <VisualRoute><VisualLibraryPage /></VisualRoute>}
         </Route>
         <Route path="/seerah">
-          {() => <SeerahPage />}
+          {() => <VisualRoute><VisualSeerahPage /></VisualRoute>}
+        </Route>
+        <Route path="/atlas">
+          {() => <VisualRoute><VisualAtlasPage /></VisualRoute>}
         </Route>
         <Route path="/prayer-guide">
           {() => (
@@ -178,17 +212,13 @@ function AppContent() {
           )}
         </Route>
         <Route path="/kids">
-          {() => <ChildrenTVPage />}
+          {() => <VisualRoute><VisualKidsPage /></VisualRoute>}
         </Route>
         <Route path="/children-tv">
-          {() => <ChildrenTVPage />}
+          {() => <VisualRoute><VisualKidsPage /></VisualRoute>}
         </Route>
         <Route path="/ai-assistant">
-          {() => (
-            <AppLayout>
-              <AlMubeenBotPage />
-            </AppLayout>
-          )}
+          {() => <Redirect to="/basirah" />}
         </Route>
         <Route path="/calendar">
           {() => (
@@ -221,19 +251,20 @@ function AppContent() {
         <Route component={NotFound} />
       </Switch>
 
-      {/* Bab Al-Samaa Components */}
-      <BabAlsamaa
-        isOpen={isOpen}
-        onClose={closeBab}
-        triggeredBy={triggerContext ? "auto" : "manual"}
-      />
-      <BabAlsamaaFAB />
-
-      {/* نافذة الترحيب المنبثقة */}
-      <WelcomeModal
-        isOpen={showWelcomeModal}
-        onClose={handleCloseWelcomeModal}
-      />
+      {!isVisualRoute && (
+        <>
+          <BabAlsamaa
+            isOpen={isOpen}
+            onClose={closeBab}
+            triggeredBy={triggerContext ? "auto" : "manual"}
+          />
+          <BabAlsamaaFAB />
+          <WelcomeModal
+            isOpen={showWelcomeModal}
+            onClose={handleCloseWelcomeModal}
+          />
+        </>
+      )}
     </>
   );
 }
