@@ -1,3 +1,4 @@
+import { normalizeIiifManifest } from "../shared/iiif";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -246,8 +247,11 @@ async function verifyPublicProviders(): Promise<VerificationResult[]> {
       },
       blockedHttpStatuses: [403],
       validate(payload) {
-        const value = objectValue(payload);
-        return Boolean(value?.["@context"]) && (Array.isArray(value?.sequences) || Array.isArray(value?.items));
+        try {
+          return normalizeIiifManifest(payload).canvases.length > 0;
+        } catch {
+          return false;
+        }
       },
     },
     {
@@ -256,8 +260,11 @@ async function verifyPublicProviders(): Promise<VerificationResult[]> {
       category: "public",
       url: "https://gallica.bnf.fr/iiif/ark:/12148/btv1b550076223/manifest.json",
       validate(payload) {
-        const value = objectValue(payload);
-        return Boolean(value?.["@context"]) && (Array.isArray(value?.sequences) || Array.isArray(value?.items));
+        try {
+          return normalizeIiifManifest(payload).canvases.length > 0;
+        } catch {
+          return false;
+        }
       },
     },
     {
