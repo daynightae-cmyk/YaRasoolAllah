@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import type { PrayerLocation, PrayerCalculationSettings } from "@/visual-golden/services/prayer/types";
 import { findLocation } from "@/visual-golden/services/prayer/locations";
 
@@ -36,5 +36,6 @@ const actions = {
  setCalc(p:Partial<PrayerCalculationSettings>){patch({calc:{...state.calc,...p}});},
 };
 state={theme:"dark",lang:"ar",panel:null,hydrated:false,favorites:[],notes:[],journey:[],visits:{},notifyLeadMin:10,notifyPrayers:["Fajr","Dhuhr","Asr","Maghrib","Isha"],notifySound:false,locationId:"ae-auh",customLocation:null,calc:{method:8,school:0,highLatitude:"auto"},recentLocationIds:["ae-auh"],...actions};
-export function useInstitution<T>(selector:(s:InstitutionState)=>T):T{ const [value,setValue]=useState(()=>selector(state)); useEffect(()=>{const fn=()=>setValue(selector(state)); listeners.add(fn); fn(); return()=>listeners.delete(fn);},[selector]); return value; }
+const subscribe=(listener:()=>void)=>{ listeners.add(listener); return ()=>{ listeners.delete(listener); }; };
+export function useInstitution<T>(selector:(s:InstitutionState)=>T):T{ return useSyncExternalStore(subscribe,()=>selector(state),()=>selector(state)); }
 export function currentLocation():PrayerLocation{return state.customLocation??findLocation(state.locationId)??findLocation("ae-auh")!;}
