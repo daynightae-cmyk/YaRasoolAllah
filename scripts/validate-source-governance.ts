@@ -11,6 +11,7 @@ import {
   rightsLedger,
   sourceRegistry,
 } from "../shared/source-registry";
+import { audiobookRegistry } from "../shared/audiobook-registry";
 import {
   childrenAdaptationRegistry,
   digitalVersionRegistry,
@@ -40,6 +41,7 @@ assertUnique(workRegistry.map((item) => item.workId), "work_registry");
 assertUnique(digitalVersionRegistry.map((item) => item.versionId), "digital_version_registry");
 assertUnique(providerPolicyRegistry.map((item) => item.providerId), "provider_policy_registry");
 assertUnique(childrenAdaptationRegistry.map((item) => item.adaptationId), "children_adaptation_registry");
+assertUnique(audiobookRegistry.map((item) => item.audiobookId), "audiobook_registry");
 
 const knownSourceIds = new Set(sourceRegistry.map((item) => item.sourceId));
 const knownWorkIds = new Set(workRegistry.map((item) => item.workId));
@@ -74,6 +76,26 @@ for (const version of digitalVersionRegistry) {
   }
   if (version.artifactGitSha !== null && !/^[a-f0-9]{40}$/.test(version.artifactGitSha)) {
     throw new Error(`${version.versionId} has an invalid artifact Git SHA`);
+  }
+}
+
+for (const audiobook of audiobookRegistry) {
+  if (!knownWorkIds.has(audiobook.workId)) {
+    throw new Error(`${audiobook.audiobookId} references missing work ${audiobook.workId}`);
+  }
+  if (audiobook.rightsState !== "cleared_for_streaming" || !audiobook.streamingAllowed) {
+    throw new Error(`${audiobook.audiobookId} must not enter the production registry before streaming rights are cleared`);
+  }
+  if (!audiobook.chapters.length) {
+    throw new Error(`${audiobook.audiobookId} has no real audio chapters`);
+  }
+  for (const chapter of audiobook.chapters) {
+    if (!chapter.audioUrl.startsWith("https://") || !chapter.sourcePageUrl.startsWith("https://")) {
+      throw new Error(`${audiobook.audiobookId}/${chapter.chapterId} needs HTTPS audio and provenance URLs`);
+    }
+    if (!chapter.narrator.trim()) {
+      throw new Error(`${audiobook.audiobookId}/${chapter.chapterId} is missing a named narrator`);
+    }
   }
 }
 
@@ -177,6 +199,14 @@ if (!evaluateResourceUsage(openItiResource, openItiRights, "cache", "production"
   throw new Error("Pinned OpenITI reader must be allowed to cache immutable text");
 }
 
+const librivoxCandidate = providerResourceRegistry.find(
+  (item) => item.resourceId === "resource-librivox-audiobooks-candidate",
+)!;
+const librivoxRights = rightsLedger.find((item) => item.rightsId === librivoxCandidate.rightsId)!;
+if (evaluateResourceUsage(librivoxCandidate, librivoxRights, "streaming", "production").allowed) {
+  throw new Error("LibriVox candidate must stay blocked until non-US/item-level rights review is complete");
+}
+
 const sampleResource = providerResourceRegistry.find(
   (item) => item.resourceId === "resource-quran-development-sample",
 )!;
@@ -217,5 +247,5 @@ if (mayPublishKidsMedia({
 }
 
 console.log(
-  `Source governance PASS: ${sourceRegistry.length} sources, ${rightsLedger.length} rights records, ${providerResourceRegistry.length} provider resources, ${workRegistry.length} works, ${digitalVersionRegistry.length} digital versions, ${providerPolicyRegistry.length} provider policies, ${childrenAdaptationRegistry.length} children adaptations, ${HADITH_DEVELOPMENT_SAMPLES.length} review-pending hadith samples, ${mediaAssetRegistry.length} cleared media assets.`,
+  `Source governance PASS: ${sourceRegistry.length} sources, ${rightsLedger.length} rights records, ${providerResourceRegistry.length} provider resources, ${workRegistry.length} works, ${digitalVersionRegistry.length} digital versions, ${providerPolicyRegistry.length} provider policies, ${audiobookRegistry.length} rights-cleared audiobooks, ${childrenAdaptationRegistry.length} children adaptations, ${HADITH_DEVELOPMENT_SAMPLES.length} review-pending hadith samples, ${mediaAssetRegistry.length} cleared media assets.`,
 );
