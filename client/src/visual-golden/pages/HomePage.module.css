@@ -379,8 +379,34 @@
   margin-right: auto;
 }
 
+.facts {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.6rem;
+  padding: 0 1.4rem 1.2rem;
+}
+.fact {
+  background: rgba(5, 42, 36, 0.72);
+  border: 1px solid rgba(212, 160, 23, 0.28);
+  border-radius: 14px;
+  padding: 0.7rem 0.5rem;
+  text-align: center;
+}
+.fact strong {
+  display: block;
+  color: var(--gold-300);
+  font-size: 1.25rem;
+}
+.fact span {
+  font-size: 0.72rem;
+  color: var(--ivory-200);
+}
+
 @media (max-width: 1180px) {
   .gateGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .facts {
     grid-template-columns: repeat(3, 1fr);
   }
   .bottomGrid {
