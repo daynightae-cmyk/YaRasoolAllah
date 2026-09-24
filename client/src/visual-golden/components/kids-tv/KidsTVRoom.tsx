@@ -401,7 +401,7 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
               <div className={styles.screen} ref={screenRef}>
                 <YouTubePlayer
                   ref={playerRef}
-                  videoId={playable[0].providerVideoId}
+                  videoId={current.providerVideoId}
                   title={current.titleAr}
                   onStateChange={handlePlayerState}
                   onError={handlePlayerError}
