@@ -1,60 +1,41 @@
-import { useState } from "react";
-import {
-  Play,
-  Pause,
-  SkipBack,
-  SkipForward,
-  Volume2,
-  Heart,
-  Share2,
-  Repeat,
-  Shuffle,
-} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link } from "wouter";
+import { Heart, Share2, ExternalLink, ShieldCheck, Lock } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import { Waveform } from "@/visual-golden/components/unique/Waveform";
 import p from "@/visual-golden/components/present/present.module.css";
+import {
+  getQuranChapters,
+  type QuranChapter,
+} from "@/services/quranService";
+import {
+  AUDIO_COUNTS,
+  AUDIO_PROVIDERS,
+  rightsLabel,
+} from "@/visual-golden/services/audio";
 import styles from "./AudioPage.module.css";
 
-const reciters = [
-  { name: "عبد الرحمن السديس", img: art.reciterDome },
-  { name: "سعود الشريم", img: art.reciterKaaba },
-  { name: "مشاري العفاسي", img: art.reciterWater },
-  { name: "ماهر المعيقلي", img: art.reciterLanterns },
-  { name: "ياسر الدوسري", img: art.reciterCourtyard },
-  { name: "أحمد العجمي", img: art.archesNight },
-  { name: "عبد الباسط عبد الصمد", img: art.reciterMushaf },
-  { name: "محمد صديق المنشاوي", img: art.dome },
-];
-
-const playlist = [
-  { name: "سورة البقرة", duration: null as string | null },
-  { name: "سورة آل عمران", duration: null },
-  { name: "سورة النساء", duration: null },
-  { name: "سورة المائدة", duration: null },
-  { name: "سورة الأنعام", duration: null },
-];
-
-const surahBrowse = [
-  { name: "سورة الفاتحة", n: 7 },
-  { name: "سورة البقرة", n: 286 },
-  { name: "سورة آل عمران", n: 200 },
-  { name: "سورة النساء", n: 176 },
-];
-
-const cats = ["القرآن الكريم", "مؤثرات إسلامية", "الأدعية والأذكار", "تلاوات نادرة", "مقاطع قصيرة", "خطب ومحاضرات"];
-const lists = [
-  { title: "أجمل التلاوات", img: art.mosque, n: 48 },
-  { title: "تلاوات لصلاة القيام", img: art.kaaba, n: 32 },
-  { title: "تلاوات للنوم والراحة", img: art.lantern, n: 28 },
-  { title: "سور الحفظ والمراجعة", img: art.mushaf, n: 114 },
-];
-
 export function AudioPage() {
-  const [playing, setPlaying] = useState(false);
-  const [active, setActive] = useState(0);
-  const [reciter, setReciter] = useState(0);
+  const [chapters, setChapters] = useState<QuranChapter[]>([]);
+  const [active, setActive] = useState(1);
   const [loved, setLoved] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    getQuranChapters()
+      .then((items) => {
+        if (!cancelled) setChapters(items);
+      })
+      .catch(() => {
+        if (!cancelled) setChapters([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const current = chapters.find((chapter) => chapter.number === active) ?? null;
 
   return (
     <div className={styles.page}>
@@ -62,152 +43,129 @@ export function AudioPage() {
         <img className={styles.bg} src={art.kaaba} alt="" />
         <div className={styles.nowPlaying}>
           <div className={p.vinyl}>
-            <div className={`${p.vinylDisc} ${playing ? p.spinning : ""}`} />
+            <div className={p.vinylDisc} />
             <div className={p.vinylHub}>
               <img src={art.mushaf} alt="" />
             </div>
-            {playing ? (
-              <span className={p.rings} aria-hidden>
-                <i />
-                <i />
-                <i />
-              </span>
-            ) : null}
           </div>
           <div>
-            <span className={styles.label}>التلاوة الحالية</span>
-            <h1>{playlist[active].name}</h1>
-            <p>{reciters[reciter].name}</p>
-            <p className="muted">لا يوجد ملف صوتي مرتبط بعد — عناصر التشغيل للتجربة البصرية.</p>
-            <Waveform playing={playing} />
+            <span className={styles.label}>مسرح الاستماع · سجل المزوّدين</span>
+            <h1>{current ? `سورة ${current.arabicName}` : "التلاوات الصوتية"}</h1>
+            <p>
+              {current
+                ? `${current.englishName} · ${current.ayahCount} آية — لا يوجد تسجيل معتمد مربوط بهذه السورة`
+                : "جارٍ تحميل فهرس السور…"}
+            </p>
+            <p className="muted" style={{ display: "flex", gap: 4, alignItems: "center" }}>
+              <Lock size={13} /> التشغيل غير مفعّل — {AUDIO_COUNTS.clearedRecordings} تسجيلات مُجازة
+              داخل المنصة
+            </p>
+            <Waveform playing={false} />
             <div className={styles.tags}>
-              <span>مصحف المدينة</span>
-              <span>جودة عالية</span>
+              <span>سجل المزوّد</span>
+              <span>التشغيل غير مُجاز</span>
             </div>
             <div className={styles.mini}>
-              <button type="button" className={loved ? styles.on : ""} onClick={() => setLoved((v) => !v)}>
+              <button type="button" className={loved ? styles.on : ""} onClick={() => setLoved((v) => !v)} aria-label="حفظ محلي">
                 <Heart size={16} />
               </button>
-              <button type="button">
+              <button type="button" aria-label="مشاركة السجل" disabled title="لا يوجد تسجيل لمشاركته" style={{ opacity: 0.55 }}>
                 <Share2 size={16} />
               </button>
             </div>
           </div>
         </div>
         <aside className={styles.playlist}>
-          <h3>قائمة التشغيل الحالية</h3>
+          <h3>التصفح حسب السورة ({chapters.length || 114})</h3>
           <ul>
-            {playlist.map((p, i) => (
+            {chapters.slice(0, 24).map((chapter, i) => (
               <li
-                key={p.name}
-                className={i === active ? styles.activeTrack : ""}
-                onClick={() => {
-                  setActive(i);
-                  setPlaying(true);
-                }}
+                key={chapter.number}
+                className={chapter.number === active ? styles.activeTrack : ""}
+                onClick={() => setActive(chapter.number)}
               >
                 <span>{i + 1}</span>
                 <div>
-                  <strong>{p.name}</strong>
-                  <em>{p.duration ?? "—"}</em>
+                  <strong>سورة {chapter.arabicName}</strong>
+                  <em>{chapter.ayahCount} آية · بدون تسجيل معتمد</em>
                 </div>
-                {i === active && playing ? (
-                  <div className={`${styles.eq} ${styles.eqOn}`} aria-hidden>
-                    <i />
-                    <i />
-                    <i />
-                  </div>
-                ) : (
-                  <Play size={14} />
-                )}
               </li>
             ))}
           </ul>
+          <p className="muted" style={{ fontSize: "0.75rem", padding: "0 0.6rem" }}>
+            أول 24 سورة من الفهرس الموثق — التصفح الكامل للسور في{" "}
+            <Link href="/quran">رواق القرآن</Link>.
+          </p>
         </aside>
         <div className={styles.player}>
           <div className={styles.progress}>
             <span>—</span>
             <div className={styles.bar}>
-              <div style={{ width: playing ? "8%" : "0%" }} />
+              <div style={{ width: "0%" }} />
             </div>
             <span>—</span>
           </div>
           <div className={styles.controls}>
-            <button type="button">
-              <Shuffle size={16} />
-            </button>
-            <button type="button" onClick={() => setActive((i) => Math.max(0, i - 1))}>
-              <SkipBack size={20} />
-            </button>
-            <button className={styles.playBtn} type="button" onClick={() => setPlaying(!playing)}>
-              {playing ? <Pause size={28} /> : <Play size={28} />}
-            </button>
-            <button type="button" onClick={() => setActive((i) => Math.min(playlist.length - 1, i + 1))}>
-              <SkipForward size={20} />
-            </button>
-            <button type="button">
-              <Repeat size={16} />
-            </button>
-            <button type="button">
-              <Volume2 size={18} />
-            </button>
-            <span>1.0x</span>
+            <span
+              className="btn-outline"
+              style={{ opacity: 0.65, cursor: "not-allowed", fontSize: "0.78rem", padding: "0.4rem 0.8rem", borderRadius: 10 }}
+              title="التشغيل والإيقاف والتنقل والمدة والتنزيل غير مفعّلة: لا توجد وسائط مُجازة"
+            >
+              عناصر التشغيل معطلة — لا توجد وسائط مُجازة
+            </span>
           </div>
         </div>
       </header>
 
       <section className={styles.pad}>
-        <SectionHead title="القراء المميزون" en="Featured Reciters" href="/audio" />
+        <SectionHead title="سجل المزوّدين الصوتيين" en="Provider catalog — playback not cleared" />
         <div className={`${styles.reciters} stagger`}>
-          {reciters.map((r, i) => (
-            <button
-              key={r.name}
-              type="button"
-              className={`${styles.reciter} ${i === reciter ? styles.recOn : ""}`}
-              onClick={() => setReciter(i)}
-            >
-              <img src={r.img} alt="" />
-              <span>{r.name}</span>
-            </button>
+          {AUDIO_PROVIDERS.map((provider) => (
+            <article key={provider.providerId} className={styles.reciter} style={{ cursor: "default" }}>
+              <div style={{ padding: "0.7rem", textAlign: "start" }}>
+                <strong style={{ display: "block", fontSize: "0.92rem" }}>{provider.provider}</strong>
+                <span style={{ fontSize: "0.75rem", display: "flex", gap: 4, alignItems: "center" }}>
+                  <ShieldCheck size={12} /> {rightsLabel(provider.rightsState)}
+                </span>
+                <span style={{ fontSize: "0.72rem", opacity: 0.85 }}>{provider.productionUse}</span>
+                <a
+                  href={provider.canonicalUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ fontSize: "0.75rem", display: "inline-flex", alignItems: "center", gap: 4, marginTop: "0.3rem" }}
+                >
+                  <ExternalLink size={12} /> الموقع الرسمي
+                </a>
+              </div>
+            </article>
           ))}
         </div>
       </section>
 
       <div className={styles.lower}>
         <section className={styles.box}>
-          <SectionHead title="الاستماع حسب السورة" en="Browse by Surah" />
-          <ul className={styles.surahs}>
-            {surahBrowse.map((s) => (
-              <li key={s.name}>
-                <span>{s.name}</span>
-                <em>{s.n} مقطع</em>
-              </li>
-            ))}
-          </ul>
+          <SectionHead title="مكتب الحقوق الصوتية" en="Rights desk" />
+          <p className="muted" style={{ fontSize: "0.82rem", lineHeight: 1.9 }}>
+            لا تُحوَّل روابط المزوّدين الخارجيين إلى ادعاء تشغيل إنتاجي. كل تسجيل يحتاج مراجعة
+            حقوق على مستوى التسجيل قبل التفعيل — عدد التسجيلات المُجازة حاليًا:{" "}
+            {AUDIO_COUNTS.clearedRecordings}. لا تُعرض مدد مزيفة ولا تقدّم زائف ولا عدّادات
+            استماع.
+          </p>
         </section>
         <section className={styles.box}>
-          <SectionHead title="التصنيفات" en="Audio Categories" />
-          <div className={styles.cats}>
-            {cats.map((c) => (
-              <button key={c} type="button">
-                {c}
-              </button>
-            ))}
-          </div>
+          <SectionHead title="النص العربي الموثق" en="Verified Arabic text" />
+          <p className="muted" style={{ fontSize: "0.82rem", lineHeight: 1.9 }}>
+            النص العربي الكامل متاح للقراءة في{" "}
+            <Link href="/quran">رواق القرآن</Link> (Tanzil Uthmani-min 1.1) — الصوت فقط هو
+            غير المربوط.
+          </p>
         </section>
         <section className={styles.box}>
-          <SectionHead title="قوائم مختارة" en="Curated Playlists" />
-          <div className={styles.lists}>
-            {lists.map((l) => (
-              <article key={l.title}>
-                <img src={l.img} alt="" />
-                <div>
-                  <strong>{l.title}</strong>
-                  <span>{l.n} تلاوة</span>
-                </div>
-              </article>
-            ))}
-          </div>
+          <SectionHead title="شروط التفعيل" en="What enabling requires" />
+          <p className="muted" style={{ fontSize: "0.82rem", lineHeight: 1.9 }}>
+            لا يُفعَّل أي زر تشغيل أو تنزيل قبل: تسجيل مُكتسب قانونيًا، مراجعة ترخيص كل
+            تسجيل على حدة، ونسبة المصدر ظاهرة بجانب كل تسجيل.
+          </p>
         </section>
       </div>
     </div>
