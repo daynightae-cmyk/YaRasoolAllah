@@ -10,7 +10,6 @@ import {
   type LibraryBook,
 } from "@/visual-golden/services/library";
 import styles from "./BookshelfHall.module.css";
-import { art } from "@/visual-golden/mock/art";
 
 interface Props {
   activeShelf: string | "الكل";
@@ -27,118 +26,185 @@ const modeIcon: Record<BookMode, typeof Eye> = {
   Audiobook: Headphones,
 };
 
-export function BookshelfHall({ activeShelf, onShelf, selected, onSelect, onOpen, query }: Props) {
-  const visible = useMemo(() => searchLibrary(query, "الكل"), [query]);
-  const shelfVisible = useMemo(() => searchLibrary(query, activeShelf), [query, activeShelf]);
-  const current = selected ?? shelfVisible[0] ?? visible[0] ?? catalog[0];
+function BookCard({
+  book,
+  selected,
+  onSelect,
+  onOpen,
+}: {
+  book: LibraryBook;
+  selected: boolean;
+  onSelect: (book: LibraryBook) => void;
+  onOpen: (book: LibraryBook, mode: BookMode) => void;
+}) {
+  return (
+    <article
+      className={`${styles.bookCard} ${selected ? styles.selected : ""}`}
+      data-book-spine
+      style={
+        {
+          "--cover": book.spine.color,
+          "--gilt": book.spine.gilt,
+        } as CSSProperties
+      }
+    >
+      <button
+        type="button"
+        className={styles.coverButton}
+        aria-label={`${book.title} — ${book.author}`}
+        aria-pressed={selected}
+        onClick={() => onSelect(book)}
+        onDoubleClick={() =>
+          onOpen(book, book.modes.includes("قراءة") ? "قراءة" : "عرض")
+        }
+      >
+        <span className={styles.bookCover}>
+          <span className={styles.coverFrame} aria-hidden />
+          <span className={styles.coverOrnament}>✦</span>
+          <strong>{book.title}</strong>
+          <small>{book.author}</small>
+          <span className={styles.coverFoot}>{book.shelf}</span>
+        </span>
+      </button>
+
+      <div className={styles.bookMeta}>
+        <strong>{book.title}</strong>
+        <span>{book.author}</span>
+        <div className={styles.badges}>
+          <i>{book.versionCount} نسخة</i>
+          {book.modes.includes("قراءة") ? <i>نص كامل</i> : <i>فهرس</i>}
+          {book.audiobook ? <i>Audiobook</i> : null}
+        </div>
+      </div>
+
+      <div className={styles.bookActions} aria-label={`فتح ${book.title}`}>
+        {book.modes.map((mode) => {
+          const Icon = modeIcon[mode];
+          return (
+            <button type="button" key={mode} onClick={() => onOpen(book, mode)}>
+              <Icon size={14} />
+              {mode}
+            </button>
+          );
+        })}
+      </div>
+    </article>
+  );
+}
+
+export function BookshelfHall({
+  activeShelf,
+  onShelf,
+  selected,
+  onSelect,
+  onOpen,
+  query,
+}: Props) {
+  const allVisible = useMemo(() => searchLibrary(query, "الكل"), [query]);
+  const sections = useMemo(
+    () =>
+      shelves
+        .map((shelf) => ({
+          shelf,
+          books: allVisible.filter((book) => book.shelf === shelf),
+        }))
+        .filter(
+          (section) =>
+            section.books.length > 0 &&
+            (activeShelf === "الكل" || activeShelf === section.shelf),
+        ),
+    [activeShelf, allVisible],
+  );
 
   return (
-    <section className={styles.hall} aria-label="قاعة الرفوف الخشبية">
-      <img src={art.shelves} alt="" className={styles.ambient} />
-      <div className={styles.inner}>
-        <header className={styles.plaque}>
-          <div>
-            <h2>قاعة الرفوف</h2>
-            <p>
-              THE READING HALL · {LIBRARY_COUNTS.works} عملًا · {LIBRARY_COUNTS.readableWorks} للقراءة · {LIBRARY_COUNTS.audiobookWorks} Audiobook موثق
-            </p>
-          </div>
-          <div className={styles.cats} aria-label="اختيار خزانة">
-            <button type="button" className={activeShelf === "الكل" ? styles.on : ""} onClick={() => onShelf("الكل")}>
-              كل الرفوف
-            </button>
-            {shelves.map((s) => (
-              <button
-                key={s}
-                type="button"
-                className={activeShelf === s ? styles.on : ""}
-                onClick={() => onShelf(s)}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
-        </header>
-
-        <div className={styles.cabinet}>
-          <div className={styles.case}>
-            {shelves.map((shelf) => {
-              const books = visible.filter((b) => b.shelf === shelf);
-              if (!books.length) return null;
-              const dim = activeShelf !== "الكل" && activeShelf !== shelf;
-              return (
-                <div key={shelf} className={`${styles.shelf} ${dim ? styles.dim : ""}`}>
-                  <div className={styles.row} role="list" aria-label={shelf}>
-                    {books.map((b) => {
-                      const preferredMode: BookMode = b.modes.includes("قراءة") ? "قراءة" : "عرض";
-                      return (
-                        <button
-                          key={b.id}
-                          type="button"
-                          role="listitem"
-                          className={`${styles.tome} ${selected?.id === b.id ? styles.pulled : ""}`}
-                          data-book-spine
-                          style={
-                            {
-                              "--w": `${b.spine.width}px`,
-                              "--h": `${b.spine.height}px`,
-                              "--c": b.spine.color,
-                              "--g": b.spine.gilt,
-                            } as CSSProperties
-                          }
-                          aria-label={`${b.title} — ${b.author}`}
-                          aria-pressed={selected?.id === b.id}
-                          onClick={() => onSelect(b)}
-                          onDoubleClick={() => onOpen(b, preferredMode)}
-                        >
-                          <span className={styles.spine}>
-                            <i className={styles.band} />
-                            <em>{b.title}</em>
-                            <i className={styles.band} />
-                          </span>
-                          <span className={styles.pages} aria-hidden />
-                        </button>
-                      );
-                    })}
-                  </div>
-                  <div className={styles.plank}>
-                    <span className={styles.shelfPlate} data-shelf-plate>
-                      <strong>{shelf}</strong>
-                      <small>{books.length} {books.length === 1 ? "عمل" : "أعمال"}</small>
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
-            {!visible.length ? (
-              <div className={styles.empty}>لا توجد كتب مطابقة للبحث الحالي داخل الرفوف المحلية.</div>
-            ) : null}
-          </div>
+    <section className={styles.library} aria-label="المكتبة العالمية">
+      <header className={styles.grandHeader}>
+        <div>
+          <span className={styles.eyebrow}>YA RASOOL ALLAH · GRAND LIBRARY</span>
+          <h2>مهرجان الكتب</h2>
+          <p>
+            الكتب أمامك مباشرة، لا مخفية داخل رف صغير. اختر القسم ثم افتح
+            العرض أو القراءة من بطاقة الكتاب نفسها.
+          </p>
         </div>
 
-        <footer className={styles.foot}>
-          <div>
-            <strong>{current.title}</strong>
-            <p className={styles.hint}>
-              {current.author} · {current.versionCount} نسخة رقمية ·{" "}
-              {current.contentAvailability === "full_text_cleared"
-                ? "نص تاريخي متاح للقراءة داخل المنصة"
-                : "سجل فهرسي فقط"}{" "}
-              {current.audiobook ? "· Audiobook بشري موثق" : ""}
-            </p>
+        <div className={styles.stats} aria-label="إحصاءات المكتبة">
+          <span><strong>{LIBRARY_COUNTS.works}</strong> كتابًا وعملًا</span>
+          <span><strong>{LIBRARY_COUNTS.versions}</strong> نسخة رقمية</span>
+          <span><strong>{LIBRARY_COUNTS.readableWorks}</strong> للقراءة المباشرة</span>
+          <span><strong>{LIBRARY_COUNTS.audiobookWorks}</strong> Audiobook موثق</span>
+        </div>
+      </header>
+
+      <nav className={styles.categories} aria-label="أقسام المكتبة">
+        <button
+          type="button"
+          className={activeShelf === "الكل" ? styles.categoryOn : ""}
+          onClick={() => onShelf("الكل")}
+        >
+          كل المكتبة
+          <small>{allVisible.length}</small>
+        </button>
+        {shelves.map((shelf) => {
+          const count = allVisible.filter((book) => book.shelf === shelf).length;
+          return (
+            <button
+              type="button"
+              key={shelf}
+              className={activeShelf === shelf ? styles.categoryOn : ""}
+              onClick={() => onShelf(shelf)}
+            >
+              {shelf}
+              <small>{count}</small>
+            </button>
+          );
+        })}
+      </nav>
+
+      <div className={styles.sections}>
+        {sections.map(({ shelf, books }) => (
+          <section className={styles.section} key={shelf}>
+            <header className={styles.sectionHead} data-shelf-plate>
+              <div>
+                <span>COLLECTION</span>
+                <h3>{shelf}</h3>
+              </div>
+              <p>{books.length} {books.length === 1 ? "كتاب" : "كتب"} في هذا القسم</p>
+            </header>
+
+            <div className={styles.bookGrid} role="list" aria-label={shelf}>
+              {books.map((book) => (
+                <div role="listitem" key={book.id}>
+                  <BookCard
+                    book={book}
+                    selected={selected?.id === book.id}
+                    onSelect={onSelect}
+                    onOpen={onOpen}
+                  />
+                </div>
+              ))}
+            </div>
+          </section>
+        ))}
+
+        {!allVisible.length ? (
+          <div className={styles.empty}>
+            <strong>لا توجد نتيجة مطابقة.</strong>
+            <span>جرّب اسم كتاب أو مؤلف أو قسم آخر.</span>
           </div>
-          <div className={styles.modes} aria-label="طرق فتح الكتاب">
-            {current.modes.map((mode) => {
-              const Icon = modeIcon[mode];
-              return (
-                <button type="button" key={mode} onClick={() => onOpen(current, mode)}>
-                  <Icon size={14} /> {mode}
-                </button>
-              );
-            })}
-          </div>
-        </footer>
+        ) : null}
       </div>
+
+      <footer className={styles.truthBar}>
+        <span>
+          <BookOpen size={15} />
+          القراءة المباشرة تعمل من النسخة الأصلية المثبتة ولا تعتمد على API داخلي.
+        </span>
+        <span>
+          <Headphones size={15} />
+          Audiobook لا يظهر إلا عند وجود تسجيل بشري موثق.
+        </span>
+      </footer>
     </section>
   );
 }
