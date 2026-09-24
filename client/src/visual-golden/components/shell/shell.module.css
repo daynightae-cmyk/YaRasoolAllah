@@ -712,8 +712,16 @@
 }
 
 @media (max-width: 1024px) {
+  .shell {
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+
   .mainArea {
     margin-left: 0;
+    height: calc(100dvh - 64px - env(safe-area-inset-bottom, 0px));
+    min-height: 0;
   }
   .sidebarOpen {
     transform: translateX(0);
@@ -728,7 +736,7 @@
     display: flex;
   }
   .content {
-    padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: 0;
   }
   .userInfo {
     display: none;
@@ -747,6 +755,15 @@
 @media (max-width: 640px) {
   .header {
     padding: 0 0.7rem;
+  }
+
+  .bellBtn,
+  .userChip {
+    display: none;
+  }
+
+  .langBtn {
+    padding-inline: 0.45rem;
   }
 }
 

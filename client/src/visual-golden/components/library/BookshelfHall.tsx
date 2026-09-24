@@ -30,12 +30,10 @@ function BookCard({
   book,
   selected,
   onSelect,
-  onOpen,
 }: {
   book: LibraryBook;
   selected: boolean;
   onSelect: (book: LibraryBook) => void;
-  onOpen: (book: LibraryBook, mode: BookMode) => void;
 }) {
   return (
     <article
@@ -44,50 +42,26 @@ function BookCard({
         {
           "--cover": book.spine.color,
           "--gilt": book.spine.gilt,
+          "--spine-height": `${book.spine.height}px`,
+          "--spine-width": `${Math.max(42, book.spine.width + 24)}px`,
         } as CSSProperties
       }
     >
       <button
         type="button"
-        className={styles.coverButton}
+        className={styles.spineButton}
         data-book-spine
         aria-label={`${book.title} — ${book.author}`}
         aria-pressed={selected}
         onClick={() => onSelect(book)}
-        onDoubleClick={() =>
-          onOpen(book, book.modes.includes("قراءة") ? "قراءة" : "عرض")
-        }
       >
-        <span className={styles.bookCover}>
-          <span className={styles.coverFrame} aria-hidden />
-          <span className={styles.coverOrnament}>✦</span>
+        <span className={styles.spineCap} aria-hidden="true" />
+        <span className={styles.spineTitle}>
           <strong>{book.title}</strong>
           <small>{book.author}</small>
-          <span className={styles.coverFoot}>{book.shelf}</span>
         </span>
+        <span className={styles.spineMark} aria-hidden="true">✦</span>
       </button>
-
-      <div className={styles.bookMeta}>
-        <strong>{book.title}</strong>
-        <span>{book.author}</span>
-        <div className={styles.badges}>
-          <i>{book.versionCount} نسخة</i>
-          {book.modes.includes("قراءة") ? <i>نص كامل</i> : <i>فهرس</i>}
-          {book.audiobook ? <i>Audiobook</i> : null}
-        </div>
-      </div>
-
-      <div className={styles.bookActions} aria-label={`فتح ${book.title}`}>
-        {book.modes.map((mode) => {
-          const Icon = modeIcon[mode];
-          return (
-            <button type="button" key={mode} onClick={() => onOpen(book, mode)}>
-              <Icon size={14} />
-              {mode}
-            </button>
-          );
-        })}
-      </div>
     </article>
   );
 }
@@ -172,6 +146,7 @@ export function BookshelfHall({
               <p>{books.length} {books.length === 1 ? "كتاب" : "كتب"} في هذا القسم</p>
             </header>
 
+            <div className={styles.shelfCase}>
             <div className={styles.bookGrid} role="list" aria-label={shelf}>
               {books.map((book) => (
                 <div role="listitem" key={book.id}>
@@ -179,11 +154,27 @@ export function BookshelfHall({
                     book={book}
                     selected={selected?.id === book.id}
                     onSelect={onSelect}
-                    onOpen={onOpen}
                   />
                 </div>
               ))}
             </div>
+            </div>
+
+            {selected && selected.shelf === shelf ? (
+              <aside className={styles.selectionDesk} aria-live="polite">
+                <div>
+                  <span>الكتاب المختار</span>
+                  <strong>{selected.title}</strong>
+                  <p>{selected.author} · {selected.versionCount} نسخة رقمية · {selected.modes.includes("قراءة") ? "نص كامل متاح" : "سجل فهرسي"}</p>
+                </div>
+                <div className={styles.bookActions} aria-label={`فتح ${selected.title}`}>
+                  {selected.modes.map((mode) => {
+                    const Icon = modeIcon[mode];
+                    return <button type="button" key={mode} onClick={() => onOpen(selected, mode)}><Icon size={14} />{mode}</button>;
+                  })}
+                </div>
+              </aside>
+            ) : null}
           </section>
         ))}
 

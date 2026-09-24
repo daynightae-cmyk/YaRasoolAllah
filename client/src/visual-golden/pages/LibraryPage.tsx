@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, ExternalLink } from "lucide-react";
+import { BookOpen, LibraryBig, Search, ExternalLink } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import {
   LIBRARY_COUNTS,
@@ -8,14 +8,16 @@ import {
 } from "@/visual-golden/services/library";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
 import { BookshelfHall } from "@/visual-golden/components/library/BookshelfHall";
+import { LibraryCatalog } from "@/visual-golden/components/library/LibraryCatalog";
 import { ReadingChamber } from "@/visual-golden/components/library/ReadingChamber";
 import styles from "./LibraryPage.module.css";
 
-export function LibraryPage() {
+export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
   const [q, setQ] = useState("");
   const [shelf, setShelf] = useState<string | "الكل">("الكل");
   const [selected, setSelected] = useState<LibraryBook | null>(null);
   const [open, setOpen] = useState<{ book: LibraryBook; mode?: BookMode } | null>(null);
+  const [view, setView] = useState<"shelves" | "catalog">(initialWorkId ? "catalog" : "shelves");
 
   return (
     <div className={styles.page}>
@@ -47,14 +49,23 @@ export function LibraryPage() {
         </div>
       </PageHero>
 
-      <BookshelfHall
-        activeShelf={shelf}
-        onShelf={setShelf}
-        selected={selected}
-        onSelect={setSelected}
-        onOpen={(book, mode) => setOpen({ book, mode })}
-        query={q}
-      />
+      {!initialWorkId ? (
+        <nav className={styles.modeSwitch} aria-label="طرق استكشاف المكتبة">
+          <button type="button" className={view === "shelves" ? styles.modeOn : ""} onClick={() => setView("shelves")}><LibraryBig size={17} /> الرفوف المعمارية</button>
+          <button type="button" className={view === "catalog" ? styles.modeOn : ""} onClick={() => setView("catalog")}><BookOpen size={17} /> الفهرس العلمي · 9,129 عملًا</button>
+        </nav>
+      ) : null}
+
+      {view === "shelves" ? (
+        <BookshelfHall
+          activeShelf={shelf}
+          onShelf={setShelf}
+          selected={selected}
+          onSelect={setSelected}
+          onOpen={(book, mode) => setOpen({ book, mode })}
+          query={q}
+        />
+      ) : <LibraryCatalog initialWorkId={initialWorkId} />}
 
       {open ? (
         <ReadingChamber

@@ -87,11 +87,11 @@ export function KidsPage() {
           <h2>كل حكاية تفتح بابًا للخير</h2>
           <p>شاهدوا الحلقات التعليمية داخل مسرح النور، ثم انتقلوا للقصص والأنشطة ومعلومات المصادر عند الحاجة.</p>
         </div>
-        <div className={styles.gardenPaths} aria-label="مسارات التعلم">
-          <span><Heart size={17} aria-hidden="true" /> سيرة النبي ﷺ</span>
-          <span><Leaf size={17} aria-hidden="true" /> الأخلاق والآداب</span>
-          <span><BookOpen size={17} aria-hidden="true" /> القرآن الكريم</span>
-          <span><Star size={17} aria-hidden="true" /> قصص الأنبياء</span>
+        <div className={styles.gardenPaths} role="list" aria-label="مسارات التعلم">
+          <span role="listitem"><Heart size={17} aria-hidden="true" /> سيرة النبي ﷺ</span>
+          <span role="listitem"><Leaf size={17} aria-hidden="true" /> الأخلاق والآداب</span>
+          <span role="listitem"><BookOpen size={17} aria-hidden="true" /> القرآن الكريم</span>
+          <span role="listitem"><Star size={17} aria-hidden="true" /> قصص الأنبياء</span>
         </div>
         <div className={styles.roomTabs} role="group" aria-label="اختر قسم الأطفال">
           <button type="button" className={activeRoom === "stories" ? styles.roomActive : styles.roomTab}
