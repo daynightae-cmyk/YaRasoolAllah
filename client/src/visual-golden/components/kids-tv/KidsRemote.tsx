@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import {
   Captions,
   ChevronDown,
@@ -32,6 +33,8 @@ export type KidsRemoteCommand =
   | "next"
   | "volume-up"
   | "volume-down"
+  | "channel-up"
+  | "channel-down"
   | "mute"
   | "captions"
   | "fullscreen";
