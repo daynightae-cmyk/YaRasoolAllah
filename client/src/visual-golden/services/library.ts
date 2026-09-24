@@ -101,9 +101,11 @@ function tagFor(record: WorkRecord): string {
 
 function toLibraryBook(record: WorkRecord): LibraryBook {
   const versions = digitalVersionRegistry.filter((version) => version.workId === record.workId);
-  // All registered versions are currently catalog_only: no cleared in-app
-  // reading or listening exists. Only the catalog desk ("عرض") is enabled.
-  const modes: BookMode[] = ["عرض"];
+  const readableVersions = versions.filter(
+    (version) => version.contentAvailability === "full_text_cleared",
+  );
+  const hasReadableText = readableVersions.length > 0;
+  const modes: BookMode[] = hasReadableText ? ["عرض", "قراءة", "استماع"] : ["عرض"];
   return {
     id: record.workId,
     title: record.titleAr,
@@ -116,8 +118,10 @@ function toLibraryBook(record: WorkRecord): LibraryBook {
     openitiWorkUri: record.openitiWorkUri,
     versionCount: versions.length,
     versions,
-    contentAvailability: "catalog_only",
-    rightsState: "catalog_metadata_only_full_text_needs_version_review",
+    contentAvailability: hasReadableText ? "full_text_cleared" : "catalog_only",
+    rightsState: hasReadableText
+      ? "cleared_public_domain_openiti_historical_text"
+      : "catalog_metadata_only_full_text_needs_version_review",
     bibliographicStatus: record.bibliographicStatus,
     scholarlyReviewStatus: record.scholarlyReviewStatus,
     attributionCaveat: record.attributionCaveat,
@@ -153,4 +157,8 @@ export function searchLibrary(query: string, activeShelf: string | "الكل"): 
 export const LIBRARY_COUNTS = {
   works: workRegistry.length,
   versions: digitalVersionRegistry.length,
+  readableWorks: catalog.filter((book) => book.contentAvailability === "full_text_cleared").length,
+  readableVersions: digitalVersionRegistry.filter(
+    (version) => version.contentAvailability === "full_text_cleared",
+  ).length,
 };

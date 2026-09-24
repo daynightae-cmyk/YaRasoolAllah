@@ -42,5 +42,42 @@ jobs:
       - name: Production build
         run: npm run build
 
+      - name: Library reading + listening browser smoke
+        shell: bash
+        run: |
+          npm start > /tmp/yra-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+
+          READY=0
+          for attempt in {1..40}; do
+            if curl -fsS http://127.0.0.1:3000/library >/dev/null; then
+              READY=1
+              break
+            fi
+            sleep 0.5
+          done
+          if [ "$READY" -ne 1 ]; then
+            cat /tmp/yra-server.log
+            exit 1
+          fi
+
+          CHROME_BIN="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$CHROME_BIN" ]; then
+            echo "No Chrome/Chromium executable found on the GitHub runner."
+            exit 1
+          fi
+
+          CHROME_PATH="$CHROME_BIN" VISUAL_BASE_URL="http://127.0.0.1:3000" node scripts/smoke-library-reading.mjs
+
+      - name: Upload library smoke evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: library-reading-smoke
+          path: artifacts/library-reading-smoke
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Whitespace check
         run: git diff --check origin/main...HEAD

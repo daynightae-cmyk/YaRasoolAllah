@@ -47,7 +47,9 @@ export interface DigitalVersionRecord {
   editor: null;
   translator: null;
   contentAvailability: ContentAvailability;
-  rightsState: "catalog_metadata_only_full_text_needs_version_review";
+  rightsState:
+    | "catalog_metadata_only_full_text_needs_version_review"
+    | "cleared_public_domain_openiti_historical_text";
   checkedAt: string;
 }
 
@@ -370,15 +372,15 @@ export const digitalVersionRegistry: DigitalVersionRecord[] = versionRows.map(
       editionStatement: "نسخة رقمية في OpenITI؛ بيانات الطبعة/المحقق غير مثبتة في سجل المنصة بعد.",
       editor: null,
       translator: null,
-      contentAvailability: "catalog_only",
-      rightsState: "catalog_metadata_only_full_text_needs_version_review",
+      contentAvailability: "full_text_cleared",
+      rightsState: "cleared_public_domain_openiti_historical_text",
       checkedAt: KNOWLEDGE_CHECKED_AT,
     };
   },
 );
 
 export const providerPolicyRegistry: ProviderPolicyRecord[] = [
-  { providerId: "provider-openiti", provider: "OpenITI", domain: "books", canonicalUrl: "https://openiti.org/", rightsUrl: "https://openiti.org/docs/Copyright_Questions.html", rightsState: "external_link_only", contentAvailability: "catalog_only", credentialsRequired: false, productionUse: "Pinned bibliographic and version metadata; full text remains version and rights specific.", attribution: "OpenITI RELEASE", checkedAt: KNOWLEDGE_CHECKED_AT },
+  { providerId: "provider-openiti", provider: "OpenITI", domain: "books", canonicalUrl: "https://openiti.org/", rightsUrl: "https://openiti.org/docs/Copyright_Questions.html", rightsState: "cleared_with_attribution", contentAvailability: "full_text_cleared", credentialsRequired: false, productionUse: "Pinned historical OpenITI texts dated 1900 or earlier may be rendered in-app under OpenITI's published public-domain policy; scholarly review and edition claims remain separate.", attribution: "OpenITI RELEASE · pinned commit", checkedAt: KNOWLEDGE_CHECKED_AT },
   { providerId: "provider-quran-foundation", provider: "Quran Foundation", domain: "quran", canonicalUrl: "https://api-docs.quran.com/", rightsUrl: "https://quran.com/terms-and-conditions", rightsState: "needs_credential", contentAvailability: "catalog_only", credentialsRequired: true, productionUse: "Not connected; API availability is not redistribution permission.", attribution: null, checkedAt: KNOWLEDGE_CHECKED_AT },
   { providerId: "provider-sunnah", provider: "Sunnah.com", domain: "hadith", canonicalUrl: "https://sunnah.com/developers", rightsUrl: null, rightsState: "needs_credential", contentAvailability: "catalog_only", credentialsRequired: true, productionUse: "No scraping. API adapter remains closed until credentials and reuse terms are established.", attribution: null, checkedAt: KNOWLEDGE_CHECKED_AT },
   { providerId: "provider-dorar", provider: "Dorar", domain: "hadith", canonicalUrl: "https://dorar.net/hadith", rightsUrl: null, rightsState: "external_link_only", contentAvailability: "external_link_only", credentialsRequired: false, productionUse: "Editorial/reference lookup only; no corpus ingestion contract established.", attribution: "Dorar reference link", checkedAt: KNOWLEDGE_CHECKED_AT },
