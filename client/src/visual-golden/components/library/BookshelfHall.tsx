@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react";
-import { BookOpen, Headphones, ScanEye } from "lucide-react";
+import { BookOpen, Headphones, Eye } from "lucide-react";
 import { catalog, shelves, type LibraryBook } from "@/visual-golden/mock/books";
 import styles from "./BookshelfHall.module.css";
 import { art } from "@/visual-golden/mock/art";
@@ -100,7 +100,7 @@ export function BookshelfHall({ activeShelf, onShelf, selected, onSelect, onOpen
           <div className={styles.modes}>
             {current.modes.includes("عرض") ? (
               <button type="button" onClick={() => onOpen(current, "عرض")}>
-                <ScanEye size={14} /> عرض
+                <Eye size={14} /> عرض
               </button>
             ) : null}
             {current.modes.includes("قراءة") ? (

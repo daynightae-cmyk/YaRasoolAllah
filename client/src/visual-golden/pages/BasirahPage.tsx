@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Copy, Bookmark, NotebookPen } from "lucide-react";
+import { Copy, Bookmark, StickyNote } from "lucide-react";
 import { BASIRAH_CATALOG, BASIRAH_MODES, type BasirahMode, type BasirahScope } from "@/visual-golden/mock/basirah";
 import { art } from "@/visual-golden/mock/art";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
@@ -77,7 +77,7 @@ export function BasirahPage() {
                 addNote(lang === "ar" ? "بحث بصيرة" : "Basirah research", q || (lang === "ar" ? "مسودة فارغة" : "Empty draft"))
               }
             >
-              <NotebookPen size={14} /> {lang === "ar" ? "حفظ في الملاحظات" : "Save to notes"}
+              <StickyNote size={14} /> {lang === "ar" ? "حفظ في الملاحظات" : "Save to notes"}
             </button>
             <button type="button" onClick={() => toggleFavorite({ id: "basirah-query", title: q || "بصيرة", path: "/basirah" })}>
               <Bookmark size={14} /> {lang === "ar" ? "حفظ" : "Save"}

@@ -1,4 +1,4 @@
-import { Expand, Minimize2, LayoutTemplate } from "lucide-react";
+import { Expand, Minimize2, LayoutGrid } from "lucide-react";
 import styles from "./present.module.css";
 
 interface Props {
@@ -12,7 +12,7 @@ export function FocusBar({ focus, onFocus, extra }: Props) {
     <div className={styles.focusBar}>
       {extra ? (
         <button type="button" className={extra.on ? styles.on : ""} onClick={extra.onClick}>
-          <LayoutTemplate size={14} /> {extra.label}
+          <LayoutGrid size={14} /> {extra.label}
         </button>
       ) : null}
       <button type="button" className={focus ? styles.on : ""} onClick={onFocus}>

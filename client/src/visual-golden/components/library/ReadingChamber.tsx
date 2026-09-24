@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BookOpen, Headphones, ScanEye, X, ChevronRight, ChevronLeft, Play, Pause, Bookmark } from "lucide-react";
+import { BookOpen, Headphones, Eye, X, ChevronRight, ChevronLeft, Play, Pause, Bookmark } from "lucide-react";
 import type { BookMode, LibraryBook } from "@/visual-golden/mock/books";
 import p from "@/visual-golden/components/present/present.module.css";
 import styles from "./ReadingChamber.module.css";
@@ -55,7 +55,7 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
                 className={mode === m ? styles.on : ""}
                 onClick={() => setMode(m)}
               >
-                {m === "عرض" ? <ScanEye size={14} /> : m === "قراءة" ? <BookOpen size={14} /> : <Headphones size={14} />}
+                {m === "عرض" ? <Eye size={14} /> : m === "قراءة" ? <BookOpen size={14} /> : <Headphones size={14} />}
                 {m}
               </button>
             ))}

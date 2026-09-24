@@ -1,11 +1,11 @@
-import { LayoutGrid, PanelsTopLeft, Route } from "lucide-react";
+import { LayoutGrid, Route } from "lucide-react";
 import styles from "./present.module.css";
 
 export type ViewMode = "cards" | "panorama" | "path";
 
 const modes: { id: ViewMode; label: string; icon: typeof LayoutGrid }[] = [
   { id: "cards", label: "بطاقات", icon: LayoutGrid },
-  { id: "panorama", label: "بانوراما", icon: PanelsTopLeft },
+  { id: "panorama", label: "بانوراما", icon: LayoutGrid },
   { id: "path", label: "مسار", icon: Route },
 ];
 
