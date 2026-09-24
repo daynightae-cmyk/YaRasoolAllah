@@ -225,6 +225,31 @@
 .recOn img {
   border-color: var(--gold-400);
 }
+.reciterDiscovery {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.1rem;
+  border-radius: 18px;
+  border: 1px solid rgba(212, 160, 23, 0.3);
+  background: rgba(5, 42, 36, 0.72);
+}
+.reciterDiscovery p { margin: 0.2rem 0; color: var(--ivory-200); line-height: 1.7; }
+.reciterDiscovery > button {
+  justify-self: start;
+  padding: 0.6rem 0.95rem;
+  border-radius: 10px;
+  color: var(--navy-950);
+  background: var(--gold-400);
+  font-weight: 700;
+}
+.reciterDiscovery > button:disabled { opacity: 0.65; cursor: wait; }
+.reciterDiscovery a { display: inline-flex; align-items: center; gap: 0.3rem; color: var(--gold-300); text-decoration: underline; }
+.reciterDiscovery a:focus-visible, .reciterDiscovery button:focus-visible { outline: 3px solid var(--gold-400); outline-offset: 3px; }
+.reciterDiscovery small { color: var(--ivory-200); }
+.reciterList { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; }
+.reciterList li { display: flex; flex-direction: column; gap: 0.3rem; padding: 0.8rem; border-radius: 12px; background: rgba(0, 0, 0, 0.16); border: 1px solid rgba(212, 160, 23, 0.2); }
+.reciterList strong { color: var(--ivory-50); }
+.reciterList span { color: var(--ivory-200); font-size: 0.78rem; }
 .lower {
   display: grid;
   grid-template-columns: 0.9fr 1fr 1.1fr;
@@ -288,9 +313,11 @@
 }
 
 @media (max-width: 1100px) {
+  .reciterList { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .hero,
   .lower,
   .reciters {
     grid-template-columns: 1fr;
   }
 }
+@media (max-width: 600px) { .reciterList { grid-template-columns: 1fr; } }

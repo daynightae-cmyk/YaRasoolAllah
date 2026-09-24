@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import { Heart, Share2, ExternalLink, ShieldCheck, Lock } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
@@ -20,6 +20,27 @@ export function AudioPage() {
   const [chapters, setChapters] = useState<QuranChapter[]>([]);
   const [active, setActive] = useState(1);
   const [loved, setLoved] = useState(false);
+  const [reciterCatalog, setReciterCatalog] = useState<
+    { state: "idle" | "loading" | "error" } | { state: "ready"; items: Array<{ id: number; name: string; reading: string | null }> }
+  >({ state: "idle" });
+  const reciterRequest = useRef<AbortController | null>(null);
+
+  useEffect(() => () => reciterRequest.current?.abort(), []);
+
+  const discoverReciters = async () => {
+    reciterRequest.current?.abort();
+    const controller = new AbortController();
+    reciterRequest.current = controller;
+    setReciterCatalog({ state: "loading" });
+    try {
+      const response = await fetch(`/api/content/audio/reciters?sura=${active}`, { signal: controller.signal });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const data: { reciters: Array<{ id: number; name: string; reading: string | null }> } = await response.json();
+      if (!controller.signal.aborted) setReciterCatalog({ state: "ready", items: data.reciters });
+    } catch {
+      if (!controller.signal.aborted) setReciterCatalog({ state: "error" });
+    }
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -82,7 +103,11 @@ export function AudioPage() {
               <li
                 key={chapter.number}
                 className={chapter.number === active ? styles.activeTrack : ""}
-                onClick={() => setActive(chapter.number)}
+                onClick={() => {
+                  reciterRequest.current?.abort();
+                  setActive(chapter.number);
+                  setReciterCatalog({ state: "idle" });
+                }}
               >
                 <span>{i + 1}</span>
                 <div>
@@ -139,6 +164,27 @@ export function AudioPage() {
               </div>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section className={styles.pad} aria-label="اكتشاف القراء من المصدر">
+        <div className={styles.reciterDiscovery}>
+          <div>
+            <SectionHead title="اكتشف القراء من الفهرس الرسمي" en="MP3Quran catalog metadata" />
+            <p>أسماء القراء والروايات المتاحة في فهرس المزوّد للسورة المختارة؛ لا تشغيل ولا تنزيل ولا تسجيلات مُجازة داخل المنصة.</p>
+          </div>
+          <button type="button" onClick={discoverReciters} disabled={reciterCatalog.state === "loading"}>
+            {reciterCatalog.state === "loading" ? "جارٍ جلب الفهرس…" : `اعرض قراء سورة ${current?.arabicName ?? active}`}
+          </button>
+          {reciterCatalog.state === "error" ? <p role="status">تعذر جلب الفهرس الآن. <a href="https://mp3quran.net/" target="_blank" rel="noopener noreferrer">افتح المصدر الرسمي <ExternalLink size={13} aria-hidden="true" /></a></p> : null}
+          {reciterCatalog.state === "ready" ? (
+            reciterCatalog.items.length ? <ul className={styles.reciterList}>
+              {reciterCatalog.items.map((item) => <li key={item.id}>
+                <strong>{item.name}</strong><span>{item.reading ?? "الرواية غير مذكورة في هذه النتيجة"}</span>
+              </li>)}
+            </ul> : <p role="status">لا يظهر قارئ لهذه السورة في استجابة المزوّد حاليًا.</p>
+          ) : null}
+          <small>المصدر: <a href="https://mp3quran.net/ar/api" target="_blank" rel="noopener noreferrer">توثيق MP3Quran API</a> · حالة العرض: بيانات فهرسية فقط.</small>
         </div>
       </section>
 
