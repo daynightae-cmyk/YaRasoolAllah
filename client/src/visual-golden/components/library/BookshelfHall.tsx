@@ -40,7 +40,6 @@ function BookCard({
   return (
     <article
       className={`${styles.bookCard} ${selected ? styles.selected : ""}`}
-      data-book-spine
       style={
         {
           "--cover": book.spine.color,
@@ -51,6 +50,7 @@ function BookCard({
       <button
         type="button"
         className={styles.coverButton}
+        data-book-spine
         aria-label={`${book.title} — ${book.author}`}
         aria-pressed={selected}
         onClick={() => onSelect(book)}
