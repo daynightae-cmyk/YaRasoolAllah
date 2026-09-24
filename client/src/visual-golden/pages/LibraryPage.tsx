@@ -57,8 +57,8 @@ export function LibraryPage() {
     <div className={styles.page}>
       <PageHero
         title="المكتبة والرفوف الرقمية"
-        subtitle={`DIGITAL LIBRARY · ${LIBRARY_COUNTS.works} عملًا · ${LIBRARY_COUNTS.versions} نسخة`}
-        desc="سجلات فهرسية ونسخ رقمية موثقة من OpenITI — النص الكامل غير متاح داخل المنصة حتى مراجعة النسخة والحقوق"
+        subtitle={`DIGITAL LIBRARY · ${LIBRARY_COUNTS.works} عملًا · ${LIBRARY_COUNTS.versions} نسخة · ${LIBRARY_COUNTS.readableWorks} للقراءة`}
+        desc="قاعة رفوف خشبية وفهرس بحث ومكتب قراءة. النصوص التاريخية المسموح بها من OpenITI تُقرأ داخل المنصة، والاستماع قراءة آلية اختيارية من جهاز المستخدم لا تسجيلًا أصليًا."
         image={art.library}
         wing="library"
       >
