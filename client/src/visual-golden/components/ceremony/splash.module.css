@@ -7,16 +7,35 @@
   overflow: hidden;
   color: #f8efc2;
   isolation: isolate;
+  background: #020c0c;
 }
 
 .void {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 50% 42%, rgba(16, 90, 70, 0.45), transparent 42%),
+    radial-gradient(ellipse at 50% 58%, rgba(16, 90, 70, 0.24), transparent 66%),
     radial-gradient(ellipse at 18% 78%, rgba(212, 160, 23, 0.12), transparent 36%),
     radial-gradient(ellipse at 82% 18%, rgba(232, 197, 71, 0.1), transparent 32%),
     linear-gradient(180deg, #02080c 0%, #041611 48%, #02060a 100%);
+}
+
+/* A quiet architectural recess gives the title depth without a circular reveal. */
+.arch {
+  position: absolute;
+  width: min(76vw, 940px);
+  height: min(84vh, 760px);
+  top: 7%;
+  left: 50%;
+  transform: translateX(-50%) perspective(1200px) rotateX(3deg) scale(0.96);
+  border: 1px solid rgba(232, 197, 71, 0.17);
+  border-bottom: 0;
+  border-radius: 48% 48% 3% 3% / 35% 35% 3% 3%;
+  background: linear-gradient(180deg, rgba(30, 78, 62, 0.13), transparent 70%);
+  box-shadow: inset 0 0 0 12px rgba(3, 22, 21, 0.35), inset 0 0 65px rgba(232, 197, 71, 0.05), 0 0 100px rgba(232, 197, 71, 0.025);
+  opacity: 0;
+  animation: archApproach 5.8s cubic-bezier(0.18, 0.65, 0.22, 1) both;
+  pointer-events: none;
 }
 
 .silhouette {
@@ -26,9 +45,10 @@
   background:
     radial-gradient(ellipse at 50% 80%, rgba(6, 40, 34, 0.55), transparent 70%),
     url("/visual-golden/art/mosque-hero.webp") center 42% / cover no-repeat;
-  opacity: 0.18;
+  opacity: 0;
   filter: saturate(0.7) blur(1.2px);
   mask-image: linear-gradient(180deg, transparent, #000 18%, #000 70%, transparent);
+  animation: sceneryReveal 3.6s ease-out 0.4s forwards;
 }
 
 .lanterns i {
@@ -37,7 +57,7 @@
   height: 280px;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(232, 197, 71, 0.22), transparent 68%);
-  animation: lanternBreath 4.8s ease-in-out infinite;
+  animation: lanternBreath 7.6s ease-in-out infinite;
   pointer-events: none;
 }
 .lanterns i:nth-child(1) { top: 6%; right: 8%; }
@@ -67,17 +87,17 @@
   stroke: rgba(232, 197, 71, 0.7);
   stroke-width: 2.4;
   filter: drop-shadow(0 0 8px rgba(232, 197, 71, 0.45));
-  animation: ribbonDraw 2.4s cubic-bezier(0.22, 1, 0.36, 1) 0.25s forwards;
+  animation: ribbonDraw 4s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
 }
 .ribbonB {
   stroke: rgba(244, 233, 208, 0.38);
   stroke-width: 1.4;
-  animation: ribbonDraw 2.8s cubic-bezier(0.22, 1, 0.36, 1) 0.45s forwards;
+  animation: ribbonDraw 4.4s cubic-bezier(0.22, 1, 0.36, 1) 0.7s forwards;
 }
 .ribbonC {
   stroke: rgba(16, 185, 129, 0.38);
   stroke-width: 1.6;
-  animation: ribbonDraw 2.6s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards;
+  animation: ribbonDraw 4.2s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards;
 }
 
 .floor {
@@ -96,6 +116,7 @@
   text-align: center;
   padding: 2rem 1.5rem 4rem;
   max-width: min(96vw, 1200px);
+  animation: stageApproach 5.4s cubic-bezier(0.18, 0.65, 0.22, 1) both;
 }
 
 .kicker {
@@ -105,7 +126,7 @@
   color: rgba(232, 197, 71, 0.82);
   font-family: var(--font-ui);
   opacity: 0;
-  animation: rise 900ms cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+  animation: rise 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.35s forwards;
 }
 
 .invocation {
@@ -123,8 +144,8 @@
   color: transparent;
   filter: drop-shadow(0 10px 28px rgba(0, 0, 0, 0.55));
   animation:
-    rise 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.28s both,
-    goldFlow 4.6s linear 0.9s infinite;
+    rise 2s cubic-bezier(0.22, 1, 0.36, 1) 0.55s both,
+    goldFlow 9s ease-in-out 1.4s infinite alternate;
 }
 
 .peace {
@@ -133,7 +154,7 @@
   font-size: clamp(1.05rem, 2.4vw, 1.7rem);
   color: #f0d78c;
   opacity: 0;
-  animation: rise 900ms cubic-bezier(0.22, 1, 0.36, 1) 0.85s forwards;
+  animation: rise 1.5s cubic-bezier(0.22, 1, 0.36, 1) 1.1s forwards;
 }
 
 .rule {
@@ -181,11 +202,25 @@
 }
 
 .exit {
-  animation: fadeOut 780ms cubic-bezier(0.4, 0, 1, 1) forwards;
+  animation: fadeOut 1.3s ease-in-out forwards;
 }
 
-.exit .invocation {
-  animation: recede 780ms cubic-bezier(0.4, 0, 1, 1) forwards;
+.exit .stage {
+  animation: stageLeave 1.3s ease-in-out forwards;
+}
+
+@keyframes archApproach {
+  0% { opacity: 0; transform: translateX(-50%) perspective(1200px) rotateX(3deg) scale(0.96); }
+  65% { opacity: 0.68; }
+  100% { opacity: 0.8; transform: translateX(-50%) perspective(1200px) rotateX(0) scale(1); }
+}
+@keyframes sceneryReveal { to { opacity: 0.21; } }
+@keyframes stageApproach {
+  from { transform: translateY(22px) scale(0.97); }
+  to { transform: translateY(0) scale(1); }
+}
+@keyframes stageLeave {
+  to { transform: translateY(-14px) scale(1.015); filter: blur(5px); opacity: 0; }
 }
 
 @keyframes rise {
@@ -215,20 +250,12 @@
   50% { opacity: 0.85; transform: scale(1.08); }
 }
 
-@keyframes recede {
-  to {
-    opacity: 0;
-    letter-spacing: 0.22em;
-    filter: blur(8px);
-    transform: scale(1.04);
-  }
-}
-
 @keyframes fadeOut {
   to { opacity: 0; visibility: hidden; }
 }
 
 @media (max-width: 720px) {
+  .arch { width: 92vw; height: 67vh; top: 16%; }
   .invocation {
     white-space: normal;
     font-size: clamp(2.6rem, 16vw, 4.2rem);
@@ -253,6 +280,9 @@
     filter: none;
     transform: none;
   }
+  .arch, .silhouette, .stage { animation: none !important; }
+  .arch { opacity: 0.75; transform: translateX(-50%); }
+  .silhouette { opacity: 0.18; }
   .invocation {
     color: #f8efc2;
     background: none;
