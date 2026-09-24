@@ -51,11 +51,29 @@ function verseKey(surah: number, ayah: number) {
   return `${surah}:${ayah}`;
 }
 
+function initialQuranSelection() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const requestedSurah = Number(params.get("surah"));
+    const requestedAyah = Number(params.get("ayah"));
+    return {
+      surah:
+        Number.isInteger(requestedSurah) && requestedSurah >= 1 && requestedSurah <= 114
+          ? requestedSurah
+          : 1,
+      ayah: Number.isInteger(requestedAyah) && requestedAyah >= 1 ? requestedAyah : 1,
+    };
+  } catch {
+    return { surah: 1, ayah: 1 };
+  }
+}
+
 export function QuranPage() {
+  const initialSelection = useMemo(initialQuranSelection, []);
   const [chapters, setChapters] = useState<QuranChapter[]>([]);
   const [verses, setVerses] = useState<QuranVerse[]>([]);
-  const [active, setActive] = useState(1);
-  const [ayah, setAyah] = useState(1);
+  const [active, setActive] = useState(initialSelection.surah);
+  const [ayah, setAyah] = useState(initialSelection.ayah);
   const [tab, setTab] = useState<SidebarTab>("surah");
   const [focus, setFocus] = useState(false);
   const [lamp, setLamp] = useState(true);
@@ -76,6 +94,17 @@ export function QuranPage() {
     setBookmarks(safeReadJson<string[]>(BOOKMARK_KEY, []));
     setNotes(safeReadJson<Record<string, string>>(NOTE_KEY, {}));
   }, []);
+
+  useEffect(() => {
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set("surah", String(active));
+      url.searchParams.set("ayah", String(ayah));
+      window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
+    } catch {
+      // URL synchronization is a convenience; Quran reading must still work.
+    }
+  }, [active, ayah]);
 
   useEffect(() => {
     let cancelled = false;
@@ -387,6 +416,7 @@ export function QuranPage() {
                   <button
                     type="button"
                     key={item.ayah}
+                    id={`quran-ayah-${active}-${item.ayah}`}
                     className={`${styles.ayah} ${
                       ayah === item.ayah ? styles.ayahOn : ""
                     }`}
