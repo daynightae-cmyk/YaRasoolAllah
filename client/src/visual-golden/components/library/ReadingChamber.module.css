@@ -1,0 +1,328 @@
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 230;
+  background: rgba(4, 8, 10, 0.78);
+  backdrop-filter: blur(10px);
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.chamber {
+  width: min(1080px, 100%);
+  max-height: min(92vh, 860px);
+  overflow: auto;
+  border-radius: 22px;
+  border: 1px solid rgba(232, 197, 71, 0.5);
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(232, 197, 71, 0.12), transparent 40%),
+    linear-gradient(180deg, #1a2e26, #0b1614 55%, #07100e);
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.55);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  animation: in 280ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+@keyframes in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.7rem;
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid rgba(212, 160, 23, 0.28);
+  flex-wrap: wrap;
+}
+
+.tabs {
+  display: inline-flex;
+  gap: 4px;
+  padding: 3px;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 160, 23, 0.4);
+}
+
+.tabs button {
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  color: var(--ivory-200);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+}
+
+.tabs .on {
+  background: linear-gradient(135deg, rgba(232, 197, 71, 0.3), rgba(6, 95, 70, 0.5));
+  color: var(--gold-300);
+}
+
+.desk {
+  position: relative;
+  padding: 1.1rem 1.2rem 1.4rem;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(90, 50, 20, 0.18) 0 2px,
+      transparent 2px 16px
+    ),
+    linear-gradient(180deg, #3a2414, #24140c);
+  min-height: 420px;
+}
+
+.lamp {
+  position: absolute;
+  top: 8px;
+  inset-inline-start: 18px;
+  width: 70px;
+  height: 90px;
+  z-index: 2;
+}
+
+.lampHead {
+  width: 54px;
+  height: 28px;
+  margin: 0 auto;
+  background: radial-gradient(circle at 50% 80%, #fde68a, #b45309);
+  border-radius: 40px 40px 8px 8px;
+  box-shadow: 0 18px 40px rgba(245, 158, 11, 0.35);
+}
+
+.lampArm {
+  width: 6px;
+  height: 40px;
+  margin: 0 auto;
+  background: linear-gradient(#d4a017, #78350f);
+}
+
+.glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 18% 0%, rgba(253, 230, 138, 0.18), transparent 46%);
+}
+
+.stage {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-height: 360px;
+}
+
+.coverCard {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 1.2rem;
+  width: min(760px, 100%);
+  background: rgba(8, 22, 20, 0.72);
+  border: 1px solid rgba(232, 197, 71, 0.4);
+  border-radius: 18px;
+  padding: 1rem;
+}
+
+.coverCard img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid rgba(232, 197, 71, 0.45);
+  box-shadow: 10px 14px 0 rgba(0, 0, 0, 0.28);
+  transform: rotateY(-8deg) rotateZ(-2deg);
+}
+
+.coverCard h3 {
+  margin: 0 0 0.3rem;
+  font-size: 1.55rem;
+  color: #f8efc2;
+}
+
+.meta {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin: 0.7rem 0 1rem;
+}
+
+.meta span {
+  font-size: 0.75rem;
+  border: 1px solid rgba(212, 160, 23, 0.4);
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+}
+
+.spread {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: min(820px, 100%);
+  min-height: 340px;
+  background: #f3e6c4;
+  color: #2a1c0c;
+  border-radius: 6px 14px 14px 6px;
+  overflow: hidden;
+  box-shadow:
+    0 24px 50px rgba(0, 0, 0, 0.4),
+    inset 0 0 0 1px rgba(161, 98, 7, 0.35);
+  transform: rotateX(4deg);
+}
+
+.page {
+  padding: 1.3rem 1.2rem 1.6rem;
+  position: relative;
+}
+
+.page:first-child {
+  border-inline-end: 1px solid rgba(120, 80, 20, 0.28);
+  background:
+    linear-gradient(90deg, transparent 92%, rgba(90, 50, 10, 0.08)),
+    linear-gradient(#f6edd4, #ead8ae);
+}
+
+.page:last-child {
+  background:
+    linear-gradient(270deg, transparent 92%, rgba(90, 50, 10, 0.08)),
+    linear-gradient(#f4e6c0, #e4d2a4);
+}
+
+.page h4 {
+  margin: 0 0 0.7rem;
+  text-align: center;
+  color: #7c4a12;
+  font-size: 1.05rem;
+}
+
+.page p {
+  margin: 0;
+  line-height: 2;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+}
+
+.folio {
+  position: absolute;
+  bottom: 8px;
+  inset-inline: 0;
+  text-align: center;
+  font-size: 0.72rem;
+  color: #7c5a30;
+}
+
+.turn {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+}
+
+.listen {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 1.1rem;
+  width: min(760px, 100%);
+  background: rgba(8, 22, 20, 0.75);
+  border: 1px solid rgba(232, 197, 71, 0.4);
+  border-radius: 18px;
+  padding: 1rem;
+}
+
+.wave {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 54px;
+  margin: 0.8rem 0;
+}
+
+.wave i {
+  flex: 1;
+  border-radius: 3px;
+  background: linear-gradient(180deg, var(--gold-400), var(--emerald-700));
+  animation: none;
+  height: 20%;
+}
+
+.playing .wave i {
+  animation: bar 1.1s ease-in-out infinite;
+}
+
+.wave i:nth-child(odd) {
+  animation-delay: 0.12s;
+}
+.wave i:nth-child(3n) {
+  animation-delay: 0.28s;
+}
+
+@keyframes bar {
+  0%,
+  100% {
+    height: 22%;
+  }
+  50% {
+    height: 92%;
+  }
+}
+
+.chapters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.chapters button {
+  text-align: start;
+  padding: 0.45rem 0.65rem;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  color: var(--ivory-100);
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.chapters .on {
+  border-color: rgba(232, 197, 71, 0.5);
+  background: rgba(232, 197, 71, 0.14);
+  color: var(--gold-300);
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.9rem;
+}
+
+@media (max-width: 760px) {
+  .coverCard,
+  .listen,
+  .spread {
+    grid-template-columns: 1fr;
+  }
+  .coverCard img {
+    height: 180px;
+    transform: none;
+  }
+  .spread {
+    transform: none;
+    min-height: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chamber {
+    animation: none;
+  }
+  .playing .wave i {
+    animation: none;
+    height: 50%;
+  }
+}

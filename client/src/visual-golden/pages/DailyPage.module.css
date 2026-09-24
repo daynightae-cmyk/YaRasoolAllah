@@ -1,0 +1,197 @@
+.page {
+  overflow-x: hidden;
+  position: relative;
+}
+.mihrab {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 0.45rem;
+  padding: 0.85rem 1.3rem 0.2rem;
+}
+.mihrab button {
+  background: rgba(5, 42, 36, 0.72);
+  border: 1px solid rgba(212, 160, 23, 0.28);
+  border-radius: 14px;
+  padding: 0.65rem 0.35rem;
+  color: var(--ivory-100);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  text-align: center;
+  min-height: 92px;
+}
+.mihrab b {
+  font-size: 0.82rem;
+  color: var(--gold-300);
+}
+.mihrab span {
+  font-size: 0.68rem;
+  color: var(--ivory-200);
+}
+.mihrab em {
+  font-style: normal;
+  font-size: 0.72rem;
+  font-family: var(--font-latin);
+  color: var(--text-muted);
+}
+.mihrabOn {
+  border-color: var(--gold-400) !important;
+  background: linear-gradient(180deg, rgba(212, 160, 23, 0.28), rgba(6, 78, 59, 0.5)) !important;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 0.8rem;
+  padding: 0.8rem 1.3rem;
+}
+.panel {
+  background: rgba(5, 42, 36, 0.72);
+  border: 1px solid rgba(212, 160, 23, 0.28);
+  border-radius: 16px;
+  padding: 0.9rem;
+}
+.adhkarCard {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 0.8rem;
+  align-items: center;
+}
+.adhkarCard img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+.adhkarCard h4 {
+  margin: 0 0 0.3rem;
+  color: var(--gold-300);
+}
+.start {
+  margin-top: 0.4rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: var(--gold-500);
+  color: var(--navy-950);
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.35rem 0.8rem;
+}
+.adhkarBtns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  margin-top: 0.7rem;
+}
+.adhkarBtns button {
+  min-height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 160, 23, 0.28);
+  color: var(--ivory-100);
+}
+.tasbihHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin: 0.6rem 0;
+}
+.counter span {
+  font-size: 3rem;
+  color: var(--gold-300);
+  min-width: 4rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.counter button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(212, 160, 23, 0.4);
+  color: var(--gold-300);
+  font-size: 1.4rem;
+}
+.dhikr {
+  text-align: center;
+  color: var(--gold-200);
+  font-size: 1.2rem;
+}
+.presets {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.presets button {
+  min-width: 52px;
+  min-height: 36px;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 160, 23, 0.3);
+  color: var(--ivory-100);
+}
+.on {
+  background: rgba(212, 160, 23, 0.25);
+  color: var(--gold-300) !important;
+}
+.lower {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 0.8rem;
+  padding: 0 1.3rem 1.4rem;
+}
+.duas {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+.duas article {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(212, 160, 23, 0.22);
+}
+.duas img {
+  width: 100%;
+  height: 88px;
+  object-fit: cover;
+  display: block;
+}
+.duas span {
+  display: block;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.78rem;
+}
+.quick {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+}
+.quick button {
+  min-height: 44px;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 160, 23, 0.28);
+  color: var(--ivory-100);
+}
+
+@media (max-width: 1024px) {
+  .grid,
+  .lower,
+  .adhkarCard {
+    grid-template-columns: 1fr;
+  }
+  .mihrab {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (max-width: 700px) {
+  .mihrab,
+  .duas,
+  .quick,
+  .adhkarBtns {
+    grid-template-columns: 1fr 1fr;
+  }
+}

@@ -1,0 +1,28 @@
+import { useCallback, useEffect, useState, type CSSProperties, type ReactNode } from "react";
+import { useLocation } from "wouter";
+import { InstitutionSidebar } from "./InstitutionSidebar";
+import { InstitutionHeader } from "./InstitutionHeader";
+import { MobileNav } from "./MobileNav";
+import { ShellDrawer } from "./ShellDrawer";
+import { DiscoveryPalette } from "@/visual-golden/components/present/DiscoveryPalette";
+import { Spotlight } from "@/visual-golden/components/present/Spotlight";
+import { SplashCeremony } from "@/visual-golden/components/ceremony/SplashCeremony";
+import { useInstitution } from "@/visual-golden/lib/institution/store";
+import styles from "./shell.module.css";
+
+const WING_LABEL: Record<string,string>={"/":"بوابة النور","/library":"المكتبة","/quran":"القرآن","/tafsir":"التفسير","/seerah":"السيرة","/atlas":"الأطلس","/hadith":"الحديث","/sunnah":"الحديث","/kids":"الأطفال","/daily":"مرصد الصلاة","/audio":"التلاوات","/quran-audio":"التلاوات","/basirah":"بصيرة"};
+function wingFromPath(pathname:string){ if(pathname==="/")return "home"; const key=pathname.replace(/^\//,"").split("/")[0]; return key==="sunnah"?"hadith":key==="quran-audio"?"audio":key||"home"; }
+function shouldShowSplash(){ if(typeof window==="undefined")return false; const q=new URLSearchParams(window.location.search); if(q.get("ceremony")==="1")return true; return sessionStorage.getItem("yra-splash")!=="1"; }
+export function InstitutionShell({children}:{children:ReactNode}){
+ const [sidebarOpen,setSidebarOpen]=useState(false); const [discover,setDiscover]=useState(false); const [splash,setSplash]=useState(false); const [pathname]=useLocation(); const wing=wingFromPath(pathname);
+ const theme=useInstitution(s=>s.theme); const lang=useInstitution(s=>s.lang); const hydrate=useInstitution(s=>s.hydrate); const recordVisit=useInstitution(s=>s.recordVisit);
+ const closeSplash=useCallback(()=>{sessionStorage.setItem("yra-splash","1");setSplash(false);},[]);
+ useEffect(()=>{hydrate();},[hydrate]); useEffect(()=>{if(shouldShowSplash())setSplash(true);},[]); useEffect(()=>{recordVisit(pathname,WING_LABEL[pathname]??pathname);},[pathname,recordVisit]);
+ useEffect(()=>{const onKey=(e:KeyboardEvent)=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();setDiscover(v=>!v);}};window.addEventListener("keydown",onKey);return()=>window.removeEventListener("keydown",onKey);},[]);
+ return <div className={`${styles.shell} vg-shell`} data-theme={theme} data-wing={wing} data-lang={lang} dir={lang==="ar"?"rtl":"ltr"}>
+   {splash?<SplashCeremony onDone={closeSplash}/>:null}<Spotlight/><div className={styles.ambient} aria-hidden>{Array.from({length:18},(_,i)=><span key={i} style={{"--i":i} as CSSProperties}/>)}</div>
+   <InstitutionSidebar open={sidebarOpen} onClose={()=>setSidebarOpen(false)} onReplaySplash={()=>setSplash(true)}/>
+   <div className={styles.mainArea}><InstitutionHeader onMenuClick={()=>setSidebarOpen(true)} onSearch={()=>setDiscover(true)}/><main id="main-content" className={styles.content}><div key={pathname} className="vg-page-enter">{children}</div></main></div>
+   <MobileNav/><DiscoveryPalette open={discover} onClose={()=>setDiscover(false)}/><ShellDrawer/>
+ </div>;
+}

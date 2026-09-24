@@ -1,0 +1,311 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - var(--header-height));
+}
+.mapArea {
+  position: relative;
+  flex: 1;
+  min-height: 560px;
+  overflow: hidden;
+}
+.title {
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  text-align: center;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(6, 28, 24, 0.94), rgba(6, 28, 24, 0.78));
+  border: 1px solid rgba(232, 197, 71, 0.5);
+  border-radius: 16px;
+  padding: 0.45rem 1.4rem 0.55rem;
+  min-width: min(420px, 80%);
+}
+.title h1 {
+  margin: 0;
+  font-size: clamp(1.2rem, 2.4vw, 1.8rem);
+  color: #f8efc2;
+}
+.title p {
+  margin: 0;
+  letter-spacing: 0.16em;
+  font-size: 0.68rem;
+  color: var(--gold-300);
+  font-family: var(--font-latin);
+}
+.filters {
+  position: absolute;
+  top: 1.1rem;
+  right: 1rem;
+  z-index: 5;
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  max-width: 46%;
+  justify-content: flex-end;
+}
+.filters button {
+  padding: 0.38rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(6, 32, 28, 0.82);
+  border: 1px solid rgba(212, 160, 23, 0.32);
+  color: var(--ivory-100);
+  font-size: 0.75rem;
+}
+.active {
+  background: linear-gradient(135deg, rgba(232, 197, 71, 0.3), rgba(6, 95, 70, 0.55)) !important;
+  color: var(--gold-300) !important;
+  border-color: var(--gold-400) !important;
+}
+.mapTools {
+  position: absolute;
+  top: 5.2rem;
+  left: 1rem;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+.mapTools button,
+.compass {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(6, 32, 28, 0.86);
+  border: 1px solid rgba(212, 160, 23, 0.35);
+  color: var(--gold-300);
+  display: grid;
+  place-items: center;
+}
+.compass {
+  height: auto;
+  padding: 0.35rem 0.2rem;
+  font-size: 0.62rem;
+}
+.compass span {
+  font-family: var(--font-latin);
+  font-weight: 700;
+}
+.layers {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  z-index: 5;
+  width: 220px;
+  background: rgba(6, 32, 28, 0.9);
+  border: 1px solid rgba(212, 160, 23, 0.35);
+  border-radius: 14px;
+  padding: 0.7rem 0.8rem;
+}
+.layers h4 {
+  margin: 0 0 0.45rem;
+  color: var(--gold-300);
+  font-size: 0.88rem;
+}
+.layers label {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  font-size: 0.78rem;
+  padding: 0.22rem 0;
+  color: var(--ivory-100);
+}
+.map {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.mapInner {
+  width: 100%;
+  height: 100%;
+  transform-origin: center;
+  transition: transform 280ms cubic-bezier(0.2, 0, 0, 1);
+  position: relative;
+}
+.mapInner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.routes {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.routes polyline {
+  fill: none;
+  stroke: #e8c547;
+  stroke-width: 0.7;
+  stroke-dasharray: 3 2;
+  animation: dashFlow 8s linear infinite;
+}
+.marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: none;
+  color: #f8efc2;
+  text-align: center;
+}
+.dot {
+  display: block;
+  width: 12px;
+  height: 12px;
+  margin: 0 auto 0.2rem;
+  border-radius: 50%;
+  background: var(--gold-400);
+  box-shadow: 0 0 0 4px rgba(232, 197, 71, 0.25);
+}
+.selected .dot {
+  animation: ping 1.8s ease-out infinite;
+  background: #f43f5e;
+  box-shadow: 0 0 0 5px rgba(244, 63, 94, 0.28);
+}
+.label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.78rem;
+  text-shadow: 0 2px 8px #000;
+}
+.label em {
+  font-style: normal;
+  font-size: 0.62rem;
+  font-family: var(--font-latin);
+  color: var(--gold-300);
+}
+.inspector {
+  position: absolute;
+  top: 5.4rem;
+  right: 1rem;
+  z-index: 5;
+  width: min(320px, 92vw);
+  background: rgba(6, 28, 24, 0.94);
+  border: 1px solid rgba(232, 197, 71, 0.45);
+  border-radius: 16px;
+  overflow: hidden;
+  animation: fadeUp 420ms cubic-bezier(0.2, 0, 0, 1);
+}
+.inspector img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+}
+.insBody {
+  padding: 0.75rem 0.85rem 0.95rem;
+}
+.insBody h3 {
+  margin: 0 0 0.3rem;
+  color: #f8efc2;
+}
+.badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.2);
+  color: var(--emerald-300);
+  margin-bottom: 0.55rem;
+}
+.insBody dl {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 0.25rem 0.5rem;
+  margin: 0 0 0.6rem;
+  font-size: 0.78rem;
+}
+.insBody dt {
+  color: var(--text-muted);
+}
+.insBody dd {
+  margin: 0;
+}
+.insBody p {
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: var(--ivory-200);
+}
+.timelineBar {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.55rem 1rem;
+  background: rgba(4, 22, 20, 0.96);
+  border-top: 1px solid rgba(212, 160, 23, 0.35);
+  flex-wrap: wrap;
+}
+.play {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold-400), var(--gold-700));
+  color: var(--navy-950);
+  display: grid;
+  place-items: center;
+}
+.ticks {
+  display: flex;
+  gap: 0.25rem;
+  flex: 1;
+  overflow-x: auto;
+}
+.ticks button {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  color: var(--ivory-200);
+  border-radius: 8px;
+}
+.tickActive {
+  background: rgba(232, 197, 71, 0.2);
+  color: var(--gold-300) !important;
+}
+.listBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid rgba(212, 160, 23, 0.35);
+  color: var(--gold-300);
+  font-size: 0.78rem;
+}
+.immersive .layers,
+.immersive .inspector,
+.immersive .timelineBar {
+  opacity: 0.12;
+  transition: opacity 240ms;
+}
+.immersive:hover .layers,
+.immersive:hover .inspector,
+.immersive:hover .timelineBar {
+  opacity: 1;
+}
+
+@media (max-width: 1100px) {
+  .filters {
+    position: static;
+    max-width: none;
+    padding: 4.6rem 0.6rem 0.4rem;
+    justify-content: flex-start;
+  }
+  .inspector {
+    position: static;
+    width: auto;
+    margin: 0.6rem;
+  }
+  .layers {
+    position: static;
+    width: auto;
+    margin: 0.6rem;
+  }
+  .mapArea {
+    display: flex;
+    flex-direction: column;
+  }
+  .map {
+    position: relative;
+    min-height: 360px;
+  }
+}
