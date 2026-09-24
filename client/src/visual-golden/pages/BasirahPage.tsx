@@ -24,10 +24,22 @@ export function BasirahPage() {
   const lang = useInstitution((s) => s.lang);
   const addNote = useInstitution((s) => s.addNote);
   const toggleFavorite = useInstitution((s) => s.toggleFavorite);
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState(() => {
+    try {
+      return new URLSearchParams(window.location.search).get("q") ?? "";
+    } catch {
+      return "";
+    }
+  });
   const [scope, setScope] = useState<BasirahScope>("all");
   const [mode, setMode] = useState<BasirahMode>("sourced");
-  const [ran, setRan] = useState(false);
+  const [ran, setRan] = useState(() => {
+    try {
+      return new URLSearchParams(window.location.search).has("q");
+    } catch {
+      return false;
+    }
+  });
   const [surahs, setSurahs] = useState<BasirahRecord[]>([]);
 
   const localIndex = useMemo(() => buildLocalIndex(), []);

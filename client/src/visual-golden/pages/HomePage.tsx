@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "wouter";
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "wouter";
 import {
   BookMarked,
   Moon,
@@ -8,8 +8,6 @@ import {
   Headphones,
   FileText,
   Bookmark,
-  MoreHorizontal,
-  Settings2,
   Search,
 } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
@@ -17,6 +15,13 @@ import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import { TiltCard } from "@/visual-golden/components/present/TiltCard";
 import { ViewSwitcher, type ViewMode } from "@/visual-golden/components/present/ViewSwitcher";
+import {
+  getDailyVerse,
+  getQuranChapters,
+  type DailyVerse,
+  type QuranChapter,
+} from "@/services/quranService";
+import { discoveryFacts } from "@/visual-golden/services/discovery";
 import p from "@/visual-golden/components/present/present.module.css";
 import styles from "./HomePage.module.css";
 
@@ -83,14 +88,57 @@ function GateBody({ g }: { g: (typeof gateways)[number] }) {
   );
 }
 
+function readJson<T>(key: string, fallback: T): T {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? (JSON.parse(raw) as T) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
 export function HomePage() {
   const [mode, setMode] = useState<ViewMode>("cards");
+  const [, navigate] = useLocation();
+  const [heroQ, setHeroQ] = useState("");
+  const [chapters, setChapters] = useState<QuranChapter[]>([]);
+  const [daily, setDaily] = useState<DailyVerse | null>(null);
   const lang = useInstitution((s) => s.lang);
   const visits = useInstitution((s) => s.visits);
   const favorites = useInstitution((s) => s.favorites);
   const notes = useInstitution((s) => s.notes);
   const toggleFavorite = useInstitution((s) => s.toggleFavorite);
-  const saved = favorites.some((f) => f.id === "continue-riyad");
+
+  const [continueSignals] = useState(() => ({
+    seerahRead: readJson<string[]>("seerah-read-chapters-v1", []).length,
+    quranMarks: readJson<string[]>("quran-bookmarks", []).length,
+    hadithMarks: readJson<string[]>("hadith-sample-bookmarks-v1", []).length,
+    kidsSeen: readJson<string[]>("kids-seen-adaptations-v1", []).length,
+  }));
+
+  useEffect(() => {
+    let cancelled = false;
+    getQuranChapters()
+      .then((items) => {
+        if (!cancelled) setChapters(items);
+      })
+      .catch(() => {
+        if (!cancelled) setChapters([]);
+      });
+    getDailyVerse()
+      .then((verse) => {
+        if (!cancelled) setDaily(verse);
+      })
+      .catch(() => {
+        if (!cancelled) setDaily(null);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const facts = discoveryFacts(chapters);
+  const recentFavorites = favorites.slice(0, 3);
 
   return (
     <div className={styles.page}>
@@ -108,9 +156,20 @@ export function HomePage() {
             وهديه، وننهل من نوره الذي أضاء للعالمين.
           </p>
         </div>
-        <form className={styles.heroSearch} onSubmit={(e) => e.preventDefault()}>
+        <form
+          className={styles.heroSearch}
+          onSubmit={(e) => {
+            e.preventDefault();
+            navigate(heroQ.trim() ? `/basirah?q=${encodeURIComponent(heroQ.trim())}` : "/basirah");
+          }}
+        >
           <Search size={16} />
-          <input placeholder="ماذا تريد أن تتعلم اليوم؟" />
+          <input
+            value={heroQ}
+            onChange={(e) => setHeroQ(e.target.value)}
+            placeholder="ماذا تريد أن تتعلم اليوم؟"
+            aria-label="البحث في بصيرة"
+          />
           <button className="btn-gold" type="submit">
             بحث
           </button>
@@ -163,30 +222,69 @@ export function HomePage() {
         ) : null}
       </section>
 
+      <section className={styles.section}>
+        <SectionHead title="حقائق السجل الموثق" en="Registry-derived facts" />
+        <div className={styles.facts}>
+          <div className={styles.fact}>
+            <strong>{facts.surahs || "—"}</strong>
+            <span>سورة قرآنية</span>
+          </div>
+          <div className={styles.fact}>
+            <strong>{facts.ayahs || "—"}</strong>
+            <span>آية عربية موثقة</span>
+          </div>
+          <div className={styles.fact}>
+            <strong>{facts.works}</strong>
+            <span>عملًا مسجلًا</span>
+          </div>
+          <div className={styles.fact}>
+            <strong>{facts.versions}</strong>
+            <span>نسخة رقمية فهرسية</span>
+          </div>
+          <div className={styles.fact}>
+            <strong>{facts.seerahChapters}</strong>
+            <span>فصول سيرة</span>
+          </div>
+          <div className={styles.fact}>
+            <strong>{facts.hadithSamples}</strong>
+            <span>سجلات حديث محلية</span>
+          </div>
+        </div>
+      </section>
+
       <section className={styles.bottomGrid}>
         <article className={styles.panel}>
-          <SectionHead title="متابعة القراءة" en="Continue Reading" href="/hadith" />
+          <SectionHead title="مواصلة محلية" en="Local continue signals" href="/seerah" />
           <div className={styles.continueRow}>
             <img src={art.bookStack} alt="" />
             <div className={styles.continueMeta}>
-              <div className={styles.continueActions}>
-                <button
-                  type="button"
-                  aria-label="حفظ"
-                  onClick={() => toggleFavorite({ id: "continue-riyad", title: "رياض الصالحين", path: "/hadith" })}
-                >
-                  <Bookmark size={14} fill={saved ? "currentColor" : "none"} />
-                </button>
-                <button type="button" aria-label="المزيد">
-                  <MoreHorizontal size={14} />
-                </button>
-              </div>
-              <strong>رياض الصالحين</strong>
-              <p>الإمام النووي</p>
-              <p className="muted">{lang === "ar" ? "موضع محفوظ على هذا الجهاز عند الربط" : "A local placeholder until production reading position is wired"}</p>
+              <strong>نشاطك على هذا الجهاز</strong>
+              <p>السيرة: {continueSignals.seerahRead} فصول مقروءة</p>
+              <p>القرآن: {continueSignals.quranMarks} علامات · الحديث: {continueSignals.hadithMarks} محفوظات</p>
+              <p className="muted">الأطفال: {continueSignals.kidsSeen} قصص فُتحت</p>
             </div>
           </div>
-          <Link href="/hadith" className={styles.followBtn}>
+          {recentFavorites.length > 0 ? (
+            <ul style={{ listStyle: "none", margin: "0.6rem 0 0", padding: 0, display: "flex", flexDirection: "column", gap: "0.3rem" }}>
+              {recentFavorites.map((fav) => (
+                <li key={fav.id} style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.8rem" }}>
+                  <button
+                    type="button"
+                    aria-label="إزالة"
+                    onClick={() => toggleFavorite({ id: fav.id, title: fav.title, path: fav.path })}
+                  >
+                    <Bookmark size={14} fill="currentColor" />
+                  </button>
+                  <Link href={fav.path}>{fav.title}</Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="muted" style={{ fontSize: "0.8rem" }}>
+              لا محفوظات بعد — احفظ من أي جناح لتظهر هنا.
+            </p>
+          )}
+          <Link href="/seerah" className={styles.followBtn}>
             متابعة ←
           </Link>
         </article>
@@ -195,18 +293,23 @@ export function HomePage() {
           <img src={art.mosque} alt="" />
           <div className={styles.inspireInner}>
             <SectionHead title="إلهام اليوم" en="Daily Inspiration" />
-            <p className={styles.hadithLabel}>حديث اليوم</p>
-            <blockquote>[نص الحديث من المصدر]</blockquote>
-            <p className="muted">[بيانات المصدر]</p>
+            <p className={styles.hadithLabel}>آية اليوم — تدوير يومي على المصحف الكامل</p>
+            {daily ? (
+              <>
+                <blockquote dir="rtl" lang="ar">{daily.arabic}</blockquote>
+                <p className="muted">
+                  سورة {daily.surahName} · الآية {daily.ayah}
+                </p>
+              </>
+            ) : (
+              <p className="muted">جارٍ تحميل آية اليوم من المصحف المحلي…</p>
+            )}
           </div>
         </article>
 
         <article className={styles.panel}>
           <div className={styles.quickHead}>
             <SectionHead title="وصول سريع" en="Quick Access" />
-            <button type="button" className={styles.gear} aria-label="تخصيص">
-              <Settings2 size={14} />
-            </button>
           </div>
           <div className={`${styles.quickGrid} stagger`}>
             {quick.map((q) => (

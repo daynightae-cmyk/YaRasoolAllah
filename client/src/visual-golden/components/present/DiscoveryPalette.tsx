@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "wouter";
 import { Search } from "lucide-react";
-import { discoveryWings, type WingPath } from "@/visual-golden/mock/discovery";
+import { filterWings, type WingPath } from "@/visual-golden/services/discovery";
 import styles from "./present.module.css";
 
 interface Props {
@@ -14,13 +14,7 @@ export function DiscoveryPalette({ open, onClose }: Props) {
   const [q, setQ] = useState("");
   const [i, setI] = useState(0);
 
-  const items = useMemo(() => {
-    const n = q.trim();
-    if (!n) return discoveryWings;
-    return discoveryWings.filter(
-      (w) => w.ar.includes(n) || w.en.toLowerCase().includes(n.toLowerCase()) || w.hint.includes(n),
-    );
-  }, [q]);
+  const items = useMemo(() => filterWings(q), [q]);
 
   useEffect(() => {
     setI(0);
