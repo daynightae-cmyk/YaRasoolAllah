@@ -1,0 +1,43 @@
+name: Provider Verification
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "scripts/verify-provider-endpoints.ts"
+      - "package.json"
+      - ".github/workflows/provider-verification.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-public-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify public provider contracts
+        run: npm run verify:providers -- --public-only --output artifacts/provider-verification/ci.json
+
+      - name: Upload verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: provider-verification
+          path: artifacts/provider-verification/ci.json
+          if-no-files-found: error
+          retention-days: 30
