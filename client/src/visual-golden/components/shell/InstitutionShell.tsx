@@ -18,6 +18,10 @@ export function InstitutionShell({children}:{children:ReactNode}){
  const theme=useInstitution(s=>s.theme); const lang=useInstitution(s=>s.lang); const hydrate=useInstitution(s=>s.hydrate); const recordVisit=useInstitution(s=>s.recordVisit);
  const closeSplash=useCallback(()=>{sessionStorage.setItem("yra-splash","1");setSplash(false);},[]);
  useEffect(()=>{hydrate();},[hydrate]); useEffect(()=>{if(shouldShowSplash())setSplash(true);},[]); useEffect(()=>{recordVisit(pathname,WING_LABEL[pathname]??pathname);},[pathname,recordVisit]);
+ useEffect(()=>{
+   document.documentElement.dataset.initialTheme=theme;
+   document.querySelector('meta[name="theme-color"]')?.setAttribute("content",theme==="light"?"#fffaf0":"#0b1f1a");
+ },[theme]);
  useEffect(()=>{const onKey=(e:KeyboardEvent)=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();setDiscover(v=>!v);}};window.addEventListener("keydown",onKey);return()=>window.removeEventListener("keydown",onKey);},[]);
  return <div className={`${styles.shell} vg-shell`} data-theme={theme} data-wing={wing} data-lang={lang} dir={lang==="ar"?"rtl":"ltr"}>
    {splash?<SplashCeremony onDone={closeSplash}/>:null}<Spotlight/><div className={styles.ambient} aria-hidden>{Array.from({length:18},(_,i)=><span key={i} style={{"--i":i} as CSSProperties}/>)}</div>

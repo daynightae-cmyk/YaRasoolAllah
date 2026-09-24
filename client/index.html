@@ -4,6 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#0b1f1a" />
+    <script>
+      document.documentElement.dataset.initialTheme = "dark";
+      try {
+        const saved = JSON.parse(localStorage.getItem("yra-visual-golden-v1") || "null");
+        if (saved && saved.theme === "light") {
+          document.documentElement.dataset.initialTheme = "light";
+          document.querySelector('meta[name="theme-color"]').content = "#fffaf0";
+        }
+      } catch { /* Use the dark default when saved preferences are unavailable. */ }
+    </script>
+    <style>
+      html, body, #root { min-height: 100%; }
+      html, html[data-initial-theme="dark"] body { background: #020c0c; color-scheme: dark; }
+      html[data-initial-theme="light"],
+      html[data-initial-theme="light"] body { background: #f8f5eb; color-scheme: light; }
+    </style>
     <meta
       name="description"
       content="منصة رقمية شاملة للسيرة النبوية العطرة، القرآن الكريم، الأذكار، والمواقيت والمعرفة الإسلامية."
