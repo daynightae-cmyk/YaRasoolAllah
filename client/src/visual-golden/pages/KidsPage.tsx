@@ -3,7 +3,7 @@ import { Puzzle, Palette, Lightbulb, Star, BookOpen, Users, FileText, ExternalLi
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import { ColoringStudio } from "@/visual-golden/components/unique/ColoringStudio";
 import { StoryTheatre } from "@/visual-golden/components/present/StoryTheatre";
-import { TvLounge } from "@/visual-golden/components/ceremony/TvLounge";
+import { KidsTVRoom } from "@/visual-golden/components/kids-tv/KidsTVRoom";
 import {
   KIDS_COUNTS,
   KIDS_STORIES,
@@ -24,14 +24,13 @@ function safeReadSeen(): string[] {
 }
 
 export function KidsPage() {
-  const [currentId, setCurrentId] = useState(KIDS_STORIES[0]?.adaptationId ?? "");
   const [theatre, setTheatre] = useState(false);
   const [coloring, setColoring] = useState(false);
   const [seen, setSeen] = useState<string[]>(() => safeReadSeen());
   const [colorSessions, setColorSessions] = useState(0);
   const [activeRoom, setActiveRoom] = useState<"stories" | "parents">("stories");
 
-  const current = KIDS_STORIES.find((story) => story.adaptationId === currentId) ?? KIDS_STORIES[0];
+  const current = KIDS_STORIES[0];
 
   const markSeen = (adaptationId: string) => {
     setSeen((prev) => {
@@ -86,7 +85,7 @@ export function KidsPage() {
         <div className={styles.gardenIntro}>
           <span className={styles.gardenMark}><Leaf size={18} aria-hidden="true" /> واحة الأطفال</span>
           <h2>كل حكاية تفتح بابًا للخير</h2>
-          <p>اقرأوا قصصنا التعليمية معًا، واكتشفوا مصادر الرسوم المتحركة من صفحات ناشريها.</p>
+          <p>شاهدوا الحلقات التعليمية داخل مسرح النور، ثم انتقلوا للقصص والأنشطة ومعلومات المصادر عند الحاجة.</p>
         </div>
         <div className={styles.gardenPaths} aria-label="مسارات التعلم">
           <span><Heart size={17} aria-hidden="true" /> سيرة النبي ﷺ</span>
@@ -96,7 +95,7 @@ export function KidsPage() {
         </div>
         <div className={styles.roomTabs} role="group" aria-label="اختر قسم الأطفال">
           <button type="button" className={activeRoom === "stories" ? styles.roomActive : styles.roomTab}
-            aria-pressed={activeRoom === "stories"} onClick={() => setActiveRoom("stories")}>اقرأ قصة</button>
+            aria-pressed={activeRoom === "stories"} onClick={() => setActiveRoom("stories")}>مسرح النور</button>
           <button type="button" className={activeRoom === "parents" ? styles.roomActive : styles.roomTab}
             aria-pressed={activeRoom === "parents"} onClick={() => setActiveRoom("parents")}>دليل الوالدين للرسوم</button>
         </div>
@@ -127,30 +126,8 @@ export function KidsPage() {
           </div>
         </section>
       ) : (
-      <TvLounge
-        stories={KIDS_STORIES.map((story) => ({
-          title: story.titleAr,
-          en: `${ageBandLabel(story.ageBand)} · تكييف تعليمي`,
-          age: ageBandLabel(story.ageBand),
-          img: story.img,
-          summary: story.summaryAr,
-        }))}
-        current={{
-          title: current.titleAr,
-          en: `${ageBandLabel(current.ageBand)} · تكييف تعليمي`,
-          age: ageBandLabel(current.ageBand),
-          img: current.img,
-          summary: current.summaryAr,
-        }}
-        playing={false}
-        onSelect={(s) => {
-          const story = KIDS_STORIES.find((item) => item.titleAr === s.title);
-          if (story) {
-            setCurrentId(story.adaptationId);
-            markSeen(story.adaptationId);
-          }
-        }}
-        onPlay={() => {
+      <KidsTVRoom
+        onReadStory={() => {
           markSeen(current.adaptationId);
           setTheatre(true);
         }}
