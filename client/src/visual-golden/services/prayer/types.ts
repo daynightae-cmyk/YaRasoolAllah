@@ -49,7 +49,8 @@ export interface PrayerTimesResult {
   timezone: string;
   utcOffset: string;
   timings: PrayerTimings;
-  tomorrowFajr: string;
+  /** Real next-day Fajr from the provider. Null means the second request failed; never synthesize it from today's Fajr. */
+  tomorrowFajr: string | null;
   date: PrayerDateInfo;
   meta: {
     provider: "aladhan";
