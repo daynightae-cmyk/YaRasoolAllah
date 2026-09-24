@@ -28,19 +28,35 @@
   color: var(--ivory-200);
   background: rgba(4, 28, 24, 0.5);
 }
+.disabledTab {
+  opacity: 0.46;
+  cursor: not-allowed;
+}
 .tabOn {
   background: linear-gradient(135deg, rgba(232, 197, 71, 0.28), rgba(6, 95, 70, 0.5)) !important;
   color: var(--gold-300) !important;
+}
+.searchWrap {
+  position: relative;
+  display: block;
+  margin-bottom: 0.55rem;
+}
+.searchWrap > svg {
+  position: absolute;
+  top: 50%;
+  right: 0.7rem;
+  transform: translateY(-50%);
+  color: var(--gold-500);
+  pointer-events: none;
 }
 .search {
   width: 100%;
   background: rgba(4, 22, 20, 0.7);
   border: 1px solid rgba(212, 160, 23, 0.28);
   border-radius: 10px;
-  padding: 0.45rem 0.7rem;
+  padding: 0.45rem 2rem 0.45rem 0.7rem;
   color: var(--ivory-50);
   font-family: var(--font-ui);
-  margin-bottom: 0.55rem;
 }
 .surahNav ul {
   list-style: none;
@@ -50,17 +66,24 @@
   overflow: auto;
 }
 .surahNav li {
-  display: grid;
-  grid-template-columns: 28px 1fr auto;
-  gap: 0.5rem;
-  align-items: center;
-  padding: 0.45rem 0.4rem;
+  padding: 0;
   border-radius: 10px;
-  cursor: pointer;
 }
 .surahNav li:hover,
 .active {
   background: rgba(232, 197, 71, 0.12);
+}
+.surahButton {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.45rem 0.4rem;
+  border-radius: 10px;
+  text-align: right;
+  color: inherit;
+  background: transparent;
 }
 .num {
   width: 26px;
@@ -141,6 +164,10 @@
 .sheetNav:last-of-type {
   left: 8px;
 }
+.sheetNav:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
 .ayat {
   font-family: var(--font-display);
   font-size: clamp(1.25rem, 2.2vw, 1.7rem);
@@ -150,7 +177,13 @@
 .ayah {
   display: inline;
   margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
   cursor: pointer;
+  font: inherit;
+  line-height: inherit;
 }
 .ayahOn {
   background: linear-gradient(180deg, rgba(232, 197, 71, 0.22), transparent);
@@ -194,6 +227,22 @@
 .player span {
   font-size: 0.75rem;
   color: var(--text-muted);
+}
+.playerCopy {
+  min-width: 0;
+  flex: 1;
+}
+.audioLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid rgba(212, 160, 23, 0.34);
+  border-radius: 10px;
+  padding: 0.48rem 0.65rem;
+  color: var(--gold-300);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  background: rgba(4, 28, 24, 0.5);
 }
 .play {
   width: 40px;
@@ -323,5 +372,150 @@
   }
   .sheet {
     padding: 1.1rem 1.3rem;
+  }
+}
+
+
+.loadingState,
+.errorState {
+  display: block;
+  margin: 4rem auto;
+  max-width: 32rem;
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  line-height: 1.8;
+  text-align: center;
+}
+.errorState {
+  color: #8b2f24;
+}
+
+.bookmarkList {
+  display: grid;
+  gap: 0.4rem;
+  max-height: 520px;
+  overflow: auto;
+}
+.bookmarkList button {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: 100%;
+  padding: 0.55rem 0.6rem;
+  border-radius: 10px;
+  border: 1px solid rgba(212, 160, 23, 0.2);
+  background: rgba(4, 28, 24, 0.45);
+  color: var(--ivory-100);
+  text-align: right;
+  font-size: 0.76rem;
+}
+.emptyState {
+  margin: 0.5rem 0;
+  padding: 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  line-height: 1.7;
+  background: rgba(4, 22, 20, 0.35);
+  border-radius: 10px;
+}
+
+.selectedVerseMeta {
+  display: grid;
+  gap: 0.15rem;
+  margin-bottom: 0.85rem;
+  padding: 0.6rem;
+  border-radius: 10px;
+  border: 1px solid rgba(212, 160, 23, 0.2);
+  background: rgba(4, 22, 20, 0.42);
+}
+.selectedVerseMeta strong {
+  color: var(--ivory-50);
+  font-size: 0.85rem;
+}
+.selectedVerseMeta span {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+}
+
+.noteBox,
+.unavailableBox,
+.sourceBox {
+  margin-bottom: 0.9rem;
+  padding: 0.65rem;
+  border-radius: 10px;
+  border: 1px solid rgba(212, 160, 23, 0.22);
+  background: rgba(4, 22, 20, 0.44);
+}
+.noteBox label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--gold-300);
+  font-size: 0.76rem;
+}
+.noteBox textarea {
+  width: 100%;
+  min-height: 92px;
+  resize: vertical;
+  padding: 0.55rem;
+  border-radius: 8px;
+  border: 1px solid rgba(212, 160, 23, 0.25);
+  background: rgba(2, 17, 15, 0.65);
+  color: var(--ivory-50);
+  font-family: var(--font-ui);
+  line-height: 1.7;
+}
+.noteBox small,
+.sourceBox small {
+  display: block;
+  margin-top: 0.45rem;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  line-height: 1.65;
+}
+.unavailableBox p {
+  margin: 0 0 0.5rem;
+  color: var(--ivory-200);
+  font-size: 0.78rem;
+  line-height: 1.7;
+}
+.unavailableBox a {
+  color: var(--gold-300);
+  font-size: 0.76rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.sourceBox {
+  display: grid;
+  gap: 0.38rem;
+}
+.sourceBox > div {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--gold-300);
+}
+.sourceBox span {
+  color: var(--ivory-200);
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .workspace {
+    padding-inline: 0.7rem;
+  }
+  .sheet {
+    padding-inline: 2.25rem;
+  }
+  .player {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .audioLink {
+    width: 100%;
+    justify-content: center;
+  }
+  .progress {
+    gap: 0.55rem 0.85rem;
   }
 }
