@@ -1,4 +1,4 @@
-import {
+      integrationMode: "DOWNLOAD_ALLOWED",\n      integrationMode: "DIRECT_API",\n      integrationMode: "DIRECT_API",\n      integrationMode: "METADATA_ONLY",\n      integrationMode: "METADATA_ONLY",\n      integrationMode: "UNKNOWN_USAGE",\n      integrationMode: "CACHE_ALLOWED",\nimport {
   providerResourceEntrySchema,
   rightsLedgerEntrySchema,
   sourceRegistryEntrySchema,
