@@ -14,6 +14,7 @@ import {
   StickyNote,
   Route,
   Search,
+  Archive,
 } from "lucide-react";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { t } from "@/visual-golden/lib/i18n";
@@ -31,6 +32,7 @@ const navItems = [
   { to: "/daily", icon: Moon, label: "مرصد الصلاة", en: "Prayer Observatory" },
   { to: "/audio", icon: Headphones, label: "التلاوات الصوتية", en: "Qur'an Audio" },
   { to: "/basirah", icon: Search, label: "بصيرة", en: "Basirah" },
+  { to: "/sources", icon: Archive, label: "خزانة المصادر", en: "Sources Vault" },
 ] as const;
 
 interface Props {
