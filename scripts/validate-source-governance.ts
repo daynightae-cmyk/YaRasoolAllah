@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { mayPublishKidsMedia, PARENT_DISCOVERY_SOURCES } from "../shared/kids-media-governance";
 import {
   evaluateResourceUsage,
   providerResourceEntrySchema,
@@ -167,7 +169,29 @@ if (!evaluateResourceUsage(tanzilResource, tanzilRights, "full_text", "productio
   throw new Error("Cleared Tanzil artifact must expose full text in production");
 }
 
+const kidsCandidates = JSON.parse(
+  readFileSync(new URL("../docs/content/kids-animation-candidates.json", import.meta.url), "utf8"),
+) as { items: Array<{ id: string; canonicalUrl: string; reviewStatus: string; rightsStatus: string; depictionStatus: string }> };
+assertUnique(kidsCandidates.items.map((item) => item.id), "kids_media_candidates");
+assertUnique(PARENT_DISCOVERY_SOURCES.map((item) => item.id), "parent_discovery_sources");
+for (const candidate of kidsCandidates.items) {
+  if (candidate.reviewStatus !== "pending" || candidate.rightsStatus !== "unknown" || candidate.depictionStatus !== "unknown") {
+    throw new Error(`${candidate.id} requires explicit reviews before publication`);
+  }
+  if (!new URL(candidate.canonicalUrl).hostname) throw new Error(`${candidate.id} needs a canonical URL`);
+}
+for (const source of PARENT_DISCOVERY_SOURCES) {
+  if (!new URL(source.url).hostname) throw new Error(`${source.id} needs a publisher page`);
+}
+if (mayPublishKidsMedia({
+  id: "unreviewed", canonicalUrl: "https://example.org/video", publisherVerified: true,
+  rightsMode: "official_embed", contentReview: "approved", depictionReview: "approved",
+  ageReview: "approved", rightsReview: "approved", reviewEvidenceUrl: null,
+  reviewerId: null, reviewedAt: null, revokedAt: null, embeddable: false,
+})) {
+  throw new Error("Missing review evidence or embed permission must block children's media");
+}
+
 console.log(
   `Source governance PASS: ${sourceRegistry.length} sources, ${rightsLedger.length} rights records, ${providerResourceRegistry.length} provider resources, ${workRegistry.length} works, ${digitalVersionRegistry.length} digital versions, ${providerPolicyRegistry.length} provider policies, ${childrenAdaptationRegistry.length} children adaptations, ${HADITH_DEVELOPMENT_SAMPLES.length} review-pending hadith samples, ${mediaAssetRegistry.length} cleared media assets.`,
 );
-

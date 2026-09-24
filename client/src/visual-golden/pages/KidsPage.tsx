@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Puzzle, Palette, Lightbulb, Star, BookOpen, Users, FileText } from "lucide-react";
+import { Puzzle, Palette, Lightbulb, Star, BookOpen, Users, FileText, ExternalLink, Film, Heart, Leaf } from "lucide-react";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import { ColoringStudio } from "@/visual-golden/components/unique/ColoringStudio";
 import { StoryTheatre } from "@/visual-golden/components/present/StoryTheatre";
@@ -10,6 +10,7 @@ import {
   ageBandLabel,
 } from "@/visual-golden/services/kids";
 import styles from "./KidsPage.module.css";
+import { PARENT_DISCOVERY_SOURCES } from "@shared/kids-media-governance";
 
 const SEEN_KEY = "kids-seen-adaptations-v1";
 
@@ -28,6 +29,7 @@ export function KidsPage() {
   const [coloring, setColoring] = useState(false);
   const [seen, setSeen] = useState<string[]>(() => safeReadSeen());
   const [colorSessions, setColorSessions] = useState(0);
+  const [activeRoom, setActiveRoom] = useState<"stories" | "parents">("stories");
 
   const current = KIDS_STORIES.find((story) => story.adaptationId === currentId) ?? KIDS_STORIES[0];
 
@@ -80,6 +82,51 @@ export function KidsPage() {
 
   return (
     <div className={styles.page}>
+      <section className={styles.garden} aria-label="مسارات واحة الأطفال">
+        <div className={styles.gardenIntro}>
+          <span className={styles.gardenMark}><Leaf size={18} aria-hidden="true" /> واحة الأطفال</span>
+          <h2>كل حكاية تفتح بابًا للخير</h2>
+          <p>اقرأوا قصصنا التعليمية معًا، واكتشفوا مصادر الرسوم المتحركة من صفحات ناشريها.</p>
+        </div>
+        <div className={styles.gardenPaths} aria-label="مسارات التعلم">
+          <span><Heart size={17} aria-hidden="true" /> سيرة النبي ﷺ</span>
+          <span><Leaf size={17} aria-hidden="true" /> الأخلاق والآداب</span>
+          <span><BookOpen size={17} aria-hidden="true" /> القرآن الكريم</span>
+          <span><Star size={17} aria-hidden="true" /> قصص الأنبياء</span>
+        </div>
+        <div className={styles.roomTabs} role="group" aria-label="اختر قسم الأطفال">
+          <button type="button" className={activeRoom === "stories" ? styles.roomActive : styles.roomTab}
+            aria-pressed={activeRoom === "stories"} onClick={() => setActiveRoom("stories")}>اقرأ قصة</button>
+          <button type="button" className={activeRoom === "parents" ? styles.roomActive : styles.roomTab}
+            aria-pressed={activeRoom === "parents"} onClick={() => setActiveRoom("parents")}>دليل الوالدين للرسوم</button>
+        </div>
+      </section>
+      {activeRoom === "parents" ? (
+        <section className={styles.parentSources} aria-labelledby="parent-sources-title">
+          <div className={styles.sourcesHead}>
+            <div>
+              <p className={styles.sourcesEyebrow}><Film size={18} aria-hidden="true" /> اكتشف مع طفلك</p>
+              <h2 id="parent-sources-title">مصادر الرسوم من الناشرين</h2>
+              <p>روابط استكشاف للأهل، وليست حلقات معتمدة أو مشغّل فيديو داخل المنصة. راجعوا كل حلقة قبل تشغيلها.</p>
+            </div>
+            <span className={styles.mediaState}>الوسائط المعتمدة هنا الآن: {KIDS_COUNTS.clearedMedia}</span>
+          </div>
+          <div className={styles.sourceGrid}>
+            {PARENT_DISCOVERY_SOURCES.map((source, index) => (
+              <article key={source.id} className={styles.sourceCard}>
+                <span className={styles.sourceNumber} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                <span className={styles.sourceTopic}>{source.topic} · {source.language}</span>
+                <h3>{source.title}</h3>
+                <p>{source.note}</p>
+                <a href={source.url} target="_blank" rel="noopener noreferrer"
+                  aria-label={`فتح صفحة الناشر: ${source.title} (موقع خارجي)`}>
+                  افتح صفحة الناشر <ExternalLink size={16} aria-hidden="true" />
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : (
       <TvLounge
         stories={KIDS_STORIES.map((story) => ({
           title: story.titleAr,
@@ -108,6 +155,7 @@ export function KidsPage() {
           setTheatre(true);
         }}
       />
+      )}
 
       <div className={styles.row}>
         <section className={styles.panel}>
