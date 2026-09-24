@@ -1,0 +1,482 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { BookOpen, Info, Radio, Tv } from "lucide-react";
+import { KIDS_VIDEO_CATALOG, buildKidsVideoRows } from "@/visual-golden/services/kids-media/catalog";
+import { getContinueWatchingIds, readKidsProgress, writeKidsProgress } from "@/visual-golden/services/kids-media/progress";
+import type {
+  KidsPlayerHandle,
+  KidsPlayerState,
+  KidsTVState,
+  KidsVideo,
+} from "@/visual-golden/services/kids-media/types";
+import { KidsCurtains } from "./KidsCurtains";
+import { KidsRemote, type KidsRemoteCommand } from "./KidsRemote";
+import { KidsVideoRow } from "./KidsVideoRow";
+import { YouTubePlayer } from "./providers/YouTubePlayer";
+import styles from "./KidsTVRoom.module.css";
+
+type Props = {
+  videos?: KidsVideo[];
+  onReadStory?: () => void;
+};
+
+export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) {
+  const playable = useMemo(() => videos.filter((video) => video.embeddable), [videos]);
+  const [currentId, setCurrentId] = useState(playable[0]?.id ?? "");
+  const current = playable.find((video) => video.id === currentId) ?? playable[0];
+  const [tvState, setTvState] = useState<KidsTVState>("idle");
+  const [playerState, setPlayerState] = useState<KidsPlayerState>("idle");
+  const [volume, setVolume] = useState(72);
+  const [muted, setMuted] = useState(false);
+  const [captions, setCaptions] = useState(true);
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
+  const [mobileRemote, setMobileRemote] = useState(false);
+  const [progressRevision, setProgressRevision] = useState(0);
+  const [friendlyError, setFriendlyError] = useState("");
+
+  const playerRef = useRef<KidsPlayerHandle>(null);
+  const screenRef = useRef<HTMLDivElement>(null);
+  const currentRef = useRef<KidsVideo | undefined>(current);
+  const playerReadyRef = useRef(false);
+  const pendingPlayRef = useRef(false);
+  const hasStartedRef = useRef(false);
+  const failedIdsRef = useRef(new Set<string>());
+  const transitionTimerRef = useRef<number | null>(null);
+  const followupTimerRef = useRef<number | null>(null);
+  const resumeAppliedRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    currentRef.current = current;
+  }, [current]);
+
+  const clearTimers = useCallback(() => {
+    if (transitionTimerRef.current !== null) window.clearTimeout(transitionTimerRef.current);
+    if (followupTimerRef.current !== null) window.clearTimeout(followupTimerRef.current);
+    transitionTimerRef.current = null;
+    followupTimerRef.current = null;
+  }, []);
+
+  useEffect(() => clearTimers, [clearTimers]);
+
+  const persistProgress = useCallback((completed = false) => {
+    const video = currentRef.current;
+    const player = playerRef.current;
+    if (!video || !player) return;
+
+    const currentTime = Math.max(0, player.getCurrentTime());
+    const duration = Math.max(0, player.getDuration());
+    if (!duration && !currentTime) return;
+
+    writeKidsProgress({
+      videoId: video.id,
+      currentTime,
+      duration,
+      completed: completed || (duration > 0 && currentTime / duration >= 0.92),
+      lastWatchedAt: new Date().toISOString(),
+    });
+    setProgressRevision((value) => value + 1);
+  }, []);
+
+  const switchTo = useCallback((video: KidsVideo, autoplay: boolean) => {
+    clearTimers();
+    setAutoplayBlocked(false);
+    setFriendlyError("");
+    resumeAppliedRef.current = null;
+
+    if (!hasStartedRef.current || !autoplay) {
+      setCurrentId(video.id);
+      currentRef.current = video;
+      setTvState("selected");
+      playerRef.current?.load(video.providerVideoId, false);
+      return;
+    }
+
+    persistProgress(false);
+    playerRef.current?.pause();
+    setTvState("curtain-closing");
+
+    transitionTimerRef.current = window.setTimeout(() => {
+      setCurrentId(video.id);
+      currentRef.current = video;
+      setTvState("loading");
+      if (playerReadyRef.current) {
+        playerRef.current?.load(video.providerVideoId, true);
+      } else {
+        pendingPlayRef.current = true;
+      }
+    }, 300);
+  }, [clearTimers, persistProgress]);
+
+  const changeBy = useCallback((direction: 1 | -1, autoplay = hasStartedRef.current) => {
+    const active = currentRef.current;
+    if (!active || playable.length < 2) return;
+
+    const index = Math.max(0, playable.findIndex((video) => video.id === active.id));
+    for (let step = 1; step <= playable.length; step += 1) {
+      const candidate = playable[(index + direction * step + playable.length) % playable.length];
+      if (!failedIdsRef.current.has(candidate.id)) {
+        switchTo(candidate, autoplay);
+        return;
+      }
+    }
+  }, [playable, switchTo]);
+
+  const openAndPlay = useCallback(() => {
+    const video = currentRef.current;
+    if (!video) return;
+    hasStartedRef.current = true;
+    setFriendlyError("");
+    setAutoplayBlocked(false);
+    setTvState("curtain-opening");
+
+    if (playerReadyRef.current) {
+      playerRef.current?.load(video.providerVideoId, true);
+    } else {
+      pendingPlayRef.current = true;
+    }
+  }, []);
+
+  const handlePlayerState = useCallback((next: KidsPlayerState) => {
+    setPlayerState(next);
+
+    if (next === "ready") {
+      playerReadyRef.current = true;
+      if (pendingPlayRef.current && currentRef.current) {
+        pendingPlayRef.current = false;
+        playerRef.current?.load(currentRef.current.providerVideoId, true);
+      }
+      return;
+    }
+
+    if (next === "playing") {
+      const video = currentRef.current;
+      if (video && resumeAppliedRef.current !== video.id) {
+        const saved = readKidsProgress()[video.id];
+        if (saved && !saved.completed && saved.currentTime > 5) {
+          const now = playerRef.current?.getCurrentTime() ?? 0;
+          playerRef.current?.seekBy(Math.max(0, saved.currentTime - now));
+        }
+        resumeAppliedRef.current = video.id;
+      }
+
+      clearTimers();
+      setTvState("curtain-opening");
+      transitionTimerRef.current = window.setTimeout(() => setTvState("playing"), 720);
+      return;
+    }
+
+    if (next === "paused") {
+      persistProgress(false);
+      setTvState((state) => state === "curtain-closing" ? state : "paused");
+      return;
+    }
+
+    if (next === "buffering") {
+      setTvState((state) => state === "curtain-closing" ? state : "loading");
+      return;
+    }
+
+    if (next === "ended") {
+      persistProgress(true);
+      setTvState("ended");
+      followupTimerRef.current = window.setTimeout(() => changeBy(1, true), 900);
+    }
+  }, [changeBy, clearTimers, persistProgress]);
+
+  const handlePlayerError = useCallback((code?: number) => {
+    const video = currentRef.current;
+    if (video) failedIdsRef.current.add(video.id);
+    clearTimers();
+    setPlayerState("error");
+    setTvState("error");
+    setFriendlyError("هذه الحلقة غير متاحة الآن");
+    console.warn("[kids-tv] provider playback error", { videoId: video?.id, code });
+
+    followupTimerRef.current = window.setTimeout(() => {
+      changeBy(1, true);
+    }, 1200);
+  }, [changeBy, clearTimers]);
+
+  const handleAutoplayBlocked = useCallback(() => {
+    setAutoplayBlocked(true);
+    setTvState("paused");
+  }, []);
+
+  useEffect(() => {
+    if (playerState !== "playing") return;
+    const timer = window.setInterval(() => persistProgress(false), 5000);
+    return () => window.clearInterval(timer);
+  }, [persistProgress, playerState]);
+
+  const toggleFullscreen = useCallback(async () => {
+    if (!screenRef.current) return;
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen();
+      else await screenRef.current.requestFullscreen();
+    } catch (error) {
+      console.warn("[kids-tv] fullscreen unavailable", error);
+    }
+  }, []);
+
+  const closePlayback = useCallback(() => {
+    clearTimers();
+    persistProgress(false);
+    playerRef.current?.pause();
+    setTvState("curtain-closing");
+    transitionTimerRef.current = window.setTimeout(() => setTvState("selected"), 320);
+  }, [clearTimers, persistProgress]);
+
+  const handleCommand = useCallback((command: KidsRemoteCommand) => {
+    switch (command) {
+      case "power":
+        if (hasStartedRef.current && ["playing", "paused", "loading", "curtain-opening"].includes(tvState)) closePlayback();
+        else openAndPlay();
+        break;
+      case "ok":
+        openAndPlay();
+        break;
+      case "play-pause":
+        if (!hasStartedRef.current || tvState === "selected" || tvState === "idle" || tvState === "error") {
+          openAndPlay();
+        } else if (playerState === "playing") {
+          playerRef.current?.pause();
+        } else {
+          playerRef.current?.play();
+        }
+        break;
+      case "previous":
+      case "channel-down":
+        changeBy(-1, true);
+        break;
+      case "next":
+      case "channel-up":
+        changeBy(1, true);
+        break;
+      case "left":
+        playerRef.current?.seekBy(-10);
+        break;
+      case "right":
+        playerRef.current?.seekBy(10);
+        break;
+      case "up":
+      case "volume-up": {
+        const next = Math.min(100, volume + 10);
+        setVolume(next);
+        setMuted(false);
+        playerRef.current?.unmute();
+        playerRef.current?.setVolume(next);
+        break;
+      }
+      case "down":
+      case "volume-down": {
+        const next = Math.max(0, volume - 10);
+        setVolume(next);
+        playerRef.current?.setVolume(next);
+        break;
+      }
+      case "mute":
+        setMuted((wasMuted) => {
+          if (wasMuted) playerRef.current?.unmute();
+          else playerRef.current?.mute();
+          return !wasMuted;
+        });
+        break;
+      case "captions":
+        setCaptions((enabled) => {
+          playerRef.current?.toggleCaptions(!enabled);
+          return !enabled;
+        });
+        break;
+      case "fullscreen":
+        void toggleFullscreen();
+        break;
+      case "back":
+        if (document.fullscreenElement) void document.exitFullscreen();
+        else closePlayback();
+        break;
+      case "home":
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        break;
+    }
+  }, [changeBy, closePlayback, openAndPlay, playerState, toggleFullscreen, tvState, volume]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      if (target?.matches("input, textarea, select")) return;
+      if (target?.closest("[data-video-card]") && ["ArrowLeft", "ArrowRight", "Enter", " "].includes(event.key)) return;
+      if (target?.closest("button, a") && ["Enter", " "].includes(event.key)) return;
+
+      const keyMap: Record<string, KidsRemoteCommand> = {
+        ArrowUp: "up",
+        ArrowDown: "down",
+        ArrowLeft: "left",
+        ArrowRight: "right",
+        Enter: "ok",
+        " ": "play-pause",
+        Escape: "back",
+      };
+
+      const command = keyMap[event.key];
+      if (!command) return;
+      event.preventDefault();
+      handleCommand(command);
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [handleCommand]);
+
+  const baseRows = useMemo(() => buildKidsVideoRows(playable), [playable]);
+  const continueWatching = useMemo(() => {
+    const ids = getContinueWatchingIds();
+    return ids
+      .map((id) => playable.find((video) => video.id === id))
+      .filter((video): video is KidsVideo => Boolean(video));
+  }, [playable, progressRevision]);
+
+  if (!current) {
+    return (
+      <section className={styles.room}>
+        <p className={styles.empty}>لا توجد حلقات قابلة للتشغيل في الفهرس الحالي.</p>
+      </section>
+    );
+  }
+
+  const curtainsOpen = ["curtain-opening", "playing", "paused", "loading", "ended"].includes(tvState);
+  const isPlaying = playerState === "playing";
+
+  return (
+    <section className={styles.room} aria-labelledby="kids-tv-title">
+      <div className={styles.ambient} aria-hidden="true" />
+      <header className={styles.roomIntro}>
+        <p><Radio size={16} aria-hidden="true" /> واحة الأطفال</p>
+        <h2 id="kids-tv-title">مسرح النور</h2>
+        <span>اختر الحلقة، اضغط OK، والستارة تفتح على المشاهدة داخل التلفزيون نفسه.</span>
+      </header>
+
+      <div className={styles.stage}>
+        <div className={styles.tvColumn}>
+          <div className={styles.cabinet}>
+            <div className={styles.bezel}>
+              <div className={styles.screen} ref={screenRef}>
+                <YouTubePlayer
+                  ref={playerRef}
+                  videoId={playable[0].providerVideoId}
+                  title={current.titleAr}
+                  onStateChange={handlePlayerState}
+                  onError={handlePlayerError}
+                  onAutoplayBlocked={handleAutoplayBlocked}
+                />
+
+                {!hasStartedRef.current || tvState === "selected" || tvState === "idle" ? (
+                  <button type="button" className={styles.posterButton} onClick={openAndPlay} aria-label={"تشغيل " + current.titleAr}>
+                    <img src={current.thumbnailUrl} alt="" />
+                    <span className={styles.posterShade} />
+                    <span className={styles.posterPlay}>▶</span>
+                  </button>
+                ) : null}
+
+                <KidsCurtains open={curtainsOpen} />
+
+                <div className={styles.screenHud} data-visible={tvState !== "playing"}>
+                  <span>{current.series ?? current.publisherName}</span>
+                  <strong>{current.titleAr}</strong>
+                  <small>{playerState === "buffering" ? "جارٍ تجهيز الحلقة…" : current.titleOriginal}</small>
+                </div>
+
+                {autoplayBlocked ? (
+                  <button type="button" className={styles.blockedPlay} onClick={() => playerRef.current?.play()}>
+                    اضغط OK للتشغيل
+                  </button>
+                ) : null}
+
+                {friendlyError ? (
+                  <div className={styles.errorState} role="status">
+                    <strong>{friendlyError}</strong>
+                    <span>سننتقل للحلقة التالية تلقائيًا.</span>
+                  </div>
+                ) : null}
+              </div>
+            </div>
+            <div className={styles.tvBar}>
+              <span className={styles.led} data-on={isPlaying} />
+              <span>NOOR KIDS TV</span>
+              <Tv size={15} aria-hidden="true" />
+            </div>
+            <div className={styles.stand} />
+          </div>
+
+          <KidsRemote
+            compact
+            playing={isPlaying}
+            muted={muted}
+            captions={captions}
+            onCommand={handleCommand}
+          />
+
+          <div className={styles.nowPlaying}>
+            <div>
+              <span>يعرض الآن</span>
+              <h3>{current.titleAr}</h3>
+              <p>{current.description}</p>
+            </div>
+            <div className={styles.infoActions}>
+              {onReadStory ? (
+                <button type="button" onClick={onReadStory}><BookOpen size={16} /> اقرأ قصة</button>
+              ) : null}
+              <a href={current.sourceUrl} target="_blank" rel="noopener noreferrer">
+                <Info size={16} /> معلومات المصدر
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <KidsRemote
+          playing={isPlaying}
+          muted={muted}
+          captions={captions}
+          onCommand={handleCommand}
+        />
+      </div>
+
+      <button type="button" className={styles.mobileRemoteButton} onClick={() => setMobileRemote(true)}>
+        🎛 الريموت
+      </button>
+
+      {mobileRemote ? (
+        <div className={styles.remoteSheetBackdrop} role="presentation" onClick={() => setMobileRemote(false)}>
+          <div className={styles.remoteSheet} role="dialog" aria-label="ريموت مسرح النور" onClick={(event) => event.stopPropagation()}>
+            <button type="button" className={styles.sheetClose} onClick={() => setMobileRemote(false)}>إغلاق</button>
+            <KidsRemote
+              playing={isPlaying}
+              muted={muted}
+              captions={captions}
+              onCommand={handleCommand}
+            />
+          </div>
+        </div>
+      ) : null}
+
+      <div className={styles.library}>
+        {continueWatching.length ? (
+          <KidsVideoRow
+            title="استمر في المشاهدة"
+            videos={continueWatching}
+            selectedId={current.id}
+            onSelect={(video) => switchTo(video, false)}
+          />
+        ) : null}
+
+        {baseRows.map((row) => (
+          <KidsVideoRow
+            key={row.id}
+            title={row.title}
+            videos={row.videos}
+            selectedId={current.id}
+            onSelect={(video) => switchTo(video, false)}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
