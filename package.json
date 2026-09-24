@@ -15,7 +15,8 @@
     "validate:kids-youtube": "tsx scripts/acquire/youtube-kids-sync.ts --validate-registry",
     "sync:kids-youtube": "tsx scripts/acquire/youtube-kids-sync.ts",
     "promote:kids-media": "tsx scripts/acquire/promote-kids-media.ts",
-    "verify:providers": "tsx scripts/verify-provider-endpoints.ts"
+    "verify:providers": "tsx scripts/verify-provider-endpoints.ts",
+    "validate:iiif": "tsx scripts/validate-iiif-normalizer.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
