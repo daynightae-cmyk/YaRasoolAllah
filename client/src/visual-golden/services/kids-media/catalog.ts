@@ -1,9 +1,10 @@
+import { APPROVED_YOUTUBE_KIDS_VIDEOS } from "@/visual-golden/data/kids-youtube-approved.generated";
 import type { KidsVideo, KidsVideoTopic } from "./types";
 
 const ytThumb = (id: string) => "https://i.ytimg.com/vi/" + id + "/hqdefault.jpg";
 const ytUrl = (id: string) => "https://www.youtube.com/watch?v=" + id;
 
-export const KIDS_VIDEO_CATALOG: KidsVideo[] = [
+const CURATED_SEED_VIDEOS: KidsVideo[] = [
   {
     id: "one4kids-be-like-muhammad-01",
     provider: "youtube",
@@ -67,6 +68,11 @@ export const KIDS_VIDEO_CATALOG: KidsVideo[] = [
     publishedAt: "2026-07-11",
     tags: ["بر الوالدين", "الاحترام", "الأسرة"],
   },
+];
+
+export const KIDS_VIDEO_CATALOG: KidsVideo[] = [
+  ...CURATED_SEED_VIDEOS,
+  ...APPROVED_YOUTUBE_KIDS_VIDEOS,
 ];
 
 export const KIDS_TOPIC_LABELS: Record<KidsVideoTopic, string> = {

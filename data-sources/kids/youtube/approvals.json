@@ -1,0 +1,5 @@
+{
+  "schemaVersion": 1,
+  "policy": "Manual item-level approval required before runtime promotion.",
+  "approvals": []
+}
