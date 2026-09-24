@@ -53,6 +53,18 @@ export const acquisitionStatusSchema = z.enum([
   "rejected",
 ]);
 
+export const integrationModeSchema = z.enum([
+  "DIRECT_API",
+  "OFFICIAL_EMBED",
+  "EXTERNAL_LINK",
+  "METADATA_ONLY",
+  "CACHE_ALLOWED",
+  "DOWNLOAD_ALLOWED",
+  "REHOST_ALLOWED",
+  "ITEM_LEVEL_REVIEW",
+  "UNKNOWN_USAGE",
+]);
+
 export const sourceRegistryEntrySchema = z.object({
   sourceId: z.string().min(1),
   title: z.string().min(1),
@@ -92,6 +104,7 @@ export const providerResourceEntrySchema = z.object({
   rightsId: z.string().min(1),
   provider: z.string().min(1),
   resourceType: z.enum(["file", "api", "catalog", "local_sample"]),
+  integrationMode: integrationModeSchema,
   endpoint: z.string().url().nullable(),
   acquisitionStatus: acquisitionStatusSchema,
   credentialsRequired: z.boolean(),
@@ -105,6 +118,7 @@ export type RightsLedgerEntry = z.infer<typeof rightsLedgerEntrySchema>;
 export type ProviderResourceEntry = z.infer<typeof providerResourceEntrySchema>;
 export type UsageType = z.infer<typeof usageTypeSchema>;
 export type RightsDecision = z.infer<typeof rightsDecisionSchema>;
+export type IntegrationMode = z.infer<typeof integrationModeSchema>;
 
 const permissionByUsage: Partial<
   Record<UsageType, keyof RightsLedgerEntry["permissions"]>
