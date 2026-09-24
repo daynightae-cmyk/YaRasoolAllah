@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Search } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
-import type { BookMode, LibraryBook } from "@/visual-golden/mock/books";
+import { LIBRARY_COUNTS, type BookMode, type LibraryBook } from "@/visual-golden/services/library";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
 import { BookshelfHall } from "@/visual-golden/components/library/BookshelfHall";
 import { ReadingChamber } from "@/visual-golden/components/library/ReadingChamber";
@@ -17,8 +17,8 @@ export function LibraryPage() {
     <div className={styles.page}>
       <PageHero
         title="المكتبة والرفوف الرقمية"
-        subtitle="DIGITAL LIBRARY"
-        desc="قاعة خشبية كمكتب عالم — ارفع الكتاب من الرف: عرضه، اقرأه، أو استمع إليه"
+        subtitle={`DIGITAL LIBRARY · ${LIBRARY_COUNTS.works} عملًا · ${LIBRARY_COUNTS.versions} نسخة`}
+        desc="سجلات فهرسية ونسخ رقمية موثقة من OpenITI — النص الكامل غير متاح داخل المنصة حتى مراجعة النسخة والحقوق"
         image={art.library}
         wing="library"
       >

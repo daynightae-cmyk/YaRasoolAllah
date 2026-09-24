@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
-import { BookOpen, Headphones, Eye } from "lucide-react";
-import { catalog, shelves, type LibraryBook } from "@/visual-golden/mock/books";
+import { useMemo } from "react";
+import { Eye } from "lucide-react";
+import { catalog, shelves, searchLibrary, LIBRARY_COUNTS, type LibraryBook } from "@/visual-golden/services/library";
 import styles from "./BookshelfHall.module.css";
 import { art } from "@/visual-golden/mock/art";
 
@@ -14,12 +15,9 @@ interface Props {
 }
 
 export function BookshelfHall({ activeShelf, onShelf, selected, onSelect, onOpen, query }: Props) {
-  const q = query.trim();
-  const visible = catalog.filter((b) => {
-    const hit = !q || b.title.includes(q) || b.author.includes(q) || b.shelf.includes(q);
-    return hit;
-  });
-  const current = selected ?? visible[0] ?? catalog[0];
+  const visible = useMemo(() => searchLibrary(query, "الكل"), [query]);
+  const shelfVisible = useMemo(() => searchLibrary(query, activeShelf), [query, activeShelf]);
+  const current = selected ?? shelfVisible[0] ?? visible[0] ?? catalog[0];
 
   return (
     <section className={styles.hall} aria-label="قاعة الرفوف">
@@ -28,7 +26,9 @@ export function BookshelfHall({ activeShelf, onShelf, selected, onSelect, onOpen
         <header className={styles.plaque}>
           <div>
             <h2>قاعة الرفوف</h2>
-            <p>THE READING HALL</p>
+            <p>
+              THE READING HALL · {LIBRARY_COUNTS.works} عملًا موثقًا · {LIBRARY_COUNTS.versions} نسخة رقمية
+            </p>
           </div>
           <div className={styles.cats}>
             <button type="button" className={activeShelf === "الكل" ? styles.on : ""} onClick={() => onShelf("الكل")}>
@@ -72,7 +72,7 @@ export function BookshelfHall({ activeShelf, onShelf, selected, onSelect, onOpen
                         }
                         aria-label={`${b.title} — ${b.author}`}
                         onClick={() => onSelect(b)}
-                        onDoubleClick={() => onOpen(b, "قراءة")}
+                        onDoubleClick={() => onOpen(b, "عرض")}
                       >
                         <span className={styles.spine}>
                           <i className={styles.band} />
@@ -94,25 +94,14 @@ export function BookshelfHall({ activeShelf, onShelf, selected, onSelect, onOpen
           <div>
             <strong>{current.title}</strong>
             <p className={styles.hint}>
-              {current.author} · {current.pages} صفحة · انقر مرتين للفتح أو اختر وضعًا
+              {current.author} · {current.versionCount} نسخة رقمية · سجل فهرسي — النص الكامل غير متاح داخل
+              المنصة
             </p>
           </div>
           <div className={styles.modes}>
-            {current.modes.includes("عرض") ? (
-              <button type="button" onClick={() => onOpen(current, "عرض")}>
-                <Eye size={14} /> عرض
-              </button>
-            ) : null}
-            {current.modes.includes("قراءة") ? (
-              <button type="button" onClick={() => onOpen(current, "قراءة")}>
-                <BookOpen size={14} /> قراءة
-              </button>
-            ) : null}
-            {current.modes.includes("استماع") ? (
-              <button type="button" onClick={() => onOpen(current, "استماع")}>
-                <Headphones size={14} /> استماع
-              </button>
-            ) : null}
+            <button type="button" onClick={() => onOpen(current, "عرض")}>
+              <Eye size={14} /> سجل العمل
+            </button>
           </div>
         </footer>
       </div>
