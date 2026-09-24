@@ -267,12 +267,17 @@ function resolveRegistryUri(id: string): string | null {
     ?? null;
 }
 
-export function LibraryCatalog({ initialWorkId, initialCategory, onOpenReader, canOpenReader }: Props) {
+export function LibraryCatalog({ initialWorkId, initialCategory, onOpenReader, canOpenReader, query: controlledQuery, onQuery }: Props & { query?: string; onQuery?: (value: string) => void }) {
   const lang = useInstitution((state) => state.lang);
   const c = copy[lang];
   const [data, setData] = useState<CatalogPayload | null>(null);
   const [error, setError] = useState("");
-  const [query, setQuery] = useState("");
+  const [innerQuery, setInnerQuery] = useState(controlledQuery ?? "");
+  // Shared search state: when the parent (LibraryPage hero search) controls the
+  // query, the shelves view and the catalog view filter from one query and
+  // switching views preserves it. Deep-link/standalone usage stays uncontrolled.
+  const query = onQuery ? (controlledQuery ?? "") : innerQuery;
+  const setQuery = onQuery ?? setInnerQuery;
   const [category, setCategory] = useState(initialCategory ?? "all");
   const [availability, setAvailability] = useState<"all" | AvailabilityState>("all");
   const [page, setPage] = useState(1);

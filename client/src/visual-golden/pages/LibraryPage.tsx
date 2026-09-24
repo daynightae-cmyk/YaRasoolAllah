@@ -153,6 +153,8 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
           initialCategory={catalogCategory}
           canOpenReader={() => true}
           onOpenReader={(work) => setOpenWork(work as CatalogWork)}
+          query={q}
+          onQuery={setQ}
         />
       )}
 

@@ -28,7 +28,7 @@
 - Purpose vs `feat/product-recovery-integration-20260925` name: AMBIGUOUS. NOT copied into clean worktree. Left for owner disposition.
 
 ## ACTIVE PR
-- NONE (no gh CLI; PR creation BLOCKED_TOOLING until push + web/API attempt).
+- NONE. Push attempted 2026-09-25 ~03:00 +04 → `fatal: could not read Username for 'https://github.com'` (PUSH_EXIT 128). No credential helper, no ~/.ssh, no stored credentials. Fetch works (public repo). Remote ops: BLOCKED_ENVIRONMENT (push auth) + BLOCKED_TOOLING (no gh → no PR/CI inspection). Commits accumulate locally on `feat/autonomous-production-closure-20260925` (currently `20923131`); owner can push later. No repeated retry per policy.
 
 ## CI STATE
 - NOT VERIFIED remotely (no gh). Local baseline gates ALL PASS (see below).
@@ -40,7 +40,15 @@
 - SLICE 0 — REALITY REFRESH + BASELINE (this window, in overnight worktree).
 
 ## CURRENT SLICE
-- SLICE 1 — P0 TRUTH/SECURITY audit in progress (exploration; no edits yet).
+- SLICE A — Library shelf/catalog shared search query: IMPLEMENTED, type/test/build PASS, browser runtime verification in progress (server booting, smoke suite next).
+
+## SLICE A DETAIL (first implementation slice, overnight worktree)
+- Files: `client/src/visual-golden/components/library/LibraryCatalog.tsx` (controlled/uncontrolled query: `query`/`onQuery` props, deep-link usage unchanged), `client/src/visual-golden/pages/LibraryPage.tsx` (passes hero `q`/`setQ` into catalog).
+- Effect: hero search, shelves filter, and catalog filter share one query; switching الرفوف المعمارية ↔ الفهرس العلمي preserves it. Previously each view kept separate state (spec contradiction `docs/visual-transformation/03-library-shelves.md:42`).
+- NOT copied from 50b5b526 (independent implementation on main).
+- `npm run check` → PASS. `npm run test:p0` → PASS (11/11). `npm run build` → PASS.
+- Browser smoke (`scripts/smoke-library-reading.mjs` regression) + query-sync CDP check: running/pending at handoff update time.
+- UPDATE 03:10 +04: Slice A VERIFIED END-TO-END. `smoke-library-reading.mjs` PASS (17 spines, 5 plaques, 0 overlaps, reading 4349 chars pinned OpenITI, no internal reader API, audiobook gate correct, 0 runtime errors). Focused CDP query-sync check PASS (hero "السيرة" → catalog input "السيرة", 15 نتيجة). Temp probe scripts removed. Status: IMPLEMENTED AND VERIFIED.
 
 ## BASELINE (clean origin/main, overnight worktree, 2026-09-25 ~02:40-02:48 +04)
 - `npm ci` → PASS (retry 1 needed: first attempt ECONNRESET; second EXIT 0)
