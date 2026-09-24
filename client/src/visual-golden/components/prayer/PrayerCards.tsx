@@ -7,7 +7,7 @@ const ORDER: PrayerName[] = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha
 
 interface Props {
   timings: PrayerTimings;
-  next: NextPrayerState;
+  next: NextPrayerState | null;
   timezone: string;
   lang: "ar" | "en";
   onFocus?: (name: PrayerName) => void;
