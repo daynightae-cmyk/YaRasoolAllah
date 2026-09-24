@@ -84,6 +84,7 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
   const [mode, setMode] = useState<BookMode>(() => allowedMode(book, initialMode));
   const [cursor, setCursor] = useState(0);
   const [reader, setReader] = useState<ReaderState>({ state: "idle" });
+  const [retryToken, setRetryToken] = useState(0);
   const [speechState, setSpeechState] = useState<SpeechState>("idle");
   const chamberRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -170,7 +171,7 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
       });
 
     return () => controller.abort();
-  }, [book.modes, book.workId, cursor, mode]);
+  }, [book.modes, book.workId, cursor, mode, retryToken]);
 
   useEffect(() => {
     if (!speechSupported) return;
@@ -319,7 +320,7 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
     <div className={styles.readerStatus} role="alert">
       <strong>تعذر فتح النص الآن.</strong>
       <span>{reader.message}</span>
-      <button type="button" className="btn-outline" onClick={() => setCursor((value) => value)}>
+      <button type="button" className="btn-outline" onClick={() => setRetryToken((value) => value + 1)}>
         حاول مرة أخرى
       </button>
     </div>
