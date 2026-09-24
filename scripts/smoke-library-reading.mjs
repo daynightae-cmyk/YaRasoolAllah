@@ -214,7 +214,7 @@ try {
       if (!dialog) return false;
       if (dialog.textContent?.includes("تعذر فتح النص")) throw new Error("Reader returned an error state");
       const paper = [...dialog.querySelectorAll("article")].find((article) => article.textContent?.trim().length > 180);
-      return Boolean(paper && dialog.textContent?.includes("قراءة داخلية"));
+      return Boolean(paper && dialog.textContent?.includes("قراءة مباشرة"));
     })()`,
     "real OpenITI reading text",
     180,
@@ -225,16 +225,25 @@ try {
     `(() => {
       const dialog = document.querySelector("[role=dialog]");
       const article = [...dialog.querySelectorAll("article")].find((item) => item.textContent?.trim().length > 180);
+      const resources = performance.getEntriesByType("resource").map((entry) => entry.name);
       return {
         dialogOpen: Boolean(dialog),
         textLength: article?.textContent?.trim().length ?? 0,
         hasPinnedSource: dialog?.textContent?.includes("OpenITI") ?? false,
         hasDigitalNumberingNotice: dialog?.textContent?.includes("مقاطع رقمية") ?? false,
+        usedDirectPinnedSource: resources.some((url) => url.includes("raw.githubusercontent.com/OpenITI/RELEASE/")),
+        usedInternalReaderApi: resources.some((url) => url.includes("/api/content/library/read/")),
       };
     })()`,
   );
-  if (reading.textLength < 180 || !reading.hasPinnedSource || !reading.hasDigitalNumberingNotice) {
-    throw new Error(`Reader evidence incomplete: ${JSON.stringify(reading)}`);
+  if (
+    reading.textLength < 180 ||
+    !reading.hasPinnedSource ||
+    !reading.hasDigitalNumberingNotice ||
+    !reading.usedDirectPinnedSource ||
+    reading.usedInternalReaderApi
+  ) {
+    throw new Error(`Direct reader evidence incomplete: ${JSON.stringify(reading)}`);
   }
   await screenshot(session, "library-reading.jpg");
 
