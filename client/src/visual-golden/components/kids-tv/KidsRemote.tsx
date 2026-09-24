@@ -48,7 +48,7 @@ type RemoteButtonProps = {
   label: string;
   command: KidsRemoteCommand;
   onCommand: (command: KidsRemoteCommand) => void;
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
 };
 
@@ -109,7 +109,11 @@ export function KidsRemote({ playing, muted, captions, onCommand, compact = fals
 
       <div className={styles.remotePair}>
         <RemoteButton label="رفع الصوت" command="volume-up" onCommand={onCommand}><Volume2 size={16} /> VOL+</RemoteButton>
+        <RemoteButton label="القناة التالية" command="channel-up" onCommand={onCommand}>CH+</RemoteButton>
+      </div>
+      <div className={styles.remotePair}>
         <RemoteButton label="خفض الصوت" command="volume-down" onCommand={onCommand}><Volume1 size={16} /> VOL-</RemoteButton>
+        <RemoteButton label="القناة السابقة" command="channel-down" onCommand={onCommand}>CH-</RemoteButton>
       </div>
 
       <div className={styles.remotePair}>
