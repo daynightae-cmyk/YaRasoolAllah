@@ -3,8 +3,6 @@ import { Link } from "wouter";
 import { Heart, Share2, ExternalLink, ShieldCheck, Lock } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
-import { Waveform } from "@/visual-golden/components/unique/Waveform";
-import p from "@/visual-golden/components/present/present.module.css";
 import {
   getQuranChapters,
   type QuranChapter,
@@ -63,11 +61,8 @@ export function AudioPage() {
       <header className={styles.hero}>
         <img className={styles.bg} src={art.kaaba} alt="" />
         <div className={styles.nowPlaying}>
-          <div className={p.vinyl}>
-            <div className={p.vinylDisc} />
-            <div className={p.vinylHub}>
-              <img src={art.mushaf} alt="" />
-            </div>
+          <div className={styles.coverWrap} aria-hidden="true">
+            <img className={styles.cover} src={art.mushaf} alt="" />
           </div>
           <div>
             <span className={styles.label}>مسرح الاستماع · سجل المزوّدين</span>
@@ -81,7 +76,6 @@ export function AudioPage() {
               <Lock size={13} /> التشغيل غير مفعّل — {AUDIO_COUNTS.clearedRecordings} تسجيلات مُجازة
               داخل المنصة
             </p>
-            <Waveform playing={false} />
             <div className={styles.tags}>
               <span>سجل المزوّد</span>
               <span>التشغيل غير مُجاز</span>
@@ -100,20 +94,23 @@ export function AudioPage() {
           <h3>التصفح حسب السورة ({chapters.length || 114})</h3>
           <ul>
             {chapters.slice(0, 24).map((chapter, i) => (
-              <li
-                key={chapter.number}
-                className={chapter.number === active ? styles.activeTrack : ""}
-                onClick={() => {
+              <li key={chapter.number}>
+                <button
+                  type="button"
+                  className={`${styles.track} ${chapter.number === active ? styles.activeTrack : ""}`}
+                  aria-current={chapter.number === active ? "true" : undefined}
+                  onClick={() => {
                   reciterRequest.current?.abort();
                   setActive(chapter.number);
                   setReciterCatalog({ state: "idle" });
-                }}
-              >
+                  }}
+                >
                 <span>{i + 1}</span>
                 <div>
                   <strong>سورة {chapter.arabicName}</strong>
                   <em>{chapter.ayahCount} آية · بدون تسجيل معتمد</em>
                 </div>
+                </button>
               </li>
             ))}
           </ul>
@@ -123,22 +120,8 @@ export function AudioPage() {
           </p>
         </aside>
         <div className={styles.player}>
-          <div className={styles.progress}>
-            <span>—</span>
-            <div className={styles.bar}>
-              <div style={{ width: "0%" }} />
-            </div>
-            <span>—</span>
-          </div>
-          <div className={styles.controls}>
-            <span
-              className="btn-outline"
-              style={{ opacity: 0.65, cursor: "not-allowed", fontSize: "0.78rem", padding: "0.4rem 0.8rem", borderRadius: 10 }}
-              title="التشغيل والإيقاف والتنقل والمدة والتنزيل غير مفعّلة: لا توجد وسائط مُجازة"
-            >
-              عناصر التشغيل معطلة — لا توجد وسائط مُجازة
-            </span>
-          </div>
+          <Lock size={17} aria-hidden="true" />
+          <p>مساحة الاستماع تُفتح عند اعتماد تسجيل ومراجعة حق عرضه. يمكنك الآن تصفح السور وفهرس القراء.</p>
         </div>
       </header>
 
