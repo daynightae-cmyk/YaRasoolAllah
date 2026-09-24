@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Play, RotateCcw } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
@@ -19,7 +19,6 @@ const hours = [
   { t: "العشاء", n: "علم وتزكية" },
   { t: "قبل النوم", n: "مراجعة وذكر" },
 ];
-const sets = ["أذكار المساء", "أذكار النوم", "أذكار بعد الصلاة", "أذكار متنوعة"];
 const duas = [
   { title: "أدعية من القرآن", img: art.mushafOpen },
   { title: "أدعية من السنة", img: art.lanternGlow },
@@ -34,7 +33,6 @@ export function DailyPage() {
   const lang = useInstitution((s) => s.lang);
   const [count, setCount] = useState(33);
   const [dhikr, setDhikr] = useState("سبحان الله");
-  const [idx, setIdx] = useState(0);
   const [hour, setHour] = useState(3);
   const wash = hour <= 1 ? p.dawn : hour <= 3 ? p.noon : hour <= 5 ? p.dusk : p.night;
 
@@ -67,19 +65,13 @@ export function DailyPage() {
             <img src={art.mosque} alt="" />
             <div>
               <h4>{lang === "ar" ? "أذكار الصباح" : "Morning adhkar"}</h4>
-              <p>[نص الأذكار من المصدر]</p>
-              <span>{idx + 1} / 15</span>
-              <button type="button" className={styles.start} onClick={() => setIdx((i) => (i + 1) % 15)}>
-                <Play size={14} /> {lang === "ar" ? "ابدأ الأذكار" : "Begin"}
-              </button>
+              <p>
+                {lang === "ar"
+                  ? "متن الأذكار اليومية غير مربوط بعد بمصدر موثق — لا يُعرض هنا متن مدّعى."
+                  : "The daily adhkar corpus is not yet bound to a verified source."}
+              </p>
+              <span>{lang === "ar" ? "قيد مراجعة المصدر والحقوق" : "Source review pending"}</span>
             </div>
-          </div>
-          <div className={styles.adhkarBtns}>
-            {sets.map((s) => (
-              <button key={s} type="button">
-                {s}
-              </button>
-            ))}
           </div>
         </div>
 
