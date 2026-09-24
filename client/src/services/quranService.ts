@@ -1162,8 +1162,7 @@ const sampleVerses: Record<string, QuranVerse> = {
 };
 
 export async function getQuranChapters(): Promise<QuranChapter[]> {
-  // In a real implementation, this would fetch from a proper Quran API
-  // For now, returning the authentic chapter data
+  // Canonical chapter metadata used by the verified local Tanzil corpus.
   return Promise.resolve(quranChapters);
 }
 
@@ -1196,6 +1195,34 @@ export async function getQuranVerse(
     tafsir: sample?.tafsir,
     surahName: sample?.surahName ?? chapter.arabicName,
   });
+}
+
+export async function getQuranChapterVerses(
+  surah: number,
+): Promise<QuranVerse[]> {
+  const chapter = quranChapters.find((item) => item.number === surah);
+  if (!chapter) return [];
+
+  const corpus = await getCorpus();
+  const verses: QuranVerse[] = [];
+
+  for (let ayah = 1; ayah <= chapter.ayahCount; ayah += 1) {
+    const arabic = corpus[`${surah}:${ayah}`];
+    if (!arabic) continue;
+
+    const sample = sampleVerses[`${surah}-${ayah}`];
+    verses.push({
+      surah,
+      ayah,
+      arabic,
+      translation: sample?.translation ?? null,
+      transliteration: sample?.transliteration,
+      tafsir: sample?.tafsir,
+      surahName: sample?.surahName ?? chapter.arabicName,
+    });
+  }
+
+  return verses;
 }
 
 export async function searchQuran(query: string): Promise<SearchResult[]> {

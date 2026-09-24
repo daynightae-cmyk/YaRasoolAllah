@@ -1,194 +1,531 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "wouter";
 import {
   Bookmark,
+  BookmarkCheck,
   Share2,
   Copy,
   Star,
   ChevronRight,
   ChevronLeft,
-  Play,
-  Pause,
   StickyNote,
-  MoreHorizontal,
+  Headphones,
+  ShieldCheck,
+  Search,
 } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
 import { FocusBar } from "@/visual-golden/components/present/FocusBar";
+import {
+  getQuranChapterVerses,
+  getQuranChapters,
+  type QuranChapter,
+  type QuranVerse,
+} from "@/services/quranService";
+import { getGovernanceRecord } from "@shared/source-registry";
 import styles from "./QuranPage.module.css";
 
-const surahs = [
-  { id: 1, name: "سورة الفاتحة", en: "Al-Fatiha" },
-  { id: 2, name: "سورة البقرة", en: "Al-Baqarah" },
-  { id: 3, name: "سورة آل عمران", en: "Al-Imran" },
-  { id: 4, name: "سورة النساء", en: "An-Nisa" },
-  { id: 5, name: "سورة المائدة", en: "Al-Ma'idah" },
-  { id: 6, name: "سورة الأنعام", en: "Al-An'am" },
-  { id: 7, name: "سورة الأعراف", en: "Al-A'raf" },
-  { id: 8, name: "سورة الأنفال", en: "Al-Anfal" },
-  { id: 9, name: "سورة التوبة", en: "At-Tawbah" },
-  { id: 10, name: "سورة يونس", en: "Yunus" },
-];
+type SidebarTab = "surah" | "marks";
 
-const ayat = [
-  { n: 1, t: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ" },
-  { n: 2, t: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ" },
-  { n: 3, t: "الرَّحْمَٰنِ الرَّحِيمِ" },
-  { n: 4, t: "مَالِكِ يَوْمِ الدِّينِ" },
-  { n: 5, t: "إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ" },
-  { n: 6, t: "اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ" },
-  { n: 7, t: "صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ" },
-];
+const BOOKMARK_KEY = "quran-bookmarks";
+const NOTE_KEY = "quran-notes-v1";
 
-const words = [
-  { ar: "الحمد", en: "All praise" },
-  { ar: "رب", en: "Lord" },
-  { ar: "العالمين", en: "The worlds" },
-  { ar: "الرحمن", en: "The Most Merciful" },
-];
+function safeReadJson<T>(key: string, fallback: T): T {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? (JSON.parse(raw) as T) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function safeWriteJson(key: string, value: unknown) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // Reading remains usable when storage is unavailable.
+  }
+}
+
+function verseKey(surah: number, ayah: number) {
+  return `${surah}:${ayah}`;
+}
 
 export function QuranPage() {
+  const [chapters, setChapters] = useState<QuranChapter[]>([]);
+  const [verses, setVerses] = useState<QuranVerse[]>([]);
   const [active, setActive] = useState(1);
-  const [tab, setTab] = useState<"surah" | "juz" | "marks">("surah");
-  const [playing, setPlaying] = useState(false);
-  const [saved, setSaved] = useState(false);
+  const [ayah, setAyah] = useState(1);
+  const [tab, setTab] = useState<SidebarTab>("surah");
   const [focus, setFocus] = useState(false);
   const [lamp, setLamp] = useState(true);
-  const [ayah, setAyah] = useState(1);
-  const surah = surahs.find((s) => s.id === active) ?? surahs[0];
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+  const [bookmarks, setBookmarks] = useState<string[]>([]);
+  const [notes, setNotes] = useState<Record<string, string>>({});
+  const [showNote, setShowNote] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const governance = useMemo(
+    () => getGovernanceRecord("resource-tanzil-uthmani-min-1-1"),
+    [],
+  );
+
+  useEffect(() => {
+    setBookmarks(safeReadJson<string[]>(BOOKMARK_KEY, []));
+    setNotes(safeReadJson<Record<string, string>>(NOTE_KEY, {}));
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    getQuranChapters()
+      .then((items) => {
+        if (!cancelled) setChapters(items);
+      })
+      .catch(() => {
+        if (!cancelled) setLoadError("تعذر تحميل فهرس السور.");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setLoadError(null);
+
+    getQuranChapterVerses(active)
+      .then((items) => {
+        if (cancelled) return;
+        setVerses(items);
+        setAyah((current) =>
+          items.some((item) => item.ayah === current) ? current : 1,
+        );
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setVerses([]);
+          setLoadError("تعذر تحميل نص السورة من المصحف المحلي الموثق.");
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [active]);
+
+  const currentChapter =
+    chapters.find((chapter) => chapter.number === active) ?? null;
+  const selectedVerse =
+    verses.find((item) => item.ayah === ayah) ?? verses[0] ?? null;
+
+  const filteredChapters = useMemo(() => {
+    const normalized = query.trim().toLowerCase();
+    if (!normalized) return chapters;
+    return chapters.filter(
+      (chapter) =>
+        chapter.arabicName.includes(query.trim()) ||
+        chapter.englishName.toLowerCase().includes(normalized) ||
+        String(chapter.number).includes(normalized),
+    );
+  }, [chapters, query]);
+
+  const bookmarkedEntries = useMemo(
+    () =>
+      bookmarks
+        .map((key) => {
+          const [surahNumber, ayahNumber] = key.split(":").map(Number);
+          const chapter = chapters.find((item) => item.number === surahNumber);
+          if (!chapter || !surahNumber || !ayahNumber) return null;
+          return { key, surahNumber, ayahNumber, chapter };
+        })
+        .filter(
+          (
+            item,
+          ): item is {
+            key: string;
+            surahNumber: number;
+            ayahNumber: number;
+            chapter: QuranChapter;
+          } => Boolean(item),
+        ),
+    [bookmarks, chapters],
+  );
+
+  const totalAyahs = useMemo(
+    () => chapters.reduce((sum, chapter) => sum + chapter.ayahCount, 0),
+    [chapters],
+  );
+
+  const selectedKey = selectedVerse
+    ? verseKey(selectedVerse.surah, selectedVerse.ayah)
+    : null;
+  const selectedBookmarked = selectedKey
+    ? bookmarks.includes(selectedKey)
+    : false;
+  const selectedNote = selectedKey ? notes[selectedKey] ?? "" : "";
+
+  const selectSurah = (surahNumber: number, targetAyah = 1) => {
+    setActive(surahNumber);
+    setAyah(targetAyah);
+    setShowNote(false);
+  };
+
+  const toggleBookmark = () => {
+    if (!selectedKey) return;
+    const next = selectedBookmarked
+      ? bookmarks.filter((key) => key !== selectedKey)
+      : [...bookmarks, selectedKey];
+    setBookmarks(next);
+    safeWriteJson(BOOKMARK_KEY, next);
+  };
+
+  const saveNote = (value: string) => {
+    if (!selectedKey) return;
+    const next = { ...notes, [selectedKey]: value };
+    if (!value.trim()) delete next[selectedKey];
+    setNotes(next);
+    safeWriteJson(NOTE_KEY, next);
+  };
+
+  const copySelectedVerse = async () => {
+    if (!selectedVerse) return;
+    const payload = `${selectedVerse.arabic}\n[سورة ${currentChapter?.arabicName ?? ""} — الآية ${selectedVerse.ayah}]`;
+    try {
+      await navigator.clipboard.writeText(payload);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    } catch {
+      setCopied(false);
+    }
+  };
+
+  const shareSelectedVerse = async () => {
+    if (!selectedVerse) return;
+    const text = `${selectedVerse.arabic}\nسورة ${currentChapter?.arabicName ?? ""} — الآية ${selectedVerse.ayah}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: "القرآن الكريم", text });
+        return;
+      } catch {
+        return;
+      }
+    }
+    await copySelectedVerse();
+  };
+
+  const moveSurah = (delta: number) => {
+    const next = Math.min(114, Math.max(1, active + delta));
+    selectSurah(next, 1);
+  };
 
   return (
     <div className={`${styles.page} ${focus ? styles.focus : ""}`}>
       {focus ? null : (
         <PageHero
           title="رواق القرآن"
-          subtitle="تلاوة · تدبّر · علم · عمل"
-          desc="اقرأ وارتَقِ … فكل آية نور"
+          subtitle="المصحف العربي الكامل · نص موثّق"
+          desc="النص العربي من نسخة Tanzil Uthmani-min 1.1 المحفوظة حرفيًا دون تعديل."
           image={art.mushafOpen}
           compact
           wing="quran"
         />
       )}
+
       <FocusBar
         focus={focus}
-        onFocus={() => setFocus((v) => !v)}
-        extra={{ label: lamp ? "إطفاء المصباح" : "إضاءة المصباح", on: lamp, onClick: () => setLamp((v) => !v) }}
+        onFocus={() => setFocus((value) => !value)}
+        extra={{
+          label: lamp ? "إطفاء المصباح" : "إضاءة المصباح",
+          on: lamp,
+          onClick: () => setLamp((value) => !value),
+        }}
       />
 
       <div className={styles.workspace}>
         {focus ? null : (
-          <aside className={styles.surahNav}>
+          <aside className={styles.surahNav} aria-label="فهرس القرآن">
             <div className={styles.tabs}>
-              <button type="button" className={tab === "surah" ? styles.tabOn : ""} onClick={() => setTab("surah")}>
+              <button
+                type="button"
+                className={tab === "surah" ? styles.tabOn : ""}
+                onClick={() => setTab("surah")}
+              >
                 السور
               </button>
-              <button type="button" className={tab === "juz" ? styles.tabOn : ""} onClick={() => setTab("juz")}>
+              <button
+                type="button"
+                className={styles.disabledTab}
+                disabled
+                title="بيانات الأجزاء والصفحات لم تُربط بعد بمصدر معتمد."
+              >
                 الأجزاء
               </button>
-              <button type="button" className={tab === "marks" ? styles.tabOn : ""} onClick={() => setTab("marks")}>
+              <button
+                type="button"
+                className={tab === "marks" ? styles.tabOn : ""}
+                onClick={() => setTab("marks")}
+              >
                 العلامات
               </button>
             </div>
-            <input placeholder="ابحث في السور..." className={styles.search} />
-            <ul>
-              {surahs.map((s) => (
-                <li
-                  key={s.id}
-                  className={active === s.id ? styles.active : ""}
-                  onClick={() => setActive(s.id)}
-                >
-                  <span className={styles.num}>{s.id}</span>
-                  <div>
-                    <strong>{s.name}</strong>
-                    <em>{s.en}</em>
-                  </div>
-                  <Star size={13} />
-                </li>
-              ))}
-            </ul>
+
+            {tab === "surah" ? (
+              <>
+                <label className={styles.searchWrap}>
+                  <Search size={14} aria-hidden="true" />
+                  <input
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    placeholder="ابحث باسم السورة أو رقمها..."
+                    className={styles.search}
+                  />
+                </label>
+                <ul>
+                  {filteredChapters.map((chapter) => (
+                    <li
+                      key={chapter.number}
+                      className={active === chapter.number ? styles.active : ""}
+                    >
+                      <button
+                        type="button"
+                        className={styles.surahButton}
+                        onClick={() => selectSurah(chapter.number)}
+                        aria-current={
+                          active === chapter.number ? "true" : undefined
+                        }
+                      >
+                        <span className={styles.num}>{chapter.number}</span>
+                        <span>
+                          <strong>سورة {chapter.arabicName}</strong>
+                          <em>
+                            {chapter.englishName} · {chapter.ayahCount} آية
+                          </em>
+                        </span>
+                        <Star size={13} aria-hidden="true" />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : (
+              <div className={styles.bookmarkList}>
+                {bookmarkedEntries.length === 0 ? (
+                  <p className={styles.emptyState}>
+                    لا توجد علامات محفوظة بعد. اختر آية ثم اضغط «حفظ».
+                  </p>
+                ) : (
+                  bookmarkedEntries.map((entry) => (
+                    <button
+                      key={entry.key}
+                      type="button"
+                      onClick={() =>
+                        selectSurah(entry.surahNumber, entry.ayahNumber)
+                      }
+                    >
+                      <BookmarkCheck size={14} />
+                      <span>
+                        سورة {entry.chapter.arabicName} · الآية{" "}
+                        {entry.ayahNumber}
+                      </span>
+                    </button>
+                  ))
+                )}
+              </div>
+            )}
           </aside>
         )}
 
         <main className={styles.reader}>
           <div className={styles.sheetHead}>
-            <span>الجزء 1</span>
-            <h2>{surah.name}</h2>
-            <span>الصفحة 1</span>
+            <span>
+              {currentChapter
+                ? currentChapter.revelationType === "meccan"
+                  ? "مكية"
+                  : "مدنية"
+                : "—"}
+            </span>
+            <h2>
+              {currentChapter
+                ? `سورة ${currentChapter.arabicName}`
+                : "القرآن الكريم"}
+            </h2>
+            <span>
+              {currentChapter ? `${currentChapter.ayahCount} آية` : "—"}
+            </span>
           </div>
-          <div className={`${styles.sheet} ${lamp ? styles.lampOn : ""}`}>
-            <button className={styles.sheetNav} type="button" aria-label="السابق" onClick={() => setActive((n) => Math.max(1, n - 1))}>
+
+          <div
+            className={`${styles.sheet} ${lamp ? styles.lampOn : ""}`}
+            dir="rtl"
+            lang="ar"
+          >
+            <button
+              className={styles.sheetNav}
+              type="button"
+              aria-label="السورة السابقة"
+              disabled={active <= 1}
+              onClick={() => moveSurah(-1)}
+            >
               <ChevronRight size={18} />
             </button>
-            <div className={styles.ayat}>
-              {ayat.map((a) => (
-                <p
-                  key={a.n}
-                  className={`${styles.ayah} ${ayah === a.n ? styles.ayahOn : ""}`}
-                  onClick={() => setAyah(a.n)}
-                >
-                  {a.t}
-                  <span className={styles.ayahNum}>{a.n}</span>
+
+            <div className={styles.ayat} aria-live="polite">
+              {loading ? (
+                <p className={styles.loadingState}>
+                  جارٍ فتح السورة من المصحف المحلي…
                 </p>
-              ))}
+              ) : loadError ? (
+                <p className={styles.errorState}>{loadError}</p>
+              ) : (
+                verses.map((item) => (
+                  <button
+                    type="button"
+                    key={item.ayah}
+                    className={`${styles.ayah} ${
+                      ayah === item.ayah ? styles.ayahOn : ""
+                    }`}
+                    onClick={() => {
+                      setAyah(item.ayah);
+                      setShowNote(false);
+                    }}
+                    aria-pressed={ayah === item.ayah}
+                    title={`الآية ${item.ayah}`}
+                  >
+                    <span>{item.arabic}</span>
+                    <span className={styles.ayahNum}>{item.ayah}</span>
+                  </button>
+                ))
+              )}
             </div>
-            <button className={styles.sheetNav} type="button" aria-label="التالي" onClick={() => setActive((n) => Math.min(10, n + 1))}>
+
+            <button
+              className={styles.sheetNav}
+              type="button"
+              aria-label="السورة التالية"
+              disabled={active >= 114}
+              onClick={() => moveSurah(1)}
+            >
               <ChevronLeft size={18} />
             </button>
           </div>
+
           <div className={styles.player}>
             <img src={art.kaaba} alt="" />
-            <div>
-              <strong>{surah.name}</strong>
-              <span>الشيخ عبد الباسط عبد الصمد</span>
+            <div className={styles.playerCopy}>
+              <strong>التلاوة الصوتية</strong>
+              <span>
+                لم نربط بهذه الشاشة تسجيلًا صوتيًا معتمد الحقوق بعد.
+              </span>
             </div>
-            <button className={styles.play} type="button" onClick={() => setPlaying((p) => !p)}>
-              {playing ? <Pause size={16} /> : <Play size={16} />}
-            </button>
-            <div className={styles.scrub}>
-              <i style={{ width: playing ? "38%" : "18%" }} />
-            </div>
-            <span>0:52</span>
+            <Link href="/audio" className={styles.audioLink}>
+              <Headphones size={15} />
+              قسم التلاوات
+            </Link>
           </div>
         </main>
 
         {focus ? null : (
           <aside className={styles.sidePanel}>
-            <h4>الجزء والصفحة</h4>
-            <div className={styles.pages}>
-              {[1, 2, 3, 4].map((pg) => (
-                <div key={pg} className={pg === 1 ? styles.pageOn : ""}>
-                  <img src={art.mushafOpen} alt="" />
-                  <span>{pg}</span>
-                </div>
-              ))}
+            <h4>الآية المحددة</h4>
+            <div className={styles.selectedVerseMeta}>
+              <strong>
+                {currentChapter
+                  ? `سورة ${currentChapter.arabicName}`
+                  : "—"}
+              </strong>
+              <span>
+                الآية {selectedVerse?.ayah ?? "—"} من{" "}
+                {currentChapter?.ayahCount ?? "—"}
+              </span>
             </div>
+
             <h4>أدوات الآية</h4>
             <div className={styles.toolGrid}>
-              <button type="button">
-                <Copy size={14} /> نسخ الآية
+              <button type="button" onClick={copySelectedVerse}>
+                <Copy size={14} /> {copied ? "تم النسخ" : "نسخ الآية"}
               </button>
-              <button type="button">
+              <button type="button" onClick={shareSelectedVerse}>
                 <Share2 size={14} /> مشاركة
               </button>
-              <button type="button" className={saved ? styles.toolOn : ""} onClick={() => setSaved((s) => !s)}>
-                <Bookmark size={14} /> المفضلة
+              <button
+                type="button"
+                className={selectedBookmarked ? styles.toolOn : ""}
+                onClick={toggleBookmark}
+              >
+                {selectedBookmarked ? (
+                  <BookmarkCheck size={14} />
+                ) : (
+                  <Bookmark size={14} />
+                )}
+                {selectedBookmarked ? "محفوظة" : "حفظ"}
               </button>
-              <button type="button">
+              <button
+                type="button"
+                className={showNote ? styles.toolOn : ""}
+                onClick={() => setShowNote((value) => !value)}
+              >
                 <StickyNote size={14} /> ملاحظة
               </button>
-              <button type="button">
-                <MoreHorizontal size={14} /> المزيد
-              </button>
             </div>
-            <h4>التفسير المختصر</h4>
-            <p className={styles.tafsirBox}>[التفسير سيُربط لاحقًا] الحمد لله رب العالمين: الثناء على الله بجميع محامد الكمال.</p>
-            <h4>معاني الكلمات</h4>
-            <div className={styles.words}>
-              {words.map((w) => (
-                <span key={w.ar}>
-                  <b>{w.ar}</b>
-                  <em>{w.en}</em>
-                </span>
-              ))}
+
+            {showNote && selectedKey ? (
+              <div className={styles.noteBox}>
+                <label htmlFor="quran-personal-note">
+                  ملاحظة شخصية على الآية
+                </label>
+                <textarea
+                  id="quran-personal-note"
+                  value={selectedNote}
+                  onChange={(event) => saveNote(event.target.value)}
+                  placeholder="اكتب ملاحظتك هنا…"
+                />
+                <small>
+                  هذه ملاحظة شخصية محلية وليست تفسيرًا أو مادة مصدرية.
+                </small>
+              </div>
+            ) : null}
+
+            <h4>التفسير والترجمة</h4>
+            <div className={styles.unavailableBox}>
+              <p>
+                لم يُربط بهذه الواجهة حتى الآن تفسير أو ترجمة معتمدة للإنتاج.
+              </p>
+              <Link href="/tafsir">فتح مساحة التفسير والتدبر</Link>
+            </div>
+
+            <h4>حالة المصدر</h4>
+            <div className={styles.sourceBox}>
+              <div>
+                <ShieldCheck size={16} aria-hidden="true" />
+                <strong>
+                  {governance?.source.provider ?? "Tanzil"}
+                </strong>
+              </div>
+              <span>
+                الإصدار: {governance?.source.version ?? "1.1-uthmani-min"}
+              </span>
+              <span>
+                الحالة:{" "}
+                {governance?.source.editorialStatus === "verified"
+                  ? "متحقق من سلامة الملف"
+                  : governance?.source.editorialStatus ?? "غير متاحة"}
+              </span>
+              <span>
+                الحقوق:{" "}
+                {governance?.rights.decision === "cleared"
+                  ? "مسموح بعرض النص العربي الحرفي مع النسبة"
+                  : governance?.rights.decision ?? "غير متاحة"}
+              </span>
+              <small>
+                النص العربي يُعرض كما هو من الملف المكتسب دون تعديل، ولا يشمل
+                هذا الاعتماد الترجمات أو التفاسير أو التسجيلات الصوتية.
+              </small>
             </div>
           </aside>
         )}
@@ -196,12 +533,16 @@ export function QuranPage() {
 
       {focus ? null : (
         <footer className={styles.progress}>
-          <span>خطة القراءة</span>
-          <b>3%</b>
-          <span>الجزء 1 من 30</span>
-          <span>1 أجزاء مكتملة</span>
-          <span>23 صفحات مقروءة</span>
-          <span>7 أيام متتالية</span>
+          <span>المصحف المحلي الموثق</span>
+          <b>{chapters.length || 114} سورة</b>
+          <span>{totalAyahs || 6236} آية</span>
+          <span>
+            السورة الحالية: {currentChapter?.ayahCount ?? "—"} آية
+          </span>
+          <span>العلامات المحفوظة: {bookmarks.length}</span>
+          <span>
+            النسبة: {governance?.rights.attribution ?? "Tanzil Project"}
+          </span>
         </footer>
       )}
     </div>
