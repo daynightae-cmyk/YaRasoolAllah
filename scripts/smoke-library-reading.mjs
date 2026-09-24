@@ -34,7 +34,7 @@ const chrome = spawn(chromePath, [
 const delay = (ms) => new Promise((resolveDelay) => setTimeout(resolveDelay, ms));
 
 async function waitForDebugger() {
-  for (let attempt = 0; attempt < 100; attempt += 1) {
+  for (let attempt = 0; attempt < 240; attempt += 1) {
     try {
       const response = await fetch(`http://127.0.0.1:${debuggingPort}/json/list`);
       const pages = await response.json();
@@ -43,7 +43,7 @@ async function waitForDebugger() {
     } catch {
       // Chrome is still starting.
     }
-    await delay(120);
+    await delay(250);
   }
   throw new Error("Chrome DevTools endpoint did not become available");
 }
