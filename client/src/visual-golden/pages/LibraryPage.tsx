@@ -58,7 +58,7 @@ export function LibraryPage() {
       <PageHero
         title="المكتبة والرفوف الرقمية"
         subtitle={`DIGITAL LIBRARY · ${LIBRARY_COUNTS.works} عملًا · ${LIBRARY_COUNTS.versions} نسخة · ${LIBRARY_COUNTS.readableWorks} للقراءة`}
-        desc="قاعة رفوف خشبية وفهرس بحث ومكتب قراءة. النصوص التاريخية المسموح بها من OpenITI تُقرأ داخل المنصة، والاستماع قراءة آلية اختيارية من جهاز المستخدم لا تسجيلًا أصليًا."
+        desc="قاعة رفوف خشبية وفهرس بحث ومكتب قراءة. النصوص التاريخية المسموح بها تُقرأ داخل المنصة. زر Audiobook لا يظهر إلا لتسجيل بشري موثق بحقوق Streaming صريحة؛ القراءة الآلية من الجهاز تبقى أداة Accessibility داخل القارئ وليست كتابًا صوتيًا."
         image={art.library}
         wing="library"
       >

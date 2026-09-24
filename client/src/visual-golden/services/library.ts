@@ -1,5 +1,9 @@
 import { art } from "@/visual-golden/mock/art";
 import {
+  getProductionAudiobookForWork,
+  type AudiobookRecord,
+} from "@shared/audiobook-registry";
+import {
   digitalVersionRegistry,
   workRegistry,
   type ContentAvailability,
@@ -9,7 +13,7 @@ import {
   type WorkRecord,
 } from "@shared/knowledge-registry";
 
-export type BookMode = "عرض" | "قراءة" | "استماع";
+export type BookMode = "عرض" | "قراءة" | "Audiobook";
 
 export interface LibraryBook {
   id: string;
@@ -29,6 +33,7 @@ export interface LibraryBook {
   scholarlyReviewStatus: ReviewState;
   attributionCaveat: string;
   sourceIds: string[];
+  audiobook: AudiobookRecord | null;
   tag: string;
   modes: BookMode[];
   cover: string;
@@ -105,7 +110,10 @@ function toLibraryBook(record: WorkRecord): LibraryBook {
     (version) => version.contentAvailability === "full_text_cleared",
   );
   const hasReadableText = readableVersions.length > 0;
-  const modes: BookMode[] = hasReadableText ? ["عرض", "قراءة", "استماع"] : ["عرض"];
+  const audiobook = getProductionAudiobookForWork(record.workId);
+  const modes: BookMode[] = ["عرض"];
+  if (hasReadableText) modes.push("قراءة");
+  if (audiobook) modes.push("Audiobook");
   return {
     id: record.workId,
     title: record.titleAr,
@@ -126,6 +134,7 @@ function toLibraryBook(record: WorkRecord): LibraryBook {
     scholarlyReviewStatus: record.scholarlyReviewStatus,
     attributionCaveat: record.attributionCaveat,
     sourceIds: record.sourceIds,
+    audiobook,
     tag: tagFor(record),
     modes,
     cover: COVER_BY_CATEGORY[record.category] ?? art.books,
@@ -161,4 +170,5 @@ export const LIBRARY_COUNTS = {
   readableVersions: digitalVersionRegistry.filter(
     (version) => version.contentAvailability === "full_text_cleared",
   ).length,
+  audiobookWorks: catalog.filter((book) => Boolean(book.audiobook)).length,
 };

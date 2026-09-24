@@ -7,14 +7,12 @@ import {
   ExternalLink,
   Eye,
   Headphones,
-  Pause,
-  Play,
   ShieldCheck,
-  Square,
-  Volume2,
   X,
 } from "lucide-react";
 import type { BookMode, LibraryBook } from "@/visual-golden/services/library";
+import { AudiobookPlayer } from "./AudiobookPlayer";
+import { DeviceTtsFallback } from "./DeviceTtsFallback";
 import p from "@/visual-golden/components/present/present.module.css";
 import styles from "./ReadingChamber.module.css";
 
@@ -62,8 +60,6 @@ type ReaderState =
   | { state: "error"; message: string }
   | { state: "ready"; data: ReaderPayload };
 
-type SpeechState = "idle" | "playing" | "paused" | "error";
-
 const BOOKMARK_KEY = "library-shelf-bookmarks-v1";
 
 function safeReadBookmarks(): string[] {
@@ -85,15 +81,9 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
   const [cursor, setCursor] = useState(0);
   const [reader, setReader] = useState<ReaderState>({ state: "idle" });
   const [retryToken, setRetryToken] = useState(0);
-  const [speechState, setSpeechState] = useState<SpeechState>("idle");
   const chamberRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const openerRef = useRef<HTMLElement | null>(null);
-
-  const speechSupported =
-    typeof window !== "undefined" &&
-    "speechSynthesis" in window &&
-    "SpeechSynthesisUtterance" in window;
 
   const currentText = useMemo(() => {
     if (reader.state !== "ready") return "";
@@ -140,13 +130,12 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
     window.addEventListener("keydown", onKey);
     return () => {
       window.removeEventListener("keydown", onKey);
-      if ("speechSynthesis" in window) window.speechSynthesis.cancel();
       openerRef.current?.focus();
     };
   }, [onClose]);
 
   useEffect(() => {
-    if (mode === "عرض" || !book.modes.includes("قراءة")) return;
+    if (mode !== "قراءة" || !book.modes.includes("قراءة")) return;
     const controller = new AbortController();
     setReader({ state: "loading" });
 
@@ -173,12 +162,6 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
     return () => controller.abort();
   }, [book.modes, book.workId, cursor, mode, retryToken]);
 
-  useEffect(() => {
-    if (!speechSupported) return;
-    window.speechSynthesis.cancel();
-    setSpeechState("idle");
-  }, [cursor, mode, speechSupported]);
-
   const toggleSaved = () => {
     try {
       const current = safeReadBookmarks();
@@ -194,43 +177,7 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
 
   const switchMode = (nextMode: BookMode) => {
     if (!book.modes.includes(nextMode)) return;
-    if (speechSupported) window.speechSynthesis.cancel();
-    setSpeechState("idle");
     setMode(nextMode);
-  };
-
-  const startSpeech = () => {
-    if (!speechSupported || !currentText) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(currentText);
-    utterance.lang = "ar-SA";
-    const arabicVoice = window.speechSynthesis
-      .getVoices()
-      .find((voice) => voice.lang.toLowerCase().startsWith("ar"));
-    if (arabicVoice) utterance.voice = arabicVoice;
-    utterance.rate = 0.9;
-    utterance.onend = () => setSpeechState("idle");
-    utterance.onerror = () => setSpeechState("error");
-    window.speechSynthesis.speak(utterance);
-    setSpeechState("playing");
-  };
-
-  const pauseSpeech = () => {
-    if (!speechSupported || !window.speechSynthesis.speaking) return;
-    window.speechSynthesis.pause();
-    setSpeechState("paused");
-  };
-
-  const resumeSpeech = () => {
-    if (!speechSupported || !window.speechSynthesis.paused) return;
-    window.speechSynthesis.resume();
-    setSpeechState("playing");
-  };
-
-  const stopSpeech = () => {
-    if (!speechSupported) return;
-    window.speechSynthesis.cancel();
-    setSpeechState("idle");
   };
 
   const catalogView = (
@@ -404,72 +351,14 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
             سياسة الحقوق <ExternalLink size={12} />
           </a>
         </div>
+
+        <DeviceTtsFallback text={currentText} />
       </div>
     </div>
   ) : null;
 
-  const listeningView = reader.state === "ready" ? (
-    <div className={styles.listenDesk}>
-      <div className={styles.listenDisc} aria-hidden>
-        <Headphones size={42} />
-      </div>
-      <div className={styles.listenBody}>
-        <span className={styles.listenKicker}>قراءة صوتية آلية من جهازك</span>
-        <h3>{book.title}</h3>
-        <p>
-          هذه ليست نسخة صوتية أصلية للكتاب ولا تسجيلًا منسوبًا لمؤلف أو قارئ. يستخدم المتصفح
-          محرك تحويل النص إلى كلام على المقطع المفتوح فقط، ويبدأ التشغيل باختيارك.
-        </p>
-        <div className={`${styles.wave} ${speechState === "playing" ? styles.playing : ""}`} aria-hidden>
-          {Array.from({ length: 18 }).map((_, index) => <i key={index} />)}
-        </div>
-        {!speechSupported ? (
-          <div className={styles.speechWarning}>متصفحك لا يوفر Speech Synthesis؛ القراءة النصية ما زالت متاحة.</div>
-        ) : (
-          <div className={styles.audioControls}>
-            {speechState === "playing" ? (
-              <button type="button" className="btn-gold" onClick={pauseSpeech}><Pause size={15} /> إيقاف مؤقت</button>
-            ) : speechState === "paused" ? (
-              <button type="button" className="btn-gold" onClick={resumeSpeech}><Play size={15} /> متابعة</button>
-            ) : (
-              <button type="button" className="btn-gold" onClick={startSpeech} disabled={!currentText}>
-                <Play size={15} /> استمع للمقطع
-              </button>
-            )}
-            <button type="button" className="btn-outline" onClick={stopSpeech} disabled={speechState === "idle"}>
-              <Square size={14} /> إيقاف
-            </button>
-            <span><Volume2 size={14} /> العربية · حسب الأصوات المتاحة في جهازك</span>
-          </div>
-        )}
-        {speechState === "error" ? (
-          <div className={styles.speechWarning} role="alert">تعذر تشغيل القراءة الآلية على هذا الجهاز.</div>
-        ) : null}
-        <div className={styles.listenExcerpt} dir="rtl">
-          {reader.data.reader.segments.map((segment) => (
-            <p key={segment.index}>{segment.text}</p>
-          ))}
-        </div>
-        <div className={styles.readerNav}>
-          <button
-            type="button"
-            className="btn-outline"
-            disabled={reader.data.reader.previousCursor === null}
-            onClick={() => setCursor(reader.data.reader.previousCursor ?? 0)}
-          >
-            <ChevronRight size={15} /> المقطع السابق
-          </button>
-          <button
-            type="button"
-            className="btn-outline"
-            disabled={reader.data.reader.nextCursor === null}
-            onClick={() => setCursor(reader.data.reader.nextCursor ?? cursor)}
-          >
-            المقطع التالي <ChevronLeft size={15} />
-          </button>
-        </div>
-      </div>
-    </div>
+  const audiobookView = book.audiobook ? (
+    <AudiobookPlayer audiobook={book.audiobook} />
   ) : null;
 
   return (
@@ -479,7 +368,7 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
         className={styles.chamber}
         role="dialog"
         aria-modal="true"
-        aria-label={`${book.title} — مكتب القراءة والاستماع`}
+        aria-label={`${book.title} — مكتب القراءة والكتاب الصوتي`}
         onClick={(event) => event.stopPropagation()}
       >
         <header className={styles.bar}>
@@ -514,9 +403,9 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
           </div>
           <div className={styles.glow} />
           <div className={styles.stage}>
-            {mode === "عرض" ? catalogView : readerStatus}
+            {mode === "عرض" ? catalogView : mode === "قراءة" ? readerStatus : null}
             {mode === "قراءة" ? readingView : null}
-            {mode === "استماع" ? listeningView : null}
+            {mode === "Audiobook" ? audiobookView : null}
           </div>
         </div>
       </div>
