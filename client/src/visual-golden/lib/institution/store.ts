@@ -35,7 +35,8 @@ const actions = {
  setLocation(loc:PrayerLocation){const known=findLocation(loc.id); const recents=[loc.id,...state.recentLocationIds.filter(id=>id!==loc.id)].slice(0,6); patch({locationId:loc.id,customLocation:known?null:loc,recentLocationIds:recents});},
  setCalc(p:Partial<PrayerCalculationSettings>){patch({calc:{...state.calc,...p}});},
 };
-state={theme:"dark",lang:"ar",panel:null,hydrated:false,favorites:[],notes:[],journey:[],visits:{},notifyLeadMin:10,notifyPrayers:["Fajr","Dhuhr","Asr","Maghrib","Isha"],notifySound:false,locationId:"ae-auh",customLocation:null,calc:{method:8,school:0,highLatitude:"auto"},recentLocationIds:["ae-auh"],...actions};
+const initialTheme:ThemeMode=typeof document!=="undefined"&&document.documentElement.dataset.initialTheme==="light"?"light":"dark";
+state={theme:initialTheme,lang:"ar",panel:null,hydrated:false,favorites:[],notes:[],journey:[],visits:{},notifyLeadMin:10,notifyPrayers:["Fajr","Dhuhr","Asr","Maghrib","Isha"],notifySound:false,locationId:"ae-auh",customLocation:null,calc:{method:8,school:0,highLatitude:"auto"},recentLocationIds:["ae-auh"],...actions};
 const subscribe=(listener:()=>void)=>{ listeners.add(listener); return ()=>{ listeners.delete(listener); }; };
 export function useInstitution<T>(selector:(s:InstitutionState)=>T):T{ return useSyncExternalStore(subscribe,()=>selector(state),()=>selector(state)); }
 export function currentLocation():PrayerLocation{return state.customLocation??findLocation(state.locationId)??findLocation("ae-auh")!;}
