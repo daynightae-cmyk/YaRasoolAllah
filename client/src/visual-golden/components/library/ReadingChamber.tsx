@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { BookOpen, Headphones, Eye, X, ChevronRight, ChevronLeft, Play, Pause, Bookmark } from "lucide-react";
-import type { BookMode, LibraryBook } from "@/visual-golden/mock/books";
+import { Eye, X, Bookmark, ExternalLink, ShieldCheck, BookOpen, Headphones } from "lucide-react";
+import type { BookMode, LibraryBook } from "@/visual-golden/services/library";
 import p from "@/visual-golden/components/present/present.module.css";
 import styles from "./ReadingChamber.module.css";
 
@@ -10,14 +10,23 @@ interface Props {
   onClose: () => void;
 }
 
-export function ReadingChamber({ book, initialMode, onClose }: Props) {
-  const start = initialMode && book.modes.includes(initialMode) ? initialMode : book.modes[0];
-  const [mode, setMode] = useState<BookMode>(start);
-  const [page, setPage] = useState(0);
-  const [playing, setPlaying] = useState(false);
-  const [chapter, setChapter] = useState(0);
+const BOOKMARK_KEY = "library-shelf-bookmarks-v1";
+
+function safeReadBookmarks(): string[] {
+  try {
+    const raw = localStorage.getItem(BOOKMARK_KEY);
+    return raw ? (JSON.parse(raw) as string[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+export function ReadingChamber({ book, onClose }: Props) {
   const [saved, setSaved] = useState(false);
-  const [progress, setProgress] = useState(12);
+
+  useEffect(() => {
+    setSaved(safeReadBookmarks().includes(book.workId));
+  }, [book.workId]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -27,18 +36,18 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  useEffect(() => {
-    if (!playing) return;
-    const t = setInterval(() => setProgress((n) => (n >= 96 ? 12 : n + 1)), 400);
-    return () => clearInterval(t);
-  }, [playing]);
-
-  const pages = [
-    book.excerpt,
-    "[بيانات الكتاب] الصفحة التالية للعرض البصري. النص الإنتاجي سيُحقن من مصدر المكتبة دون إعادة تصميم الصفحة.",
-    "[بيانات الكتاب] حاشية بصرية للمحاذاة والكثافة فقط.",
-    "خاتمة المجلد — [بيانات المصدر]",
-  ];
+  const toggleSaved = () => {
+    try {
+      const current = safeReadBookmarks();
+      const next = current.includes(book.workId)
+        ? current.filter((id) => id !== book.workId)
+        : [...current, book.workId];
+      localStorage.setItem(BOOKMARK_KEY, JSON.stringify(next));
+      setSaved(next.includes(book.workId));
+    } catch {
+      setSaved((s) => !s);
+    }
+  };
 
   return (
     <div className={styles.scrim} onClick={onClose} role="presentation">
@@ -46,19 +55,10 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
         <header className={styles.bar}>
           <strong className="gold-text">{book.title}</strong>
           <div className={styles.tabs} role="tablist">
-            {book.modes.map((m) => (
-              <button
-                key={m}
-                type="button"
-                role="tab"
-                aria-selected={mode === m}
-                className={mode === m ? styles.on : ""}
-                onClick={() => setMode(m)}
-              >
-                {m === "عرض" ? <Eye size={14} /> : m === "قراءة" ? <BookOpen size={14} /> : <Headphones size={14} />}
-                {m}
-              </button>
-            ))}
+            <button type="button" role="tab" aria-selected className={styles.on}>
+              <Eye size={14} />
+              سجل العمل
+            </button>
           </div>
           <button type="button" className="btn-outline" onClick={onClose} aria-label="إغلاق">
             <X size={14} />
@@ -72,126 +72,109 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
           </div>
           <div className={styles.glow} />
           <div className={styles.stage}>
-            {mode === "عرض" ? (
-              <article className={styles.coverCard}>
-                <img src={book.cover} alt="" />
-                <div>
-                  <h3>{book.title}</h3>
-                  <p className="muted">{book.author}</p>
-                  <div className={styles.meta}>
-                    <span>{book.tag}</span>
-                    <span>{book.shelf}</span>
-                    <span>{book.pages} صفحة</span>
-                  </div>
-                  <div className={p.parchment}>
-                    <p style={{ margin: 0, lineHeight: 1.9 }}>{book.excerpt}</p>
-                  </div>
-                  <div className={styles.actions}>
-                    {book.modes.includes("قراءة") ? (
-                      <button type="button" className="btn-gold" onClick={() => setMode("قراءة")}>
-                        ابدأ القراءة
-                      </button>
-                    ) : null}
-                    {book.modes.includes("استماع") ? (
-                      <button type="button" className="btn-outline" onClick={() => setMode("استماع")}>
-                        استمع
-                      </button>
-                    ) : null}
-                    <button type="button" className="btn-outline" onClick={() => setSaved((s) => !s)}>
-                      <Bookmark size={14} /> {saved ? "في الرف الخاص" : "أضف للرف"}
-                    </button>
-                  </div>
-                </div>
-              </article>
-            ) : null}
-
-            {mode === "قراءة" ? (
+            <article className={styles.coverCard}>
+              <img src={book.cover} alt="" />
               <div>
-                <div className={styles.spread}>
-                  <div className={styles.page}>
-                    <h4>{book.title}</h4>
-                    <p>{pages[page] ?? pages[0]}</p>
-                    <span className={styles.folio}>{page * 2 + 1}</span>
-                  </div>
-                  <div className={styles.page}>
-                    <h4>{book.chapters[Math.min(page, book.chapters.length - 1)]}</h4>
-                    <p>{pages[page + 1] ?? pages[0]}</p>
-                    <span className={styles.folio}>{page * 2 + 2}</span>
-                  </div>
+                <h3>{book.title}</h3>
+                <p className="muted">
+                  {book.author} · {book.authorEn}
+                </p>
+                <p className="muted" style={{ fontSize: "0.78rem" }}>
+                  {book.titleEn} · {book.shelf}
+                </p>
+                <div className={styles.meta}>
+                  <span>{book.tag}</span>
+                  <span>{book.shelf}</span>
+                  <span>{book.versionCount} نسخة رقمية</span>
+                  <span>سجل فهرسي فقط</span>
                 </div>
-                <div className={styles.turn}>
-                  <button
-                    type="button"
-                    className="btn-outline"
-                    onClick={() => setPage((n) => Math.max(0, n - 1))}
-                    aria-label="الصفحة السابقة"
-                  >
-                    <ChevronRight size={14} /> السابق
+
+                <div className={p.parchment}>
+                  <p style={{ margin: 0, lineHeight: 1.9 }}>
+                    {book.attributionCaveat}
+                  </p>
+                  <p style={{ margin: "0.6rem 0 0", lineHeight: 1.9, fontSize: "0.85rem" }}>
+                    النص الكامل لهذا العمل غير متاح داخل المنصة حتى مراجعة النسخة والحقوق على مستوى
+                    كل نسخة رقمية. ما يُعرض هنا هو بيانات الفهرسة والنسخ والمصادر فقط.
+                  </p>
+                </div>
+
+                <div className={styles.meta} style={{ marginTop: "0.8rem" }}>
+                  <span>
+                    <ShieldCheck size={12} style={{ verticalAlign: "-2px" }} /> الببليوغرافيا:{" "}
+                    {book.bibliographicStatus === "verified_bibliographic" ? "موثقة" : "قيد المراجعة"}
+                  </span>
+                  <span>المراجعة العلمية: معلقة</span>
+                  <span>الإتاحة: فهرس فقط</span>
+                </div>
+
+                {book.openitiWorkUri ? (
+                  <p className="muted" style={{ fontSize: "0.75rem", direction: "ltr", textAlign: "end" }}>
+                    OpenITI: {book.openitiWorkUri}
+                  </p>
+                ) : (
+                  <p className="muted" style={{ fontSize: "0.75rem" }}>
+                    لا توجد نسخة OpenITI مثبتة لهذا العمل في هذا الإصدار.
+                  </p>
+                )}
+
+                <div className={styles.actions}>
+                  <button type="button" className="btn-outline" onClick={toggleSaved}>
+                    <Bookmark size={14} /> {saved ? "في الرف الخاص (محلي)" : "أضف للرف الخاص (محلي)"}
                   </button>
-                  <button
-                    type="button"
-                    className="btn-gold"
-                    onClick={() => setPage((n) => Math.min(pages.length - 2, n + 1))}
-                    aria-label="الصفحة التالية"
-                  >
-                    التالي <ChevronLeft size={14} />
-                  </button>
+                </div>
+
+                <div style={{ marginTop: "1rem" }}>
+                  <h4 style={{ margin: "0 0 0.5rem", color: "#f8efc2", fontSize: "0.95rem" }}>
+                    النسخ الرقمية ({book.versions.length})
+                  </h4>
+                  {book.versions.length === 0 ? (
+                    <p className="muted" style={{ fontSize: "0.82rem" }}>
+                      لم تُثبت أي نسخة رقمية لهذا العمل في هذا الإصدار.
+                    </p>
+                  ) : (
+                    <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "0.45rem" }}>
+                      {book.versions.map((version) => (
+                        <li
+                          key={version.versionId}
+                          style={{
+                            border: "1px solid rgba(212,160,23,0.3)",
+                            borderRadius: 10,
+                            padding: "0.5rem 0.65rem",
+                            background: "rgba(0,0,0,0.2)",
+                            fontSize: "0.78rem",
+                          }}
+                        >
+                          <div style={{ direction: "ltr", textAlign: "left", wordBreak: "break-all", color: "#f8efc2" }}>
+                            {version.openitiUri}
+                          </div>
+                          <div className="muted" style={{ marginTop: "0.25rem" }}>
+                            {version.editionStatement}
+                          </div>
+                          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginTop: "0.4rem" }}>
+                            <a href={version.sourceUrl} target="_blank" rel="noreferrer" className="btn-outline" style={{ fontSize: "0.75rem", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}>
+                              <ExternalLink size={12} /> المصدر
+                            </a>
+                            <a href={version.versionMetadataUrl} target="_blank" rel="noreferrer" className="btn-outline" style={{ fontSize: "0.75rem", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 4 }}>
+                              <ExternalLink size={12} /> بيانات النسخة
+                            </a>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+
+                <div style={{ marginTop: "1rem", display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+                  <span className="btn-outline" style={{ opacity: 0.65, cursor: "not-allowed", display: "inline-flex", alignItems: "center", gap: 4 }} title="القراءة الداخلية غير مفعّلة: لا توجد نسخة كاملة cleared الحقوق">
+                    <BookOpen size={14} /> قراءة — غير متاحة
+                  </span>
+                  <span className="btn-outline" style={{ opacity: 0.65, cursor: "not-allowed", display: "inline-flex", alignItems: "center", gap: 4 }} title="الاستماع غير مفعّل: لا يوجد أصل صوتي cleared">
+                    <Headphones size={14} /> استماع — غير متاح
+                  </span>
                 </div>
               </div>
-            ) : null}
-
-            {mode === "استماع" ? (
-              <article className={`${styles.listen} ${playing ? styles.playing : ""}`}>
-                <div className={p.vinyl}>
-                  <div className={`${p.vinylDisc} ${playing ? p.spinning : ""}`} />
-                  <div className={p.vinylHub}>
-                    <img src={book.cover} alt="" />
-                  </div>
-                </div>
-                <div>
-                  <p className="gold-text">كتاب صوتي</p>
-                  <h3 style={{ margin: "0.2rem 0", color: "#f8efc2" }}>{book.title}</h3>
-                  <p className="muted">{book.author}</p>
-                  <div className={styles.wave} aria-hidden>
-                    {Array.from({ length: 28 }).map((_, i) => (
-                      <i key={i} style={{ animationDelay: `${(i % 7) * 80}ms` }} />
-                    ))}
-                  </div>
-                  <div className="scrub" style={{ height: 6, background: "rgba(255,255,255,0.1)", borderRadius: 99 }}>
-                    <i
-                      style={{
-                        display: "block",
-                        width: `${progress}%`,
-                        height: "100%",
-                        background: "var(--gold-500)",
-                        borderRadius: 99,
-                      }}
-                    />
-                  </div>
-                  <div className={styles.actions}>
-                    <button type="button" className="btn-gold" onClick={() => setPlaying((v) => !v)}>
-                      {playing ? <Pause size={14} /> : <Play size={14} />} {playing ? "إيقاف" : "تشغيل"}
-                    </button>
-                  </div>
-                  <div className={styles.chapters} style={{ marginTop: "0.8rem" }}>
-                    {book.chapters.map((c, i) => (
-                      <button
-                        key={c}
-                        type="button"
-                        className={chapter === i ? styles.on : ""}
-                        onClick={() => {
-                          setChapter(i);
-                          setPlaying(true);
-                          setProgress(8);
-                        }}
-                      >
-                        {c}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </article>
-            ) : null}
+            </article>
           </div>
         </div>
       </div>
