@@ -156,18 +156,40 @@ try {
   const shelfDiagnostics = await evaluate(
     session,
     `(() => {
-      const books = [...document.querySelectorAll("button[aria-label]")].filter((button) =>
-        button.getAttribute("aria-label")?.includes("—")
-      );
+      const books = [...document.querySelectorAll("[data-book-spine]")];
+      const plates = [...document.querySelectorAll("[data-shelf-plate]")];
       const target = books.find((button) => button.getAttribute("aria-label")?.includes("السيرة النبوية"));
-      if (!target) return { clicked: false };
+      const intersects = (a, b) =>
+        a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+      const plaqueOverlaps = plates.flatMap((plate, plateIndex) => {
+        const plateRect = plate.getBoundingClientRect();
+        return books.flatMap((book, bookIndex) => {
+          const bookRect = book.getBoundingClientRect();
+          return intersects(plateRect, bookRect)
+            ? [{ plateIndex, bookIndex, plate: plate.textContent?.trim(), book: book.getAttribute("aria-label") }]
+            : [];
+        });
+      });
+      if (!target) return { clicked: false, bookCount: books.length, plaqueCount: plates.length, plaqueOverlaps };
       target.click();
       const overflow = document.documentElement.scrollWidth > innerWidth + 1;
-      return { clicked: true, bookCount: books.length, overflow, target: target.getAttribute("aria-label") };
+      return {
+        clicked: true,
+        bookCount: books.length,
+        plaqueCount: plates.length,
+        plaqueOverlapCount: plaqueOverlaps.length,
+        plaqueOverlaps: plaqueOverlaps.slice(0, 12),
+        overflow,
+        target: target.getAttribute("aria-label"),
+      };
     })()`,
   );
   if (!shelfDiagnostics.clicked) throw new Error("Could not select the Ibn Hisham shelf book");
   if (shelfDiagnostics.overflow) throw new Error("Library page has horizontal page overflow");
+  if (shelfDiagnostics.plaqueOverlapCount !== 0) {
+    throw new Error(`Shelf plaque overlaps detected: ${JSON.stringify(shelfDiagnostics.plaqueOverlaps)}`);
+  }
+  await screenshot(session, "library-shelves.jpg");
 
   await waitFor(
     session,
