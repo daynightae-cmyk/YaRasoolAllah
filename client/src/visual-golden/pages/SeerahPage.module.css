@@ -1,0 +1,224 @@
+.page {
+  overflow-x: hidden;
+}
+.heroBtns {
+  display: flex;
+  gap: 0.55rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+.timelineWrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.1rem 0.4rem;
+}
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.55rem;
+  flex: 1;
+}
+.stage {
+  background: rgba(5, 42, 36, 0.7);
+  border: 1px solid rgba(212, 160, 23, 0.22);
+  border-radius: 14px;
+  overflow: hidden;
+  color: var(--ivory-100);
+  text-align: center;
+  padding-bottom: 0.55rem;
+}
+.stage img {
+  width: 100%;
+  height: 72px;
+  object-fit: cover;
+  display: block;
+}
+.stage b {
+  display: block;
+  font-size: 0.78rem;
+  margin-top: 0.4rem;
+}
+.stage span {
+  font-size: 0.68rem;
+  color: var(--gold-300);
+}
+.stageOn {
+  border-color: var(--gold-400);
+  box-shadow: 0 0 0 1px var(--gold-400);
+}
+.arrow {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border-gold);
+  color: var(--gold-300);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.main,
+.lower {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1.3fr) 280px;
+  gap: 0.9rem;
+  padding: 1rem 1.3rem;
+}
+.lower {
+  grid-template-columns: 1.1fr 1.3fr 0.9fr;
+  padding-top: 0;
+  padding-bottom: 1.4rem;
+}
+.panel {
+  background: rgba(5, 42, 36, 0.72);
+  border: 1px solid rgba(212, 160, 23, 0.28);
+  border-radius: 16px;
+  padding: 0.9rem;
+}
+.events {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+.events li {
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.35rem;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.events img {
+  width: 46px;
+  height: 46px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.events span {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--gold-300);
+}
+.evOn {
+  background: rgba(212, 160, 23, 0.14);
+}
+.mapCard {
+  background: rgba(5, 42, 36, 0.55);
+  border: 1px solid rgba(212, 160, 23, 0.28);
+  border-radius: 16px;
+  padding: 0.9rem;
+}
+.map {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 260px;
+}
+.map img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+  display: block;
+}
+.pin {
+  position: absolute;
+  background: rgba(6, 28, 24, 0.86);
+  border: 1px solid var(--border-gold);
+  color: var(--ivory-50);
+  font-size: 0.72rem;
+  padding: 0.2rem 0.45rem;
+  border-radius: 999px;
+}
+.pinOn {
+  background: var(--gold-500);
+  color: var(--navy-950);
+  font-weight: 700;
+}
+.miles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.miles article {
+  position: relative;
+  height: 92px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.miles img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.miles span {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  padding: 0.4rem;
+  background: linear-gradient(transparent, rgba(3, 16, 14, 0.95));
+  font-size: 0.78rem;
+}
+.figures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.figures span {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(0, 0, 0, 0.16);
+  border-radius: 999px;
+  padding: 0.25rem 0.55rem 0.25rem 0.25rem;
+  font-size: 0.75rem;
+}
+.figures img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.places {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.45rem;
+}
+.places article {
+  text-align: center;
+}
+.places img {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--gold-500);
+  margin: 0 auto 0.25rem;
+  display: block;
+}
+.places span {
+  font-size: 0.72rem;
+}
+.bar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 99px;
+  margin: 0.5rem 0;
+}
+.bar i {
+  display: block;
+  height: 100%;
+  background: var(--gold-500);
+  border-radius: 99px;
+}
+
+@media (max-width: 1100px) {
+  .timeline,
+  .main,
+  .lower {
+    grid-template-columns: 1fr;
+  }
+}

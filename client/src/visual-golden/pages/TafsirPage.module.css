@@ -1,0 +1,220 @@
+.page {
+  overflow-x: hidden;
+}
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+  padding: 0.85rem 1.3rem;
+}
+.toolbar > button,
+.toolbar label {
+  background: rgba(5, 42, 36, 0.72);
+  border: 1px solid rgba(212, 160, 23, 0.3);
+  border-radius: 12px;
+  padding: 0.45rem 0.8rem;
+  color: var(--ivory-100);
+  font-size: 0.82rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+.toolbar b {
+  color: var(--gold-300);
+  margin-inline-start: 0.35rem;
+}
+.tools {
+  margin-inline-start: auto;
+  display: flex;
+  gap: 0.35rem;
+}
+.tools button {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(5, 42, 36, 0.72);
+  border: 1px solid rgba(212, 160, 23, 0.3);
+  color: var(--gold-300);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 0 0.55rem;
+  width: auto;
+}
+.on {
+  border-color: var(--gold-400) !important;
+  background: rgba(232, 197, 71, 0.16) !important;
+}
+.layout,
+.bottom {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr) 300px;
+  gap: 0.9rem;
+  padding: 0 1.3rem 1rem;
+}
+.bottom {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.panel {
+  background: rgba(5, 42, 36, 0.72);
+  border: 1px solid rgba(212, 160, 23, 0.28);
+  border-radius: 16px;
+  padding: 0.85rem;
+}
+.verseItem {
+  width: 100%;
+  text-align: start;
+  background: rgba(4, 22, 20, 0.45);
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 0.55rem 0.65rem;
+  color: var(--ivory-100);
+  margin-bottom: 0.4rem;
+}
+.verseItem span {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.verseItem b {
+  float: inline-end;
+  color: var(--gold-300);
+}
+.verseItem p {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+}
+.current {
+  border-color: var(--gold-400);
+  background: rgba(232, 197, 71, 0.1);
+}
+.verseBox {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(16, 185, 129, 0.12), transparent 50%),
+    linear-gradient(180deg, #0b2a24, #071814);
+  border: 1px solid rgba(232, 197, 71, 0.4);
+  border-radius: 18px;
+  padding: 1.3rem 1.2rem 1.5rem;
+  text-align: center;
+}
+.verseBox h2 {
+  margin: 0 0 0.8rem;
+  color: var(--gold-300);
+  font-size: 1.05rem;
+}
+.arabic {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2.3vw, 1.7rem);
+  line-height: 2.3;
+  color: #f8efc2;
+  margin: 0 0 0.8rem;
+}
+.arabic span {
+  display: inline-grid;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  margin-inline-start: 0.4rem;
+  border-radius: 50%;
+  border: 1px solid var(--gold-500);
+  font-size: 0.72rem;
+  font-family: var(--font-ui);
+}
+.en {
+  color: var(--text-secondary);
+  font-family: var(--font-latin);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+.srcTabs,
+.reflectTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-bottom: 0.7rem;
+}
+.srcTabs button,
+.reflectTabs button {
+  padding: 0.32rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  background: rgba(4, 22, 20, 0.5);
+  color: var(--ivory-200);
+  border: 1px solid rgba(212, 160, 23, 0.2);
+}
+.srcOn {
+  background: linear-gradient(135deg, rgba(232, 197, 71, 0.28), rgba(6, 95, 70, 0.5)) !important;
+  color: var(--gold-300) !important;
+}
+.tafsir {
+  font-size: 0.88rem;
+  line-height: 1.85;
+  color: var(--ivory-100);
+}
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--gold-300);
+  font-size: 0.8rem;
+  margin-top: 0.4rem;
+}
+.words {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.words li {
+  padding: 0.45rem 0;
+  border-bottom: 1px solid rgba(212, 160, 23, 0.15);
+}
+.words strong {
+  color: var(--gold-300);
+  margin-inline-end: 0.4rem;
+}
+.words em {
+  font-style: normal;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: var(--font-latin);
+}
+.words p {
+  margin: 0.2rem 0 0;
+  font-size: 0.8rem;
+  color: var(--ivory-200);
+}
+.prompts {
+  margin: 0;
+  padding-inline-start: 1.1rem;
+  color: var(--ivory-100);
+  line-height: 1.8;
+  font-size: 0.86rem;
+}
+.panel textarea {
+  width: 100%;
+  background: rgba(4, 22, 20, 0.55);
+  border: 1px solid rgba(212, 160, 23, 0.25);
+  border-radius: 10px;
+  color: var(--ivory-50);
+  padding: 0.7rem;
+  font-family: var(--font-ui);
+  resize: vertical;
+  margin-bottom: 0.7rem;
+}
+.focus .layout {
+  grid-template-columns: 1fr;
+  max-width: 860px;
+  margin: 0 auto;
+}
+.focus .layout > aside,
+.focus .bottom {
+  display: none;
+}
+
+@media (max-width: 1100px) {
+  .layout,
+  .bottom {
+    grid-template-columns: 1fr;
+  }
+}
