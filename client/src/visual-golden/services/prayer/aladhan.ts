@@ -147,7 +147,7 @@ export async function loadPrayerTimes(
   const usedKey = actualKey === initialKey ? initialKey : dateKeyInZone(providerTz);
   const tomorrowKey = shiftDateKey(usedKey, 1);
   const tomorrow = await fetchDay({ ...args, date: tomorrowKey });
-  const tomorrowFajr = tomorrow.ok ? stripTime(tomorrow.data.timings.Fajr) : stripTime(today.data.timings.Fajr);
+  const tomorrowFajr = tomorrow.ok ? stripTime(tomorrow.data.timings.Fajr) : null;
 
   return {
     location,
