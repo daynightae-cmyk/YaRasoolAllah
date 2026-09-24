@@ -1,14 +1,16 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BookOpen, Info, Radio, Tv } from "lucide-react";
-import { KIDS_VIDEO_CATALOG, buildKidsVideoRows } from "@/visual-golden/services/kids-media/catalog";
+import { KIDS_TOPIC_LABELS, KIDS_VIDEO_CATALOG, buildKidsVideoRows } from "@/visual-golden/services/kids-media/catalog";
 import { getContinueWatchingIds, readKidsProgress, writeKidsProgress } from "@/visual-golden/services/kids-media/progress";
 import type {
   KidsPlayerHandle,
   KidsPlayerState,
   KidsTVState,
   KidsVideo,
+  KidsVideoTopic,
 } from "@/visual-golden/services/kids-media/types";
 import { KidsCurtains } from "./KidsCurtains";
+import { KidsLibraryToolbar } from "./KidsLibraryToolbar";
 import { KidsRemote, type KidsRemoteCommand } from "./KidsRemote";
 import { KidsVideoRow } from "./KidsVideoRow";
 import { YouTubePlayer } from "./providers/YouTubePlayer";
@@ -32,6 +34,8 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
   const [mobileRemote, setMobileRemote] = useState(false);
   const [progressRevision, setProgressRevision] = useState(0);
   const [friendlyError, setFriendlyError] = useState("");
+  const [libraryQuery, setLibraryQuery] = useState("");
+  const [activeTopic, setActiveTopic] = useState<KidsVideoTopic | "all">("all");
 
   const playerRef = useRef<KidsPlayerHandle>(null);
   const screenRef = useRef<HTMLDivElement>(null);
@@ -326,13 +330,49 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [handleCommand]);
 
-  const baseRows = useMemo(() => buildKidsVideoRows(playable), [playable]);
+  const availableTopics = useMemo(
+    () => [...new Set(playable.map((video) => video.topic))],
+    [playable],
+  );
+
+  const filteredVideos = useMemo(() => {
+    const normalized = libraryQuery.trim().toLocaleLowerCase("ar");
+    return playable.filter((video) => {
+      if (activeTopic !== "all" && video.topic !== activeTopic) return false;
+      if (!normalized) return true;
+      const haystack = [
+        video.titleAr,
+        video.titleOriginal,
+        video.description ?? "",
+        video.series ?? "",
+        video.publisherName,
+        KIDS_TOPIC_LABELS[video.topic],
+        ...video.tags,
+      ]
+        .join(" ")
+        .toLocaleLowerCase("ar");
+      return haystack.includes(normalized);
+    });
+  }, [activeTopic, libraryQuery, playable]);
+
+  const baseRows = useMemo(() => buildKidsVideoRows(filteredVideos), [filteredVideos]);
   const continueWatching = useMemo(() => {
     const ids = getContinueWatchingIds();
     return ids
       .map((id) => playable.find((video) => video.id === id))
       .filter((video): video is KidsVideo => Boolean(video));
   }, [playable, progressRevision]);
+
+  const watchNext = useMemo(() => {
+    if (!current) return [];
+    const sameTopic = filteredVideos.filter(
+      (video) => video.id !== current.id && video.topic === current.topic,
+    );
+    const others = filteredVideos.filter(
+      (video) => video.id !== current.id && video.topic !== current.topic,
+    );
+    return [...sameTopic, ...others].slice(0, 8);
+  }, [current, filteredVideos]);
 
   if (!current) {
     return (
@@ -458,10 +498,28 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
       ) : null}
 
       <div className={styles.library}>
-        {continueWatching.length ? (
+        <KidsLibraryToolbar
+          query={libraryQuery}
+          onQueryChange={setLibraryQuery}
+          activeTopic={activeTopic}
+          availableTopics={availableTopics}
+          onTopicChange={setActiveTopic}
+          resultCount={filteredVideos.length}
+        />
+
+        {continueWatching.length && !libraryQuery && activeTopic === "all" ? (
           <KidsVideoRow
             title="استمر في المشاهدة"
             videos={continueWatching}
+            selectedId={current.id}
+            onSelect={(video) => switchTo(video, false)}
+          />
+        ) : null}
+
+        {watchNext.length ? (
+          <KidsVideoRow
+            title="شاهد التالي"
+            videos={watchNext}
             selectedId={current.id}
             onSelect={(video) => switchTo(video, false)}
           />
@@ -476,6 +534,22 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
             onSelect={(video) => switchTo(video, false)}
           />
         ))}
+
+        {!filteredVideos.length ? (
+          <div className={styles.noResults} role="status">
+            <strong>لم نجد حلقة مطابقة</strong>
+            <span>جرّب كلمة أبسط أو اختر «الكل» من الموضوعات.</span>
+            <button
+              type="button"
+              onClick={() => {
+                setLibraryQuery("");
+                setActiveTopic("all");
+              }}
+            >
+              عرض كل الحلقات
+            </button>
+          </div>
+        ) : null}
       </div>
     </section>
   );
