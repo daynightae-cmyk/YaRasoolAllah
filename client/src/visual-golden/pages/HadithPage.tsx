@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Search, Bookmark, BookmarkCheck, Share2, Copy, ShieldCheck, Database } from "lucide-react";
+import { Search, Bookmark, BookmarkCheck, ExternalLink, ShieldCheck, Database } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
@@ -31,7 +31,6 @@ export function HadithPage() {
   const [collectionId, setCollectionId] = useState<string | "all">("all");
   const [activeId, setActiveId] = useState("bukhari-1");
   const [bookmarks, setBookmarks] = useState<string[]>(() => safeReadBookmarks());
-  const [copied, setCopied] = useState(false);
 
   const results = useMemo(() => searchSamples(q, collectionId), [q, collectionId]);
   const active = results.find((sample) => sample.id === activeId) ?? results[0] ?? null;
@@ -49,32 +48,6 @@ export function HadithPage() {
     } catch {
       // bookmark remains in-memory
     }
-  };
-
-  const copyActive = async () => {
-    if (!active) return;
-    const payload = `${active.textAr}\n[${activeCollection?.nameAr ?? ""} · كتاب ${active.bookNameAr} · حديث رقم ${active.hadithNumber}]`;
-    try {
-      await navigator.clipboard.writeText(payload);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 1600);
-    } catch {
-      setCopied(false);
-    }
-  };
-
-  const shareActive = async () => {
-    if (!active) return;
-    const text = `${active.textAr}\n${activeCollection?.nameAr ?? ""} — حديث رقم ${active.hadithNumber}`;
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: "دار الحديث", text });
-        return;
-      } catch {
-        return;
-      }
-    }
-    await copyActive();
   };
 
   return (
@@ -143,7 +116,7 @@ export function HadithPage() {
             <>
               <div className={p.parchment}>
                 <blockquote style={{ margin: 0 }}>
-                  قال رسول الله ﷺ:
+                  نص عينة تطويرية منسوبة للحديث، قيد مراجعة النقل والتخريج:
                   <br />
                   {active.textAr}
                 </blockquote>
@@ -179,16 +152,13 @@ export function HadithPage() {
               </p>
               <IsnadChain narrator={active.narratorAr} collection={activeCollection.nameAr} />
               <div className={styles.actions}>
-                <button type="button" onClick={shareActive}>
-                  <Share2 size={14} /> مشاركة
-                </button>
-                <button type="button" onClick={copyActive}>
-                  <Copy size={14} /> {copied ? "تم النسخ" : "نسخ"}
-                </button>
                 <button type="button" className={activeBookmarked ? styles.on : ""} onClick={toggleBookmark}>
                   {activeBookmarked ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}{" "}
                   {activeBookmarked ? "محفوظ محليًا" : "حفظ محلي"}
                 </button>
+                <a href="https://dorar.net/hadith" target="_blank" rel="noopener noreferrer" className={styles.sourceLink}>
+                  ابحث في الموسوعة الحديثية لدى الدرر السنية <ExternalLink size={14} aria-hidden="true" />
+                </a>
               </div>
             </>
           ) : (
@@ -223,6 +193,9 @@ export function HadithPage() {
             الأعداد المعروضة على بطاقات المصنفات هي أعداد ببليوغرافية معروفة للمصنف، وليست حجم
             المتن المحلي. المتاح محليًا هو {HADITH_COUNTS.localSamples} سجلات تطويرية فقط، كل
             منها قيد المراجعة التحريرية، ولا تُقدَّم على أنها المتن الكامل لأي مصنف.
+          </p>
+          <p className="muted" style={{ fontSize: "0.8rem", lineHeight: 1.9 }}>
+            رابط الدرر السنية يفتح المصدر الخارجي للبحث والتحقق، ولا يعني اعتماد نص العينة المحلية أو درجتها.
           </p>
         </article>
       </div>

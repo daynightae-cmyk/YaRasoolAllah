@@ -114,6 +114,19 @@
   color: var(--ivory-100);
   font-size: 0.78rem;
 }
+.sourceLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid rgba(212, 160, 23, 0.45);
+  color: var(--gold-300);
+  font-size: 0.78rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.sourceLink:focus-visible { outline: 3px solid var(--gold-400); outline-offset: 3px; }
 .on {
   border-color: var(--gold-400) !important;
   color: var(--gold-300) !important;
