@@ -44,6 +44,10 @@ const VisualDailyPage = lazy(() => import("@/visual-golden/pages/DailyPage").the
 const VisualAudioPage = lazy(() => import("@/visual-golden/pages/AudioPage").then((m) => ({ default: m.AudioPage })));
 const VisualBasirahPage = lazy(() => import("@/visual-golden/pages/BasirahPage").then((m) => ({ default: m.BasirahPage })));
 
+function LibraryWorkRoute({ params }: { params: { workId: string } }) {
+  return <VisualRoute><VisualLibraryPage initialWorkId={decodeURIComponent(params.workId)} /></VisualRoute>;
+}
+
 
 const VISUAL_PATHS = new Set([
   "/", "/library", "/digital-library", "/books", "/quran", "/tafsir", "/seerah", "/atlas",
@@ -111,6 +115,7 @@ function AppContent() {
         <Route path="/24-hours">
           {() => <PropheticDayPage />}
         </Route>
+        <Route path="/library/work/:workId" component={LibraryWorkRoute} />
         <Route path="/library">
           {() => <VisualRoute><VisualLibraryPage /></VisualRoute>}
         </Route>

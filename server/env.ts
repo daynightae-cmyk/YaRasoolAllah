@@ -44,9 +44,12 @@ export function getPersistenceMode(): PersistenceMode {
     return "postgres";
   }
 
-  if (isProduction() && process.env.ALLOW_EPHEMERAL_PERSISTENCE !== "1") {
+  const explicitCiSmoke = process.env.CI === "true"
+    && process.env.ALLOW_EPHEMERAL_PERSISTENCE === "1";
+
+  if (isProduction() && !explicitCiSmoke) {
     throw new Error(
-      "DATABASE_URL is required in production. Set ALLOW_EPHEMERAL_PERSISTENCE=1 only for an explicit ephemeral smoke, never as a silent production default.",
+      "DATABASE_URL is required in production. Ephemeral persistence is allowed only for an explicit CI smoke run.",
     );
   }
 

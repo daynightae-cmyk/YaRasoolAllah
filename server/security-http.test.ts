@@ -10,6 +10,7 @@ delete process.env.DATABASE_URL;
 
 const { createApiApp } = await import("./create-app");
 const { DEMO_ENDPOINT_GONE } = await import("./legacy-endpoints");
+const { getPersistenceMode } = await import("./env");
 
 async function withServer(app: Express, run: (base: string) => Promise<void>): Promise<void> {
   const server = createServer(app);
@@ -32,6 +33,27 @@ test("health reports ephemeral memory persistence and quarantined demo endpoints
     assert.equal(body.demoEndpoints, "quarantined");
     assert.equal(body.auth, "jwt-hs256");
   });
+});
+
+test("production cannot opt into ephemeral persistence", () => {
+  const previousNodeEnv = process.env.NODE_ENV;
+  const previousOverride = process.env.ALLOW_EPHEMERAL_PERSISTENCE;
+  const previousCi = process.env.CI;
+  try {
+    process.env.NODE_ENV = "production";
+    process.env.ALLOW_EPHEMERAL_PERSISTENCE = "1";
+    delete process.env.CI;
+    delete process.env.DATABASE_URL;
+    assert.throws(() => getPersistenceMode(), /DATABASE_URL is required in production/);
+    process.env.CI = "true";
+    assert.equal(getPersistenceMode(), "memory");
+  } finally {
+    process.env.NODE_ENV = previousNodeEnv;
+    if (previousOverride === undefined) delete process.env.ALLOW_EPHEMERAL_PERSISTENCE;
+    else process.env.ALLOW_EPHEMERAL_PERSISTENCE = previousOverride;
+    if (previousCi === undefined) delete process.env.CI;
+    else process.env.CI = previousCi;
+  }
 });
 
 test("demo-token is rejected and register/login persist hashed credentials", async () => {
