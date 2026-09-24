@@ -1,246 +1,366 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
-import { ZoomIn, ZoomOut, Locate, Play, Pause, List, Expand } from "lucide-react";
-import { art } from "@/visual-golden/mock/art";
-import { CompassRose } from "@/visual-golden/components/unique/CompassRose";
-import { FocusBar } from "@/visual-golden/components/present/FocusBar";
+import {
+  ZoomIn,
+  ZoomOut,
+  Locate,
+  List,
+  ChevronRight,
+  ChevronLeft,
+  Mountain,
+  BookOpen,
+} from "lucide-react";
+import { LivingTerrainTheatre } from "@/visual-golden/components/atlas/LivingTerrainTheatre";
+import {
+  LIVING_CAMPAIGNS,
+  CERTAINTY_LABEL,
+  WEATHER_LABEL,
+  campaignById,
+  type Weather,
+} from "@/visual-golden/data/living-atlas";
 import {
   ATLAS_COUNTS,
   ATLAS_FILTERS,
   ATLAS_NODES,
   filterNodes,
-  narrativeLinks,
   type AtlasFilter,
 } from "@/visual-golden/services/atlas";
-import styles from "./AtlasPage.module.css";
+import styles from "./LivingAtlasPage.module.css";
 
-const layers = [
-  { id: "terrain", label: "التضاريس (رسم توضيحي)", on: true },
-  { id: "routes", label: "التسلسل السردي التخطيطي", on: true },
-  { id: "nodes", label: "المواضع التخطيطية", on: true },
-  { id: "legend", label: "مفتاح الدقة", on: true },
-];
+const HIJAZ_PLATE = "/visual-golden/art/atlas-hero.webp";
 
 export function AtlasPage() {
-  const [selectedId, setSelectedId] = useState(ATLAS_NODES[0]?.id ?? "");
+  const [mode, setMode] = useState<"theatre" | "places">("theatre");
+  const [campaignId, setCampaignId] = useState(LIVING_CAMPAIGNS[0].id);
+  const [phaseIndex, setPhaseIndex] = useState(0);
+  const [markerId, setMarkerId] = useState(LIVING_CAMPAIGNS[0].markers[0]?.id ?? "");
   const [zoom, setZoom] = useState(1);
-  const [filter, setFilter] = useState<AtlasFilter>("all");
-  const [layerOn, setLayerOn] = useState(() => Object.fromEntries(layers.map((l) => [l.id, l.on])));
-  const [immersive, setImmersive] = useState(false);
-  const [touring, setTouring] = useState(false);
+  const [showOverlays, setShowOverlays] = useState(false);
+  const [showMarkers, setShowMarkers] = useState(true);
   const [listMode, setListMode] = useState(false);
+  const [placeFilter, setPlaceFilter] = useState<AtlasFilter>("all");
+  const [placeId, setPlaceId] = useState(ATLAS_NODES[0]?.id ?? "");
 
-  const visible = useMemo(() => filterNodes(filter), [filter]);
-  const sel = visible.find((node) => node.id === selectedId) ?? visible[0] ?? null;
-  const links = useMemo(() => narrativeLinks(visible), [visible]);
-
-  useEffect(() => {
-    if (!touring || visible.length < 2) return;
-    const timer = window.setInterval(() => {
-      setSelectedId((current) => {
-        const idx = visible.findIndex((node) => node.id === current);
-        return visible[(idx + 1) % visible.length].id;
-      });
-    }, 1800);
-    return () => window.clearInterval(timer);
-  }, [touring, visible]);
+  const campaign = campaignById(campaignId);
+  const phase = campaign.phases[Math.min(phaseIndex, campaign.phases.length - 1)];
+  const marker = campaign.markers.find((item) => item.id === markerId) ?? campaign.markers[0];
+  const weather: Weather = phase.weather;
+  const places = useMemo(() => filterNodes(placeFilter), [placeFilter]);
+  const place = places.find((node) => node.id === placeId) ?? places[0] ?? null;
 
   useEffect(() => {
-    setTouring(false);
-    if (!visible.some((node) => node.id === selectedId)) {
-      setSelectedId(visible[0]?.id ?? "");
+    setPhaseIndex(0);
+    setZoom(1);
+  }, [campaignId]);
+
+  useEffect(() => {
+    const firstActive = phase.activeMarkerIds[0];
+    if (firstActive) setMarkerId(firstActive);
+  }, [campaignId, phaseIndex, phase.activeMarkerIds]);
+
+  useEffect(() => {
+    if (!places.some((node) => node.id === placeId)) {
+      setPlaceId(places[0]?.id ?? "");
     }
-  }, [filter, visible, selectedId]);
+  }, [places, placeId]);
+
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) return;
+      if (mode !== "theatre") return;
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        setPhaseIndex((index) => Math.min(campaign.phases.length - 1, index + 1));
+      }
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        setPhaseIndex((index) => Math.max(0, index - 1));
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [mode, campaign.phases.length]);
+
+  const witnessKind =
+    phase.witness.kind === "quran" ? "قرآن" : phase.witness.kind === "hadith" ? "حديث" : "سيرة";
 
   return (
-    <div className={`${styles.page} ${immersive ? styles.immersive : ""}`}>
-      <FocusBar
-        focus={immersive}
-        onFocus={() => setImmersive((v) => !v)}
-        extra={{ label: "غمر الخريطة", on: immersive, onClick: () => setImmersive((v) => !v) }}
-      />
-      <div className={styles.mapArea}>
-        <div className={styles.title}>
-          <h1>الأطلس التخطيطي للسيرة</h1>
-          <p>
-            SCHEMATIC ATLAS · {ATLAS_COUNTS.nodes} مواضع · {ATLAS_COUNTS.mentions} إشارة من فصول السيرة
+    <div className={styles.page} data-climate={mode === "theatre" ? weather : "places"}>
+      <div className={styles.stageWrap}>
+        {listMode ? (
+          <ol className={styles.listEq}>
+            {(mode === "theatre" ? campaign.markers : places).map((item) => {
+              const id = item.id;
+              const name = "labelAr" in item ? item.labelAr : item.name;
+              return (
+                <li key={id}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (mode === "theatre") setMarkerId(id);
+                      else setPlaceId(id);
+                      setListMode(false);
+                    }}
+                  >
+                    <strong>{name}</strong>
+                    <span>{"certainty" in item ? CERTAINTY_LABEL[item.certainty] : "موضع تخطيطي"}</span>
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        ) : (
+          <div className={styles.frame}>
+            {mode === "theatre" ? (
+              <LivingTerrainTheatre
+                plate={campaign.plate}
+                plateAlt={`لوحة فنية لمناخ ${campaign.nameAr} — ليست خريطة مساحية. ${campaign.terrainTeacherAr}`}
+                weather={weather}
+                overlays={campaign.overlays}
+                markers={campaign.markers}
+                selectedId={marker?.id ?? ""}
+                activeIds={phase.activeMarkerIds}
+                showOverlays={showOverlays}
+                showMarkers={showMarkers}
+                zoom={zoom}
+                onSelect={setMarkerId}
+              />
+            ) : (
+              <LivingTerrainTheatre
+                plate={HIJAZ_PLATE}
+                plateAlt="لوحة فنية لمرتفعات الحجاز — مواضع السيرة عليها تخطيطية وليست إحداثيات."
+                weather="clear-dawn"
+                overlays={[]}
+                markers={places.map((node) => ({
+                  id: node.id,
+                  labelAr: node.name,
+                  x: node.layout.x,
+                  y: node.layout.y,
+                  kind: "place" as const,
+                  certainty: "schematic" as const,
+                  descriptionAr: node.mentions.map((mention) => mention.eventTitle).join(" · "),
+                  source: "فصول السيرة الموجودة في المنصة",
+                }))}
+                selectedId={place?.id ?? ""}
+                activeIds={place ? [place.id] : []}
+                showOverlays={false}
+                showMarkers={showMarkers}
+                zoom={zoom}
+                onSelect={setPlaceId}
+              />
+            )}
+          </div>
+        )}
+
+        <header className={styles.top}>
+          <div className={styles.kicker}>
+            <Mountain size={16} />
+            <span>الأطلس الجبلي الحي</span>
+            <em>SCHEMATIC · بلا تجسيد · بلا إحداثيات</em>
+          </div>
+          <h1>{mode === "theatre" ? campaign.nameAr : "مواضع السيرة التخطيطية"}</h1>
+          <p className={styles.lede}>
+            {mode === "theatre"
+              ? `${campaign.questionAr} · ${phase.hourLabel} · ${WEATHER_LABEL[weather]}`
+              : "أسماء مواضع من فصول السيرة على لوحة فنية. ليست خريطة مساحية."}
           </p>
-        </div>
-
-        <div className={styles.filters}>
-          {ATLAS_FILTERS.map((f) => (
-            <button
-              key={f.id}
-              className={filter === f.id ? styles.active : ""}
-              type="button"
-              onClick={() => setFilter(f.id)}
-            >
-              {f.label}
+          <div className={styles.pledge} role="note">
+            نعيش الحدث بالمكان والزمن والرواية. لا صورة لرسول الله ﷺ ولا محاكاة قتال.
+          </div>
+          <div className={styles.modes} role="tablist" aria-label="نمط الأطلس">
+            <button type="button" role="tab" aria-selected={mode === "theatre"} onClick={() => setMode("theatre")}>
+              مسرح الغزوات
             </button>
-          ))}
-        </div>
+            <button type="button" role="tab" aria-selected={mode === "places"} onClick={() => setMode("places")}>
+              مواضع السيرة
+            </button>
+          </div>
+          {mode === "theatre" ? (
+            <div className={styles.campaigns} role="list">
+              {LIVING_CAMPAIGNS.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  aria-pressed={item.id === campaign.id}
+                  onClick={() => setCampaignId(item.id)}
+                >
+                  <strong>{item.nameAr}</strong>
+                  <span>{item.dateAr}</span>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.campaigns}>
+              {ATLAS_FILTERS.map((filter) => (
+                <button
+                  key={filter.id}
+                  type="button"
+                  aria-pressed={placeFilter === filter.id}
+                  onClick={() => setPlaceFilter(filter.id)}
+                >
+                  <strong>{filter.label}</strong>
+                  <span>{filter.id === "all" ? `${ATLAS_COUNTS.nodes} مواضع` : ""}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </header>
 
-        <div className={styles.mapTools}>
-          <span title="بوصلة زخرفية — لا تمثل اتجاهًا محسوبًا">
-            <CompassRose deg={0} />
-          </span>
-          <button type="button" onClick={() => setZoom((z) => Math.min(1.8, +(z + 0.15).toFixed(2)))} aria-label="تكبير">
+        <div className={styles.tools}>
+          <button type="button" onClick={() => setZoom((value) => Math.min(1.7, +(value + 0.15).toFixed(2)))} aria-label="تكبير">
             <ZoomIn size={16} />
           </button>
-          <button type="button" onClick={() => setZoom((z) => Math.max(1, +(z - 0.15).toFixed(2)))} aria-label="تصغير">
+          <button type="button" onClick={() => setZoom((value) => Math.max(1, +(value - 0.15).toFixed(2)))} aria-label="تصغير">
             <ZoomOut size={16} />
           </button>
           <button type="button" onClick={() => setZoom(1)} aria-label="إعادة الضبط">
             <Locate size={16} />
           </button>
-          <button type="button" onClick={() => setImmersive((v) => !v)} aria-label="عرض غامر">
-            <Expand size={16} />
+          <button type="button" onClick={() => setListMode((value) => !value)} aria-label="عرض كقائمة">
+            <List size={16} />
           </button>
         </div>
 
         <aside className={styles.layers}>
-          <h4>طبقات الخريطة</h4>
-          {layers.map((l) => (
-            <label key={l.id}>
-              <input
-                type="checkbox"
-                checked={layerOn[l.id]}
-                onChange={() => setLayerOn((s) => ({ ...s, [l.id]: !s[l.id] }))}
-              />
-              {l.label}
-            </label>
-          ))}
-          {layerOn.legend ? (
-            <p className="muted" style={{ fontSize: "0.72rem", lineHeight: 1.8, margin: "0.4rem 0 0" }}>
-              مفتاح الدقة: كل المواضع <strong>تخطيطية</strong> — مواضع رسم توضيحي على صورة فنية،
-              ليست إحداثيات GPS ولا مسارات تاريخية دقيقة ولا مواقع عسكرية محددة.
-            </p>
-          ) : null}
+          <h4>الطبقات</h4>
+          <label>
+            <input type="checkbox" checked={showOverlays} onChange={() => setShowOverlays((value) => !value)} />
+            حدود تضاريسية تخطيطية
+          </label>
+          <label>
+            <input type="checkbox" checked={showMarkers} onChange={() => setShowMarkers((value) => !value)} />
+            العلامات
+          </label>
+          <p>لوحة فنية للمناخ. العلامات تخطيطية. لا مقياس مسافة.</p>
         </aside>
 
-        {listMode ? (
-          <div className={styles.map} style={{ display: "grid", placeItems: "center", padding: "5rem 1rem 1rem" }}>
-            <ol style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "0.5rem", width: "min(560px, 100%)" }}>
-              {visible.map((node) => (
-                <li key={node.id}>
+        {mode === "theatre" && marker ? (
+          <aside className={styles.floatCard} aria-live="polite">
+            <span className={styles.badge}>{CERTAINTY_LABEL[marker.certainty]}</span>
+            <h2>{marker.labelAr}</h2>
+            <p>{marker.descriptionAr}</p>
+            <p className={styles.src}>
+              {witnessKind} · {phase.witness.cite}
+            </p>
+            <Link href="/seerah" className={styles.seerahLink}>
+              <BookOpen size={14} /> فتح فصول السيرة
+            </Link>
+          </aside>
+        ) : null}
+
+        {mode === "places" && place ? (
+          <aside className={styles.floatCard} aria-live="polite">
+            <span className={styles.badge}>موضع تخطيطي — ليس إحداثيات</span>
+            <h2>{place.name}</h2>
+            <ul className={styles.mentions}>
+              {place.mentions.map((mention, index) => (
+                <li key={`${mention.chapterId}-${index}`}>
+                  <strong>{mention.eventTitle}</strong>
+                  <span>
+                    {mention.chapterTitle} · {mention.eventDate}
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <Link href="/seerah" className={styles.seerahLink}>
+              <BookOpen size={14} /> فتح فصول السيرة
+            </Link>
+          </aside>
+        ) : null}
+
+        {mode === "theatre" ? (
+          <div className={styles.phaseRail}>
+            <button
+              type="button"
+              onClick={() => setPhaseIndex((index) => Math.max(0, index - 1))}
+              disabled={phaseIndex === 0}
+              aria-label="المرحلة السابقة"
+            >
+              <ChevronRight size={16} />
+            </button>
+            <ol>
+              {campaign.phases.map((item, index) => (
+                <li key={item.id}>
                   <button
                     type="button"
-                    onClick={() => {
-                      setSelectedId(node.id);
-                      setListMode(false);
-                    }}
-                    style={{
-                      width: "100%",
-                      textAlign: "start",
-                      padding: "0.6rem 0.8rem",
-                      borderRadius: 12,
-                      border: "1px solid rgba(212,160,23,0.35)",
-                      background: "rgba(6,32,28,0.9)",
-                      color: "var(--ivory-100)",
-                    }}
+                    aria-current={index === phaseIndex ? "step" : undefined}
+                    onClick={() => setPhaseIndex(index)}
                   >
-                    <strong>{node.name}</strong> · تخطيطي · {node.mentions.length}{" "}
-                    {node.mentions.length === 1 ? "إشارة" : "إشارات"}
+                    <span>٠{index + 1}</span>
+                    {item.titleAr}
                   </button>
                 </li>
               ))}
             </ol>
+            <button
+              type="button"
+              onClick={() => setPhaseIndex((index) => Math.min(campaign.phases.length - 1, index + 1))}
+              disabled={phaseIndex === campaign.phases.length - 1}
+              aria-label="المرحلة التالية"
+            >
+              <ChevronLeft size={16} />
+            </button>
           </div>
-        ) : (
-          <div className={styles.map}>
-            <div className={styles.mapInner} style={{ transform: `scale(${zoom})` }}>
-              <img src={art.atlas} alt="رسم توضيحي فني للتضاريس — ليس خريطة مساحية" />
-              {layerOn.routes && links ? (
-                <svg className={styles.routes} viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden>
-                  <polyline points={links} />
-                </svg>
-              ) : null}
-              {layerOn.nodes
-                ? visible.map((node) => (
-                    <button
-                      key={node.id}
-                      type="button"
-                      className={`${styles.marker} ${sel?.id === node.id ? styles.selected : ""}`}
-                      style={{ left: `${node.layout.x}%`, top: `${node.layout.y}%` }}
-                      onClick={() => setSelectedId(node.id)}
-                      aria-label={`${node.name} — موضع تخطيطي`}
-                    >
-                      <span className={styles.dot} />
-                      <span className={styles.label}>
-                        {node.name}
-                        <em>SCHEMATIC</em>
-                      </span>
-                    </button>
-                  ))
-                : null}
-            </div>
-          </div>
-        )}
-
-        {sel ? (
-          <aside className={styles.inspector} key={sel.id}>
-            <img src={art.desert} alt="" />
-            <div className={styles.insBody}>
-              <h3>{sel.name}</h3>
-              <span className={styles.badge}>موضع تخطيطي — ليس إحداثيات دقيقة</span>
-              <dl>
-                <dt>الإشارات في السيرة</dt>
-                <dd>
-                  {sel.mentions.length} {sel.mentions.length === 1 ? "إشارة" : "إشارات"}
-                </dd>
-                <dt>الفصول</dt>
-                <dd>{[...new Set(sel.mentions.map((m) => `فصل ${m.chapterOrder}`))].join(" · ")}</dd>
-              </dl>
-              <ul style={{ listStyle: "none", margin: "0 0 0.6rem", padding: 0, display: "flex", flexDirection: "column", gap: "0.35rem", fontSize: "0.78rem" }}>
-                {sel.mentions.map((mention, i) => (
-                  <li key={`${mention.chapterId}-${i}`}>
-                    <strong>{mention.eventTitle}</strong> · {mention.eventDate}
-                    <br />
-                    <span className="muted">
-                      {mention.chapterTitle} (فصل {mention.chapterOrder})
-                    </span>
-                  </li>
-                ))}
-              </ul>
-              <p>
-                خط التسلسل على الرسم يربط المواضع بترتيب الفصول السردي فقط — لا يمثل طريقًا
-                تاريخيًا مرسومًا ولا تحركات عسكرية.
-              </p>
-              <Link href="/seerah" className="btn-outline" style={{ textDecoration: "none", display: "inline-block", marginTop: "0.4rem" }}>
-                فتح فصول السيرة
-              </Link>
-            </div>
-          </aside>
         ) : null}
       </div>
 
-      <div className={styles.timelineBar}>
-        <button
-          type="button"
-          className={styles.play}
-          onClick={() => setTouring((t) => !t)}
-          aria-label={touring ? "إيقاف الجولة" : "جولة بصرية بين المواضع"}
-          title="جولة بصرية بين المواضع التخطيطية"
-        >
-          {touring ? <Pause size={14} /> : <Play size={14} />}
-        </button>
-        <span>التسلسل السردي للمواضع {touring ? "· الجولة تعمل" : ""}</span>
-        <div className={styles.ticks}>
-          {visible.map((node) => (
-            <button
-              key={node.id}
-              type="button"
-              className={sel?.id === node.id ? styles.tickActive : ""}
-              onClick={() => setSelectedId(node.id)}
-            >
-              {node.name}
-            </button>
-          ))}
-        </div>
-        <button type="button" className={styles.listBtn} onClick={() => setListMode((v) => !v)}>
-          <List size={14} /> {listMode ? "عرض كخريطة" : "عرض كقائمة"}
-        </button>
-      </div>
+      {mode === "theatre" ? (
+        <section className={styles.board}>
+          <article className={styles.teacher}>
+            <h2>الأرض معلّمة</h2>
+            <p>{campaign.terrainTeacherAr}</p>
+            <dl>
+              <div>
+                <dt>نوع الخريطة</dt>
+                <dd>{campaign.mapTypeLabel}</dd>
+              </div>
+              <div>
+                <dt>ساعة المرحلة</dt>
+                <dd>
+                  {phase.hourLabel} · {WEATHER_LABEL[weather]}
+                </dd>
+              </div>
+              <div>
+                <dt>الثقة المكانية</dt>
+                <dd>{campaign.confidenceLabel}</dd>
+              </div>
+              <div>
+                <dt>المسافة</dt>
+                <dd>{campaign.distanceNote}</dd>
+              </div>
+            </dl>
+          </article>
+          <article className={styles.witness}>
+            <h2>دفتر الشاهد</h2>
+            <span className={styles.badge}>{witnessKind}</span>
+            <blockquote>
+              <p>{phase.witness.arabic}</p>
+              <footer>{phase.witness.cite}</footer>
+            </blockquote>
+            <p className={styles.phaseBody}>{phase.bodyAr}</p>
+          </article>
+          <section className={styles.legend} aria-label="مفتاح الرموز واليقين">
+            <h2>مفتاح اليقين</h2>
+            <ul>
+              <li>
+                <i className={styles.kNamed} /> معلم مسمّى
+              </li>
+              <li>
+                <i className={styles.kApprox} /> تقريبي
+              </li>
+              <li>
+                <i className={styles.kSchema} /> تخطيطي
+              </li>
+              <li>
+                <i className={styles.kNur} /> مقام النور — بلا تجسيد
+              </li>
+            </ul>
+            <p>{campaign.disputeAr}</p>
+            <p>{campaign.geographicBasisAr}</p>
+            <p className={styles.src}>{campaign.sources.join(" · ")}</p>
+          </section>
+        </section>
+      ) : null}
     </div>
   );
 }

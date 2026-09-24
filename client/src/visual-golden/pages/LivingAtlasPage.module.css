@@ -1,0 +1,508 @@
+.page {
+  --atlas-glow: #e6c777;
+  --atlas-surface: rgba(7, 18, 19, 0.88);
+  --atlas-line: rgba(231, 205, 130, 0.28);
+  min-height: calc(100vh - var(--header-height));
+  background:
+    radial-gradient(circle at 50% 0%, rgba(63, 75, 55, 0.18), transparent 38%),
+    #071110;
+  color: #f6efd9;
+}
+.stageWrap {
+  position: relative;
+  min-height: clamp(680px, 82vh, 980px);
+  overflow: hidden;
+  border-bottom: 1px solid var(--atlas-line);
+}
+.frame {
+  position: absolute;
+  inset: 0;
+}
+.frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(3, 9, 10, 0.62) 0%, transparent 24%, transparent 70%, rgba(3, 9, 10, 0.72) 100%),
+    linear-gradient(90deg, rgba(3, 9, 10, 0.38), transparent 28%, transparent 72%, rgba(3, 9, 10, 0.26));
+}
+.top {
+  position: absolute;
+  z-index: 6;
+  inset-inline: 50%;
+  transform: translateX(50%);
+  top: clamp(1rem, 3vw, 2.2rem);
+  width: min(760px, calc(100% - 8rem));
+  text-align: center;
+  pointer-events: none;
+}
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--atlas-line);
+  border-radius: 999px;
+  background: rgba(5, 18, 18, 0.72);
+  backdrop-filter: blur(12px);
+  color: var(--atlas-glow);
+  font-size: 0.72rem;
+}
+.kicker em {
+  font-style: normal;
+  font-family: var(--font-latin);
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+}
+.top h1 {
+  margin: 0.65rem 0 0.2rem;
+  font-size: clamp(2rem, 5vw, 4.5rem);
+  font-family: Amiri, serif;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 0 4px 28px rgba(0, 0, 0, 0.7);
+}
+.lede {
+  margin: 0 auto;
+  max-width: 720px;
+  color: rgba(250, 241, 215, 0.82);
+  line-height: 1.8;
+  text-shadow: 0 2px 16px #000;
+}
+.pledge {
+  margin: 0.55rem auto 0;
+  width: fit-content;
+  max-width: 100%;
+  padding: 0.35rem 0.7rem;
+  border-inline-start: 2px solid var(--atlas-glow);
+  background: rgba(4, 14, 15, 0.58);
+  font-size: 0.72rem;
+  color: rgba(250, 241, 215, 0.78);
+}
+.modes,
+.campaigns {
+  pointer-events: auto;
+  display: flex;
+  justify-content: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  margin-top: 0.65rem;
+}
+.modes button,
+.campaigns button {
+  border: 1px solid var(--atlas-line);
+  background: rgba(4, 16, 17, 0.72);
+  color: #f6efd9;
+  border-radius: 999px;
+  padding: 0.42rem 0.75rem;
+  backdrop-filter: blur(10px);
+}
+.modes button[aria-selected="true"],
+.campaigns button[aria-pressed="true"] {
+  border-color: rgba(238, 211, 132, 0.72);
+  background: rgba(94, 80, 38, 0.48);
+  color: #fff0b8;
+}
+.campaigns button {
+  display: grid;
+  gap: 0.08rem;
+  min-width: 92px;
+}
+.campaigns strong {
+  font-size: 0.76rem;
+}
+.campaigns span {
+  font-size: 0.62rem;
+  opacity: 0.68;
+}
+.tools {
+  position: absolute;
+  z-index: 7;
+  top: 1.1rem;
+  inset-inline-start: 1rem;
+  display: grid;
+  gap: 0.35rem;
+}
+.tools button {
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--atlas-line);
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  background: var(--atlas-surface);
+  color: var(--atlas-glow);
+  backdrop-filter: blur(12px);
+}
+.layers {
+  position: absolute;
+  z-index: 7;
+  inset-inline-start: 1rem;
+  bottom: 5.8rem;
+  width: min(255px, calc(100% - 2rem));
+  padding: 0.72rem;
+  border: 1px solid var(--atlas-line);
+  border-radius: 15px;
+  background: var(--atlas-surface);
+  backdrop-filter: blur(14px);
+}
+.layers h4 {
+  margin: 0 0 0.45rem;
+  color: var(--atlas-glow);
+}
+.layers label {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.2rem 0;
+  font-size: 0.78rem;
+}
+.layers p {
+  margin: 0.45rem 0 0;
+  font-size: 0.68rem;
+  line-height: 1.7;
+  opacity: 0.7;
+}
+.floatCard {
+  position: absolute;
+  z-index: 7;
+  inset-inline-end: 1rem;
+  top: clamp(17rem, 38vh, 25rem);
+  width: min(320px, calc(100% - 2rem));
+  padding: 0.9rem;
+  border: 1px solid rgba(236, 211, 139, 0.38);
+  border-radius: 17px;
+  background: rgba(5, 17, 18, 0.9);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+  backdrop-filter: blur(16px);
+}
+.floatCard h2 {
+  margin: 0.3rem 0;
+  font-family: Amiri, serif;
+  font-size: 1.45rem;
+}
+.floatCard p {
+  margin: 0.3rem 0;
+  font-size: 0.78rem;
+  line-height: 1.75;
+}
+.badge {
+  display: inline-flex;
+  width: fit-content;
+  padding: 0.18rem 0.48rem;
+  border: 1px solid rgba(236, 211, 139, 0.3);
+  border-radius: 999px;
+  color: #f1d98c;
+  font-size: 0.64rem;
+}
+.src {
+  color: rgba(246, 239, 217, 0.62);
+  font-size: 0.68rem !important;
+}
+.seerahLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+  text-decoration: none;
+  color: #f6df9d;
+  font-size: 0.76rem;
+}
+.mentions {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+.mentions li {
+  display: grid;
+  gap: 0.08rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(236, 211, 139, 0.13);
+}
+.mentions span {
+  font-size: 0.68rem;
+  opacity: 0.66;
+}
+.phaseRail {
+  position: absolute;
+  z-index: 8;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(760px, calc(100% - 4rem));
+  display: grid;
+  grid-template-columns: 42px 1fr 42px;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.48rem;
+  border: 1px solid var(--atlas-line);
+  border-radius: 18px;
+  background: rgba(4, 14, 15, 0.88);
+  backdrop-filter: blur(18px);
+}
+.phaseRail > button {
+  height: 42px;
+  border-radius: 12px;
+  color: var(--atlas-glow);
+}
+.phaseRail > button:disabled {
+  opacity: 0.25;
+}
+.phaseRail ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.3rem;
+}
+.phaseRail li button {
+  width: 100%;
+  min-height: 42px;
+  padding: 0.3rem;
+  border-radius: 11px;
+  color: rgba(246, 239, 217, 0.72);
+  font-size: 0.72rem;
+}
+.phaseRail li button[aria-current="step"] {
+  background: rgba(111, 92, 41, 0.45);
+  color: #fff0b8;
+}
+.phaseRail li span {
+  margin-inline-end: 0.25rem;
+  color: var(--atlas-glow);
+  font-family: var(--font-latin);
+}
+.listEq {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  list-style: none;
+  margin: 0;
+  padding: clamp(15rem, 32vh, 20rem) max(1rem, 8vw) 7rem;
+  overflow: auto;
+  background:
+    linear-gradient(180deg, rgba(6, 14, 15, 0.9), rgba(6, 14, 15, 0.96)),
+    url("/visual-golden/art/atlas-hero.webp") center/cover;
+  display: grid;
+  align-content: start;
+  gap: 0.55rem;
+}
+.listEq button {
+  width: min(720px, 100%);
+  margin-inline: auto;
+  text-align: start;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--atlas-line);
+  border-radius: 13px;
+  background: rgba(8, 22, 22, 0.82);
+  color: #f6efd9;
+}
+.listEq span {
+  font-size: 0.68rem;
+  opacity: 0.68;
+}
+.board {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 0.9fr;
+  gap: 1px;
+  background: rgba(231, 205, 130, 0.14);
+}
+.board > * {
+  min-height: 310px;
+  padding: clamp(1.2rem, 3vw, 2.3rem);
+  background:
+    linear-gradient(180deg, rgba(11, 28, 27, 0.98), rgba(6, 18, 18, 0.98)),
+    #071110;
+}
+.board h2 {
+  margin: 0 0 0.7rem;
+  color: #efd98f;
+  font-family: Amiri, serif;
+  font-size: 1.45rem;
+}
+.teacher > p,
+.phaseBody,
+.legend p {
+  line-height: 1.95;
+  color: rgba(246, 239, 217, 0.8);
+}
+.teacher dl {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+.teacher dl div {
+  border-top: 1px solid rgba(231, 205, 130, 0.15);
+  padding-top: 0.45rem;
+}
+.teacher dt {
+  color: rgba(246, 239, 217, 0.5);
+  font-size: 0.68rem;
+}
+.teacher dd {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+}
+.witness blockquote {
+  margin: 0.8rem 0;
+  padding: 1rem;
+  border-inline-start: 2px solid #d7b65c;
+  background: rgba(239, 217, 143, 0.07);
+}
+.witness blockquote p {
+  margin: 0;
+  font-family: Amiri, serif;
+  font-size: 1.25rem;
+  line-height: 2;
+}
+.witness blockquote footer {
+  margin-top: 0.5rem;
+  color: #d9c582;
+  font-size: 0.72rem;
+}
+.legend ul {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+.legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+}
+.legend i {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 240, 190, 0.6);
+}
+.kNamed { background: #e2c56e; }
+.kApprox { background: transparent; border-style: dashed !important; }
+.kSchema { background: rgba(218, 229, 224, 0.25); }
+.kNur {
+  border-radius: 7px 7px 1px 1px !important;
+  box-shadow: 0 0 12px rgba(243, 215, 132, 0.5);
+}
+@media (max-width: 1050px) {
+  .stageWrap {
+    min-height: 880px;
+  }
+  .top {
+    width: calc(100% - 6rem);
+  }
+  .floatCard {
+    top: auto;
+    bottom: 7rem;
+  }
+  .layers {
+    bottom: 7rem;
+  }
+  .board {
+    grid-template-columns: 1fr 1fr;
+  }
+  .legend {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 720px) {
+  .stageWrap {
+    min-height: 980px;
+    display: flex;
+    flex-direction: column;
+  }
+  .frame {
+    position: relative;
+    inset: auto;
+    min-height: 470px;
+    order: 2;
+    margin-top: 15.5rem;
+  }
+  .top {
+    top: 0.8rem;
+    inset-inline: 0.7rem;
+    width: auto;
+    transform: none;
+    text-align: start;
+  }
+  .top h1 {
+    font-size: 2.15rem;
+  }
+  .lede {
+    font-size: 0.76rem;
+  }
+  .kicker em {
+    display: none;
+  }
+  .modes,
+  .campaigns {
+    justify-content: flex-start;
+  }
+  .campaigns {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.2rem;
+  }
+  .tools {
+    top: 16.3rem;
+    display: flex;
+  }
+  .layers {
+    position: relative;
+    inset: auto;
+    order: 3;
+    margin: 0.7rem;
+    width: auto;
+  }
+  .floatCard {
+    position: relative;
+    inset: auto;
+    order: 4;
+    margin: 0 0.7rem 6.5rem;
+    width: auto;
+  }
+  .phaseRail {
+    width: calc(100% - 1rem);
+    bottom: 0.5rem;
+    grid-template-columns: 36px 1fr 36px;
+  }
+  .phaseRail ol {
+    overflow-x: auto;
+    grid-template-columns: repeat(3, minmax(118px, 1fr));
+  }
+  .listEq {
+    padding: 17rem 0.7rem 6rem;
+  }
+  .listEq button {
+    display: grid;
+  }
+  .board {
+    grid-template-columns: 1fr;
+  }
+  .legend {
+    grid-column: auto;
+  }
+  .teacher dl {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page *,
+  .page *::before,
+  .page *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
