@@ -6,6 +6,7 @@ export interface StoryItem {
   en: string;
   age: string;
   img: string;
+  summary?: string;
 }
 
 interface Props {
@@ -35,11 +36,11 @@ export function TvLounge({ stories, current, playing, onPlay, onSelect }: Props)
               <img src={current.img} alt="" />
               <div className={styles.scan} aria-hidden />
               <div className={styles.vignette} aria-hidden />
-              <button type="button" className={styles.play} onClick={onPlay} aria-label={playing ? "إيقاف" : "تشغيل"}>
+              <button type="button" className={styles.play} onClick={onPlay} aria-label="فتح وضع القراءة">
                 {playing ? <Pause size={28} /> : <Play size={28} />}
               </button>
               <div className={styles.osd}>
-                <span>{current.age}</span>
+                <span>{current.age} · وضع المعاينة والقراءة — لا يوجد فيديو معتمد</span>
                 <strong>{current.title}</strong>
                 <em>{current.en}</em>
               </div>
