@@ -136,7 +136,7 @@ export function PrayerObservatory() {
     <section aria-label={t(lang, "observatory")}>
       <div className={styles.observatory}>
         <div className={styles.clockWrap}>
-          {data && next ? (
+          {data ? (
             <>
               <PrayerClock
                 timings={data.timings}
@@ -153,6 +153,13 @@ export function PrayerObservatory() {
                 <span>
                   {data.date.gregorian} · {data.timezone} · {data.utcOffset}
                 </span>
+                {!next && !data.tomorrowFajr ? (
+                  <span className={styles.err}>
+                    {lang === "ar"
+                      ? "فجر اليوم التالي غير متاح من المزوّد الآن؛ لا يوجد عدّ تنازلي بديل."
+                      : "Next-day Fajr is unavailable from the provider; no substitute countdown is shown."}
+                  </span>
+                ) : null}
               </div>
             </>
           ) : (
@@ -182,7 +189,7 @@ export function PrayerObservatory() {
         </div>
       </div>
 
-      {data && next ? <PrayerCards timings={data.timings} next={next} timezone={data.timezone} lang={lang} /> : null}
+      {data ? <PrayerCards timings={data.timings} next={next} timezone={data.timezone} lang={lang} /> : null}
 
       <div className={styles.split}>
         {data ? <QiblaPanel lat={data.meta.latitude} lng={data.meta.longitude} lang={lang} /> : <div className={styles.panel} />}

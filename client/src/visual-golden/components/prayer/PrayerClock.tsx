@@ -22,7 +22,7 @@ const MARKERS: PrayerName[] = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Is
 interface Props {
   timings: PrayerTimings;
   timezone: string;
-  next: NextPrayerState;
+  next: NextPrayerState | null;
   city: string;
   nowLabel: string;
 }
@@ -68,7 +68,7 @@ export function PrayerClock({ timings, timezone, next, city, nowLabel }: Props) 
       {MARKERS.map((name) => {
         const min = minutesFromHHMM(timings[name]);
         const p = polar(cx, cy, 168, min);
-        const on = next.name === name && !next.isTomorrow;
+        const on = next?.name === name && !next.isTomorrow;
         return (
           <g key={name}>
             <circle cx={p.x} cy={p.y} r={on ? 7 : 4.5} fill={on ? "#e8c547" : "#0b3d32"} stroke="#e8c547" strokeWidth="1.5" />
