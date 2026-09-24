@@ -2,6 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { registerOpenLibraryRoutes } from "./open-library";
 import { registerMp3QuranCatalogRoutes } from "./mp3quran-catalog";
+import { registerIiifRoutes } from "./iiif";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
@@ -41,6 +42,7 @@ app.use((req, res, next) => {
 (async () => {
   registerOpenLibraryRoutes(app);
   registerMp3QuranCatalogRoutes(app);
+  registerIiifRoutes(app);
   const server = await registerRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
