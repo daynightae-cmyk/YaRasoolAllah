@@ -7,7 +7,7 @@ import {
   type SourceRegistryEntry,
 } from "./source-governance";
 
-const CHECKED_AT = "2026-09-23T00:00:00+04:00";
+const CHECKED_AT = "2026-09-24T17:00:00+04:00";
 
 export const sourceRegistry: SourceRegistryEntry[] = sourceRegistryEntrySchema.array().parse([
   {
@@ -71,6 +71,20 @@ export const sourceRegistry: SourceRegistryEntry[] = sourceRegistryEntrySchema.a
     editorialStatus: "verified",
     notes:
       "مرجع مثبت لسجلات الأعمال ومعرفات النسخ الرقمية. التحقق ببليوغرافي فقط؛ النص الكامل والطبعة والحقوق تُراجع لكل نسخة على حدة.",
+  },
+  {
+    sourceId: "src-openiti-historical-texts-pinned",
+    title: "OpenITI RELEASE — pinned historical full text",
+    provider: "OpenITI",
+    kind: "primary_text",
+    canonicalUrl:
+      "https://github.com/OpenITI/RELEASE/tree/cfc4157a3cf2054c0888f133970a4eaa3e22e58c",
+    version: "cfc4157a3cf2054c0888f133970a4eaa3e22e58c",
+    artifactSha256: null,
+    checkedAt: CHECKED_AT,
+    editorialStatus: "verified",
+    notes:
+      "نصوص OpenITI التاريخية المسجلة هنا مثبتة على إصدار immutable. OpenITI يعلن أن النصوص العربية والفارسية التاريخية المرفوعة والمؤرخة 1900 أو أقدم ضمن الملكية العامة؛ هذا لا يساوي مراجعة علمية أو اعتماد طبعة.",
   },
   {
     sourceId: "src-library-bibliographic-registry",
@@ -280,6 +294,26 @@ export const rightsLedger: RightsLedgerEntry[] = rightsLedgerEntrySchema.array()
     reviewNote: "يجب تثبيت الإصدار وحفظ شروطه قبل الإدخال؛ لا clearance شاملًا للنصوص الكاملة.",
   },
   {
+    rightsId: "rights-openiti-historical-texts-pinned",
+    sourceId: "src-openiti-historical-texts-pinned",
+    decision: "cleared",
+    licenseName: "OpenITI public-domain policy for historical texts dated 1900 or earlier",
+    licenseUrl: "https://openiti.org/docs/Copyright_Questions.html",
+    termsSnapshotPath: null,
+    attribution: "Open Islamicate Texts Initiative (OpenITI), pinned RELEASE commit",
+    permissions: {
+      apiAccess: "allowed",
+      caching: "allowed",
+      streaming: "forbidden",
+      offline: "unknown",
+      redistribution: "allowed",
+      commercial: "unknown",
+    },
+    checkedAt: CHECKED_AT,
+    reviewNote:
+      "يُسمح بعرض النص التاريخي المثبت من OpenITI داخل القارئ مع الإسناد. لا يشمل ذلك مواد الطبعة الحديثة المحذوفة من corpus، ولا يرفع حالة المراجعة العلمية للعمل.",
+  },
+  {
     rightsId: "rights-quran-foundation-api",
     sourceId: "src-quran-foundation-api",
     decision: "needs_review",
@@ -396,6 +430,21 @@ export const providerResourceRegistry: ProviderResourceEntry[] =
       credentialsConfigured: false,
       allowedUsages: [],
       productionReady: false,
+    },
+    {
+      resourceId: "resource-openiti-historical-texts-pinned",
+      sourceId: "src-openiti-historical-texts-pinned",
+      rightsId: "rights-openiti-historical-texts-pinned",
+      provider: "OpenITI",
+      resourceType: "file",
+      integrationMode: "CACHE_ALLOWED",
+      endpoint:
+        "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/",
+      acquisitionStatus: "registered",
+      credentialsRequired: false,
+      credentialsConfigured: false,
+      allowedUsages: ["cache", "full_text", "external_link"],
+      productionReady: true,
     },
     {
       resourceId: "resource-quran-foundation-api",
