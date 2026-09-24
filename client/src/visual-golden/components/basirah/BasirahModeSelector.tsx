@@ -1,4 +1,4 @@
-import { BASIRAH_MODES, BASIRAH_SCOPES, type BasirahMode, type BasirahScope } from "@/visual-golden/mock/basirah";
+import { BASIRAH_MODES, BASIRAH_SCOPES, type BasirahMode, type BasirahScope } from "@/visual-golden/services/basirah";
 import styles from "./basirah.module.css";
 
 interface Props {

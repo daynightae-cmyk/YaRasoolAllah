@@ -14,7 +14,17 @@ export function BasirahAnswer({ lang, ran, hitCount, modeLabel }: Props) {
     <div className={styles.lanes}>
       <article className={styles.lane} data-kind="source">
         <h4>{t(lang, "sourceText")}</h4>
-        <BasirahEmptyState text="[ستظهر الإجابة الموثقة هنا بعد ربط محرك البحث بالمصادر]" />
+        <BasirahEmptyState
+          text={
+            lang === "ar"
+              ? hitCount > 0
+                ? `تم العثور على ${hitCount} من المصادر ذات الصلة في وضع «${modeLabel}» — افتح بطاقات السكة للوصول إلى المصدر.`
+                : "لم تُطابق المصادر المحلية هذا الاستعلام بعد."
+              : hitCount > 0
+                ? `${hitCount} related sources found in “${modeLabel}” — open the rail cards to reach each source.`
+                : "No local sources match this query yet."
+          }
+        />
       </article>
       <article className={styles.lane}>
         <h4>{t(lang, "summary")}</h4>
@@ -24,8 +34,8 @@ export function BasirahAnswer({ lang, ran, hitCount, modeLabel }: Props) {
           <BasirahEmptyState
             text={
               lang === "ar"
-                ? `فهرس المؤسسة يعرض ${hitCount} سجلًا مطابقًا في وضع «${modeLabel}». ليست هذه نصوصًا دينية مولَّدة.`
-                : `The institutional index lists ${hitCount} matching records in “${modeLabel}”. These are not generated religious texts.`
+                ? `فهرس المصادر المحلية يعرض ${hitCount} سجلًا مطابقًا في وضع «${modeLabel}». ليست هذه نصوصًا دينية مولَّدة ولا فتوى.`
+                : `The local source index lists ${hitCount} matching records in “${modeLabel}”. These are not generated religious texts or fatwa.`
             }
           />
         )}
@@ -35,8 +45,8 @@ export function BasirahAnswer({ lang, ran, hitCount, modeLabel }: Props) {
         <BasirahEmptyState
           text={
             lang === "ar"
-              ? "الشرح سيُربط لاحقًا بالمصادر المعتمدة، منفصلًا عن أي توليد آلي."
-              : "Explanation will later bind to approved sources, kept separate from any generated assistance."
+              ? "لا يولّد بصيرة إجابات دينية من عنده — اعتمد سكة المصادر ومواضعها."
+              : "Basirah does not generate religious answers — rely on the source rail and its passages."
           }
         />
       </article>

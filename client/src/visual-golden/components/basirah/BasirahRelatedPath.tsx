@@ -1,4 +1,4 @@
-import type { BasirahRecord } from "@/visual-golden/mock/basirah";
+import type { BasirahRecord } from "@/visual-golden/services/basirah";
 import styles from "./basirah.module.css";
 
 export function BasirahRelatedPath({ records, lang }: { records: BasirahRecord[]; lang: "ar" | "en" }) {
