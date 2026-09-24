@@ -5,7 +5,7 @@
 - START_MAIN_SHA: `476b7604eaa4038ad9166c02aad06d3ab2858faf`
 - BRANCH: `feat/provider-verification-20260924`
 - PR: #51
-- MERGE_SHA: pending until this PR is merged
+- MERGE_SHA: `0a84fb156d8c161ca126cb503ee543834d296e79`
 - EVIDENCE_ARTIFACT: `artifacts/provider-verification/2026-09-24.json`
 - LIVE_WORKFLOW_RUN: `35973353289`
 - ARTIFACT_DIGEST: `sha256:39591fc70e0c091acf9bec5f4389a5be6367bb6381e13c9044d5d3c0b43b6f07`
