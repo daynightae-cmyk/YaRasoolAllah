@@ -39,6 +39,9 @@ jobs:
       - name: Kids YouTube registry
         run: npm run validate:kids-youtube
 
+      - name: IIIF normalizer
+        run: npm run validate:iiif
+
       - name: Production build
         run: npm run build
 
