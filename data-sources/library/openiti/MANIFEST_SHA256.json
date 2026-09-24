@@ -1,0 +1,21 @@
+{
+  "sourceTsv": {
+    "file": "OpenITI_metadata_2025-1-9.tsv",
+    "sha256": "10a025fcfc1bf96d218096f0dfe1d9416f9ff277f092c42622cb012cc4da2a61"
+  },
+  "imports": [
+    {
+      "importId": "OPENITI-META-2025-1-9-0001",
+      "provider": "OpenITI/Release (GitHub, branch master)",
+      "sourceVersion": "OpenITI_metadata_2025-1-9.tsv @ metadata tree sha aaa9fc03ed6c6dc43cd0cf90f84f8c1751c9a21d",
+      "startedAt": "2026-09-25",
+      "completedAt": "2026-09-25",
+      "itemCount": 9539,
+      "checksum": "a0f364ef0cb3473971b103b75dd7212d787d2f3b3ca60ef65303ec0ae0b5072a",
+      "rightsDecision": "METADATA_ONLY pending per-text rights verification; corpus license conditions to be respected before text ingestion",
+      "toolVersion": "acquire/openiti-metadata-normalize v1",
+      "gitSha": "5eef0f8",
+      "notes": "14107 version rows normalized to 9539 distinct work identities (Arabic-title dedup). No full texts imported yet. Source TSV sha256 recorded in sidecar."
+    }
+  ]
+}
