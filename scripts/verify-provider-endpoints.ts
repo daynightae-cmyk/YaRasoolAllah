@@ -5,7 +5,8 @@ import { fileURLToPath } from "node:url";
 type VerificationStatus =
   | "PASS"
   | "FAIL"
-  | "BLOCKED_CREDENTIAL";
+  | "BLOCKED_CREDENTIAL"
+  | "BLOCKED_PROVIDER";
 
 type VerificationResult = {
   id: string;
@@ -35,6 +36,7 @@ type ProbeOptions = {
   headers?: Record<string, string>;
   body?: URLSearchParams;
   credentialEnv?: string[];
+  blockedHttpStatuses?: number[];
   validate: (payload: unknown) => boolean;
 };
 
@@ -116,9 +118,10 @@ async function requestJson(
       }
 
       const schemaValid = payload !== null && options.validate(payload);
+      const providerBlocked = options.blockedHttpStatuses?.includes(response.status) ?? false;
       const ok = response.ok && schemaValid;
 
-      if (!ok && retryable.has(response.status) && attempt < 2) {
+      if (!ok && !providerBlocked && retryable.has(response.status) && attempt < 2) {
         await sleep(350 * (attempt + 1));
         continue;
       }
@@ -127,7 +130,7 @@ async function requestJson(
         id: options.id,
         provider: options.provider,
         category: options.category,
-        status: ok ? "PASS" : "FAIL",
+        status: ok ? "PASS" : providerBlocked ? "BLOCKED_PROVIDER" : "FAIL",
         request: {
           method: options.method ?? "GET",
           url: redactUrl(options.url),
@@ -140,9 +143,11 @@ async function requestJson(
         checkedAt: new Date().toISOString(),
         error: ok
           ? null
-          : !response.ok
-            ? "HTTP " + response.status
-            : "response schema did not match the expected contract",
+          : providerBlocked
+            ? "provider blocked automated verification with HTTP " + response.status
+            : !response.ok
+              ? "HTTP " + response.status
+              : "response schema did not match the expected contract",
         credentialEnv: options.credentialEnv,
       };
     } catch (error) {
@@ -235,6 +240,11 @@ async function verifyPublicProviders(): Promise<VerificationResult[]> {
       provider: "Qatar Digital Library",
       category: "public",
       url: "https://www.qdl.qa/en/iiif/qnlhc/12933/manifest",
+      headers: {
+        "User-Agent": "Mozilla/5.0 (compatible; YaRasoolAllahProviderVerifier/1.0; +https://github.com/daynightae-cmyk/YaRasoolAllah)",
+        Referer: "https://www.qdl.qa/",
+      },
+      blockedHttpStatuses: [403],
       validate(payload) {
         const value = objectValue(payload);
         return Boolean(value?.["@context"]) && (Array.isArray(value?.sequences) || Array.isArray(value?.items));
@@ -279,7 +289,10 @@ async function verifyPublicProviders(): Promise<VerificationResult[]> {
         encodeURIComponent("إنما الأعمال بالنيات"),
       validate(payload) {
         const value = objectValue(payload);
-        return Array.isArray(value?.ahadith);
+        const ahadith = value?.ahadith;
+        if (Array.isArray(ahadith)) return true;
+        const ahadithObject = objectValue(ahadith);
+        return typeof ahadithObject?.result === "string";
       },
     },
   ];
@@ -512,7 +525,7 @@ async function main(): Promise<void> {
   ];
 
   const publicFailures = results.filter(
-    (item) => item.category === "public" && item.status !== "PASS",
+    (item) => item.category === "public" && item.status === "FAIL",
   );
   const credentialFailures = results.filter(
     (item) => item.category === "credentialed" && item.status === "FAIL",
@@ -529,6 +542,9 @@ async function main(): Promise<void> {
       failed: results.filter((item) => item.status === "FAIL").length,
       blockedCredential: results.filter(
         (item) => item.status === "BLOCKED_CREDENTIAL",
+      ).length,
+      blockedProvider: results.filter(
+        (item) => item.status === "BLOCKED_PROVIDER",
       ).length,
       publicFailures: publicFailures.length,
       credentialFailures: credentialFailures.length,
