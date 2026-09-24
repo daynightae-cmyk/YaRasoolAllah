@@ -1,6 +1,15 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Copy, Bookmark, StickyNote } from "lucide-react";
-import { BASIRAH_CATALOG, BASIRAH_MODES, type BasirahMode, type BasirahScope } from "@/visual-golden/mock/basirah";
+import {
+  BASIRAH_MODES,
+  buildLocalIndex,
+  searchBasirah,
+  surahRecords,
+  type BasirahMode,
+  type BasirahRecord,
+  type BasirahScope,
+} from "@/visual-golden/services/basirah";
+import { getQuranChapters } from "@/services/quranService";
 import { art } from "@/visual-golden/mock/art";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { t } from "@/visual-golden/lib/i18n";
@@ -19,16 +28,26 @@ export function BasirahPage() {
   const [scope, setScope] = useState<BasirahScope>("all");
   const [mode, setMode] = useState<BasirahMode>("sourced");
   const [ran, setRan] = useState(false);
+  const [surahs, setSurahs] = useState<BasirahRecord[]>([]);
 
-  const hits = useMemo(() => {
-    const n = q.trim();
-    return BASIRAH_CATALOG.filter((r) => {
-      if (scope !== "all" && r.scope !== scope) return false;
-      if (!n) return true;
-      const hay = `${r.titleAr} ${r.titleEn} ${r.hintAr} ${r.hintEn} ${r.kindAr}`;
-      return hay.toLowerCase().includes(n.toLowerCase()) || hay.includes(n);
-    });
-  }, [q, scope]);
+  const localIndex = useMemo(() => buildLocalIndex(), []);
+  const index = useMemo(() => [...surahs, ...localIndex], [surahs, localIndex]);
+
+  useEffect(() => {
+    let cancelled = false;
+    getQuranChapters()
+      .then((chapters) => {
+        if (!cancelled) setSurahs(surahRecords(chapters));
+      })
+      .catch(() => {
+        if (!cancelled) setSurahs([]);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const hits = useMemo(() => searchBasirah(index, q, scope), [index, q, scope]);
 
   const modeLabel = (lang === "ar" ? BASIRAH_MODES.find((m) => m.id === mode)?.ar : BASIRAH_MODES.find((m) => m.id === mode)?.en) ?? mode;
 
@@ -40,8 +59,8 @@ export function BasirahPage() {
         <h1>{lang === "ar" ? "بَصِيرَة" : "Basirah"}</h1>
         <p>
           {lang === "ar"
-            ? "رفيق بحث يساعدك على الوصول إلى النصوص والمصادر وفهم مسارات المعرفة، مع إظهار المرجع وحدود الإجابة بوضوح."
-            : "A research companion that helps you reach texts and sources, with citations and the limits of each answer made visible."}
+            ? `رفيق اكتشاف المصادر المحلية — ${index.length} سجلًا من السور والفصول والسجلات والأعمال والمصادر. بصيرة ليست مفتيًا ولا محرك فتوى.`
+            : `Local source-discovery companion — ${index.length} records across surahs, chapters, samples, works, and sources. Basirah is not a mufti or fatwa engine.`}
         </p>
         <span className={styles.boundary}>{t(lang, "basirahBoundary")}</span>
       </header>

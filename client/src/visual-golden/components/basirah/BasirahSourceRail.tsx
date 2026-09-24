@@ -1,4 +1,4 @@
-import type { BasirahRecord } from "@/visual-golden/mock/basirah";
+import type { BasirahRecord } from "@/visual-golden/services/basirah";
 import { BasirahEvidenceCard } from "./BasirahEvidenceCard";
 import styles from "./basirah.module.css";
 
