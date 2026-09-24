@@ -38,9 +38,11 @@
 
 ## LAST SUCCESSFUL SLICE
 - SLICE 0 — REALITY REFRESH + BASELINE (this window, in overnight worktree).
+- SLICE A — Library shared search query: COMMITTED locally as `0b283745` (amended message). IMPLEMENTED AND VERIFIED (tsc, test:p0, build, library smoke, CDP query-sync). Push BLOCKED_ENVIRONMENT (no auth). PR/CI BLOCKED_TOOLING.
+- SLICE B — Library shared-query gate: `scripts/library-shared-query.test.ts` (3 tests) wired into `test:p0` (now 14/14 PASS). Visual-golden smoke PASS (6 routes, evidence in gitignored artifacts/). COMMITTED locally (see HEAD below).
 
 ## CURRENT SLICE
-- SLICE A — Library shelf/catalog shared search query: IMPLEMENTED, type/test/build PASS, browser runtime verification in progress (server booting, smoke suite next).
+- SLICE A+1 — Visual-golden regression smoke across institution routes (next; server still up).
 
 ## SLICE A DETAIL (first implementation slice, overnight worktree)
 - Files: `client/src/visual-golden/components/library/LibraryCatalog.tsx` (controlled/uncontrolled query: `query`/`onQuery` props, deep-link usage unchanged), `client/src/visual-golden/pages/LibraryPage.tsx` (passes hero `q`/`setQ` into catalog).
