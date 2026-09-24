@@ -135,7 +135,7 @@ export const YouTubePlayer = forwardRef<KidsPlayerHandle, Props>(function YouTub
             enablejsapi: 1,
             playsinline: 1,
             rel: 0,
-            controls: 0,
+            controls: 1,
             cc_load_policy: 1,
             origin: window.location.origin,
           },

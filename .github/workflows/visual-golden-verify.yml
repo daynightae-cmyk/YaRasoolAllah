@@ -5,7 +5,7 @@ on:
     branches: [main]
   push:
     branches:
-      - feat/grok-visual-golden-master-20260924
+      - main
 
 jobs:
   verify:
@@ -34,6 +34,46 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Capture live visual golden screenshots
+        shell: bash
+        env:
+          JWT_SECRET: ci-ephemeral-jwt-secret-key-32ch
+          ALLOW_EPHEMERAL_PERSISTENCE: "1"
+        run: |
+          npm start > /tmp/yra-visual-server.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+
+          READY=0
+          for attempt in {1..40}; do
+            if curl -fsS http://127.0.0.1:3000/ >/dev/null; then
+              READY=1
+              break
+            fi
+            sleep 0.5
+          done
+          if [ "$READY" -ne 1 ]; then
+            cat /tmp/yra-visual-server.log
+            exit 1
+          fi
+
+          CHROME_BIN="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$CHROME_BIN" ]; then
+            echo "No Chrome/Chromium executable found on the GitHub runner."
+            exit 1
+          fi
+
+          CHROME_PATH="$CHROME_BIN" VISUAL_BASE_URL="http://127.0.0.1:3000" node scripts/smoke-visual-golden.mjs
+
+      - name: Upload visual golden smoke
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-golden-smoke
+          path: artifacts/visual-golden-smoke
+          if-no-files-found: warn
+          retention-days: 14
 
       - name: Diff hygiene
         run: git diff --check origin/main...HEAD
