@@ -1,0 +1,245 @@
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 260;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(2, 7, 9, 0.84);
+  backdrop-filter: blur(10px);
+}
+
+.reader {
+  width: min(1240px, 100%);
+  height: min(92vh, 920px);
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  overflow: hidden;
+  border: 1px solid rgba(231, 197, 82, 0.46);
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 50% -20%, rgba(230, 192, 76, 0.15), transparent 34%),
+    linear-gradient(180deg, #12231e, #08120f);
+  color: #fff6d7;
+  box-shadow: 0 42px 100px rgba(0, 0, 0, 0.62);
+}
+
+.header,
+.toolbar,
+.footer {
+  padding: 0.75rem 1rem;
+  border-color: rgba(216, 177, 63, 0.22);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(216, 177, 63, 0.22);
+}
+
+.header span {
+  color: #d7b657;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+}
+
+.header h2 {
+  margin: 0.18rem 0 0;
+  max-width: 760px;
+  font-size: clamp(1rem, 2.5vw, 1.45rem);
+  line-height: 1.45;
+}
+
+.headerActions,
+.pageControls,
+.zoomControls,
+.manifestMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.headerActions button,
+.toolbar button,
+.sourceLink,
+.status a {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.42rem 0.7rem;
+  border: 1px solid rgba(225, 190, 79, 0.3);
+  border-radius: 10px;
+  background: rgba(4, 18, 15, 0.82);
+  color: #f4dfa0;
+  text-decoration: none;
+}
+
+.headerActions button {
+  width: 40px;
+  padding: 0;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  border-bottom: 1px solid rgba(216, 177, 63, 0.16);
+  background: rgba(3, 12, 10, 0.52);
+}
+
+.toolbar button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.pageControls label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: rgba(255, 246, 215, 0.72);
+  font-size: 0.75rem;
+}
+
+.pageControls input {
+  width: 68px;
+  min-height: 36px;
+  border: 1px solid rgba(225, 190, 79, 0.32);
+  border-radius: 8px;
+  background: #06110e;
+  color: #fff6d7;
+  text-align: center;
+}
+
+.zoomControls output {
+  min-width: 54px;
+  text-align: center;
+  color: #e7c75f;
+  font-size: 0.76rem;
+}
+
+.viewport {
+  min-height: 0;
+  overflow: auto;
+  display: grid;
+  align-items: start;
+  justify-items: center;
+  padding: 1rem;
+  background:
+    linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px),
+    #020706;
+  background-size: 24px 24px;
+  overscroll-behavior: contain;
+}
+
+.imageStage {
+  min-width: min(100%, 720px);
+  transition: width 180ms ease;
+}
+
+.imageStage img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  background: #efe5ca;
+  box-shadow: 0 22px 55px rgba(0,0,0,0.52);
+}
+
+.footer {
+  border-top: 1px solid rgba(216, 177, 63, 0.18);
+  background: rgba(3, 12, 10, 0.66);
+}
+
+.footer > div:first-child {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+}
+
+.footer span,
+.footer p {
+  color: rgba(255, 246, 215, 0.6);
+  font-size: 0.72rem;
+}
+
+.footer strong {
+  font-size: 0.84rem;
+}
+
+.footer p {
+  margin: 0.45rem 0 0;
+  line-height: 1.6;
+}
+
+.footer a {
+  color: #e6c75d;
+}
+
+.status {
+  grid-row: 2 / -1;
+  min-height: 360px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0.6rem;
+  padding: 2rem;
+  text-align: center;
+}
+
+.status strong {
+  color: #fff0b9;
+}
+
+.status span {
+  color: rgba(255,246,215,0.62);
+}
+
+.spin {
+  animation: spin 900ms linear infinite;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.headerActions button:focus-visible,
+.toolbar button:focus-visible,
+.sourceLink:focus-visible,
+.status a:focus-visible,
+.pageControls input:focus-visible {
+  outline: 3px solid #e8c75f;
+  outline-offset: 3px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 720px) {
+  .scrim { padding: 0; }
+  .reader { width: 100%; height: 100dvh; border-radius: 0; border-inline: 0; }
+  .header { align-items: flex-start; }
+  .sourceLink { display: none; }
+  .toolbar { flex-wrap: wrap; }
+  .pageControls, .zoomControls { width: 100%; justify-content: center; }
+  .viewport { padding: 0.55rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .imageStage { transition: none; }
+  .spin { animation: none; }
+}
