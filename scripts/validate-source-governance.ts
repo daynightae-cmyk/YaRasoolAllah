@@ -137,6 +137,16 @@ for (const resource of providerResourceRegistry) {
   if (["needs_review", "blocked"].includes(rights.decision) && resource.allowedUsages.length) {
     throw new Error(`${resource.resourceId} exposes usages while rights are ${rights.decision}`);
   }
+
+  if (resource.integrationMode === "DIRECT_API" && resource.resourceType !== "api") {
+    throw new Error(`${resource.resourceId} declares DIRECT_API without an API resource type`);
+  }
+  if (resource.integrationMode === "METADATA_ONLY" && resource.resourceType !== "catalog") {
+    throw new Error(`${resource.resourceId} declares METADATA_ONLY without a catalog resource type`);
+  }
+  if (resource.integrationMode === "DOWNLOAD_ALLOWED" && resource.resourceType !== "file") {
+    throw new Error(`${resource.resourceId} declares DOWNLOAD_ALLOWED without a file resource type`);
+  }
 }
 
 const catalogResource = providerResourceRegistry.find(
