@@ -100,9 +100,9 @@ export function QuranPage() {
       .then((items) => {
         if (cancelled) return;
         setVerses(items);
-        if (!items.some((item) => item.ayah === ayah)) {
-          setAyah(1);
-        }
+        setAyah((current) =>
+          items.some((item) => item.ayah === current) ? current : 1,
+        );
       })
       .catch(() => {
         if (!cancelled) {
@@ -117,7 +117,7 @@ export function QuranPage() {
     return () => {
       cancelled = true;
     };
-  }, [active, ayah]);
+  }, [active]);
 
   const currentChapter =
     chapters.find((chapter) => chapter.number === active) ?? null;
