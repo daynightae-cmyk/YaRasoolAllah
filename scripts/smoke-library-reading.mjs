@@ -34,7 +34,7 @@ const chrome = spawn(chromePath, [
 const delay = (ms) => new Promise((resolveDelay) => setTimeout(resolveDelay, ms));
 
 async function waitForDebugger() {
-  for (let attempt = 0; attempt < 100; attempt += 1) {
+  for (let attempt = 0; attempt < 240; attempt += 1) {
     try {
       const response = await fetch(`http://127.0.0.1:${debuggingPort}/json/list`);
       const pages = await response.json();
@@ -43,7 +43,7 @@ async function waitForDebugger() {
     } catch {
       // Chrome is still starting.
     }
-    await delay(120);
+    await delay(250);
   }
   throw new Error("Chrome DevTools endpoint did not become available");
 }
@@ -214,7 +214,7 @@ try {
       if (!dialog) return false;
       if (dialog.textContent?.includes("تعذر فتح النص")) throw new Error("Reader returned an error state");
       const paper = [...dialog.querySelectorAll("article")].find((article) => article.textContent?.trim().length > 180);
-      return Boolean(paper && dialog.textContent?.includes("قراءة داخلية"));
+      return Boolean(paper && dialog.textContent?.includes("قراءة مباشرة"));
     })()`,
     "real OpenITI reading text",
     180,
@@ -225,16 +225,25 @@ try {
     `(() => {
       const dialog = document.querySelector("[role=dialog]");
       const article = [...dialog.querySelectorAll("article")].find((item) => item.textContent?.trim().length > 180);
+      const resources = performance.getEntriesByType("resource").map((entry) => entry.name);
       return {
         dialogOpen: Boolean(dialog),
         textLength: article?.textContent?.trim().length ?? 0,
         hasPinnedSource: dialog?.textContent?.includes("OpenITI") ?? false,
         hasDigitalNumberingNotice: dialog?.textContent?.includes("مقاطع رقمية") ?? false,
+        usedDirectPinnedSource: resources.some((url) => url.includes("raw.githubusercontent.com/OpenITI/RELEASE/")),
+        usedInternalReaderApi: resources.some((url) => url.includes("/api/content/library/read/")),
       };
     })()`,
   );
-  if (reading.textLength < 180 || !reading.hasPinnedSource || !reading.hasDigitalNumberingNotice) {
-    throw new Error(`Reader evidence incomplete: ${JSON.stringify(reading)}`);
+  if (
+    reading.textLength < 180 ||
+    !reading.hasPinnedSource ||
+    !reading.hasDigitalNumberingNotice ||
+    !reading.usedDirectPinnedSource ||
+    reading.usedInternalReaderApi
+  ) {
+    throw new Error(`Direct reader evidence incomplete: ${JSON.stringify(reading)}`);
   }
   await screenshot(session, "library-reading.jpg");
 
