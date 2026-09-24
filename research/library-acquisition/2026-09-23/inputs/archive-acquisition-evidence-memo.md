@@ -1,7 +1,7 @@
 # Archive and Catalogue Acquisition Evidence Memo
 
-**Workstream:** 02 — Internet Archive, HathiTrust, Google Books, and WorldCat/OCLC  
-**Research date:** 23 September 2026  
+**Workstream:** 02 — Internet Archive, HathiTrust, Google Books, and WorldCat/OCLC
+**Research date:** 23 September 2026
 **Scope:** Provider capability, Arabic/Islamic discovery potential, identifiers, machine-readable access, file availability, rights, and lawful future-ingestion classification. This memo does not authorize content acquisition and no corpus was downloaded.
 
 ## Conclusion

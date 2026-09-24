@@ -60,7 +60,7 @@ def read_csv(path):
 
 def write_csv(path,rows,headers):
     with path.open("w",encoding="utf-8-sig",newline="") as f:
-        w=csv.DictWriter(f,fieldnames=headers,extrasaction="ignore");w.writeheader()
+        w=csv.DictWriter(f,fieldnames=headers,extrasaction="ignore",lineterminator="\n");w.writeheader()
         for row in rows:
             out={}
             for h in headers:
