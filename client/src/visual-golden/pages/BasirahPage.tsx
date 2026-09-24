@@ -10,6 +10,10 @@ import {
   type BasirahScope,
 } from "@/visual-golden/services/basirah";
 import { getQuranChapters } from "@/services/quranService";
+import {
+  searchVerifiedQuran,
+  type QuranSearchHit,
+} from "@/visual-golden/services/quran-search";
 import { art } from "@/visual-golden/mock/art";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { t } from "@/visual-golden/lib/i18n";
@@ -41,9 +45,30 @@ export function BasirahPage() {
     }
   });
   const [surahs, setSurahs] = useState<BasirahRecord[]>([]);
+  const [quranHits, setQuranHits] = useState<QuranSearchHit[]>([]);
+  const [quranSearchState, setQuranSearchState] = useState<"idle" | "loading" | "ready">("idle");
 
   const localIndex = useMemo(() => buildLocalIndex(), []);
-  const index = useMemo(() => [...surahs, ...localIndex], [surahs, localIndex]);
+  const quranRecords = useMemo<BasirahRecord[]>(
+    () =>
+      quranHits.map((hit) => ({
+        id: `quran-ayah-${hit.surah}-${hit.ayah}`,
+        scope: "quran",
+        titleAr: `سورة ${hit.surahName} · الآية ${hit.ayah}`,
+        titleEn: `Quran ${hit.surah}:${hit.ayah}`,
+        kindAr: "آية من المصحف المحلي الموثق",
+        kindEn: "verified local Quran verse",
+        path: `/quran?surah=${hit.surah}&ayah=${hit.ayah}`,
+        hintAr: hit.arabic,
+        hintEn: `Tanzil Uthmani-min 1.1 · ${hit.surah}:${hit.ayah}`,
+        availabilityAr: "النص العربي المحلي متاح · لا ترجمة أو تفسير مضمّن في نتيجة البحث",
+      })),
+    [quranHits],
+  );
+  const index = useMemo(
+    () => [...quranRecords, ...surahs, ...localIndex],
+    [quranRecords, surahs, localIndex],
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -59,6 +84,40 @@ export function BasirahPage() {
     };
   }, []);
 
+  useEffect(() => {
+    let cancelled = false;
+    const query = q.trim();
+    if ((scope !== "all" && scope !== "quran") || query.length < 2) {
+      setQuranHits([]);
+      setQuranSearchState("idle");
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    setQuranSearchState("loading");
+    const timer = window.setTimeout(() => {
+      searchVerifiedQuran(query, 30)
+        .then((items) => {
+          if (!cancelled) {
+            setQuranHits(items);
+            setQuranSearchState("ready");
+          }
+        })
+        .catch(() => {
+          if (!cancelled) {
+            setQuranHits([]);
+            setQuranSearchState("ready");
+          }
+        });
+    }, 180);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [q, scope]);
+
   const hits = useMemo(() => searchBasirah(index, q, scope), [index, q, scope]);
 
   const modeLabel = (lang === "ar" ? BASIRAH_MODES.find((m) => m.id === mode)?.ar : BASIRAH_MODES.find((m) => m.id === mode)?.en) ?? mode;
@@ -71,8 +130,8 @@ export function BasirahPage() {
         <h1>{lang === "ar" ? "بَصِيرَة" : "Basirah"}</h1>
         <p>
           {lang === "ar"
-            ? `رفيق اكتشاف المصادر المحلية — ${index.length} سجلًا من السور والفصول والسجلات والأعمال والمصادر. بصيرة ليست مفتيًا ولا محرك فتوى.`
-            : `Local source-discovery companion — ${index.length} records across surahs, chapters, samples, works, and sources. Basirah is not a mufti or fatwa engine.`}
+            ? `رفيق اكتشاف المصادر المحلية — ${surahs.length + localIndex.length} سجلًا فهرسيًا، مع بحث نصي في المصحف العربي الكامل عند الاستعلام. بصيرة ليست مفتيًا ولا محرك فتوى.`
+            : `Local source-discovery companion — ${surahs.length + localIndex.length} catalog records plus query-time search across the full local Arabic Quran. Basirah is not a mufti or fatwa engine.`}
         </p>
         <span className={styles.boundary}>{t(lang, "basirahBoundary")}</span>
       </header>
@@ -98,6 +157,11 @@ export function BasirahPage() {
             <span>{lang === "ar" ? "شرح" : "Explanation"}</span>
           </div>
 
+          {quranSearchState === "loading" ? (
+            <p className="muted" role="status">
+              {lang === "ar" ? "جارٍ البحث في نص القرآن المحلي الموثق…" : "Searching the verified local Quran text…"}
+            </p>
+          ) : null}
           <BasirahRelatedPath records={hits} lang={lang} />
           <BasirahAnswer lang={lang} ran={ran} hitCount={hits.length} modeLabel={modeLabel} />
 
