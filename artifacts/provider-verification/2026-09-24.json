@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-24T08:07:17.088Z",
+  "startedAt": "2026-09-24T08:07:14.860Z",
+  "mode": "public-only",
+  "summary": {
+    "total": 12,
+    "passed": 6,
+    "failed": 0,
+    "blockedCredential": 5,
+    "blockedProvider": 1,
+    "publicFailures": 0,
+    "credentialFailures": 0
+  },
+  "results": [
+    {"id":"open-library-search","provider":"Open Library","category":"public","status":"PASS","request":{"method":"GET","url":"https://openlibrary.org/search.json?q=Ibn%20Hisham&fields=key,title,author_name,first_publish_year,edition_key,cover_i&limit=1&page=1"},"httpStatus":200,"durationMs":716,"contentType":"application/json","schemaValid":true,"checkedAt":"2026-09-24T08:07:15.578Z","error":null},
+    {"id":"internet-archive-metadata","provider":"Internet Archive","category":"public","status":"PASS","request":{"method":"GET","url":"https://archive.org/metadata/opensource"},"httpStatus":200,"durationMs":249,"contentType":"application/json","schemaValid":true,"checkedAt":"2026-09-24T08:07:15.828Z","error":null},
+    {"id":"qdl-iiif-manifest","provider":"Qatar Digital Library","category":"public","status":"BLOCKED_PROVIDER","request":{"method":"GET","url":"https://www.qdl.qa/en/iiif/qnlhc/12933/manifest","headers":["User-Agent","Referer"]},"httpStatus":403,"durationMs":36,"contentType":"text/html; charset=UTF-8","schemaValid":false,"checkedAt":"2026-09-24T08:07:15.865Z","error":"provider blocked automated verification with HTTP 403"},
+    {"id":"gallica-iiif-manifest","provider":"BnF Gallica","category":"public","status":"PASS","request":{"method":"GET","url":"https://gallica.bnf.fr/iiif/ark:/12148/btv1b550076223/manifest.json"},"httpStatus":200,"durationMs":452,"contentType":"application/json;charset=UTF-8","schemaValid":true,"checkedAt":"2026-09-24T08:07:16.317Z","error":null},
+    {"id":"mp3quran-languages","provider":"MP3Quran","category":"public","status":"PASS","request":{"method":"GET","url":"https://mp3quran.net/api/v3/languages"},"httpStatus":200,"durationMs":238,"contentType":"application/json","schemaValid":true,"checkedAt":"2026-09-24T08:07:16.555Z","error":null},
+    {"id":"aladhan-methods","provider":"AlAdhan","category":"public","status":"PASS","request":{"method":"GET","url":"https://api.aladhan.com/v1/methods"},"httpStatus":200,"durationMs":234,"contentType":"application/json","schemaValid":true,"checkedAt":"2026-09-24T08:07:16.788Z","error":null},
+    {"id":"dorar-search","provider":"Dorar","category":"public","status":"PASS","request":{"method":"GET","url":"https://dorar.net/dorar_api.json?skey=%D8%A5%D9%86%D9%85%D8%A7%20%D8%A7%D9%84%D8%A3%D8%B9%D9%85%D8%A7%D9%84%20%D8%A8%D8%A7%D9%84%D9%86%D9%8A%D8%A7%D8%AA"},"httpStatus":200,"durationMs":299,"contentType":"application/json","schemaValid":true,"checkedAt":"2026-09-24T08:07:17.087Z","error":null},
+    {"id":"quran-foundation-chapters","provider":"Quran Foundation","category":"credentialed","status":"BLOCKED_CREDENTIAL","request":{"method":"GET","url":"https://apis-prelive.quran.foundation/content/api/v4/chapters"},"httpStatus":null,"durationMs":null,"contentType":null,"schemaValid":null,"checkedAt":"2026-09-24T08:07:17.088Z","error":null,"credentialEnv":["QF_CLIENT_ID","QF_CLIENT_SECRET","QF_ENV"]},
+    {"id":"sunnah-collections","provider":"Sunnah.com","category":"credentialed","status":"BLOCKED_CREDENTIAL","request":{"method":"GET","url":"https://api.sunnah.com/v1/collections?limit=1&page=1"},"httpStatus":null,"durationMs":null,"contentType":null,"schemaValid":null,"checkedAt":"2026-09-24T08:07:17.088Z","error":null,"credentialEnv":["SUNNAH_API_KEY"]},
+    {"id":"geonames-search","provider":"GeoNames","category":"credentialed","status":"BLOCKED_CREDENTIAL","request":{"method":"GET","url":"https://api.geonames.org/searchJSON?q=Dubai&maxRows=1&username=%5BREDACTED%5D"},"httpStatus":null,"durationMs":null,"contentType":null,"schemaValid":null,"checkedAt":"2026-09-24T08:07:17.088Z","error":null,"credentialEnv":["GEONAMES_USERNAME"]},
+    {"id":"youtube-one4kids-channel","provider":"YouTube Data API","category":"credentialed","status":"BLOCKED_CREDENTIAL","request":{"method":"GET","url":"https://www.googleapis.com/youtube/v3/channels?part=snippet%2CcontentDetails&forHandle=%40one4kids&key=%5BREDACTED%5D"},"httpStatus":null,"durationMs":null,"contentType":null,"schemaValid":null,"checkedAt":"2026-09-24T08:07:17.088Z","error":null,"credentialEnv":["YOUTUBE_DATA_API_KEY"]},
+    {"id":"timezonedb-dubai","provider":"TimeZoneDB","category":"credentialed","status":"BLOCKED_CREDENTIAL","request":{"method":"GET","url":"https://api.timezonedb.com/v2.1/get-time-zone?format=json&by=zone&zone=Asia%2FDubai&key=%5BREDACTED%5D"},"httpStatus":null,"durationMs":null,"contentType":null,"schemaValid":null,"checkedAt":"2026-09-24T08:07:17.088Z","error":null,"credentialEnv":["TIMEZONEDB_API_KEY"]}
+  ]
+}
