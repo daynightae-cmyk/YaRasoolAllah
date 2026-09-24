@@ -10,7 +10,7 @@ import { SplashCeremony } from "@/visual-golden/components/ceremony/SplashCeremo
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import styles from "./shell.module.css";
 
-const WING_LABEL: Record<string,string>={"/":"بوابة النور","/library":"المكتبة","/quran":"القرآن","/tafsir":"التفسير","/seerah":"السيرة","/atlas":"الأطلس","/hadith":"الحديث","/sunnah":"الحديث","/kids":"الأطفال","/daily":"مرصد الصلاة","/audio":"التلاوات","/quran-audio":"التلاوات","/basirah":"بصيرة"};
+const WING_LABEL: Record<string,string>={"/":"بوابة النور","/library":"المكتبة","/quran":"القرآن","/tafsir":"التفسير","/seerah":"السيرة","/atlas":"الأطلس","/hadith":"الحديث","/sunnah":"الحديث","/kids":"الأطفال","/daily":"مرصد الصلاة","/audio":"التلاوات","/quran-audio":"التلاوات","/basirah":"بصيرة","/sources":"خزانة المصادر"};
 function wingFromPath(pathname:string){ if(pathname==="/")return "home"; const key=pathname.replace(/^\//,"").split("/")[0]; return key==="sunnah"?"hadith":key==="quran-audio"?"audio":key||"home"; }
 function shouldShowSplash(){ if(typeof window==="undefined")return false; const q=new URLSearchParams(window.location.search); if(q.get("ceremony")==="1")return true; return sessionStorage.getItem("yra-splash")!=="1"; }
 export function InstitutionShell({children}:{children:ReactNode}){
