@@ -14,9 +14,13 @@ const debuggingPort = 9341;
 mkdirSync(evidenceDir, { recursive: true });
 
 const chrome = spawn(chromePath, [
-  "--headless=new",
+  "--headless",
   "--disable-gpu",
   "--no-sandbox",
+  "--disable-dev-shm-usage",
+  "--no-first-run",
+  "--no-default-browser-check",
+  "--remote-debugging-address=127.0.0.1",
   "--disable-background-networking",
   "--disable-default-apps",
   "--disable-extensions",
@@ -25,7 +29,7 @@ const chrome = spawn(chromePath, [
   `--remote-debugging-port=${debuggingPort}`,
   `--user-data-dir=${profileDir}`,
   `${origin}/`,
-], { stdio: "ignore" });
+], { stdio: ["ignore", "ignore", "inherit"] });
 
 const delay = (ms) => new Promise((resolveDelay) => setTimeout(resolveDelay, ms));
 
