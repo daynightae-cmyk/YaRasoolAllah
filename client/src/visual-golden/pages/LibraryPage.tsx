@@ -5,6 +5,9 @@ import { LIBRARY_COUNTS, type BookMode, type LibraryBook } from "@/visual-golden
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
 import { BookshelfHall } from "@/visual-golden/components/library/BookshelfHall";
 import { ReadingChamber } from "@/visual-golden/components/library/ReadingChamber";
+import { ManuscriptGallery } from "@/visual-golden/components/library/ManuscriptGallery";
+import { ManuscriptReader } from "@/visual-golden/components/library/ManuscriptReader";
+import type { ManuscriptSource } from "@/visual-golden/services/iiif";
 import styles from "./LibraryPage.module.css";
 
 interface ExternalCatalogItem {
@@ -26,6 +29,7 @@ export function LibraryPage() {
   const [selected, setSelected] = useState<LibraryBook | null>(null);
   const [open, setOpen] = useState<{ book: LibraryBook; mode?: BookMode } | null>(null);
   const [external, setExternal] = useState<ExternalSearch>({ state: "idle" });
+  const [manuscript, setManuscript] = useState<ManuscriptSource | null>(null);
   const request = useRef<AbortController | null>(null);
 
   useEffect(() => () => request.current?.abort(), []);
@@ -103,6 +107,8 @@ export function LibraryPage() {
         </section>
       ) : null}
 
+      <ManuscriptGallery onOpen={setManuscript} />
+
       <BookshelfHall
         activeShelf={shelf}
         onShelf={setShelf}
@@ -114,6 +120,10 @@ export function LibraryPage() {
 
       {open ? (
         <ReadingChamber book={open.book} initialMode={open.mode} onClose={() => setOpen(null)} />
+      ) : null}
+
+      {manuscript ? (
+        <ManuscriptReader source={manuscript} onClose={() => setManuscript(null)} />
       ) : null}
     </div>
   );
