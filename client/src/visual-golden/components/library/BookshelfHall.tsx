@@ -77,6 +77,7 @@ export function BookshelfHall({ activeShelf, onShelf, selected, onSelect, onOpen
                           type="button"
                           role="listitem"
                           className={`${styles.tome} ${selected?.id === b.id ? styles.pulled : ""}`}
+                          data-book-spine
                           style={
                             {
                               "--w": `${b.spine.width}px`,
@@ -101,7 +102,7 @@ export function BookshelfHall({ activeShelf, onShelf, selected, onSelect, onOpen
                     })}
                   </div>
                   <div className={styles.plank}>
-                    <span className={styles.shelfPlate}>
+                    <span className={styles.shelfPlate} data-shelf-plate>
                       <strong>{shelf}</strong>
                       <small>{books.length} {books.length === 1 ? "عمل" : "أعمال"}</small>
                     </span>
