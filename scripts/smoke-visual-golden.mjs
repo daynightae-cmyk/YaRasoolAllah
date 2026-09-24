@@ -18,6 +18,8 @@ const cases = [
   { name: "quran-1440-rtl", path: "/quran", width: 1440, height: 1000 },
   { name: "kids-360-rtl", path: "/kids", width: 360, height: 844 },
   { name: "library-1440-rtl", path: "/library", width: 1440, height: 1000 },
+  { name: "sources-1440-rtl", path: "/sources", width: 1440, height: 1000 },
+  { name: "sources-360-rtl", path: "/sources", width: 360, height: 844 },
 ];
 
 const chrome = spawn(chromePath, [
