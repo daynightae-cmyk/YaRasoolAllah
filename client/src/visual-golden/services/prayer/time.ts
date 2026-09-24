@@ -79,10 +79,10 @@ const ORDER: PrayerName[] = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha
 
 export function computeNextPrayer(
   timings: PrayerTimings,
-  tomorrowFajr: string,
+  tomorrowFajr: string | null,
   timeZone: string,
   at = new Date(),
-): NextPrayerState {
+): NextPrayerState | null {
   const nowMin = nowMinutesInZone(timeZone, at);
   for (const name of ORDER) {
     const t = minutesFromHHMM(timings[name]);
@@ -98,6 +98,11 @@ export function computeNextPrayer(
       };
     }
   }
+
+  // After Isha, the next prayer is tomorrow's Fajr. If that second provider
+  // request failed, there is no honest time to display or count down to.
+  if (!tomorrowFajr) return null;
+
   const fajr = minutesFromHHMM(tomorrowFajr) + 1440;
   const remainingSeconds = Math.max(0, Math.round((fajr - nowMin) * 60));
   return {
@@ -110,10 +115,10 @@ export function computeNextPrayer(
   };
 }
 
-export function prayerStatus(name: PrayerName, timings: PrayerTimings, next: NextPrayerState, timeZone: string) {
+export function prayerStatus(name: PrayerName, timings: PrayerTimings, next: NextPrayerState | null, timeZone: string) {
   const now = nowMinutesInZone(timeZone);
   const t = minutesFromHHMM(timings[name]);
-  if (next.name === name && !next.isTomorrow) return "next" as const;
+  if (next?.name === name && !next.isTomorrow) return "next" as const;
   if (now >= t && name !== "Sunrise") return "past" as const;
   if (name === "Sunrise" && now >= t) return "past" as const;
   return "upcoming" as const;
