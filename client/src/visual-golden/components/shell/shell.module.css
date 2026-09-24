@@ -537,6 +537,76 @@
   color: var(--gold-400);
 }
 
+/* The reading wings use dark, illustrated surfaces. Keep their light text
+   palette when the surrounding navigation switches to a bright day surface. */
+.shell[data-theme="light"] .content,
+.shell[data-theme="light"] .drawer {
+  --text-primary: #fefdf8;
+  --text-secondary: #f5edd8;
+  --text-muted: #b6b0a4;
+  --text-gold: #e8c547;
+}
+
+.shell[data-theme="light"] .sidebar {
+  background: linear-gradient(180deg, #fffaf0, #f1ead8 54%, #e7e4d7);
+  border-right-color: rgba(124, 86, 26, 0.32);
+  box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.8), 8px 0 28px rgba(21, 49, 38, 0.1);
+}
+
+.shell[data-theme="light"] .logoArea {
+  border-bottom-color: rgba(124, 86, 26, 0.22);
+}
+
+.shell[data-theme="light"] .brandAr { color: #76510f; }
+.shell[data-theme="light"] .brandEn,
+.shell[data-theme="light"] .navEn { color: #586557; }
+
+.shell[data-theme="light"] .navItem { color: #183d34; }
+.shell[data-theme="light"] .navItem:hover {
+  color: #0c2d28;
+  background: rgba(12, 109, 78, 0.1);
+}
+.shell[data-theme="light"] .navActive {
+  color: #133e32;
+  background: linear-gradient(90deg, rgba(209, 161, 61, 0.27), rgba(44, 122, 94, 0.14));
+  box-shadow: inset 0 0 0 1px rgba(150, 108, 36, 0.36);
+}
+.shell[data-theme="light"] .navDivider { background: rgba(124, 86, 26, 0.2); }
+.shell[data-theme="light"] .journeyCard {
+  color: #594017;
+  background: linear-gradient(135deg, rgba(229, 195, 113, 0.36), rgba(124, 173, 139, 0.28));
+  border-color: rgba(150, 108, 36, 0.3);
+}
+.shell[data-theme="light"] .journeyEn { color: #355044; }
+
+.shell[data-theme="light"] .header {
+  background: rgba(255, 250, 240, 0.94);
+  border-bottom-color: rgba(124, 86, 26, 0.24);
+  color: #183d34;
+}
+.shell[data-theme="light"] .searchWrap {
+  color: #54675c;
+  background: rgba(255, 255, 255, 0.76);
+  border-color: rgba(124, 86, 26, 0.28);
+}
+.shell[data-theme="light"] .searchInput { color: #183d34; }
+.shell[data-theme="light"] .searchIcon,
+.shell[data-theme="light"] .langOn { color: #84601e; }
+.shell[data-theme="light"] .langBtn,
+.shell[data-theme="light"] .userChip {
+  background: rgba(232, 216, 177, 0.38);
+  color: #27483b;
+}
+.shell[data-theme="light"] .iconBtn,
+.shell[data-theme="light"] .menuBtn { color: #234639; }
+.shell[data-theme="light"] .userRole { color: #586557; }
+.shell[data-theme="light"] .mobileNav {
+  background: rgba(255, 250, 240, 0.97);
+  border-top-color: rgba(124, 86, 26, 0.28);
+}
+.shell[data-theme="light"] .mobileNavItem { color: #405c4e; }
+.shell[data-theme="light"] .mobileNavActive { color: #76510f; }
+
 .drawerScrim {
   position: fixed;
   inset: 0;
