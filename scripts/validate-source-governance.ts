@@ -63,8 +63,11 @@ for (const version of digitalVersionRegistry) {
   if (version.releaseCommit !== OPENITI_RELEASE_COMMIT) {
     throw new Error(`${version.versionId} is not pinned to the approved OpenITI release`);
   }
-  if (version.contentAvailability !== "catalog_only") {
-    throw new Error(`${version.versionId} must remain catalog-only pending version rights review`);
+  if (version.contentAvailability !== "full_text_cleared") {
+    throw new Error(`${version.versionId} must expose the pinned historical text after rights clearance`);
+  }
+  if (version.rightsState !== "cleared_public_domain_openiti_historical_text") {
+    throw new Error(`${version.versionId} is missing the OpenITI historical-text rights decision`);
   }
   if (!version.sourceUrl.includes(`/blob/${OPENITI_RELEASE_COMMIT}/`)) {
     throw new Error(`${version.versionId} source URL is not commit-pinned`);
@@ -161,6 +164,17 @@ if (!evaluateResourceUsage(catalogResource, catalogRights, "external_link", "pro
 }
 if (evaluateResourceUsage(catalogResource, catalogRights, "full_text", "production").allowed) {
   throw new Error("Catalog-only resource must never expose full text");
+}
+
+const openItiResource = providerResourceRegistry.find(
+  (item) => item.resourceId === "resource-openiti-historical-texts-pinned",
+)!;
+const openItiRights = rightsLedger.find((item) => item.rightsId === openItiResource.rightsId)!;
+if (!evaluateResourceUsage(openItiResource, openItiRights, "full_text", "production").allowed) {
+  throw new Error("Pinned OpenITI historical text must expose full text in production");
+}
+if (!evaluateResourceUsage(openItiResource, openItiRights, "cache", "production").allowed) {
+  throw new Error("Pinned OpenITI reader must be allowed to cache immutable text");
 }
 
 const sampleResource = providerResourceRegistry.find(
