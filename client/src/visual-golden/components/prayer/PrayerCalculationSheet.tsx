@@ -29,7 +29,7 @@ export function PrayerCalculationSheet({
   onToggleNight,
   onCalc,
 }: Props) {
-  const night = data ? nightWindows(data.timings.Maghrib, data.tomorrowFajr) : null;
+  const night = data?.tomorrowFajr ? nightWindows(data.timings.Maghrib, data.tomorrowFajr) : null;
 
   return (
     <div className={styles.panel}>
@@ -101,6 +101,8 @@ export function PrayerCalculationSheet({
           <dd>{data.timings.Sunrise}</dd>
           <dt>{lang === "ar" ? "الغروب" : "Sunset"}</dt>
           <dd>{data.timings.Sunset}</dd>
+          <dt>{lang === "ar" ? "فجر اليوم التالي" : "Next-day Fajr"}</dt>
+          <dd>{data.tomorrowFajr ?? (lang === "ar" ? "غير متاح من المزوّد" : "unavailable from provider")}</dd>
           <dt>{lang === "ar" ? "آخر تحديث" : "Fetched"}</dt>
           <dd>{new Date(data.meta.fetchedAt).toLocaleString(lang === "ar" ? "ar" : "en")}</dd>
         </dl>
@@ -127,6 +129,13 @@ export function PrayerCalculationSheet({
               : "These are time divisions from Maghrib to next Fajr, not jurisprudential rulings."}
           </p>
         </div>
+      ) : null}
+      {openNight && data && !data.tomorrowFajr ? (
+        <p className={styles.err} role="status">
+          {lang === "ar"
+            ? "تعذر جلب فجر اليوم التالي من المزوّد؛ لذلك لم نحسب منتصف الليل أو الثلث الأخير بقيمة بديلة."
+            : "Next-day Fajr is unavailable from the provider, so no substitute night-window calculation is shown."}
+        </p>
       ) : null}
     </div>
   );
