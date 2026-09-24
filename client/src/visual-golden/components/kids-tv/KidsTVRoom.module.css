@@ -122,6 +122,10 @@
   pointer-events: none;
 }
 
+.screen[data-player-active="true"]::after {
+  display: none;
+}
+
 .screen iframe,
 .screen > div:first-child {
   position: absolute !important;
@@ -461,6 +465,35 @@
 .nowPlaying span { color: #d9ba60; font-size: 0.7rem; }
 .nowPlaying h3 { margin: 0.16rem 0; font-size: 1.02rem; }
 .nowPlaying p { margin: 0; color: rgba(255, 248, 233, 0.65); font-size: 0.78rem; line-height: 1.7; }
+
+.nextChoices {
+  margin-top: 0.7rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(224, 189, 93, 0.18);
+  border-radius: 16px;
+  background: rgba(4, 13, 22, 0.7);
+}
+
+.nextChoices p {
+  margin: 0 0 0.55rem;
+  color: #f3e2a8;
+  font-size: 0.82rem;
+}
+
+.nextChoices div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.nextChoices button {
+  min-height: 40px;
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(224, 189, 93, 0.28);
+  background: rgba(18, 28, 42, 0.9);
+  color: #fff6d8;
+}
 
 .infoActions {
   display: flex;

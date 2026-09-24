@@ -30,6 +30,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: P0 auth, persistence contract, and kids player policy
+        run: npm run test:p0
+
       - name: TypeScript check
         run: npm run check
 
@@ -44,6 +47,9 @@ jobs:
 
       - name: Library reading + audiobook gate browser smoke
         shell: bash
+        env:
+          JWT_SECRET: ci-ephemeral-jwt-secret-key-32ch
+          ALLOW_EPHEMERAL_PERSISTENCE: "1"
         run: |
           npm start > /tmp/yra-server.log 2>&1 &
           SERVER_PID=$!

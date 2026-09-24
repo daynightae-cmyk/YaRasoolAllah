@@ -21,6 +21,8 @@ type Props = {
   onReadStory?: () => void;
 };
 
+const PLAYER_ACTIVE_STATES: KidsTVState[] = ["playing", "paused", "loading", "ended"];
+
 export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) {
   const playable = useMemo(() => videos.filter((video) => video.embeddable), [videos]);
   const [currentId, setCurrentId] = useState(playable[0]?.id ?? "");
@@ -45,7 +47,6 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
   const hasStartedRef = useRef(false);
   const failedIdsRef = useRef(new Set<string>());
   const transitionTimerRef = useRef<number | null>(null);
-  const followupTimerRef = useRef<number | null>(null);
   const resumeAppliedRef = useRef<string | null>(null);
 
   useEffect(() => {
@@ -54,9 +55,7 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
 
   const clearTimers = useCallback(() => {
     if (transitionTimerRef.current !== null) window.clearTimeout(transitionTimerRef.current);
-    if (followupTimerRef.current !== null) window.clearTimeout(followupTimerRef.current);
     transitionTimerRef.current = null;
-    followupTimerRef.current = null;
   }, []);
 
   useEffect(() => clearTimers, [clearTimers]);
@@ -85,32 +84,26 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
     setAutoplayBlocked(false);
     setFriendlyError("");
     resumeAppliedRef.current = null;
+    persistProgress(false);
+
+    setCurrentId(video.id);
+    currentRef.current = video;
 
     if (!hasStartedRef.current || !autoplay) {
-      setCurrentId(video.id);
-      currentRef.current = video;
       setTvState("selected");
       playerRef.current?.load(video.providerVideoId, false);
       return;
     }
 
-    persistProgress(false);
-    playerRef.current?.pause();
-    setTvState("curtain-closing");
-
-    transitionTimerRef.current = window.setTimeout(() => {
-      setCurrentId(video.id);
-      currentRef.current = video;
-      setTvState("loading");
-      if (playerReadyRef.current) {
-        playerRef.current?.load(video.providerVideoId, true);
-      } else {
-        pendingPlayRef.current = true;
-      }
-    }, 300);
+    setTvState("loading");
+    if (playerReadyRef.current) {
+      playerRef.current?.load(video.providerVideoId, true);
+    } else {
+      pendingPlayRef.current = true;
+    }
   }, [clearTimers, persistProgress]);
 
-  const changeBy = useCallback((direction: 1 | -1, autoplay = hasStartedRef.current) => {
+  const changeBy = useCallback((direction: 1 | -1, autoplay = false) => {
     const active = currentRef.current;
     if (!active || playable.length < 2) return;
 
@@ -132,11 +125,14 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
     setAutoplayBlocked(false);
     setTvState("curtain-opening");
 
-    if (playerReadyRef.current) {
-      playerRef.current?.load(video.providerVideoId, true);
-    } else {
-      pendingPlayRef.current = true;
-    }
+    transitionTimerRef.current = window.setTimeout(() => {
+      setTvState("loading");
+      if (playerReadyRef.current) {
+        playerRef.current?.load(video.providerVideoId, true);
+      } else {
+        pendingPlayRef.current = true;
+      }
+    }, 720);
   }, []);
 
   const handlePlayerState = useCallback((next: KidsPlayerState) => {
@@ -163,28 +159,26 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
       }
 
       clearTimers();
-      setTvState("curtain-opening");
-      transitionTimerRef.current = window.setTimeout(() => setTvState("playing"), 720);
+      setTvState("playing");
       return;
     }
 
     if (next === "paused") {
       persistProgress(false);
-      setTvState((state) => state === "curtain-closing" ? state : "paused");
+      setTvState("paused");
       return;
     }
 
     if (next === "buffering") {
-      setTvState((state) => state === "curtain-closing" ? state : "loading");
+      setTvState("loading");
       return;
     }
 
     if (next === "ended") {
       persistProgress(true);
       setTvState("ended");
-      followupTimerRef.current = window.setTimeout(() => changeBy(1, true), 900);
     }
-  }, [changeBy, clearTimers, persistProgress]);
+  }, [clearTimers, persistProgress]);
 
   const handlePlayerError = useCallback((code?: number) => {
     const video = currentRef.current;
@@ -194,11 +188,7 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
     setTvState("error");
     setFriendlyError("هذه الحلقة غير متاحة الآن");
     console.warn("[kids-tv] provider playback error", { videoId: video?.id, code });
-
-    followupTimerRef.current = window.setTimeout(() => {
-      changeBy(1, true);
-    }, 1200);
-  }, [changeBy, clearTimers]);
+  }, [clearTimers]);
 
   const handleAutoplayBlocked = useCallback(() => {
     setAutoplayBlocked(true);
@@ -226,13 +216,16 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
     persistProgress(false);
     playerRef.current?.pause();
     setTvState("curtain-closing");
-    transitionTimerRef.current = window.setTimeout(() => setTvState("selected"), 320);
+    transitionTimerRef.current = window.setTimeout(() => {
+      hasStartedRef.current = false;
+      setTvState("selected");
+    }, 320);
   }, [clearTimers, persistProgress]);
 
   const handleCommand = useCallback((command: KidsRemoteCommand) => {
     switch (command) {
       case "power":
-        if (hasStartedRef.current && ["playing", "paused", "loading", "curtain-opening"].includes(tvState)) closePlayback();
+        if (hasStartedRef.current && ["playing", "paused", "loading", "ended"].includes(tvState)) closePlayback();
         else openAndPlay();
         break;
       case "ok":
@@ -249,11 +242,11 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
         break;
       case "previous":
       case "channel-down":
-        changeBy(-1, true);
+        changeBy(-1, hasStartedRef.current);
         break;
       case "next":
       case "channel-up":
-        changeBy(1, true);
+        changeBy(1, hasStartedRef.current);
         break;
       case "left":
         playerRef.current?.seekBy(-10);
@@ -382,7 +375,10 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
     );
   }
 
-  const curtainsOpen = ["curtain-opening", "playing", "paused", "loading", "ended"].includes(tvState);
+  const playerViewportActive = hasStartedRef.current && PLAYER_ACTIVE_STATES.includes(tvState);
+  const showPoster = !playerViewportActive && (tvState === "selected" || tvState === "idle" || tvState === "curtain-closing");
+  const showCurtains = !playerViewportActive && (showPoster || tvState === "curtain-opening" || tvState === "curtain-closing");
+  const curtainsOpen = tvState === "curtain-opening";
   const isPlaying = playerState === "playing";
 
   return (
@@ -391,14 +387,18 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
       <header className={styles.roomIntro}>
         <p><Radio size={16} aria-hidden="true" /> واحة الأطفال</p>
         <h2 id="kids-tv-title">مسرح النور</h2>
-        <span>اختر الحلقة، اضغط OK، والستارة تفتح على المشاهدة داخل التلفزيون نفسه.</span>
+        <span>اختر الحلقة، اضغط OK، ثم شاهد داخل مشغّل يوتيوب دون تغطية.</span>
       </header>
 
       <div className={styles.stage}>
         <div className={styles.tvColumn}>
           <div className={styles.cabinet}>
             <div className={styles.bezel}>
-              <div className={styles.screen} ref={screenRef}>
+              <div
+                className={styles.screen}
+                ref={screenRef}
+                data-player-active={playerViewportActive ? "true" : "false"}
+              >
                 <YouTubePlayer
                   ref={playerRef}
                   videoId={current.providerVideoId}
@@ -408,7 +408,7 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
                   onAutoplayBlocked={handleAutoplayBlocked}
                 />
 
-                {!hasStartedRef.current || tvState === "selected" || tvState === "idle" ? (
+                {showPoster ? (
                   <button type="button" className={styles.posterButton} onClick={openAndPlay} aria-label={"تشغيل " + current.titleAr}>
                     <img src={current.thumbnailUrl} alt="" />
                     <span className={styles.posterShade} />
@@ -416,24 +416,12 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
                   </button>
                 ) : null}
 
-                <KidsCurtains open={curtainsOpen} />
-
-                <div className={styles.screenHud} data-visible={tvState !== "playing"}>
-                  <span>{current.series ?? current.publisherName}</span>
-                  <strong>{current.titleAr}</strong>
-                  <small>{playerState === "buffering" ? "جارٍ تجهيز الحلقة…" : current.titleOriginal}</small>
-                </div>
-
-                {autoplayBlocked ? (
-                  <button type="button" className={styles.blockedPlay} onClick={() => playerRef.current?.play()}>
-                    اضغط OK للتشغيل
-                  </button>
-                ) : null}
+                {showCurtains ? <KidsCurtains open={curtainsOpen} /> : null}
 
                 {friendlyError ? (
                   <div className={styles.errorState} role="status">
                     <strong>{friendlyError}</strong>
-                    <span>سننتقل للحلقة التالية تلقائيًا.</span>
+                    <span>اختر حلقة أخرى من الرف عندما تكون جاهزًا. لن ننتقل تلقائيًا.</span>
                   </div>
                 ) : null}
               </div>
@@ -456,7 +444,7 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
 
           <div className={styles.nowPlaying}>
             <div>
-              <span>يعرض الآن</span>
+              <span>{tvState === "ended" ? "انتهت الحلقة" : "يعرض الآن"}</span>
               <h3>{current.titleAr}</h3>
               <p>{current.description}</p>
             </div>
@@ -469,6 +457,19 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
               </a>
             </div>
           </div>
+
+          {tvState === "ended" && watchNext.length ? (
+            <div className={styles.nextChoices} role="region" aria-label="اختر الحلقة التالية">
+              <p>اختر الحلقة التالية. لا يوجد تشغيل تلقائي.</p>
+              <div>
+                {watchNext.slice(0, 3).map((video) => (
+                  <button key={video.id} type="button" onClick={() => switchTo(video, false)}>
+                    {video.titleAr}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </div>
 
         <KidsRemote
