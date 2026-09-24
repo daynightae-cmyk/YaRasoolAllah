@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./splash.module.css";
 
 interface Props {
@@ -8,24 +8,35 @@ interface Props {
 export function SplashCeremony({ onDone }: Props) {
   const [phase, setPhase] = useState<"enter" | "hold" | "exit">("enter");
   const [canSkip, setCanSkip] = useState(false);
+  const finishTimer = useRef<number | null>(null);
+
+  const leave = () => {
+    setPhase("exit");
+  };
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) {
-      const t = window.setTimeout(onDone, 1100);
+      const t = window.setTimeout(onDone, 350);
       return () => window.clearTimeout(t);
     }
-    const skip = window.setTimeout(() => setCanSkip(true), 700);
-    const hold = window.setTimeout(() => setPhase("hold"), 850);
-    const exit = window.setTimeout(() => setPhase("exit"), 2900);
-    const done = window.setTimeout(onDone, 3700);
+    const skip = window.setTimeout(() => setCanSkip(true), 1300);
+    const hold = window.setTimeout(() => setPhase((current) => current === "exit" ? current : "hold"), 1800);
+    const exit = window.setTimeout(() => setPhase("exit"), 4700);
     return () => {
       window.clearTimeout(skip);
       window.clearTimeout(hold);
       window.clearTimeout(exit);
-      window.clearTimeout(done);
     };
   }, [onDone]);
+
+  useEffect(() => {
+    if (phase !== "exit") return;
+    finishTimer.current = window.setTimeout(onDone, 1350);
+    return () => {
+      if (finishTimer.current !== null) window.clearTimeout(finishTimer.current);
+    };
+  }, [phase, onDone]);
 
   return (
     <div
@@ -35,6 +46,7 @@ export function SplashCeremony({ onDone }: Props) {
       data-ceremony="splash"
     >
       <div className={styles.void} aria-hidden="true" />
+      <div className={styles.arch} aria-hidden="true" />
       <div className={styles.silhouette} aria-hidden="true" />
       <div className={styles.lanterns} aria-hidden="true">
         <i />
@@ -57,8 +69,8 @@ export function SplashCeremony({ onDone }: Props) {
         <p className={styles.en}>YA RASOOL ALLAH · GATEWAY OF LIGHT</p>
       </div>
 
-      {canSkip ? (
-        <button type="button" className={styles.enter} onClick={onDone}>
+      {canSkip && phase !== "exit" ? (
+        <button type="button" className={styles.enter} onClick={leave}>
           ادخل
         </button>
       ) : null}
