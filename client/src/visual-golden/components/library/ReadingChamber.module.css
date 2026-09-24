@@ -333,10 +333,17 @@
   margin-top: 1rem;
 }
 
-.versions h4 {
+.versions summary {
+  width: fit-content;
   margin: 0 0 0.5rem;
   color: #f8efc2;
   font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.versions summary:focus-visible {
+  outline: 3px solid var(--gold-400);
+  outline-offset: 3px;
 }
 
 .versions ul {

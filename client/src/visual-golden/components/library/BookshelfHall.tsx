@@ -9,6 +9,7 @@ import {
   type BookMode,
   type LibraryBook,
 } from "@/visual-golden/services/library";
+import { useInstitution } from "@/visual-golden/lib/institution/store";
 import styles from "./BookshelfHall.module.css";
 
 interface Props {
@@ -30,11 +31,15 @@ function BookCard({
   book,
   selected,
   onSelect,
+  lang,
 }: {
   book: LibraryBook;
   selected: boolean;
   onSelect: (book: LibraryBook) => void;
+  lang: "ar" | "en";
 }) {
+  const title = lang === "ar" ? book.title : book.titleEn;
+  const author = lang === "ar" ? book.author : book.authorEn;
   return (
     <article
       className={`${styles.bookCard} ${selected ? styles.selected : ""}`}
@@ -51,14 +56,14 @@ function BookCard({
         type="button"
         className={styles.spineButton}
         data-book-spine
-        aria-label={`${book.title} — ${book.author}`}
+        aria-label={`${title} — ${author}`}
         aria-pressed={selected}
         onClick={() => onSelect(book)}
       >
         <span className={styles.spineCap} aria-hidden="true" />
         <span className={styles.spineTitle}>
-          <strong>{book.title}</strong>
-          <small>{book.author}</small>
+          <strong>{title}</strong>
+          <small>{author}</small>
         </span>
         <span className={styles.spineMark} aria-hidden="true">✦</span>
       </button>
@@ -74,6 +79,58 @@ export function BookshelfHall({
   onOpen,
   query,
 }: Props) {
+  const lang = useInstitution((state) => state.lang);
+  const labels = lang === "ar" ? {
+    aria: "الرفوف المعمارية للمكتبة",
+    eyebrow: "المجموعة المنقحة للرفوف",
+    title: "قاعات الكتب",
+    description: "لا يُرقّى إلى هذه الرفوف إلا عمل مكتمل العنوان والمؤلف والقسم والمصدر، وله نسخة رقمية موصولة وسجل ببليوغرافي متحقق.",
+    works: "عملاً منقحاً",
+    versions: "نسخة رقمية موصولة",
+    readable: "عملاً للقراءة المباشرة",
+    audio: "كتاباً صوتياً موثقاً",
+    all: "كل الرفوف",
+    section: "مجموعة منقحة",
+    inSection: (count: number) => `${count.toLocaleString("ar")} ${count === 1 ? "كتاب" : "كتب"} في هذا القسم`,
+    selected: "الكتاب المختار",
+    fullText: "نص كامل متاح",
+    catalogOnly: "بيانات فهرسية فقط",
+    versionsCount: (count: number) => `${count.toLocaleString("ar")} نسخة رقمية`,
+    open: (title: string) => `فتح ${title}`,
+    noResult: "لا توجد نتيجة مطابقة.",
+    tryAgain: "جرّب اسم كتاب أو مؤلف أو قسم آخر.",
+    textTruth: "غرفة القراءة لا تُفتح إلا من نسخة أصلية مثبتة ومصرح بها.",
+    audioTruth: "الكتاب الصوتي لا يظهر إلا عند وجود تسجيل بشري موثق.",
+  } : {
+    aria: "Architectural Library shelves",
+    eyebrow: "Curated shelf collection",
+    title: "Book Halls",
+    description: "A work is promoted to these shelves only when title, author, subject, source, verified bibliographic status, and a connected digital version are present.",
+    works: "curated works",
+    versions: "connected digital versions",
+    readable: "works available to read",
+    audio: "verified audiobooks",
+    all: "All shelves",
+    section: "Curated collection",
+    inSection: (count: number) => `${count.toLocaleString("en")} ${count === 1 ? "work" : "works"} in this section`,
+    selected: "Selected work",
+    fullText: "Full text available",
+    catalogOnly: "Catalog metadata only",
+    versionsCount: (count: number) => `${count.toLocaleString("en")} digital versions`,
+    open: (title: string) => `Open ${title}`,
+    noResult: "No matching result.",
+    tryAgain: "Try another title, author, or subject.",
+    textTruth: "The Reading Chamber opens only from a pinned, permitted source version.",
+    audioTruth: "Audiobooks appear only when a human recording has been verified.",
+  };
+  const shelfLabel = (shelf: string) => lang === "ar" ? shelf : ({
+    "السيرة النبوية": "Prophetic Biography",
+    "التاريخ": "History",
+    "التفسير وعلوم القرآن": "Exegesis and Qur'anic Studies",
+    "الحديث الشريف": "Hadith",
+    "الآداب والأخلاق": "Ethics and Conduct",
+  }[shelf] ?? shelf);
+  const modeLabel = (mode: BookMode) => lang === "ar" ? ({ عرض: "تفاصيل", قراءة: "قراءة", Audiobook: "كتاب صوتي" }[mode]) : ({ عرض: "Details", قراءة: "Read", Audiobook: "Audiobook" }[mode]);
   const allVisible = useMemo(() => searchLibrary(query, "الكل"), [query]);
   const sections = useMemo(
     () =>
@@ -91,22 +148,19 @@ export function BookshelfHall({
   );
 
   return (
-    <section className={styles.library} aria-label="المكتبة العالمية">
+    <section className={styles.library} aria-label={labels.aria}>
       <header className={styles.grandHeader}>
         <div>
-          <span className={styles.eyebrow}>YA RASOOL ALLAH · GRAND LIBRARY</span>
-          <h2>مهرجان الكتب</h2>
-          <p>
-            الكتب أمامك مباشرة، لا مخفية داخل رف صغير. اختر القسم ثم افتح
-            العرض أو القراءة من بطاقة الكتاب نفسها.
-          </p>
+          <span className={styles.eyebrow}>{labels.eyebrow}</span>
+          <h2>{labels.title}</h2>
+          <p>{labels.description}</p>
         </div>
 
         <div className={styles.stats} aria-label="إحصاءات المكتبة">
-          <span><strong>{LIBRARY_COUNTS.works}</strong> كتابًا وعملًا</span>
-          <span><strong>{LIBRARY_COUNTS.versions}</strong> نسخة رقمية</span>
-          <span><strong>{LIBRARY_COUNTS.readableWorks}</strong> للقراءة المباشرة</span>
-          <span><strong>{LIBRARY_COUNTS.audiobookWorks}</strong> Audiobook موثق</span>
+          <span><strong>{LIBRARY_COUNTS.works.toLocaleString(lang)}</strong> {labels.works}</span>
+          <span><strong>{LIBRARY_COUNTS.versions.toLocaleString(lang)}</strong> {labels.versions}</span>
+          <span><strong>{LIBRARY_COUNTS.readableWorks.toLocaleString(lang)}</strong> {labels.readable}</span>
+          <span><strong>{LIBRARY_COUNTS.audiobookWorks.toLocaleString(lang)}</strong> {labels.audio}</span>
         </div>
       </header>
 
@@ -116,7 +170,7 @@ export function BookshelfHall({
           className={activeShelf === "الكل" ? styles.categoryOn : ""}
           onClick={() => onShelf("الكل")}
         >
-          كل المكتبة
+          {labels.all}
           <small>{allVisible.length}</small>
         </button>
         {shelves.map((shelf) => {
@@ -128,7 +182,7 @@ export function BookshelfHall({
               className={activeShelf === shelf ? styles.categoryOn : ""}
               onClick={() => onShelf(shelf)}
             >
-              {shelf}
+              {shelfLabel(shelf)}
               <small>{count}</small>
             </button>
           );
@@ -140,10 +194,10 @@ export function BookshelfHall({
           <section className={styles.section} key={shelf}>
             <header className={styles.sectionHead} data-shelf-plate>
               <div>
-                <span>COLLECTION</span>
-                <h3>{shelf}</h3>
+                <span>{labels.section}</span>
+                <h3>{shelfLabel(shelf)}</h3>
               </div>
-              <p>{books.length} {books.length === 1 ? "كتاب" : "كتب"} في هذا القسم</p>
+              <p>{labels.inSection(books.length)}</p>
             </header>
 
             <div className={styles.shelfCase}>
@@ -154,6 +208,7 @@ export function BookshelfHall({
                     book={book}
                     selected={selected?.id === book.id}
                     onSelect={onSelect}
+                    lang={lang}
                   />
                 </div>
               ))}
@@ -163,14 +218,14 @@ export function BookshelfHall({
             {selected && selected.shelf === shelf ? (
               <aside className={styles.selectionDesk} aria-live="polite">
                 <div>
-                  <span>الكتاب المختار</span>
-                  <strong>{selected.title}</strong>
-                  <p>{selected.author} · {selected.versionCount} نسخة رقمية · {selected.modes.includes("قراءة") ? "نص كامل متاح" : "سجل فهرسي"}</p>
+                  <span>{labels.selected}</span>
+                  <strong>{lang === "ar" ? selected.title : selected.titleEn}</strong>
+                  <p>{lang === "ar" ? selected.author : selected.authorEn} · {labels.versionsCount(selected.versionCount)} · {selected.modes.includes("قراءة") ? labels.fullText : labels.catalogOnly}</p>
                 </div>
-                <div className={styles.bookActions} aria-label={`فتح ${selected.title}`}>
+                <div className={styles.bookActions} aria-label={labels.open(lang === "ar" ? selected.title : selected.titleEn)}>
                   {selected.modes.map((mode) => {
                     const Icon = modeIcon[mode];
-                    return <button type="button" key={mode} onClick={() => onOpen(selected, mode)}><Icon size={14} />{mode}</button>;
+                    return <button type="button" key={mode} onClick={() => onOpen(selected, mode)}><Icon size={14} />{modeLabel(mode)}</button>;
                   })}
                 </div>
               </aside>
@@ -180,8 +235,8 @@ export function BookshelfHall({
 
         {!allVisible.length ? (
           <div className={styles.empty}>
-            <strong>لا توجد نتيجة مطابقة.</strong>
-            <span>جرّب اسم كتاب أو مؤلف أو قسم آخر.</span>
+            <strong>{labels.noResult}</strong>
+            <span>{labels.tryAgain}</span>
           </div>
         ) : null}
       </div>
@@ -189,11 +244,11 @@ export function BookshelfHall({
       <footer className={styles.truthBar}>
         <span>
           <BookOpen size={15} />
-          القراءة المباشرة تعمل من النسخة الأصلية المثبتة ولا تعتمد على API داخلي.
+          {labels.textTruth}
         </span>
         <span>
           <Headphones size={15} />
-          Audiobook لا يظهر إلا عند وجود تسجيل بشري موثق.
+          {labels.audioTruth}
         </span>
       </footer>
     </section>

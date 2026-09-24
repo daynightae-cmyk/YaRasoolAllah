@@ -190,32 +190,24 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
           </span>
         </div>
 
-        {book.openitiWorkUri ? (
-          <p className="muted" style={{ fontSize: "0.75rem", direction: "ltr", textAlign: "end" }}>
-            OpenITI: {book.openitiWorkUri}
-          </p>
-        ) : (
-          <p className="muted" style={{ fontSize: "0.75rem" }}>
-            لا توجد نسخة OpenITI مثبتة لهذا العمل في هذا الإصدار.
-          </p>
-        )}
-
         <div className={styles.actions}>
           <button type="button" className="btn-outline" onClick={toggleSaved}>
             <Bookmark size={14} /> {saved ? "في الرف الخاص (محلي)" : "أضف للرف الخاص (محلي)"}
           </button>
         </div>
 
-        <div className={styles.versions}>
-          <h4>النسخ الرقمية ({book.versions.length})</h4>
+        <details className={styles.versions}>
+          <summary>تفاصيل المصدر والنسخ الرقمية ({book.versions.length})</summary>
+          {book.openitiWorkUri ? <p className="muted" dir="ltr">OpenITI URI: {book.openitiWorkUri}</p> : null}
           {book.versions.length === 0 ? (
             <p className="muted">لم تُثبت أي نسخة رقمية لهذا العمل في هذا الإصدار.</p>
           ) : (
             <ul>
               {book.versions.map((version) => (
                 <li key={version.versionId}>
-                  <div className={styles.versionUri}>{version.openitiUri}</div>
+                  <strong>نسخة نصية رقمية موصولة</strong>
                   <div className="muted">{version.editionStatement}</div>
+                  <div className={styles.versionUri} dir="ltr">{version.openitiUri}</div>
                   <div className={styles.versionLinks}>
                     <a href={version.sourceUrl} target="_blank" rel="noreferrer" className="btn-outline">
                       <ExternalLink size={12} /> المصدر
@@ -228,7 +220,7 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
               ))}
             </ul>
           )}
-        </div>
+        </details>
       </div>
     </article>
   );
