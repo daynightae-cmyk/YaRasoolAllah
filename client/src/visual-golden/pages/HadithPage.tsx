@@ -1,35 +1,88 @@
-import { useState } from "react";
-import { Search, Bookmark, Share2, Copy } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Search, Bookmark, BookmarkCheck, Share2, Copy, ShieldCheck, Database } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import { IsnadChain } from "@/visual-golden/components/unique/IsnadChain";
 import p from "@/visual-golden/components/present/present.module.css";
+import {
+  COLLECTIONS,
+  HADITH_COUNTS,
+  getCollection,
+  searchSamples,
+} from "@/visual-golden/services/hadith";
 import styles from "./HadithPage.module.css";
 
-const collections = [
-  { name: "الصحيحان", count: "14,678 حديث", desc: "صحيح البخاري ومسلم", img: art.books },
-  { name: "الكتب التسعة", count: "62,831 حديث", desc: "المصادر المعتمدة", img: art.bookStack },
-  { name: "الأربعون النووية", count: "42 حديث", desc: "مجموعة الأحاديث المختارة", img: art.mushaf },
-  { name: "رياض الصالحين", count: "1,899 حديث", desc: "من كلام سيد المرسلين", img: art.lanternGlow },
-  { name: "الأدب والمواعظ", count: "8,452 حديث", desc: "في الهدي النبوي", img: art.archesNight },
-];
+const BOOKMARK_KEY = "hadith-sample-bookmarks-v1";
 
-const topics = ["العقيدة", "الصلاة", "الزكاة", "الصيام", "الأسرة", "المعاملات", "الأخلاق", "الطب النبوي"];
-const chips = ["الحديث الصحيح", "الطب النبوي", "الأخلاق", "الأسرة", "الزكاة", "الصلاة"];
-const narrators = ["أبو بكر الصديق", "عمر بن الخطاب", "عثمان بن عفان", "علي بن أبي طالب"];
+function safeReadBookmarks(): string[] {
+  try {
+    const raw = localStorage.getItem(BOOKMARK_KEY);
+    return raw ? (JSON.parse(raw) as string[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+const COLLECTION_ART = [art.books, art.bookStack, art.mushaf, art.lanternGlow, art.archesNight, art.mushafOpen];
 
 export function HadithPage() {
   const [q, setQ] = useState("");
-  const [saved, setSaved] = useState(false);
-  const [topic, setTopic] = useState("العقيدة");
+  const [collectionId, setCollectionId] = useState<string | "all">("all");
+  const [activeId, setActiveId] = useState("bukhari-1");
+  const [bookmarks, setBookmarks] = useState<string[]>(() => safeReadBookmarks());
+  const [copied, setCopied] = useState(false);
+
+  const results = useMemo(() => searchSamples(q, collectionId), [q, collectionId]);
+  const active = results.find((sample) => sample.id === activeId) ?? results[0] ?? null;
+  const activeCollection = active ? getCollection(active.collectionId) : null;
+  const activeBookmarked = active ? bookmarks.includes(active.id) : false;
+
+  const toggleBookmark = () => {
+    if (!active) return;
+    const next = activeBookmarked
+      ? bookmarks.filter((id) => id !== active.id)
+      : [...bookmarks, active.id];
+    setBookmarks(next);
+    try {
+      localStorage.setItem(BOOKMARK_KEY, JSON.stringify(next));
+    } catch {
+      // bookmark remains in-memory
+    }
+  };
+
+  const copyActive = async () => {
+    if (!active) return;
+    const payload = `${active.textAr}\n[${activeCollection?.nameAr ?? ""} · كتاب ${active.bookNameAr} · حديث رقم ${active.hadithNumber}]`;
+    try {
+      await navigator.clipboard.writeText(payload);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    } catch {
+      setCopied(false);
+    }
+  };
+
+  const shareActive = async () => {
+    if (!active) return;
+    const text = `${active.textAr}\n${activeCollection?.nameAr ?? ""} — حديث رقم ${active.hadithNumber}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: "دار الحديث", text });
+        return;
+      } catch {
+        return;
+      }
+    }
+    await copyActive();
+  };
 
   return (
     <div className={styles.page}>
       <PageHero
         title="دار الحديث"
-        subtitle="مصادر موثوقة · علم راسخ · هداية دائمة"
-        desc="[نص الحديث من المصدر] — الأرشيف العلمي للسنة النبوية"
+        subtitle={`ARCHIVE · ${HADITH_COUNTS.collections} مصنفات ببليوغرافية · ${HADITH_COUNTS.localSamples} سجلات محلية`}
+        desc="أرشيف يفرّق بين بيانات المصنفات الببليوغرافية والسجلات التطويرية المحلية — العدد الكلي للمصنف ليس حجم المتن المحلي"
         image={art.shelves}
         wing="hadith"
       >
@@ -38,31 +91,42 @@ export function HadithPage() {
           <input
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="ابحث في نصوص الأحاديث، الألفاظ، الرواة، الموضوعات..."
+            placeholder="ابحث في السجلات المحلية: النص، الراوي، الكتاب، الباب..."
           />
           <button className="btn-gold" type="submit">
             بحث
           </button>
         </form>
         <div className={styles.chips}>
-          {chips.map((c) => (
-            <button key={c} type="button">
-              {c}
+          <button type="button" onClick={() => setCollectionId("all")} className={collectionId === "all" ? styles.on : ""}>
+            كل السجلات المحلية ({HADITH_COUNTS.localSamples})
+          </button>
+          {COLLECTIONS.map((collection) => (
+            <button
+              key={collection.id}
+              type="button"
+              onClick={() => setCollectionId(collection.id)}
+              className={collectionId === collection.id ? styles.on : ""}
+            >
+              {collection.nameAr}
             </button>
           ))}
         </div>
       </PageHero>
 
       <section className={styles.pad}>
-        <SectionHead title="المجموعات الرئيسية" en="Featured Collections" href="/library" />
+        <SectionHead title="المصنفات الببليوغرافية" en="Collection Metadata — not local corpus" href="/library" />
         <div className={`${styles.grid} stagger`}>
-          {collections.map((c) => (
-            <article key={c.name} className={styles.card}>
-              <img src={c.img} alt="" />
+          {COLLECTIONS.map((collection, i) => (
+            <article key={collection.id} className={styles.card}>
+              <img src={COLLECTION_ART[i % COLLECTION_ART.length]} alt="" />
               <div>
-                <h3>{c.name}</h3>
-                <p>{c.desc}</p>
-                <span>{c.count}</span>
+                <h3>{collection.nameAr}</h3>
+                <p>{collection.compiler} (ت {collection.deathHijri}هـ)</p>
+                <span>
+                  العدد الببليوغرافي المعروف: {collection.totalHadithCount.toLocaleString("ar-EG")} حديث · غير
+                  متاح محليًا
+                </span>
               </div>
             </article>
           ))}
@@ -71,54 +135,95 @@ export function HadithPage() {
 
       <div className={styles.row}>
         <article className={styles.hotd}>
-          <SectionHead title="حديث اليوم" en="Hadith of the Day" />
-          <div className={p.parchment}>
-            <blockquote style={{ margin: 0 }}>
-              قال رسول الله ﷺ:
-              <br />
-              «إِنَّمَا الْأَعْمَالُ بِالنِّيَّاتِ، وَإِنَّمَا لِكُلِّ امْرِئٍ مَا نَوَى»
-            </blockquote>
-            <p style={{ margin: "0.6rem 0 0" }}>[بيانات المصدر] رواه البخاري ومسلم</p>
-            <div className={p.seal}>ختم</div>
+          <SectionHead
+            title={active ? `السجل المحلي: ${activeCollection?.nameAr ?? ""}` : "السجل المحلي"}
+            en={active ? `Hadith ${active.hadithNumber} · development sample` : "Local sample"}
+          />
+          {active && activeCollection ? (
+            <>
+              <div className={p.parchment}>
+                <blockquote style={{ margin: 0 }}>
+                  قال رسول الله ﷺ:
+                  <br />
+                  {active.textAr}
+                </blockquote>
+                <p style={{ margin: "0.6rem 0 0", fontSize: "0.8rem" }}>
+                  {active.bookNameAr} · {active.chapterNameAr} · حديث رقم {active.hadithNumber}
+                </p>
+                <p style={{ margin: "0.4rem 0 0", fontSize: "0.8rem", opacity: 0.85 }}>
+                  الراوي: {active.narratorAr}
+                </p>
+                <div className={p.seal}>عينة تطوير</div>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem", marginTop: "0.8rem", fontSize: "0.78rem" }}>
+                <span style={{ display: "flex", gap: 4, alignItems: "center" }}>
+                  <Database size={13} /> الترجمة التطويرية (إنجليزية):
+                </span>
+                <p className="muted" dir="ltr" style={{ margin: 0, textAlign: "left" }}>
+                  {active.textEn}
+                </p>
+                <span>
+                  الدرجة: {active.gradeAr} · المصدر: {active.gradeSource}
+                </span>
+                <span>مقيّم الدرجة: {active.gradeAssessor ?? "غير مذكور في السجل — لم يُخترع"}</span>
+                <span style={{ display: "flex", gap: 4, alignItems: "center" }}>
+                  <ShieldCheck size={13} /> المراجعة التحريرية: {active.editorialReviewStatus === "editorial_review_pending" ? "قيد المراجعة التحريرية" : active.editorialReviewStatus}
+                </span>
+                <span>الإتاحة: عينة تطوير محلية — ليست متنًا إنتاجيًا</span>
+                <span className="muted">المنشأ: {active.provenance}</span>
+              </div>
+
+              <p className="muted" style={{ margin: "0.85rem 0 0.35rem", fontSize: "0.78rem" }}>
+                الراوي المسجل — السلسلة الكاملة غير متوفرة كبنية بيانات
+              </p>
+              <IsnadChain narrator={active.narratorAr} collection={activeCollection.nameAr} />
+              <div className={styles.actions}>
+                <button type="button" onClick={shareActive}>
+                  <Share2 size={14} /> مشاركة
+                </button>
+                <button type="button" onClick={copyActive}>
+                  <Copy size={14} /> {copied ? "تم النسخ" : "نسخ"}
+                </button>
+                <button type="button" className={activeBookmarked ? styles.on : ""} onClick={toggleBookmark}>
+                  {activeBookmarked ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}{" "}
+                  {activeBookmarked ? "محفوظ محليًا" : "حفظ محلي"}
+                </button>
+              </div>
+            </>
+          ) : (
+            <p className="muted">لا توجد سجلات محلية مطابقة للبحث الحالي.</p>
+          )}
+        </article>
+
+        <article className={styles.panel}>
+          <SectionHead title="السجلات المحلية المتاحة" en={`${results.length} local records`} />
+          <div className={styles.topics} style={{ gridTemplateColumns: "1fr" }}>
+            {results.map((sample) => {
+              const collection = getCollection(sample.collectionId);
+              return (
+                <button
+                  key={sample.id}
+                  type="button"
+                  className={active?.id === sample.id ? styles.on : ""}
+                  onClick={() => setActiveId(sample.id)}
+                  style={{ textAlign: "start" }}
+                >
+                  {collection?.nameAr} · حديث {sample.hadithNumber} — {sample.chapterNameAr}
+                </button>
+              );
+            })}
+            {results.length === 0 ? <p className="muted">لا نتائج محلية لهذا البحث.</p> : null}
           </div>
-          <p className="muted" style={{ margin: "0.85rem 0 0.35rem", fontSize: "0.78rem" }}>
-            سلسلة الإسناد البصرية — أسماء للعرض فقط
+        </article>
+
+        <article className={styles.panel}>
+          <SectionHead title="تنبيه الأرشيف" en="Corpus honesty" />
+          <p className="muted" style={{ fontSize: "0.8rem", lineHeight: 1.9 }}>
+            الأعداد المعروضة على بطاقات المصنفات هي أعداد ببليوغرافية معروفة للمصنف، وليست حجم
+            المتن المحلي. المتاح محليًا هو {HADITH_COUNTS.localSamples} سجلات تطويرية فقط، كل
+            منها قيد المراجعة التحريرية، ولا تُقدَّم على أنها المتن الكامل لأي مصنف.
           </p>
-          <IsnadChain />
-          <div className={styles.actions}>
-            <button type="button">
-              <Share2 size={14} /> مشاركة
-            </button>
-            <button type="button">
-              <Copy size={14} /> نسخ
-            </button>
-            <button type="button" className={saved ? styles.on : ""} onClick={() => setSaved((s) => !s)}>
-              <Bookmark size={14} /> حفظ
-            </button>
-          </div>
-        </article>
-
-        <article className={styles.panel}>
-          <SectionHead title="تصفح بالأبواب" en="Browse by Topics" />
-          <div className={styles.topics}>
-            {topics.map((t) => (
-              <button key={t} type="button" className={topic === t ? styles.on : ""} onClick={() => setTopic(t)}>
-                {t}
-              </button>
-            ))}
-          </div>
-        </article>
-
-        <article className={styles.panel}>
-          <SectionHead title="شمول الرواية" en="Narrators & Chains" />
-          <ul className={styles.narr}>
-            {narrators.map((n) => (
-              <li key={n}>
-                <img src={art.dome} alt="" />
-                <span>{n}</span>
-              </li>
-            ))}
-          </ul>
         </article>
       </div>
     </div>
