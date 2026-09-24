@@ -42,7 +42,7 @@ jobs:
       - name: Production build
         run: npm run build
 
-      - name: Library reading + listening browser smoke
+      - name: Library reading + audiobook gate browser smoke
         shell: bash
         run: |
           npm start > /tmp/yra-server.log 2>&1 &
