@@ -1,3 +1,13 @@
+/**
+ * QUARANTINED LEGACY SERVICE — NOT A LIVE AUTHORITY.
+ *
+ * The golden Prayer Observatory (`client/src/visual-golden/services/prayer/`)
+ * is the only production prayer-times path. This module must never synthesize
+ * prayer times: every network or geolocation failure throws so callers render
+ * loading / offline / provider-error / permission-denied states instead of
+ * fake live times. No hardcoded city fallback exists in this file.
+ */
+
 interface PrayerTimesResponse {
   data: {
     timings: {
@@ -67,8 +77,9 @@ export class PrayerTimesService {
       return this.formatPrayerTimes(data.data.timings, date || new Date());
     } catch (error) {
       console.error("Error fetching prayer times:", error);
-      // Return fallback prayer times for Riyadh
-      return this.getFallbackPrayerTimes();
+      // Quarantined: network failure must surface as provider-error, never as
+      // synthesized times presented as live.
+      throw error instanceof Error ? error : new Error("Prayer-times provider unavailable");
     }
   }
 
@@ -88,13 +99,9 @@ export class PrayerTimesService {
         },
         (error) => {
           console.error("Geolocation error:", error);
-          // Return Riyadh coordinates as fallback
-          resolve({
-            latitude: 24.7136,
-            longitude: 46.6753,
-            city: "الرياض",
-            country: "السعودية"
-          });
+          // Quarantined: never silently resolve a hardcoded city. Callers must
+          // ask the user to pick a location or show permission-denied.
+          reject(error instanceof Error ? error : new Error("Geolocation unavailable"));
         },
         {
           timeout: 10000,
@@ -121,7 +128,7 @@ export class PrayerTimesService {
       return this.formatPrayerTimes(data.data.timings, date || new Date());
     } catch (error) {
       console.error("Error fetching prayer times by city:", error);
-      return this.getFallbackPrayerTimes();
+      throw error instanceof Error ? error : new Error("Prayer-times provider unavailable");
     }
   }
 
@@ -160,30 +167,6 @@ export class PrayerTimesService {
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
-  }
-
-  private getFallbackPrayerTimes(): PrayerTime[] {
-    const now = new Date();
-    const fallbackTimes = [
-      { name: "fajr", time: "05:30" },
-      { name: "sunrise", time: "06:45" },
-      { name: "dhuhr", time: "12:15" },
-      { name: "asr", time: "15:30" },
-      { name: "maghrib", time: "18:20" },
-      { name: "isha", time: "19:50" },
-    ];
-
-    return fallbackTimes.map(prayer => {
-      const [hours, minutes] = prayer.time.split(":").map(Number);
-      const timestamp = new Date(now);
-      timestamp.setHours(hours, minutes, 0, 0);
-
-      return {
-        name: prayer.name,
-        time: this.formatTime12Hour(prayer.time),
-        timestamp,
-      };
-    });
   }
 
   getCurrentPrayer(prayerTimes: PrayerTime[]): PrayerTime | null {
