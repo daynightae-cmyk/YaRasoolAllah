@@ -11,6 +11,10 @@ import {
   X,
 } from "lucide-react";
 import type { BookMode, LibraryBook } from "@/visual-golden/services/library";
+import {
+  loadDirectBookPage,
+  type DirectReaderPayload,
+} from "@/visual-golden/services/direct-book-reader";
 import { AudiobookPlayer } from "./AudiobookPlayer";
 import { DeviceTtsFallback } from "./DeviceTtsFallback";
 import p from "@/visual-golden/components/present/present.module.css";
@@ -22,43 +26,10 @@ interface Props {
   onClose: () => void;
 }
 
-interface ReaderPayload {
-  work: {
-    workId: string;
-    title: string;
-    author: string;
-    scholarlyReviewStatus: string;
-  };
-  version: {
-    versionId: string;
-    openitiUri: string;
-    releaseCommit: string;
-    sourceUrl: string;
-    metadataUrl: string;
-    rightsState: string;
-  };
-  reader: {
-    cursor: number;
-    nextCursor: number | null;
-    previousCursor: number | null;
-    totalSegments: number;
-    segments: Array<{
-      index: number;
-      kind: "heading" | "paragraph";
-      text: string;
-      locator: string | null;
-    }>;
-    toc: Array<{ title: string; segmentIndex: number }>;
-    numbering: "digital_segments_not_print_pages";
-  };
-  attribution: string;
-  rightsUrl: string;
-}
-
 type ReaderState =
   | { state: "idle" | "loading" }
   | { state: "error"; message: string }
-  | { state: "ready"; data: ReaderPayload };
+  | { state: "ready"; data: DirectReaderPayload };
 
 const BOOKMARK_KEY = "library-shelf-bookmarks-v1";
 
@@ -136,30 +107,31 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
 
   useEffect(() => {
     if (mode !== "قراءة" || !book.modes.includes("قراءة")) return;
-    const controller = new AbortController();
+    let cancelled = false;
     setReader({ state: "loading" });
 
-    fetch(
-      `/api/content/library/read/${encodeURIComponent(book.workId)}?cursor=${cursor}&limit=2`,
-      { signal: controller.signal },
-    )
-      .then(async (response) => {
-        const body = (await response.json()) as ReaderPayload | { message?: string };
-        if (!response.ok) {
-          throw new Error("message" in body && body.message ? body.message : `HTTP ${response.status}`);
-        }
-        return body as ReaderPayload;
+    loadDirectBookPage({
+      workId: book.workId,
+      cursor,
+      limit: 2,
+    })
+      .then((data) => {
+        if (!cancelled) setReader({ state: "ready", data });
       })
-      .then((data) => setReader({ state: "ready", data }))
       .catch((error: unknown) => {
-        if (controller.signal.aborted) return;
+        if (cancelled) return;
         setReader({
           state: "error",
-          message: error instanceof Error ? error.message : "تعذر تحميل النص.",
+          message:
+            error instanceof Error
+              ? error.message
+              : "تعذر تحميل النص من الرابط المباشر.",
         });
       });
 
-    return () => controller.abort();
+    return () => {
+      cancelled = true;
+    };
   }, [book.modes, book.workId, cursor, mode, retryToken]);
 
   const toggleSaved = () => {
@@ -299,7 +271,7 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
       <div className={styles.readerPaper}>
         <header className={styles.readerHeading}>
           <div>
-            <span>قراءة داخلية · OpenITI</span>
+            <span>قراءة مباشرة · OpenITI</span>
             <strong>{book.title}</strong>
           </div>
           <small>
@@ -345,7 +317,7 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
         <div className={styles.readerSource}>
           <span>{reader.data.attribution}</span>
           <a href={reader.data.version.sourceUrl} target="_blank" rel="noreferrer">
-            النسخة المثبتة <ExternalLink size={12} />
+            رابط النسخة الأصلية <ExternalLink size={12} />
           </a>
           <a href={reader.data.rightsUrl} target="_blank" rel="noreferrer">
             سياسة الحقوق <ExternalLink size={12} />
