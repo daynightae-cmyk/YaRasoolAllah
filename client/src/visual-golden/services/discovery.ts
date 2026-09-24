@@ -21,7 +21,8 @@ export type WingPath =
   | "/daily"
   | "/audio"
   | "/seerah"
-  | "/basirah";
+  | "/basirah"
+  | "/sources";
 
 export const discoveryWings: {
   path: WingPath;
@@ -40,6 +41,7 @@ export const discoveryWings: {
   { path: "/daily", ar: "مرصد الصلاة", en: "Prayer Observatory", hint: "مواقيت حية حسب المدينة والقبلة" },
   { path: "/audio", ar: "التلاوات الصوتية", en: "Qur’an Audio", hint: "سجل المزوّدين — التشغيل غير مُجاز" },
   { path: "/basirah", ar: "بصيرة", en: "Basirah", hint: "اكتشاف المصادر المحلية" },
+  { path: "/sources", ar: "خزانة المصادر", en: "Sources Vault", hint: "المصادر والحقوق والمزوّدون والنسخ" },
 ];
 
 export function filterWings(query: string) {
