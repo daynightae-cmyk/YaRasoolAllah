@@ -47,7 +47,7 @@ const VisualBasirahPage = lazy(() => import("@/visual-golden/pages/BasirahPage")
 
 const VISUAL_PATHS = new Set([
   "/", "/library", "/digital-library", "/books", "/quran", "/tafsir", "/seerah", "/atlas",
-  "/sunnah", "/hadith", "/kids", "/children-tv", "/daily", "/quran-audio", "/audio", "/basirah",
+  "/sunnah", "/hadith", "/kids", "/children-tv", "/daily", "/quran-audio", "/audio", "/basirah", "/sources",
   "/ai-assistant", "/al-mufti-al-mubeen"
 ]);
 
@@ -100,7 +100,7 @@ function AppContent() {
           {() => <VisualRoute><VisualHadithPage /></VisualRoute>}
         </Route>
         <Route path="/sources">
-          {() => <SourcesPage />}
+          {() => <VisualRoute><SourcesPage /></VisualRoute>}
         </Route>
         <Route path="/character">
           {() => <WhoIsMuhammadPage defaultChapterId="family-and-personal-character" />}
