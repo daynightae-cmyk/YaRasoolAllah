@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -34,4 +36,4 @@ jobs:
         run: npm run build
 
       - name: Diff hygiene
-        run: git diff --check HEAD^ HEAD
+        run: git diff --check origin/main...HEAD
