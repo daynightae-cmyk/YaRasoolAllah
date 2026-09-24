@@ -8,39 +8,29 @@ import { ThemeProvider } from "./components/ThemeProvider";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { ProgressProvider } from "./contexts/ProgressContext";
 import { BabAlsamaaProvider, useBabAlsamaa } from "./hooks/useBabAlsamaa";
-import AppLayout from "./components/Layout/AppLayout";
-import BabAlsamaa from "./components/BabAlsamaa/BabAlsamaa";
-import BabAlsamaaFAB from "./components/BabAlsamaa/BabAlsamaaFAB";
-import WelcomeModal from "./components/WelcomeModal";
-import GateOfLightPage from "./pages/GateOfLightPage";
-import WhoIsMuhammadPage from "./pages/WhoIsMuhammadPage";
-import SunnahPage from "./pages/SunnahPage";
-import SourcesPage from "./pages/SourcesPage";
-import PropheticDayPage from "./pages/PropheticDayPage";
-import HomePage from "./pages/HomePage";
-import QuranPage from "./pages/QuranPage";
-import SeerahPage from "./pages/SeerahPage";
-import PrayerGuidePage from "./pages/PrayerGuidePage";
-import DailyRemindersPage from "./pages/DailyRemindersPage";
-import IslamicKnowledgePage from "./pages/IslamicKnowledgePage";
-import FivePillarsPage from "./pages/FivePillarsPage";
-import WomenInIslamPage from "./pages/WomenInIslamPage";
-import ChildrenTVPage from "./pages/ChildrenTVPage";
-import QuranAudioPage from "./pages/QuranAudioPage";
-import DailyVersePage from "./pages/DailyVersePage";
-import BabAlsamaaSettingsPage from "./pages/BabAlsamaaSettingsPage";
 import { DepthProvider } from "./components/Institution/LearningDepthSelector";
-import IslamicAIManagementPage from "./pages/IslamicAIManagementPage";
-import AlMubeenBotPage from "./pages/AlMubeenBotPage";
-import AlMuftiAlMubeenPage from "./pages/AlMuftiAlMubeenPage";
-import IslamicCalendarPage from "./pages/IslamicCalendarPage";
-import DigitalLibraryPage from "./pages/DigitalLibraryPage";
-import NotFound from "@/pages/not-found";
-import DigitalTasbihPage from "./pages/DigitalTasbihPage";
-import QiblaCompassPage from "./pages/QiblaCompassPage";
-import DashboardPage from "./pages/DashboardPage";
 import { InstitutionShell as VisualInstitutionShell } from "@/visual-golden/components/shell/InstitutionShell";
 import "@/visual-golden/visual-base.css";
+
+const AppLayout = lazy(() => import("./components/Layout/AppLayout"));
+const BabAlsamaa = lazy(() => import("./components/BabAlsamaa/BabAlsamaa"));
+const BabAlsamaaFAB = lazy(() => import("./components/BabAlsamaa/BabAlsamaaFAB"));
+const WelcomeModal = lazy(() => import("./components/WelcomeModal"));
+const WhoIsMuhammadPage = lazy(() => import("./pages/WhoIsMuhammadPage"));
+const SourcesPage = lazy(() => import("./pages/SourcesPage"));
+const PropheticDayPage = lazy(() => import("./pages/PropheticDayPage"));
+const PrayerGuidePage = lazy(() => import("./pages/PrayerGuidePage"));
+const IslamicKnowledgePage = lazy(() => import("./pages/IslamicKnowledgePage"));
+const FivePillarsPage = lazy(() => import("./pages/FivePillarsPage"));
+const WomenInIslamPage = lazy(() => import("./pages/WomenInIslamPage"));
+const DailyVersePage = lazy(() => import("./pages/DailyVersePage"));
+const BabAlsamaaSettingsPage = lazy(() => import("./pages/BabAlsamaaSettingsPage"));
+const IslamicAIManagementPage = lazy(() => import("./pages/IslamicAIManagementPage"));
+const IslamicCalendarPage = lazy(() => import("./pages/IslamicCalendarPage"));
+const DigitalTasbihPage = lazy(() => import("./pages/DigitalTasbihPage"));
+const QiblaCompassPage = lazy(() => import("./pages/QiblaCompassPage"));
+const DashboardPage = lazy(() => import("./pages/DashboardPage"));
+const NotFound = lazy(() => import("@/pages/not-found"));
 
 const VisualHomePage = lazy(() => import("@/visual-golden/pages/HomePage").then((m) => ({ default: m.HomePage })));
 const VisualLibraryPage = lazy(() => import("@/visual-golden/pages/LibraryPage").then((m) => ({ default: m.LibraryPage })));
@@ -92,6 +82,7 @@ function AppContent() {
 
   return (
     <>
+      <Suspense fallback={<div className="min-h-screen grid place-items-center" role="status">جاري فتح الصفحة…</div>}>
       <Switch>
         <Route path="/">
           {() => <VisualRoute><VisualHomePage /></VisualRoute>}
@@ -250,8 +241,10 @@ function AppContent() {
         </Route>
         <Route component={NotFound} />
       </Switch>
+      </Suspense>
 
       {!isVisualRoute && (
+        <Suspense fallback={null}>
         <>
           <BabAlsamaa
             isOpen={isOpen}
@@ -264,6 +257,7 @@ function AppContent() {
             onClose={handleCloseWelcomeModal}
           />
         </>
+        </Suspense>
       )}
     </>
   );
