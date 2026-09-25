@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { NextFunction, Request, Response } from "express";
-import { isProduction } from "./env";
+import { isProduction } from "./env.js";
 
 const SENSITIVE_KEY = /(password|token|secret|authorization|cookie|note|prompt|email)/i;
 

@@ -1,8 +1,8 @@
 import type { Express } from "express";
 import { z } from "zod";
-import { digitalVersionRegistry, workRegistry } from "../shared/knowledge-registry";
-import { providerResourceRegistry, rightsLedger } from "../shared/source-registry";
-import { evaluateResourceUsage } from "../shared/source-governance";
+import { digitalVersionRegistry, workRegistry } from "../shared/knowledge-registry.js";
+import { providerResourceRegistry, rightsLedger } from "../shared/source-registry.js";
+import { evaluateResourceUsage } from "../shared/source-governance.js";
 
 const querySchema = z.object({
   versionId: z.string().trim().min(1).max(220).optional(),

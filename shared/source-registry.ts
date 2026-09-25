@@ -5,7 +5,7 @@ import {
   type ProviderResourceEntry,
   type RightsLedgerEntry,
   type SourceRegistryEntry,
-} from "./source-governance";
+} from "./source-governance.js";
 
 const CHECKED_AT = "2026-09-24T17:00:00+04:00";
 

@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { createPublicContentApp } from "../server/create-public-content-app";
+import { createPublicContentApp } from "../server/create-public-content-app.js";
 
 const app = createPublicContentApp();
 
