@@ -138,39 +138,58 @@ async function waitFor(session, expression, label, attempts = 80) {
   throw new Error(`Timed out waiting for ${label}`);
 }
 
+/**
+ * Re-runs `poke` on every poll until `check` returns something truthy.
+ *
+ * Dispatching a media event once is a race: if React has not attached the
+ * handler yet, the event is lost and the gate times out even though the app
+ * is correct. Re-dispatching until the expected state appears removes the race
+ * instead of hoping the first dispatch lands.
+ */
+async function dispatchUntil(session, poke, check, label, attempts = 80) {
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    const value = await evaluate(session, `(() => { ${poke} return (() => { ${check} })(); })()`, true);
+    if (value) return value;
+    await delay(150);
+  }
+  throw new Error(`Timed out waiting for ${label}`);
+}
+
+const AUDIO_ALERT_TEXT = "تعذر تشغيل البث من MP3Quran";
+const audioAlertExpression = `[...document.querySelectorAll('[role="alert"]')].find((element) => element.textContent?.includes(${JSON.stringify(
+  AUDIO_ALERT_TEXT,
+)}))`;
+const playLabelExpression = `([...document.querySelectorAll("button")].find((button) => {
+  const label = button.getAttribute("aria-label") || "";
+  return label.includes("تشغيل التلاوة") || label.includes("إيقاف التلاوة");
+})?.getAttribute("aria-label")) || ""`;
+
 async function verifyAudioFailureState(session, label) {
-  await evaluate(session, `(() => {
-    const audio = document.querySelector("audio");
-    if (!audio) throw new Error("Audio element is missing");
-    audio.dispatchEvent(new Event("error"));
-    return true;
-  })()`);
-  await waitFor(
+  const failed = await dispatchUntil(
     session,
-    `[...document.querySelectorAll('[role="alert"]')].some((element) => element.textContent?.includes("تعذر تشغيل البث من MP3Quran"))`,
+    `const audio = document.querySelector("audio");
+     if (!audio) throw new Error("Audio element is missing");
+     audio.dispatchEvent(new Event("error"));`,
+    `const alert = ${audioAlertExpression};
+     return alert ? { alert: alert.textContent || "", playLabel: ${playLabelExpression} } : null;`,
     `${label} stream error`,
   );
-  const failed = await evaluate(session, `(() => {
-    const alert = [...document.querySelectorAll('[role="alert"]')].find((element) => element.textContent?.includes("تعذر تشغيل البث من MP3Quran"));
-    const playButton = [...document.querySelectorAll("button")].find((button) => {
-      const label = button.getAttribute("aria-label") || "";
-      return label.includes("تشغيل التلاوة") || label.includes("إيقاف التلاوة");
-    });
-    return {
-      alert: alert?.textContent || "",
-      playLabel: playButton?.getAttribute("aria-label") || "",
-    };
-  })()`);
   if (!failed.alert || !failed.playLabel.includes("تشغيل التلاوة")) {
     throw new Error(`${label} stream error state failed: ${JSON.stringify(failed)}`);
   }
-  await evaluate(session, 'document.querySelector("audio")?.dispatchEvent(new Event("play"))');
-  await waitFor(
+  await dispatchUntil(
     session,
-    `![...document.querySelectorAll('[role="alert"]')].some((element) => element.textContent?.includes("تعذر تشغيل البث من MP3Quran"))`,
+    `document.querySelector("audio")?.dispatchEvent(new Event("play"));`,
+    `return ${audioAlertExpression} ? null : ${playLabelExpression};`,
     `${label} stream recovery`,
   );
-  await evaluate(session, 'document.querySelector("audio")?.dispatchEvent(new Event("pause"))');
+  await dispatchUntil(
+    session,
+    `document.querySelector("audio")?.dispatchEvent(new Event("pause"));`,
+    `const current = ${playLabelExpression};
+     return current.includes("تشغيل التلاوة") ? current : null;`,
+    `${label} stream pause`,
+  );
   return failed;
 }
 

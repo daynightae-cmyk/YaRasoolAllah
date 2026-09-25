@@ -44,3 +44,33 @@ test("Visual smoke exercises rendered audio failure states", () => {
   assert.match(visualSmoke, /audio-1440-rtl/);
   assert.match(visualSmoke, /quran-1440-rtl/);
 });
+
+test("the audio failure gate re-dispatches instead of racing the handler", () => {
+  assert.match(
+    visualSmoke,
+    /async function dispatchUntil\(session, poke, check, label/,
+    "the harness needs a poke/check retry loop",
+  );
+  assert.match(visualSmoke, /\$\{poke\}/, "dispatchUntil must run the poke on every attempt");
+  assert.match(visualSmoke, /\$\{check\}/, "dispatchUntil must evaluate the check on every attempt");
+  const audioBlock = visualSmoke.slice(
+    visualSmoke.indexOf("async function verifyAudioFailureState"),
+    visualSmoke.indexOf("const summary = []"),
+  );
+  assert.equal(
+    /await evaluate\(session, `\(\(\) => \{\s*const audio[\s\S]*?dispatchEvent\(new Event\("error"\)\);[\s\S]*?\}\)\(\)`\)/.test(
+      audioBlock,
+    ),
+    false,
+    "the one-shot error dispatch is the flake and must be gone",
+  );
+  assert.equal(
+    (audioBlock.match(/dispatchUntil\(/g) ?? []).length,
+    3,
+    "error, play recovery and pause must all be deterministic",
+  );
+  assert.match(audioBlock, /dispatchEvent\(new Event\("error"\)\)/);
+  assert.match(audioBlock, /dispatchEvent\(new Event\("play"\)\)/);
+  assert.match(audioBlock, /dispatchEvent\(new Event\("pause"\)\)/);
+  assert.match(audioBlock, /stream pause/, "the pause step must assert a state, not fire and forget");
+});
