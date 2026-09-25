@@ -5,6 +5,8 @@ import {
   canReadPdfInside,
   canReadTextInside,
   canUseIiifInside,
+  canViewPresentationInside,
+  buildPresentationEmbedUrl,
   type CatalogWork,
 } from "../client/src/visual-golden/services/catalog-library";
 
@@ -72,6 +74,37 @@ test("download is shown only when the governed resource permits it", () => {
   assert.equal(canDownloadInside(work()), true);
   assert.equal(
     canDownloadInside(work({ digital: { ...work().digital!, download: "BLOCKED_PENDING_REVIEW" } })),
+    false,
+  );
+});
+
+
+test("cleared PowerPoint files open through an internal presentation embed", () => {
+  const presentation = work({
+    digital: {
+      ...work().digital!,
+      format: "PPTX",
+      fileUrl: "https://example.test/slides/deck.pptx",
+    },
+  });
+  assert.equal(canViewPresentationInside(presentation), true);
+  assert.equal(
+    buildPresentationEmbedUrl(presentation),
+    "https://view.officeapps.live.com/op/embed.aspx?src=https%3A%2F%2Fexample.test%2Fslides%2Fdeck.pptx",
+  );
+});
+
+test("presentation adapter rejects non-HTTPS and uncleared resources", () => {
+  assert.equal(
+    buildPresentationEmbedUrl(work({
+      digital: { ...work().digital!, format: "PPTX", fileUrl: "http://example.test/deck.pptx" },
+    })),
+    null,
+  );
+  assert.equal(
+    canViewPresentationInside(work({
+      digital: { ...work().digital!, format: "PPTX", rights: "NEEDS_ITEM_LEVEL_REVIEW" },
+    })),
     false,
   );
 });
