@@ -6,6 +6,7 @@ import { MobileNav } from "./MobileNav";
 import { ShellDrawer } from "./ShellDrawer";
 import { DiscoveryPalette } from "@/visual-golden/components/present/DiscoveryPalette";
 import { Spotlight } from "@/visual-golden/components/present/Spotlight";
+import { ContentLanguageNotice } from "./ContentLanguageNotice";
 import { SplashCeremony } from "@/visual-golden/components/ceremony/SplashCeremony";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import styles from "./shell.module.css";
@@ -30,7 +31,7 @@ export function InstitutionShell({children}:{children:ReactNode}){
  return <div className={`${styles.shell} vg-shell`} data-theme={theme} data-wing={wing} data-lang={lang} dir={lang==="ar"?"rtl":"ltr"}>
    {splash?<SplashCeremony onDone={closeSplash}/>:null}<Spotlight/><div className={styles.ambient} aria-hidden>{Array.from({length:18},(_,i)=><span key={i} style={{"--i":i} as CSSProperties}/>)}</div>
    <InstitutionSidebar open={sidebarOpen} onClose={()=>setSidebarOpen(false)} onReplaySplash={()=>setSplash(true)}/>
-   <div className={styles.mainArea}><InstitutionHeader onMenuClick={()=>setSidebarOpen(true)} onSearch={()=>setDiscover(true)}/><main ref={contentRef} id="main-content" className={styles.content}><div key={pathname} className="vg-page-enter">{children}</div></main></div>
+    <div className={styles.mainArea}><InstitutionHeader onMenuClick={()=>setSidebarOpen(true)} onSearch={()=>setDiscover(true)}/><ContentLanguageNotice pathname={pathname}/><main ref={contentRef} id="main-content" className={styles.content}><div key={pathname} className="vg-page-enter">{children}</div></main></div>
    <MobileNav/><DiscoveryPalette open={discover} onClose={()=>setDiscover(false)}/><ShellDrawer/>
  </div>;
 }

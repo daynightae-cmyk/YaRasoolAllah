@@ -31,6 +31,7 @@ const cases = [
   { name: "seerah-1440-rtl", path: "/seerah", width: 1440, height: 1000 },
   { name: "seerah-768-rtl", path: "/seerah", width: 768, height: 900 },
   { name: "seerah-390-rtl", path: "/seerah", width: 390, height: 844 },
+  { name: "seerah-768-ltr", path: "/seerah", width: 768, height: 900, lang: "en" },
   { name: "who-1440-rtl", path: "/who-is-muhammad", width: 1440, height: 1000 },
   { name: "who-390-rtl", path: "/who-is-muhammad", width: 390, height: 844 },
   { name: "kids-360-rtl", path: "/kids", width: 360, height: 844 },
@@ -377,6 +378,35 @@ try {
         throw new Error(`${item.name} canonical shell failed: ${JSON.stringify(whoGeometry)}`);
       }
       diagnostics.geometry = whoGeometry;
+    }
+    if (item.lang === "en") {
+      const languageBoundary = await evaluate(session, `(() => {
+        const shell = document.querySelector(".vg-shell");
+        const notice = document.querySelector('[data-visual="content-language-notice"]');
+        const main = shell?.querySelector("main");
+        return {
+          uiLang: shell?.getAttribute("data-lang"),
+          dir: shell?.getAttribute("dir"),
+          notice: notice ? (notice.textContent || "") : null,
+          noticeWidth: notice ? notice.getBoundingClientRect().width : 0,
+          viewport: innerWidth,
+          documentWidth: document.documentElement.scrollWidth,
+          hasMain: Boolean(main)
+        };
+      })()`);
+      if (languageBoundary.uiLang !== "en" || languageBoundary.dir !== "ltr" || !languageBoundary.hasMain) {
+        throw new Error(`${item.name} English interface shell failed: ${JSON.stringify(languageBoundary)}`);
+      }
+      const declaresArabicContent = languageBoundary.notice !== null;
+      if (declaresArabicContent) {
+        const text = languageBoundary.notice ?? "";
+        if (!text.includes("recorded in Arabic only") || !text.includes("لم يُترجم") || languageBoundary.noticeWidth <= 0) {
+          throw new Error(`${item.name} content language notice failed: ${JSON.stringify(languageBoundary)}`);
+        }
+      } else if (languageBoundary.documentWidth > languageBoundary.viewport + 1) {
+        throw new Error(`${item.name} English interface overflowed: ${JSON.stringify(languageBoundary)}`);
+      }
+      diagnostics.contentLanguage = { ...languageBoundary, declaresArabicContent };
     }
     if (item.path === "/daily-verse") {
       await waitFor(session, 'document.querySelectorAll(\'[role="tab"]\').length >= 4', `${item.name} daily verse tabs`);

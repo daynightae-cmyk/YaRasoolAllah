@@ -23,7 +23,7 @@ export const cases = [
   { name: "seerah-1440-dark-rtl", path: "/seerah", width: 1440, height: 1000, theme: "dark", language: "ar" },
   { name: "seerah-graph-768-dark-rtl", path: "/seerah", width: 768, height: 1024, theme: "dark", language: "ar", scrollSelector: '[data-visual="seerah-event-graph"]', scrollOffset: -80 },
   { name: "atlas-1440-dark-rtl", path: "/atlas", width: 1440, height: 1000, theme: "dark", language: "ar", clickText: "مسرح الغزوات", scrollSelector: '[data-visual="atlas-theatre-evidence"]', scrollOffset: -80 },
-  { name: "seerah-768-light-ltr", path: "/seerah", width: 768, height: 1024, theme: "light", language: "en" },
+  { name: "seerah-768-light-ltr", path: "/seerah", width: 768, height: 1024, theme: "light", language: "en", scrollSelector: '[data-visual="content-language-notice"]', scrollOffset: -80 },
   { name: "children-360-light-rtl", path: "/kids", width: 360, height: 900, theme: "light", language: "ar" },
   { name: "children-1440-dark-ltr", path: "/children-tv", width: 1440, height: 1000, theme: "dark", language: "en" },
   { name: "hadith-768-dark-rtl", path: "/sunnah", width: 768, height: 1024, theme: "dark", language: "ar" },
@@ -168,7 +168,15 @@ try {
       ],
     });
     await session.send("Runtime.evaluate", {
-      expression: `localStorage.setItem("divine-mode", ${JSON.stringify(testCase.theme === "dark" ? "heaven" : "earth")}); localStorage.setItem("preferred-language", ${JSON.stringify(testCase.language)}); localStorage.setItem("institution-welcome-seen", "true");`,
+      expression: `localStorage.setItem("divine-mode", ${JSON.stringify(testCase.theme === "dark" ? "heaven" : "earth")}); localStorage.setItem("preferred-language", ${JSON.stringify(testCase.language)}); localStorage.setItem("institution-welcome-seen", "true");
+      (() => {
+        const key = "yra-visual-golden-v1";
+        let saved = {};
+        try { saved = JSON.parse(localStorage.getItem(key) || "{}"); } catch { saved = {}; }
+        localStorage.setItem(key, JSON.stringify({ ...saved, theme: ${JSON.stringify(testCase.theme)}, lang: ${JSON.stringify(
+          testCase.language === "en" ? "en" : "ar",
+        )} }));
+      })();`,
     });
     await session.send("Page.navigate", { url: `${origin}${testCase.path}` });
     await waitForDocument(session, testCase.path === "/home" ? "/" : testCase.path);
@@ -231,6 +239,8 @@ try {
           theme: document.documentElement.classList.contains("dark") ? "dark" : "light",
           language: document.documentElement.lang,
           direction: document.documentElement.dir,
+          shellLanguage: document.querySelector(".vg-shell")?.getAttribute("data-lang") ?? null,
+          contentLanguageNotice: Boolean(document.querySelector('[data-visual="content-language-notice"]')),
           horizontalOverflow: document.documentElement.scrollWidth > viewportWidth + 1,
           overflowElements,
           visiblyUnnamedInteractive: [...document.querySelectorAll("button, a[href], [role='button'], [role='link']")]
@@ -288,15 +298,37 @@ try {
     });
   }
 
+  const caseByName = new Map(cases.map((item) => [item.name, item]));
+  const withExpectations = report.map((item) => {
+    const declared = caseByName.get(item.name);
+    const expectedLanguage = declared?.language === "en" ? "en" : "ar";
+    const expectedDirection = expectedLanguage === "ar" ? "rtl" : "ltr";
+    const shellLang = item.shellLanguage ?? null;
+    return {
+      ...item,
+      expectedLanguage,
+      expectedDirection,
+      shellLanguage: shellLang,
+      matchesDeclaredLanguage: shellLang === expectedLanguage,
+      matchesDeclaredDirection: item.direction === expectedDirection,
+    };
+  });
+  const mismatched = withExpectations.filter(
+    (item) => !item.matchesDeclaredLanguage || !item.matchesDeclaredDirection,
+  );
   const reportPath = join(evidenceDir, "visual-evidence-report.json");
-  writeFileSync(reportPath, `${JSON.stringify({ origin, reducedMotion: true, cases: report }, null, 2)}\n`);
+  writeFileSync(
+    reportPath,
+    `${JSON.stringify({ origin, reducedMotion: true, cases: withExpectations }, null, 2)}\n`,
+  );
 
-  const failed = report.filter((item) => !item.applicationMounted || !item.originMatches || item.horizontalOverflow || item.runtimeErrors.length || item.visiblyUnnamedInteractive.length);
-  console.log(`Visual evidence captured: ${report.length} cases.`);
-  console.log(`Application mount failures: ${report.filter((item) => !item.applicationMounted || !item.originMatches).length}.`);
-  console.log(`Horizontal overflow failures: ${report.filter((item) => item.horizontalOverflow).length}.`);
-  console.log(`Runtime error cases: ${report.filter((item) => item.runtimeErrors.length).length}.`);
-  console.log(`Cases with visible unnamed interactive elements: ${report.filter((item) => item.visiblyUnnamedInteractive.length).length}.`);
+  const failed = withExpectations.filter((item) => !item.applicationMounted || !item.originMatches || item.horizontalOverflow || item.runtimeErrors.length || item.visiblyUnnamedInteractive.length || !item.matchesDeclaredLanguage || !item.matchesDeclaredDirection);
+  console.log(`Visual evidence captured: ${withExpectations.length} cases.`);
+  console.log(`Application mount failures: ${withExpectations.filter((item) => !item.applicationMounted || !item.originMatches).length}.`);
+  console.log(`Horizontal overflow failures: ${withExpectations.filter((item) => item.horizontalOverflow).length}.`);
+  console.log(`Runtime error cases: ${withExpectations.filter((item) => item.runtimeErrors.length).length}.`);
+  console.log(`Cases with visible unnamed interactive elements: ${withExpectations.filter((item) => item.visiblyUnnamedInteractive.length).length}.`);
+  console.log(`Cases whose rendered language/direction did not match the case name: ${mismatched.length}.`);
   if (failed.length) {
     console.log(`Review required: ${failed.map((item) => item.name).join(", ")}`);
     process.exitCode = 1;
