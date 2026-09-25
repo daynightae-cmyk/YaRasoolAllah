@@ -182,7 +182,7 @@ try {
           search: rect(search),
           copy: rect(copy),
           form: rect(form),
-          wings: wings.map((wing) => ({ href: wing.getAttribute("href"), ...rect(wing).toJSON() }))
+          wings: wings.map((wing) => ({ href: wing.getAttribute("href"), ...rect(wing) }))
         };
       })()`);
       const expectedLang = item.lang ?? "ar";
