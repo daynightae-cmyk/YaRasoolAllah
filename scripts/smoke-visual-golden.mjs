@@ -29,6 +29,8 @@ const cases = [
   { name: "seerah-1440-rtl", path: "/seerah", width: 1440, height: 1000 },
   { name: "seerah-768-rtl", path: "/seerah", width: 768, height: 900 },
   { name: "seerah-390-rtl", path: "/seerah", width: 390, height: 844 },
+  { name: "who-1440-rtl", path: "/who-is-muhammad", width: 1440, height: 1000 },
+  { name: "who-390-rtl", path: "/who-is-muhammad", width: 390, height: 844 },
   { name: "kids-360-rtl", path: "/kids", width: 360, height: 844 },
   { name: "library-1440-rtl", path: "/library", width: 1440, height: 1000 },
   { name: "sources-1440-rtl", path: "/sources", width: 1440, height: 1000 },
@@ -274,6 +276,25 @@ try {
         await waitFor(session, `location.pathname === "/seerah" && document.querySelector('article[aria-label="تفاصيل المحطة المختارة"] h3')?.textContent === ${JSON.stringify(selected)}`, "restored Seerah event");
         diagnostics.roundTrip = { link, returnLink, selected };
       }
+    }
+    if (item.path === "/who-is-muhammad") {
+      await waitFor(session, 'document.querySelector(".vg-shell main h1")?.textContent?.includes("محمد")', `${item.name} who-is-muhammad`);
+      const whoGeometry = await evaluate(session, `(() => {
+        const shell = document.querySelector(".vg-shell");
+        const heading = shell?.querySelector("main h1");
+        const rect = heading?.getBoundingClientRect().toJSON() ?? null;
+        return {
+          viewport: innerWidth,
+          documentWidth: document.documentElement.scrollWidth,
+          shellCount: document.querySelectorAll(".vg-shell").length,
+          heading: rect,
+          legacyShellHeaderCount: [...document.querySelectorAll("header")].filter((node) => !node.closest(".vg-shell")).length
+        };
+      })()`);
+      if (!whoGeometry.heading || whoGeometry.shellCount !== 1 || whoGeometry.documentWidth > whoGeometry.viewport + 1 || whoGeometry.heading.left < -1 || whoGeometry.heading.right > whoGeometry.viewport + 1 || whoGeometry.legacyShellHeaderCount !== 0) {
+        throw new Error(`${item.name} canonical shell failed: ${JSON.stringify(whoGeometry)}`);
+      }
+      diagnostics.geometry = whoGeometry;
     }
     const shot = await session.send("Page.captureScreenshot", {
       format: "jpeg",
