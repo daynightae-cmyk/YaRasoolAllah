@@ -3,6 +3,7 @@ import { registerMp3QuranCatalogRoutes } from "./mp3quran-catalog.js";
 import { registerOpenItiReaderRoutes } from "./openiti-reader.js";
 import { registerOpenLibraryRoutes } from "./open-library.js";
 import { registerQuranTranslationRoutes } from "./quran-translations.js";
+import { registerQuranTafsirRoutes } from "./quran-tafsir.js";
 import { errorHandler, requestLogging } from "./logging.js";
 
 function publicContentHeaders(

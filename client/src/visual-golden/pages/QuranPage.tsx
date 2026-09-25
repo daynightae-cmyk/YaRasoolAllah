@@ -37,6 +37,11 @@ import {
   type QuranRecitationPayload,
   type QuranReciterStream,
 } from "@/visual-golden/services/quran-recitation";
+import {
+  getQuranTafsir,
+  type QuranTafsirAyah,
+  type QuranTafsirResponse,
+} from "@/visual-golden/services/quran-tafsir";
 import styles from "./QuranPage.module.css";
 
 type SidebarTab = "surah" | "marks";
@@ -49,6 +54,10 @@ type RecitationState =
   | { state: "idle" | "loading" }
   | { state: "error"; message: string }
   | { state: "ready"; payload: QuranRecitationPayload };
+type TafsirState =
+  | { state: "idle" | "loading" }
+  | { state: "error"; message: string }
+  | { state: "ready"; payload: QuranTafsirResponse };
 
 const BOOKMARK_KEY = "quran-bookmarks";
 const NOTE_KEY = "quran-notes-v1";
@@ -125,6 +134,7 @@ export function QuranPage() {
   const [readingMode, setReadingMode] = useState<ReadingMode>("mushaf");
   const [translationLanguage, setTranslationLanguage] = useState<QuranTranslationLanguage>("en");
   const [translationState, setTranslationState] = useState<TranslationState>({ state: "idle" });
+  const [tafsirState, setTafsirState] = useState<TafsirState>({ state: "idle" });
   const [recitationState, setRecitationState] = useState<RecitationState>({ state: "idle" });
   const [selectedReciterKey, setSelectedReciterKey] = useState<string | null>(null);
   const [audioPlaying, setAudioPlaying] = useState(false);
@@ -235,6 +245,29 @@ export function QuranPage() {
   }, [active, readingMode, translationLanguage]);
 
   useEffect(() => {
+    if (readingMode !== "study") {
+      setTafsirState({ state: "idle" });
+      return;
+    }
+
+    const controller = new AbortController();
+    setTafsirState({ state: "loading" });
+    getQuranTafsir(active, controller.signal)
+      .then((payload) => {
+        if (!controller.signal.aborted) setTafsirState({ state: "ready", payload });
+      })
+      .catch((error: unknown) => {
+        if (controller.signal.aborted) return;
+        setTafsirState({
+          state: "error",
+          message: error instanceof Error ? error.message : "تعذر تحميل التفسير الميسر.",
+        });
+      });
+
+    return () => controller.abort();
+  }, [active, readingMode]);
+
+  useEffect(() => {
     const controller = new AbortController();
     setRecitationState({ state: "loading" });
     setSelectedReciterKey(null);
@@ -272,6 +305,13 @@ export function QuranPage() {
   }, [translationState]);
   const selectedTranslation = selectedVerse
     ? translationByAyah.get(selectedVerse.ayah) ?? null
+    : null;
+  const tafsirByAyah = useMemo(() => {
+    if (tafsirState.state !== "ready") return new Map<number, QuranTafsirAyah>();
+    return new Map(tafsirState.payload.ayahs.map((item) => [item.ayah, item] as const));
+  }, [tafsirState]);
+  const selectedTafsir = selectedVerse
+    ? tafsirByAyah.get(selectedVerse.ayah) ?? null
     : null;
   const selectedReciter: QuranReciterStream | null = useMemo(() => {
     if (recitationState.state !== "ready") return null;
@@ -618,6 +658,21 @@ export function QuranPage() {
               </small>
             </label>
           ) : null}
+          {readingMode === "study" ? (
+            <div className={styles.translationPicker} role="status" aria-live="polite">
+              <span>التفسير</span>
+              <strong>التفسير الميسر · QuranEnc.com</strong>
+              <small>
+                {tafsirState.state === "ready"
+                  ? `الإصدار ${tafsirState.payload.version} · آخر تحديث ${tafsirState.payload.lastUpdate}`
+                  : tafsirState.state === "loading"
+                    ? "جارٍ تحميل التفسير الميسر من المصدر…"
+                    : tafsirState.state === "error"
+                      ? tafsirState.message
+                      : "اختر وضع الدراسة لتحميل التفسير."}
+              </small>
+            </div>
+          ) : null}
           <a className={styles.catalogJump} href="#quran-surah-nav">فهرس السور والبحث ↓</a>
 
           <div
@@ -682,9 +737,21 @@ export function QuranPage() {
                 ) : (
                   <p className={styles.pendingStudy}>لا توجد ترجمة متاحة لهذا الموضع من المزوّد الآن.</p>
                 )}
-                {selectedVerse.tafsir ? <p><b>تفسير:</b> {selectedVerse.tafsir}</p> : <p className={styles.pendingStudy}>لا يوجد تفسير إنتاجي موثق مربوط بهذا الموضع بعد.</p>}
+                {tafsirState.state === "loading" ? (
+                  <p className={styles.pendingStudy}>جارٍ تحميل التفسير الميسر…</p>
+                ) : tafsirState.state === "error" ? (
+                  <p className={styles.pendingStudy}>{tafsirState.message}</p>
+                ) : selectedTafsir && tafsirState.state === "ready" ? (
+                  <>
+                    <p><b>التفسير الميسر:</b> {selectedTafsir.text}</p>
+                    {selectedTafsir.footnotes ? <p><b>هامش المصدر:</b> {selectedTafsir.footnotes}</p> : null}
+                  </>
+                ) : (
+                  <p className={styles.pendingStudy}>لا يوجد تفسير متاح لهذا الموضع من المصدر الآن.</p>
+                )}
                 <small>
-                  النص العربي المحلي مستقل عن الترجمة والتفسير. الترجمة تُجلب عبر خادم المنصة مع الحفاظ على هوية الإصدار والمترجم.
+                  النص العربي المحلي مستقل عن الترجمة والتفسير. الترجمة تأتي عبر AlQuran Cloud،
+                  والتفسير الميسر يأتي حيًا من QuranEnc.com دون تعديل مع رقم الإصدار وآخر تحديث.
                 </small>
               </div>
             ) : null}
@@ -855,7 +922,19 @@ export function QuranPage() {
               {translationState.state === "ready" ? (
                 <small>{translationState.payload.attribution} · {translationState.payload.edition}</small>
               ) : null}
-              {selectedVerse?.tafsir ? <p><strong>التفسير:</strong> {selectedVerse.tafsir}</p> : <p>لا يوجد تفسير إنتاجي موثق لهذا الموضع بعد.</p>}
+              {tafsirState.state === "loading" ? (
+                <p>جارٍ تحميل التفسير الميسر…</p>
+              ) : tafsirState.state === "error" ? (
+                <p>{tafsirState.message}</p>
+              ) : selectedTafsir && tafsirState.state === "ready" ? (
+                <>
+                  <p><strong>التفسير الميسر:</strong> {selectedTafsir.text}</p>
+                  {selectedTafsir.footnotes ? <p><strong>هامش المصدر:</strong> {selectedTafsir.footnotes}</p> : null}
+                  <small>{tafsirState.payload.attribution} · آخر تحديث {tafsirState.payload.lastUpdate}</small>
+                </>
+              ) : (
+                <p>التفسير غير متاح من المصدر لهذا الموضع حاليًا.</p>
+              )}
               <Link href="/tafsir">فتح مساحة التفسير والتدبر</Link>
             </div>
 
@@ -883,9 +962,9 @@ export function QuranPage() {
                   : governance?.rights.decision ?? "غير متاحة"}
               </span>
               <small>
-                النص العربي يُعرض كما هو من الملف المكتسب دون تعديل. ترجمة وضع الدراسة
-                مستقلة عنه وتأتي عبر AlQuran Cloud مع اسم المترجم والإصدار؛ لا تُدمج
-                الترجمة في النص القرآني ولا تُعامل كتفسير.
+                النص العربي يُعرض كما هو من Tanzil دون تعديل. ترجمة وضع الدراسة مستقلة
+                وتأتي عبر AlQuran Cloud، والتفسير الميسر مستقل ويأتي من QuranEnc.com دون
+                تعديل مع المصدر ورقم الإصدار وآخر تحديث.
               </small>
             </div>
           </aside>
