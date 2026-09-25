@@ -5,6 +5,7 @@ import { registerOpenLibraryRoutes } from "./open-library.js";
 import { registerQuranTranslationRoutes } from "./quran-translations.js";
 import { registerQuranTafsirRoutes } from "./quran-tafsir.js";
 import { registerHadithStatusRoutes } from "./hadith.js";
+import { registerApiNotFound } from "./api-not-found.js";
 import { errorHandler, requestLogging } from "./logging.js";
 
 function publicContentHeaders(
@@ -34,6 +35,7 @@ export function createPublicContentApp(): Express {
   registerQuranTafsirRoutes(app);
   registerHadithStatusRoutes(app);
   registerOpenItiReaderRoutes(app);
+  registerApiNotFound(app);
 
   app.use(errorHandler);
   return app;

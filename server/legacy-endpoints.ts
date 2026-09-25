@@ -19,4 +19,6 @@ export function registerQuarantinedDemoRoutes(app: Express): void {
   app.get("/api/azkar/:category", gone);
   app.get("/api/calendar/events", gone);
   app.get("/api/children/stories", gone);
+  app.get("/api/quran/daily-verse", gone);
+  app.get("/api/daily-verse", gone);
 }

@@ -5,6 +5,7 @@ import { registerQuranTafsirRoutes } from "./quran-tafsir";
 import { registerHadithStatusRoutes } from "./hadith";
 import { registerOpenItiReaderRoutes } from "./openiti-reader";
 import { registerOpenLibraryRoutes } from "./open-library";
+import { registerApiNotFound } from "./api-not-found";
 import { assertRuntimeConfig } from "./env";
 import { errorHandler, requestLogging } from "./logging";
 import { registerRoutes } from "./routes";
@@ -38,6 +39,7 @@ export function createApiApp(): Express {
   registerHadithStatusRoutes(app);
   registerOpenItiReaderRoutes(app);
   registerRoutes(app);
+  registerApiNotFound(app);
   app.use(errorHandler);
 
   return app;

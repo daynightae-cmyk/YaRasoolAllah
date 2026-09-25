@@ -17,7 +17,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { useProgress } from "../contexts/ProgressContext";
 import { useLanguage } from "../contexts/LanguageContext";
-import { getDailyVerse } from "@/services/quranService";
+import { getDailyVerse, dailyVerseDayKey } from "@/services/quranService";
 import { cn } from "@/lib/utils";
 
 interface DailyVerseSettings {
@@ -109,7 +109,7 @@ export default function DailyVersePage() {
   }, [updateLastVisited]);
 
   const { data: dailyVerse, isLoading } = useQuery({
-    queryKey: ["/api/quran/daily-verse"],
+    queryKey: ["daily-verse-of-the-day", dailyVerseDayKey()],
     queryFn: getDailyVerse,
   });
 
@@ -510,15 +510,15 @@ https://yarasoolallah.org
                         </Badge>
                       </div>
                       <Separator />
-                      <div className="text-center">
+                      <div className="text-center" data-honesty="no-reward-claim">
                         <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                          أجرك المتراكم
+                          عدد مرات المشاركة
                         </p>
                         <div className="text-2xl font-bold text-amber-600 dark:text-amber-400">
-                          {shareStats.total * 10} حسنة
+                          {shareStats.total}
                         </div>
                         <p className="text-xs text-amber-600 dark:text-amber-400">
-                          بإذن الله تعالى
+                          لا تذكر هذه الصفحة أجرًا أو ثوابًا محددًا، لأن ذلك يحتاج إلى مرجع موثق غير متاح هنا.
                         </p>
                       </div>
                     </CardContent>
@@ -540,6 +540,7 @@ https://yarasoolallah.org
                           المشاركة التلقائية
                         </span>
                         <Switch
+                          aria-label="المشاركة التلقائية"
                           checked={settings.autoShare}
                           onCheckedChange={(checked) =>
                             saveSettings({ autoShare: checked })
@@ -653,6 +654,7 @@ https://yarasoolallah.org
                         </p>
                       </div>
                       <Switch
+                        aria-label="تفعيل المشاركة التلقائية"
                         checked={settings.autoShare}
                         onCheckedChange={(checked) =>
                           saveSettings({ autoShare: checked })
@@ -845,6 +847,7 @@ https://yarasoolallah.org
                               </div>
                             </div>
                             <Switch
+                              aria-label={`تفعيل المشاركة مع ${contact.name}`}
                               checked={contact.active}
                               onCheckedChange={() => toggleContact(contact.id)}
                             />
@@ -1120,6 +1123,7 @@ https://yarasoolallah.org
                           </p>
                         </div>
                         <Switch
+                          aria-label="تضمين الصوت"
                           checked={settings.includeAudio}
                           onCheckedChange={(checked) =>
                             saveSettings({ includeAudio: checked })
@@ -1202,17 +1206,17 @@ https://yarasoolallah.org
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
                           <span className="text-sm">تفعيل المساعد الذكي</span>
-                          <Switch defaultChecked />
+                          <Switch aria-label="تفعيل المساعد الذكي" defaultChecked />
                         </div>
 
                         <div className="flex items-center justify-between">
                           <span className="text-sm">إجابات صوتية</span>
-                          <Switch />
+                          <Switch aria-label="إجابات صوتية" />
                         </div>
 
                         <div className="flex items-center justify-between">
                           <span className="text-sm">حفظ المحادثات</span>
-                          <Switch defaultChecked />
+                          <Switch aria-label="حفظ المحادثات" defaultChecked />
                         </div>
                       </div>
                     </div>
@@ -1264,7 +1268,7 @@ https://yarasoolallah.org
                               </span>
                               <span className="text-sm">{item.text}</span>
                             </div>
-                            <Switch checked={item.active} />
+                            <Switch aria-label={item.text} checked={item.active} />
                           </div>
                         ))}
                       </div>
