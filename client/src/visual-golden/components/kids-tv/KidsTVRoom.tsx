@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BookOpen, Info, Radio, Tv } from "lucide-react";
 import { KIDS_TOPIC_LABELS, KIDS_VIDEO_CATALOG, buildKidsVideoRows } from "@/visual-golden/services/kids-media/catalog";
+import { DISCOVERED_KIDS_VIDEOS } from "@/visual-golden/data/kids-youtube-discovered.generated";
 import { getContinueWatchingIds, readKidsProgress, writeKidsProgress } from "@/visual-golden/services/kids-media/progress";
 import type {
   KidsPlayerHandle,
@@ -418,9 +419,30 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
         </div>
 
         <div className={styles.library}>
-          <div className={styles.noResults} role="status">
-            <strong>مكتبة الحلقات فارغة حاليًا</strong>
-            <span>ستظهر هنا صفوف الحلقات المعتمدة فور اعتماد أول دفعة مراجعة.</span>
+          <div className={styles.reviewQueueHead} role="status">
+            <div>
+              <span>مكتبة الاستحواذ المرئي</span>
+              <strong>{DISCOVERED_KIDS_VIDEOS.length} روابط فيديو مستعادة وقيد المراجعة</strong>
+            </div>
+            <p>
+              الروابط التي جمعناها لم تعد مختفية. تظهر هنا داخل المؤسسة كعناصر مكتشفة،
+              ولا يتحول أي عنصر إلى تشغيل عام حتى تنتهي مراجعة المحتوى والتصوير والعمر والحقوق.
+            </p>
+          </div>
+          <div className={styles.pendingRail} aria-label="الفيديوهات المكتشفة قيد المراجعة">
+            {DISCOVERED_KIDS_VIDEOS.map((video) => (
+              <article key={video.id} className={styles.pendingCard}>
+                <div className={styles.pendingThumb}>
+                  <img src={video.thumbnailUrl} alt="" loading="lazy" />
+                  <span>قيد المراجعة</span>
+                </div>
+                <div>
+                  <strong>{video.titleAr}</strong>
+                  <small>{video.publisherName}</small>
+                  <p>{video.titleOriginal}</p>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       </section>
