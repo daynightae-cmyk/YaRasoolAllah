@@ -12,6 +12,7 @@ import {
   Headphones,
   ShieldCheck,
   Search,
+  Languages,
 } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
@@ -24,6 +25,12 @@ import {
 } from "@/services/quranService";
 import { getGovernanceRecord } from "@shared/source-registry";
 import { searchVerifiedQuran, type QuranSearchHit } from "@/visual-golden/services/quran-search";
+import {
+  getQuranTranslation,
+  QURAN_TRANSLATION_EDITIONS,
+  type TranslationKey,
+  type TranslationPayload,
+} from "@/visual-golden/services/quran-translations";
 import styles from "./QuranPage.module.css";
 
 type SidebarTab = "surah" | "marks";
@@ -102,6 +109,12 @@ export function QuranPage() {
   const [showNote, setShowNote] = useState(false);
   const [copied, setCopied] = useState(false);
   const [readingMode, setReadingMode] = useState<ReadingMode>("mushaf");
+  const [translationKey, setTranslationKey] = useState<TranslationKey>("english_rwwad");
+  const [translationState, setTranslationState] = useState<
+    | { state: "idle" | "loading" }
+    | { state: "error"; message: string }
+    | { state: "ready"; payload: TranslationPayload }
+  >({ state: "idle" });
   const [fontScale, setFontScale] = useState(() => safeReadReadingSettings().fontScale);
   const [lineHeight, setLineHeight] = useState(() => safeReadReadingSettings().lineHeight);
 
@@ -147,6 +160,26 @@ export function QuranPage() {
 
   useEffect(() => {
     let cancelled = false;
+    setTranslationState({ state: "loading" });
+    getQuranTranslation(active, translationKey)
+      .then((payload) => {
+        if (!cancelled) setTranslationState({ state: "ready", payload });
+      })
+      .catch((error: unknown) => {
+        if (!cancelled) {
+          setTranslationState({
+            state: "error",
+            message: error instanceof Error ? error.message : "تعذر تحميل الترجمة.",
+          });
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [active, translationKey]);
+
+  useEffect(() => {
+    let cancelled = false;
     setLoading(true);
     setVerses([]);
     setLoadError(null);
@@ -189,6 +222,13 @@ export function QuranPage() {
     chapters.find((chapter) => chapter.number === active) ?? null;
   const selectedVerse =
     verses.find((item) => item.ayah === ayah) ?? verses[0] ?? null;
+  const selectedTranslationEdition = QURAN_TRANSLATION_EDITIONS.find(
+    (edition) => edition.key === translationKey,
+  ) ?? QURAN_TRANSLATION_EDITIONS[0];
+  const selectedTranslationVerse =
+    translationState.state === "ready"
+      ? translationState.payload.verses.find((item) => item.aya === ayah) ?? null
+      : null;
 
   const filteredChapters = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -481,6 +521,21 @@ export function QuranPage() {
           <div className={styles.readingModes} role="tablist" aria-label="وضع القراءة">
             <button type="button" role="tab" aria-selected={readingMode === "mushaf"} className={readingMode === "mushaf" ? styles.modeOn : ""} onClick={() => setReadingMode("mushaf")}>مصحف</button>
             <button type="button" role="tab" aria-selected={readingMode === "study"} className={readingMode === "study" ? styles.modeOn : ""} onClick={() => setReadingMode("study")}>دراسة</button>
+            <label className={styles.translationSelect}>
+              <Languages size={14} aria-hidden="true" />
+              <span>ترجمة المعاني</span>
+              <select
+                value={translationKey}
+                onChange={(event) => setTranslationKey(event.target.value as TranslationKey)}
+                aria-label="اختيار ترجمة معاني القرآن"
+              >
+                {QURAN_TRANSLATION_EDITIONS.map((edition) => (
+                  <option key={edition.key} value={edition.key}>
+                    {edition.label}
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
           <a className={styles.catalogJump} href="#quran-surah-nav">فهرس السور والبحث ↓</a>
 
@@ -531,9 +586,27 @@ export function QuranPage() {
             {readingMode === "study" && selectedVerse ? (
               <div className={styles.studyCard} aria-live="polite">
                 <strong>مادة الدراسة · الآية {selectedVerse.ayah}</strong>
-                {selectedVerse.translation ? <p><b>ترجمة:</b> {selectedVerse.translation}</p> : <p className={styles.pendingStudy}>لا توجد ترجمة إنتاجية موثقة مربوطة بهذا الموضع بعد.</p>}
+                {translationState.state === "loading" ? (
+                  <p className={styles.pendingStudy}>جارٍ تحميل ترجمة المعاني من QuranEnc داخل الرواق…</p>
+                ) : translationState.state === "error" ? (
+                  <p className={styles.pendingStudy}>{translationState.message}</p>
+                ) : selectedTranslationVerse ? (
+                  <div
+                    className={styles.translationText}
+                    dir={selectedTranslationEdition.direction}
+                    lang={selectedTranslationEdition.language}
+                  >
+                    <b>{selectedTranslationEdition.label}</b>
+                    <p>{selectedTranslationVerse.translation}</p>
+                    <small>
+                      QuranEnc.com · الإصدار {selectedTranslationEdition.version} · النص معروض دون تعديل.
+                    </small>
+                  </div>
+                ) : (
+                  <p className={styles.pendingStudy}>لا توجد ترجمة لهذه الآية في استجابة المصدر الحالية.</p>
+                )}
                 {selectedVerse.tafsir ? <p><b>تفسير:</b> {selectedVerse.tafsir}</p> : <p className={styles.pendingStudy}>لا يوجد تفسير إنتاجي موثق مربوط بهذا الموضع بعد.</p>}
-                <small>النص العربي مستقل عن الترجمة والتفسير؛ لا تُعرض مادة عينة بوصفها corpus إنتاجيًا كاملًا.</small>
+                <small>النص العربي مستقل عن ترجمة المعاني والتفسير؛ كل طبقة تحمل مصدرها وإصدارها منفصلين.</small>
               </div>
             ) : null}
 
@@ -553,7 +626,7 @@ export function QuranPage() {
             <div className={styles.playerCopy}>
               <strong>التلاوة الصوتية</strong>
               <span>
-                لم نربط بهذه الشاشة تسجيلًا صوتيًا معتمد الحقوق بعد.
+                التلاوات الحقيقية متاحة الآن داخل قسم الاستماع من MP3Quran.net مع اختيار القارئ والرواية والسورة.
               </span>
             </div>
             <Link href="/audio" className={styles.audioLink}>
@@ -639,8 +712,16 @@ export function QuranPage() {
 
             <h4>التفسير والترجمة</h4>
             <div className={styles.tafsirBox}>
-              {selectedVerse?.translation ? <p><strong>الترجمة:</strong> {selectedVerse.translation}</p> : <p>لا توجد ترجمة إنتاجية موثقة لهذا الموضع بعد.</p>}
-              {selectedVerse?.tafsir ? <p><strong>التفسير:</strong> {selectedVerse.tafsir}</p> : <p>لا يوجد تفسير إنتاجي موثق لهذا الموضع بعد.</p>}
+              {selectedTranslationVerse ? (
+                <div dir={selectedTranslationEdition.direction} lang={selectedTranslationEdition.language}>
+                  <strong>{selectedTranslationEdition.label}</strong>
+                  <p>{selectedTranslationVerse.translation}</p>
+                  <small>QuranEnc.com · V{selectedTranslationEdition.version}</small>
+                </div>
+              ) : (
+                <p>{translationState.state === "loading" ? "جارٍ تحميل ترجمة المعاني…" : "لا تتوفر ترجمة لهذه الآية الآن."}</p>
+              )}
+              {selectedVerse?.tafsir ? <p><strong>التفسير:</strong> {selectedVerse.tafsir}</p> : <p>لا يوجد تفسير إنتاجي موثق مربوط بهذا الموضع بعد.</p>}
               <Link href="/tafsir">فتح مساحة التفسير والتدبر</Link>
             </div>
 
@@ -668,8 +749,8 @@ export function QuranPage() {
                   : governance?.rights.decision ?? "غير متاحة"}
               </span>
               <small>
-                النص العربي يُعرض كما هو من الملف المكتسب دون تعديل، ولا يشمل
-                هذا الاعتماد الترجمات أو التفاسير أو التسجيلات الصوتية.
+                النص العربي يُعرض كما هو من ملف Tanzil المكتسب دون تعديل. ترجمة المعاني طبقة مستقلة
+                من QuranEnc.com بشروط إعادة النشر الخاصة بها، والتلاوة طبقة مستقلة من MP3Quran.net.
               </small>
             </div>
           </aside>
