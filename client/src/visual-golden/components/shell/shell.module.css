@@ -32,6 +32,34 @@
     var(--navy-950);
 }
 
+.contentLanguage {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin: 0.5rem 0 0;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid rgba(212, 160, 23, 0.35);
+  border-radius: 10px;
+  background: rgba(6, 28, 24, 0.6);
+  color: var(--gold-300);
+  font-size: 0.74rem;
+  line-height: 1.7;
+}
+
+.contentLanguage svg {
+  flex-shrink: 0;
+}
+
+.contentLanguage span {
+  overflow-wrap: anywhere;
+}
+
+.contentLanguageAr {
+  color: var(--ivory-100);
+  opacity: 0.85;
+}
+
 .shell[data-wing="kids"] .content {
   background:
     radial-gradient(ellipse at 70% 0%, rgba(245, 158, 11, 0.14), transparent 48%),
