@@ -1,6 +1,7 @@
 import express, { type Express } from "express";
 import { registerMp3QuranCatalogRoutes } from "./mp3quran-catalog";
-import { registerQuranTranslationRoutes } from "./quran-translations";\nimport { registerQuranTafsirRoutes } from "./quran-tafsir";
+import { registerQuranTranslationRoutes } from "./quran-translations";
+import { registerQuranTafsirRoutes } from "./quran-tafsir";
 import { registerOpenItiReaderRoutes } from "./openiti-reader";
 import { registerOpenLibraryRoutes } from "./open-library";
 import { assertRuntimeConfig } from "./env";
