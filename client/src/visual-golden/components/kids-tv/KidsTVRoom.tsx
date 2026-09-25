@@ -369,8 +369,60 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
 
   if (!current) {
     return (
-      <section className={styles.room}>
-        <p className={styles.empty}>لا توجد حلقات قابلة للتشغيل في الفهرس الحالي.</p>
+      <section className={styles.room} aria-labelledby="kids-tv-title">
+        <div className={styles.ambient} aria-hidden="true" />
+        <header className={styles.roomIntro}>
+          <p><Radio size={16} aria-hidden="true" /> واحة الأطفال</p>
+          <h2 id="kids-tv-title">مسرح النور</h2>
+          <span>اختر الحلقة، اضغط OK، ثم شاهد داخل مشغّل يوتيوب دون تغطية.</span>
+        </header>
+
+        <div className={styles.stage}>
+          <div className={styles.tvColumn}>
+            <div className={styles.cabinet}>
+              <div className={styles.bezel}>
+                <div className={styles.screen} data-player-active="false">
+                  <div className={styles.pendingScreen} role="status">
+                    <strong>الحلقات المختارة قيد المراجعة والتحقق قبل النشر</strong>
+                    <span>
+                      لا توجد حلقات معتمدة للتشغيل في الفهرس الحالي. يعمل التشغيل العام
+                      للحلقات المعتمدة فقط، وتبقى المواد المكتشفة قيد المراجعة الدينية
+                      والتربوية والحقوقية قبل النشر.
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.tvBar}>
+                <span className={styles.led} data-on={false} />
+                <span>NOOR KIDS TV</span>
+                <Tv size={15} aria-hidden="true" />
+              </div>
+              <div className={styles.stand} />
+            </div>
+
+            <KidsRemote
+              compact
+              playing={false}
+              muted={muted}
+              captions={captions}
+              onCommand={handleCommand}
+            />
+          </div>
+
+          <KidsRemote
+            playing={false}
+            muted={muted}
+            captions={captions}
+            onCommand={handleCommand}
+          />
+        </div>
+
+        <div className={styles.library}>
+          <div className={styles.noResults} role="status">
+            <strong>مكتبة الحلقات فارغة حاليًا</strong>
+            <span>ستظهر هنا صفوف الحلقات المعتمدة فور اعتماد أول دفعة مراجعة.</span>
+          </div>
+        </div>
       </section>
     );
   }
