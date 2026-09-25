@@ -6,6 +6,7 @@ export interface AtlasMention {
   chapterId: string;
   chapterTitle: string;
   chapterOrder: number;
+  eventId: string;
   eventTitle: string;
   eventDate: string;
 }
@@ -59,6 +60,7 @@ function buildNodes(): AtlasNode[] {
         chapterId: chapter.id,
         chapterTitle: chapter.title,
         chapterOrder: chapter.order,
+        eventId: event.id,
         eventTitle: event.title,
         eventDate: event.date,
       });

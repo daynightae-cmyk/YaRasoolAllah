@@ -12,9 +12,19 @@ import {
   SEERAH_COUNTS,
   getRelatedChapters,
 } from "@/visual-golden/services/seerah";
+import { ATLAS_NODES } from "@/visual-golden/services/atlas";
 import styles from "./SeerahPage.module.css";
 
 const READ_KEY = "seerah-read-chapters-v1";
+
+function initialSelection() {
+  const params = new URLSearchParams(window.location.search);
+  const chapter = CHAPTERS.find((item) => item.id === params.get("chapter"));
+  return {
+    chapterId: chapter?.id ?? CHAPTERS[3]?.id ?? CHAPTERS[0].id,
+    eventId: chapter?.timelineEvents?.find((event) => event.id === params.get("event"))?.id ?? "",
+  };
+}
 
 function safeReadRead(): string[] {
   try {
@@ -37,13 +47,19 @@ const STAGE_ART = [
 ];
 
 export function SeerahPage() {
-  const [chapterId, setChapterId] = useState(CHAPTERS[3]?.id ?? CHAPTERS[0].id);
+  const [selection, setSelection] = useState(initialSelection);
   const [read, setRead] = useState<string[]>(() => safeReadRead());
 
-  const index = Math.max(0, CHAPTERS.findIndex((chapter) => chapter.id === chapterId));
+  const index = Math.max(0, CHAPTERS.findIndex((chapter) => chapter.id === selection.chapterId));
   const chapter = CHAPTERS[index] ?? CHAPTERS[0];
   const related = useMemo(() => getRelatedChapters(chapter.id), [chapter.id]);
   const events = chapter.timelineEvents ?? [];
+  const selectedEvent = events.find((event) => event.id === selection.eventId) ?? events[0] ?? null;
+  const place = ATLAS_NODES.find(
+    (node) => node.name === selectedEvent?.location && node.mentions.some(
+      (mention) => mention.chapterId === chapter.id && mention.eventId === selectedEvent.id,
+    ),
+  );
 
   const readCount = CHAPTERS.filter((c) => read.includes(c.id)).length;
   const percent = Math.round((readCount / CHAPTERS.length) * 100);
@@ -62,7 +78,7 @@ export function SeerahPage() {
 
   const step = (delta: number) => {
     const next = Math.min(CHAPTERS.length - 1, Math.max(0, index + delta));
-    setChapterId(CHAPTERS[next].id);
+    setSelection({ chapterId: CHAPTERS[next].id, eventId: "" });
   };
 
   return (
@@ -70,7 +86,7 @@ export function SeerahPage() {
       <PageHero
         title="درب السيرة"
         subtitle={`رحلة سردية · ${SEERAH_COUNTS.chapters} فصول · ${SEERAH_COUNTS.categories} مراحل`}
-        desc="فصول السيرة بترتيبها السردي من المصدر المعتمد — المراحل والتسلسل سرديان لا تقويمًا تاريخيًا دقيقًا"
+        desc="فصول السيرة بترتيبها السردي من البيانات المسجلة — المراحل والتسلسل سرديان لا تقويمًا تاريخيًا دقيقًا"
         image={art.desert}
         tall
         wing="seerah"
@@ -99,7 +115,7 @@ export function SeerahPage() {
               key={c.id}
               type="button"
               className={`${p.filmItem} ${i === index ? p.filmOn : ""}`}
-              onClick={() => setChapterId(c.id)}
+              onClick={() => setSelection({ chapterId: c.id, eventId: "" })}
               aria-current={i === index ? "true" : undefined}
             >
               <img src={STAGE_ART[i % STAGE_ART.length]} alt="" />
@@ -130,14 +146,21 @@ export function SeerahPage() {
               لا توجد محطات مسجلة لهذا الفصل في المصدر.
             </p>
           ) : (
-            <ol className={styles.events}>
+            <ol className={styles.events} aria-label="محطات الفصل">
               {events.map((e) => (
                 <li key={e.id}>
-                  <img src={STAGE_ART[(e.title.length + index) % STAGE_ART.length]} alt="" />
-                  <div>
-                    <span>{e.date}</span>
-                    <strong>{e.title}</strong>
-                  </div>
+                  <button
+                    type="button"
+                    className={`${styles.eventButton} ${selectedEvent?.id === e.id ? styles.evOn : ""}`}
+                    aria-pressed={selectedEvent?.id === e.id}
+                    onClick={() => setSelection({ chapterId: chapter.id, eventId: e.id })}
+                  >
+                    <img src={STAGE_ART[(e.title.length + index) % STAGE_ART.length]} alt="" />
+                    <span className={styles.eventText}>
+                      <span>{e.date}</span>
+                      <strong>{e.title}</strong>
+                    </span>
+                  </button>
                 </li>
               ))}
             </ol>
@@ -150,6 +173,24 @@ export function SeerahPage() {
           <p className="muted" style={{ lineHeight: 2, fontSize: "0.84rem", whiteSpace: "pre-line" }}>
             {chapter.details.split("\n\n")[0]}
           </p>
+          {selectedEvent ? (
+            <article className={styles.eventDetail} aria-live="polite" aria-label="تفاصيل المحطة المختارة">
+              <span className={styles.eventLabel}>المحطة المختارة من بيانات الفصل</span>
+              <h3>{selectedEvent.title}</h3>
+              <p>{selectedEvent.description}</p>
+              <dl>
+                <div><dt>التاريخ الوارد</dt><dd>{selectedEvent.date}</dd></div>
+                <div><dt>دقة التاريخ</dt><dd>غير موثقة في بيانات المحطة</dd></div>
+                <div><dt>الموضع المذكور</dt><dd>{selectedEvent.location || "غير مسجل"}</dd></div>
+              </dl>
+              {place ? (
+                <Link href={`/atlas?place=${encodeURIComponent(place.id)}`} className={styles.eventLink}>
+                  <Map size={14} /> شاهد {place.name} في الأطلس التخطيطي
+                </Link>
+              ) : null}
+              <p className={styles.eventCaveat}>إحالات المحطة إلى الأشخاص والقرآن والحديث والمراجع التفصيلية غير مسجلة هنا بعد.</p>
+            </article>
+          ) : null}
           <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", marginTop: "0.6rem" }}>
             {chapter.keywords.slice(0, 6).map((keyword) => (
               <span
@@ -217,7 +258,7 @@ export function SeerahPage() {
                 <button
                   key={r.id}
                   type="button"
-                  onClick={() => setChapterId(r.id)}
+                  onClick={() => setSelection({ chapterId: r.id, eventId: "" })}
                   style={{
                     display: "flex",
                     alignItems: "center",
