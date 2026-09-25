@@ -34,6 +34,7 @@ export const cases = [
   { name: "sources-360-dark-rtl", path: "/sources", width: 360, height: 900, theme: "dark", language: "ar" },
   { name: "daily-768-light-rtl", path: "/daily", width: 768, height: 1024, theme: "light", language: "ar" },
   { name: "daily-360-dark-ltr", path: "/daily", width: 360, height: 900, theme: "dark", language: "en" },
+  { name: "daily-verse-honesty-1440-dark-rtl", path: "/daily-verse", width: 1440, height: 1000, theme: "dark", language: "ar", scrollSelector: '[data-honesty="no-reward-claim"]', scrollOffset: -140 },
   { name: "prophetic-day-360-light-rtl", path: "/prophetic-day", width: 360, height: 900, theme: "light", language: "ar" },
   { name: "prophetic-day-status-360-dark-rtl", path: "/prophetic-day", width: 360, height: 900, theme: "dark", language: "ar", scrollSelector: ".reflection-nook__summary", scrollOffset: -120 },
 ];

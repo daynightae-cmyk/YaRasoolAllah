@@ -1257,14 +1257,22 @@ export async function searchQuran(query: string): Promise<SearchResult[]> {
   return Promise.resolve(results);
 }
 
-export async function getDailyVerse(): Promise<DailyVerse> {
-  // Deterministic rotation over the full corpus by day of year.
-  const dayOfYear = Math.floor(
-    (Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) /
+/** Stable day-of-year key so the daily verse cache rotates at midnight. */
+export function dailyVerseDayKey(now: Date = new Date()): number {
+  return Math.floor(
+    (now.getTime() - new Date(now.getFullYear(), 0, 0).getTime()) /
       (1000 * 60 * 60 * 24),
   );
+}
+
+export async function getDailyVerse(): Promise<DailyVerse> {
+  // Deterministic rotation over the full corpus by day of year.
+  const dayOfYear = dailyVerseDayKey();
   const corpus = await getCorpus();
   const keys = Object.keys(corpus);
+  if (keys.length === 0) {
+    throw new Error("Quran corpus is empty; the daily verse cannot be selected");
+  }
   const selectedKey = keys[dayOfYear % keys.length];
   const [surah, ayah] = selectedKey.split(":").map(Number);
   const sample = sampleVerses[`${surah}-${ayah}`];

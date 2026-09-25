@@ -38,6 +38,7 @@ const cases = [
   { name: "hadith-390-rtl", path: "/hadith", width: 390, height: 844 },
   { name: "daily-1440-rtl", path: "/daily", width: 1440, height: 1000 },
   { name: "daily-390-rtl", path: "/daily", width: 390, height: 844 },
+  { name: "daily-verse-1440-rtl", path: "/daily-verse", width: 1440, height: 1000 },
   { name: "basirah-1440-rtl", path: "/basirah", width: 1440, height: 1000 },
   { name: "basirah-390-rtl", path: "/basirah", width: 390, height: 844 },
   { name: "library-1440-rtl", path: "/library", width: 1440, height: 1000 },
@@ -357,6 +358,26 @@ try {
         throw new Error(`${item.name} canonical shell failed: ${JSON.stringify(whoGeometry)}`);
       }
       diagnostics.geometry = whoGeometry;
+    }
+    if (item.path === "/daily-verse") {
+      await waitFor(session, 'document.querySelectorAll(\'[role="tab"]\').length >= 4', `${item.name} daily verse tabs`);
+      const honesty = await waitFor(session, `(() => {
+        const claim = document.querySelector('[data-honesty="no-reward-claim"]');
+        if (!claim) return null;
+        const bounds = claim.getBoundingClientRect().toJSON();
+        return {
+          viewport: innerWidth,
+          documentWidth: document.documentElement.scrollWidth,
+          bounds,
+          statesReward: (claim.textContent || "").includes("حسنة") || (claim.textContent || "").includes("بإذن الله"),
+          statesBoundary: (claim.textContent || "").includes("لا تذكر هذه الصفحة أجرًا أو ثوابًا محددًا"),
+          countLabel: (claim.textContent || "").includes("عدد مرات المشاركة")
+        };
+      })()`, "daily verse honesty card");
+      if (!honesty || honesty.statesReward || !honesty.statesBoundary || !honesty.countLabel || honesty.documentWidth > honesty.viewport + 1 || honesty.bounds.left < -1 || honesty.bounds.right > honesty.viewport + 1) {
+        throw new Error(`${item.name} daily verse reward honesty failed: ${JSON.stringify(honesty)}`);
+      }
+      diagnostics.dailyVerseHonesty = honesty;
     }
     if (["/hadith", "/daily", "/basirah"].includes(item.path)) {
       await waitFor(session, '(document.querySelector(".vg-shell main h1")?.textContent || "").trim().length > 0', `${item.name} supporting wing heading`);
