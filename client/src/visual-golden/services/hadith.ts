@@ -39,3 +39,39 @@ export function searchSamples(query: string, collectionId: string | "all"): Hadi
       sample.textEn.toLowerCase().includes(lowered),
   );
 }
+
+/**
+ * Build an honest share text for a development sample. The text always
+ * labels the record as a development sample under editorial review and
+ * never claims verification, full-corpus membership, or a complete isnad.
+ */
+export function buildHadithShareText(sample: HadithRecord, collectionNameAr: string): string {
+  const lines = [
+    `عينة تطويرية — ${collectionNameAr} · حديث رقم ${sample.hadithNumber}`,
+    `${sample.bookNameAr} · ${sample.chapterNameAr}`,
+    "",
+    sample.textAr,
+    "",
+    `الراوي المسجل: ${sample.narratorAr} (السلسلة الكاملة غير متوفرة كبنية بيانات)`,
+    `الدرجة: ${sample.gradeAr} · المصدر: ${sample.gradeSource} · المقيّم: ${sample.gradeAssessor ?? "غير مذكور في السجل"}`,
+    `المراجعة التحريرية: ${sample.editorialReviewStatus}`,
+    `المنشأ: ${sample.provenance}`,
+    "هذه عينة تطوير محلية قيد المراجعة — ليست متنًا إنتاجيًا ولا تغني عن مراجعة المصدر.",
+  ];
+  return lines.join("\n");
+}
+
+/**
+ * Build a relative deep link that reopens the same development sample.
+ * Only identifiers from the governed local registry are accepted; unknown
+ * ids produce the plain archive path so the UI never invents a record.
+ */
+export function buildHadithDeepLink(sampleId: string, collectionId: string): string {
+  const known = LOCAL_SAMPLES.some((sample) => sample.id === sampleId);
+  if (!known) return "/hadith";
+  const params = new URLSearchParams({ sample: sampleId });
+  if (collectionId !== "all" && COLLECTIONS.some((collection) => collection.id === collectionId)) {
+    params.set("collection", collectionId);
+  }
+  return `/hadith?${params.toString()}`;
+}

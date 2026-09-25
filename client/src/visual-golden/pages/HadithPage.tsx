@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Search, Bookmark, BookmarkCheck, ExternalLink, ShieldCheck, Database } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Search, Bookmark, BookmarkCheck, ExternalLink, ShieldCheck, Database, Copy, Link2, Check } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
@@ -9,10 +9,39 @@ import {
   COLLECTIONS,
   HADITH_COUNTS,
   LOCAL_SAMPLES,
+  buildHadithDeepLink,
+  buildHadithShareText,
   getCollection,
   searchSamples,
 } from "@/visual-golden/services/hadith";
 import styles from "./HadithPage.module.css";
+
+type CopyState = "idle" | "copied" | "error";
+
+async function copyTextToClipboard(text: string): Promise<boolean> {
+  try {
+    if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch {
+    // Fall through to the legacy textarea path below.
+  }
+  try {
+    const area = document.createElement("textarea");
+    area.value = text;
+    area.setAttribute("readonly", "");
+    area.style.position = "fixed";
+    area.style.opacity = "0";
+    document.body.appendChild(area);
+    area.select();
+    const ok = document.execCommand("copy");
+    document.body.removeChild(area);
+    return ok;
+  } catch {
+    return false;
+  }
+}
 
 const BOOKMARK_KEY = "hadith-sample-bookmarks-v1";
 
@@ -59,11 +88,25 @@ export function HadithPage() {
   const [collectionId, setCollectionId] = useState<string | "all">(initial.collectionId);
   const [activeId, setActiveId] = useState(initial.activeId);
   const [bookmarks, setBookmarks] = useState<string[]>(() => safeReadBookmarks());
+  const [matnCopy, setMatnCopy] = useState<CopyState>("idle");
+  const [linkCopy, setLinkCopy] = useState<CopyState>("idle");
 
   const results = useMemo(() => searchSamples(q, collectionId), [q, collectionId]);
   const active = results.find((sample) => sample.id === activeId) ?? results[0] ?? null;
   const activeCollection = active ? getCollection(active.collectionId) : null;
   const activeBookmarked = active ? bookmarks.includes(active.id) : false;
+
+  useEffect(() => {
+    if (!active) return;
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set("sample", active.id);
+      if (active.collectionId) url.searchParams.set("collection", active.collectionId);
+      window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
+    } catch {
+      // URL synchronization is a convenience; the archive must still work.
+    }
+  }, [active]);
 
   const toggleBookmark = () => {
     if (!active) return;
@@ -76,6 +119,26 @@ export function HadithPage() {
     } catch {
       // bookmark remains in-memory
     }
+  };
+
+  const copyMatn = async () => {
+    if (!active || !activeCollection) return;
+    setMatnCopy("idle");
+    const ok = await copyTextToClipboard(buildHadithShareText(active, activeCollection.nameAr));
+    setMatnCopy(ok ? "copied" : "error");
+  };
+
+  const copyLink = async () => {
+    if (!active) return;
+    setLinkCopy("idle");
+    let absolute = buildHadithDeepLink(active.id, active.collectionId);
+    try {
+      absolute = new URL(absolute, window.location.href).toString();
+    } catch {
+      // Keep the relative deep link if the absolute URL cannot be built.
+    }
+    const ok = await copyTextToClipboard(absolute);
+    setLinkCopy(ok ? "copied" : "error");
   };
 
   return (
@@ -189,6 +252,14 @@ export function HadithPage() {
                 <button type="button" className={activeBookmarked ? styles.on : ""} onClick={toggleBookmark}>
                   {activeBookmarked ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}{" "}
                   {activeBookmarked ? "محفوظ محليًا" : "حفظ محلي"}
+                </button>
+                <button type="button" onClick={copyMatn} aria-live="polite">
+                  {matnCopy === "copied" ? <Check size={14} /> : <Copy size={14} />}{" "}
+                  {matnCopy === "copied" ? "تم نسخ المتن" : matnCopy === "error" ? "تعذر النسخ" : "نسخ المتن"}
+                </button>
+                <button type="button" onClick={copyLink} aria-live="polite">
+                  {linkCopy === "copied" ? <Check size={14} /> : <Link2 size={14} />}{" "}
+                  {linkCopy === "copied" ? "تم نسخ الرابط" : linkCopy === "error" ? "تعذر نسخ الرابط" : "نسخ رابط السجل"}
                 </button>
                 <a href="https://dorar.net/hadith" target="_blank" rel="noopener noreferrer" className={styles.sourceLink}>
                   ابحث في الموسوعة الحديثية لدى الدرر السنية <ExternalLink size={14} aria-hidden="true" />
