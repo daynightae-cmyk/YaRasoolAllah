@@ -24,10 +24,19 @@ import {
 } from "@/services/quranService";
 import { getGovernanceRecord } from "@shared/source-registry";
 import { searchVerifiedQuran, type QuranSearchHit } from "@/visual-golden/services/quran-search";
+import {
+  getQuranTranslation,
+  type QuranTranslationLanguage,
+  type QuranTranslationResponse,
+} from "@/visual-golden/services/quran-translations";
 import styles from "./QuranPage.module.css";
 
 type SidebarTab = "surah" | "marks";
 type ReadingMode = "mushaf" | "study";
+type TranslationState =
+  | { state: "idle" | "loading" }
+  | { state: "error"; message: string }
+  | { state: "ready"; payload: QuranTranslationResponse };
 
 const BOOKMARK_KEY = "quran-bookmarks";
 const NOTE_KEY = "quran-notes-v1";
@@ -102,6 +111,8 @@ export function QuranPage() {
   const [showNote, setShowNote] = useState(false);
   const [copied, setCopied] = useState(false);
   const [readingMode, setReadingMode] = useState<ReadingMode>("mushaf");
+  const [translationLanguage, setTranslationLanguage] = useState<QuranTranslationLanguage>("en");
+  const [translationState, setTranslationState] = useState<TranslationState>({ state: "idle" });
   const [fontScale, setFontScale] = useState(() => safeReadReadingSettings().fontScale);
   const [lineHeight, setLineHeight] = useState(() => safeReadReadingSettings().lineHeight);
 
@@ -183,12 +194,42 @@ export function QuranPage() {
     document.getElementById(`quran-ayah-${active}-${ayah}`)?.scrollIntoView({ block: "center", behavior: "smooth" });
   }, [active, ayah, loading, verses]);
 
+  useEffect(() => {
+    if (readingMode !== "study") {
+      setTranslationState({ state: "idle" });
+      return;
+    }
+
+    const controller = new AbortController();
+    setTranslationState({ state: "loading" });
+    getQuranTranslation(active, translationLanguage, controller.signal)
+      .then((payload) => {
+        if (!controller.signal.aborted) setTranslationState({ state: "ready", payload });
+      })
+      .catch((error: unknown) => {
+        if (controller.signal.aborted) return;
+        setTranslationState({
+          state: "error",
+          message: error instanceof Error ? error.message : "تعذر تحميل الترجمة.",
+        });
+      });
+
+    return () => controller.abort();
+  }, [active, readingMode, translationLanguage]);
+
   useEffect(() => () => { searchRequest.current += 1; }, []);
 
   const currentChapter =
     chapters.find((chapter) => chapter.number === active) ?? null;
   const selectedVerse =
     verses.find((item) => item.ayah === ayah) ?? verses[0] ?? null;
+  const translationByAyah = useMemo(() => {
+    if (translationState.state !== "ready") return new Map<number, string>();
+    return new Map(translationState.payload.ayahs.map((item) => [item.ayah, item.text] as const));
+  }, [translationState]);
+  const selectedTranslation = selectedVerse
+    ? translationByAyah.get(selectedVerse.ayah) ?? null
+    : null;
 
   const filteredChapters = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -482,6 +523,29 @@ export function QuranPage() {
             <button type="button" role="tab" aria-selected={readingMode === "mushaf"} className={readingMode === "mushaf" ? styles.modeOn : ""} onClick={() => setReadingMode("mushaf")}>مصحف</button>
             <button type="button" role="tab" aria-selected={readingMode === "study"} className={readingMode === "study" ? styles.modeOn : ""} onClick={() => setReadingMode("study")}>دراسة</button>
           </div>
+          {readingMode === "study" ? (
+            <label className={styles.translationPicker}>
+              <span>ترجمة المعنى</span>
+              <select
+                value={translationLanguage}
+                onChange={(event) => setTranslationLanguage(event.target.value as QuranTranslationLanguage)}
+                aria-label="اختيار ترجمة القرآن"
+              >
+                <option value="en">English · Saheeh International</option>
+                <option value="fr">Français · Muhammad Hamidullah</option>
+                <option value="ur">اردو · فتح محمد جالندھری</option>
+              </select>
+              <small>
+                {translationState.state === "ready"
+                  ? `${translationState.payload.translator} · ${translationState.payload.source}`
+                  : translationState.state === "loading"
+                    ? "جارٍ تحميل الترجمة عبر الواجهة الداخلية…"
+                    : translationState.state === "error"
+                      ? translationState.message
+                      : "اختر وضع الدراسة لتحميل الترجمة."}
+              </small>
+            </label>
+          ) : null}
           <a className={styles.catalogJump} href="#quran-surah-nav">فهرس السور والبحث ↓</a>
 
           <div
@@ -531,9 +595,25 @@ export function QuranPage() {
             {readingMode === "study" && selectedVerse ? (
               <div className={styles.studyCard} aria-live="polite">
                 <strong>مادة الدراسة · الآية {selectedVerse.ayah}</strong>
-                {selectedVerse.translation ? <p><b>ترجمة:</b> {selectedVerse.translation}</p> : <p className={styles.pendingStudy}>لا توجد ترجمة إنتاجية موثقة مربوطة بهذا الموضع بعد.</p>}
+                {translationState.state === "loading" ? (
+                  <p className={styles.pendingStudy}>جارٍ تحميل ترجمة السورة…</p>
+                ) : translationState.state === "error" ? (
+                  <p className={styles.pendingStudy}>{translationState.message}</p>
+                ) : selectedTranslation && translationState.state === "ready" ? (
+                  <p
+                    className={styles.translationText}
+                    dir={translationState.payload.direction}
+                    lang={translationState.payload.language}
+                  >
+                    <b>ترجمة المعنى:</b> {selectedTranslation}
+                  </p>
+                ) : (
+                  <p className={styles.pendingStudy}>لا توجد ترجمة متاحة لهذا الموضع من المزوّد الآن.</p>
+                )}
                 {selectedVerse.tafsir ? <p><b>تفسير:</b> {selectedVerse.tafsir}</p> : <p className={styles.pendingStudy}>لا يوجد تفسير إنتاجي موثق مربوط بهذا الموضع بعد.</p>}
-                <small>النص العربي مستقل عن الترجمة والتفسير؛ لا تُعرض مادة عينة بوصفها corpus إنتاجيًا كاملًا.</small>
+                <small>
+                  النص العربي المحلي مستقل عن الترجمة والتفسير. الترجمة تُجلب عبر خادم المنصة مع الحفاظ على هوية الإصدار والمترجم.
+                </small>
               </div>
             ) : null}
 
@@ -639,7 +719,18 @@ export function QuranPage() {
 
             <h4>التفسير والترجمة</h4>
             <div className={styles.tafsirBox}>
-              {selectedVerse?.translation ? <p><strong>الترجمة:</strong> {selectedVerse.translation}</p> : <p>لا توجد ترجمة إنتاجية موثقة لهذا الموضع بعد.</p>}
+              {selectedTranslation && translationState.state === "ready" ? (
+                <p dir={translationState.payload.direction} lang={translationState.payload.language}>
+                  <strong>الترجمة:</strong> {selectedTranslation}
+                </p>
+              ) : translationState.state === "loading" ? (
+                <p>جارٍ تحميل ترجمة السورة…</p>
+              ) : (
+                <p>الترجمة غير متاحة من المزوّد لهذا الموضع حاليًا.</p>
+              )}
+              {translationState.state === "ready" ? (
+                <small>{translationState.payload.attribution} · {translationState.payload.edition}</small>
+              ) : null}
               {selectedVerse?.tafsir ? <p><strong>التفسير:</strong> {selectedVerse.tafsir}</p> : <p>لا يوجد تفسير إنتاجي موثق لهذا الموضع بعد.</p>}
               <Link href="/tafsir">فتح مساحة التفسير والتدبر</Link>
             </div>
@@ -668,8 +759,9 @@ export function QuranPage() {
                   : governance?.rights.decision ?? "غير متاحة"}
               </span>
               <small>
-                النص العربي يُعرض كما هو من الملف المكتسب دون تعديل، ولا يشمل
-                هذا الاعتماد الترجمات أو التفاسير أو التسجيلات الصوتية.
+                النص العربي يُعرض كما هو من الملف المكتسب دون تعديل. ترجمة وضع الدراسة
+                مستقلة عنه وتأتي عبر AlQuran Cloud مع اسم المترجم والإصدار؛ لا تُدمج
+                الترجمة في النص القرآني ولا تُعامل كتفسير.
               </small>
             </div>
           </aside>
