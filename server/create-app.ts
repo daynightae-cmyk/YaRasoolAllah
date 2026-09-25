@@ -3,6 +3,7 @@ import { registerMp3QuranCatalogRoutes } from "./mp3quran-catalog";
 import { registerQuranTranslationRoutes } from "./quran-translations";
 import { registerOpenItiReaderRoutes } from "./openiti-reader";
 import { registerOpenLibraryRoutes } from "./open-library";
+import { registerQuranEncTranslationRoutes } from "./quranenc-translations";
 import { assertRuntimeConfig } from "./env";
 import { errorHandler, requestLogging } from "./logging";
 import { registerRoutes } from "./routes";
@@ -32,6 +33,7 @@ export function createApiApp(): Express {
   registerOpenLibraryRoutes(app);
   registerMp3QuranCatalogRoutes(app);
   registerQuranTranslationRoutes(app);
+  registerQuranEncTranslationRoutes(app);
   registerOpenItiReaderRoutes(app);
   registerRoutes(app);
   app.use(errorHandler);
