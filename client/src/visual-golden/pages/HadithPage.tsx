@@ -12,11 +12,17 @@ import {
   buildHadithDeepLink,
   buildHadithShareText,
   getCollection,
+  getHadithCorpusStatus,
   searchSamples,
+  type HadithCorpusStatus,
 } from "@/visual-golden/services/hadith";
 import styles from "./HadithPage.module.css";
 
 type CopyState = "idle" | "copied" | "error";
+type CorpusState =
+  | { state: "loading" }
+  | { state: "ready"; payload: HadithCorpusStatus }
+  | { state: "error"; message: string };
 
 async function copyTextToClipboard(text: string): Promise<boolean> {
   try {
@@ -90,6 +96,7 @@ export function HadithPage() {
   const [bookmarks, setBookmarks] = useState<string[]>(() => safeReadBookmarks());
   const [matnCopy, setMatnCopy] = useState<CopyState>("idle");
   const [linkCopy, setLinkCopy] = useState<CopyState>("idle");
+  const [corpusState, setCorpusState] = useState<CorpusState>({ state: "loading" });
 
   const results = useMemo(() => searchSamples(q, collectionId), [q, collectionId]);
   const active = results.find((sample) => sample.id === activeId) ?? results[0] ?? null;
@@ -107,6 +114,22 @@ export function HadithPage() {
       // URL synchronization is a convenience; the archive must still work.
     }
   }, [active]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    getHadithCorpusStatus(controller.signal)
+      .then((payload) => {
+        if (!controller.signal.aborted) setCorpusState({ state: "ready", payload });
+      })
+      .catch((error: unknown) => {
+        if (controller.signal.aborted) return;
+        setCorpusState({
+          state: "error",
+          message: error instanceof Error ? error.message : "تعذر تحميل حالة مزودي الحديث.",
+        });
+      });
+    return () => controller.abort();
+  }, []);
 
   const toggleBookmark = () => {
     if (!active) return;
@@ -201,6 +224,46 @@ export function HadithPage() {
             </article>
           ))}
         </div>
+      </section>
+
+      <section className={styles.scopeSection}>
+        <article className={styles.scopePanel} data-visual="hadith-corpus-scope">
+          <SectionHead title="نطاق المحتوى الحالي" en="Corpus scope" />
+          {corpusState.state === "loading" ? (
+            <p className={styles.scopeStatus} role="status">جارٍ التحقق من سجلات مزودي الحديث...</p>
+          ) : corpusState.state === "error" ? (
+            <p className={styles.scopeStatus} role="alert">
+              تعذر تحميل حالة المزودين: {corpusState.message}. النطاق المحلي يظل {HADITH_COUNTS.localSamples} سجلات قيد المراجعة.
+            </p>
+          ) : (
+            <>
+              <p className={styles.scopeSummary}>
+                <strong>{corpusState.payload.localSampleCount}</strong> سجلات محلية · {" "}
+                <strong>{corpusState.payload.collectionCount}</strong> مصنفات ببليوغرافية · المتن الكامل غير متاح.
+              </p>
+              <p className={styles.scopeBlocker}>
+                حالة المتن الكامل: محجوبة حتى تتوفر بيانات الاعتماد، ومراجعة الحقوق، ومراجعة تحريرية.
+              </p>
+              <ul className={styles.providerList} aria-label="حالة مزودي الحديث">
+                {corpusState.payload.providers.map((provider) => (
+                  <li key={provider.providerId} data-provider-state={provider.integrationState}>
+                    <div>
+                      <strong>{provider.provider}</strong>
+                      <span>{provider.message}</span>
+                      <small>{provider.rightsState} · {provider.contentAvailability}</small>
+                    </div>
+                    <span className={styles.providerState}>
+                      {provider.integrationState === "credential_blocked" ? "محجوب: يحتاج بيانات اعتماد" : "مرجع خارجي فقط"}
+                    </span>
+                    <a href={provider.canonicalUrl} target="_blank" rel="noreferrer">
+                      فتح السجل <ExternalLink size={12} aria-hidden="true" />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </article>
       </section>
 
       <div className={styles.row}>
