@@ -1,3 +1,7 @@
+> **SUPERSEDED AS CURRENT TRUTH.** Counts, shells, and provider states in this file
+> were recorded against an older SHA. Use `docs/audit/CURRENT_PRODUCT_REALITY.md`
+> for live authority. This file remains as historical evidence only.
+
 # YA RASOOL ALLAH ﷺ (يا رسول الله) — COMPREHENSIVE FOUNDATION AUDIT REPORT
 
 **Document Identifier**: `docs/audit/YA_RASOOL_ALLAH_FOUNDATION_AUDIT.md`  
