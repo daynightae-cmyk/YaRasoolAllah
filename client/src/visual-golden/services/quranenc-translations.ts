@@ -1,30 +1,34 @@
-export type TranslationKey = "english_rwwad" | "urdu_junagarhi";
+export type QuranEncTranslationKey = "english_rwwad" | "urdu_junagarhi";
+export type TranslationKey = QuranEncTranslationKey;
 
-export interface TranslationEdition {
-  key: TranslationKey;
+export interface QuranEncTranslationEdition {
+  key: QuranEncTranslationKey;
   language: string;
   label: string;
   direction: "ltr" | "rtl";
   version: string;
 }
+export type TranslationEdition = QuranEncTranslationEdition;
 
-export interface TranslationVerse {
+export interface QuranEncTranslationVerse {
   sura: number;
   aya: number;
   translation: string;
   footnotes: unknown;
 }
+export type TranslationVerse = QuranEncTranslationVerse;
 
-export interface TranslationPayload {
+export interface QuranEncTranslationPayload {
   provider: "QuranEnc.com";
-  translation: TranslationEdition;
+  translation: QuranEncTranslationEdition;
   termsUrl: string;
-  verses: TranslationVerse[];
+  verses: QuranEncTranslationVerse[];
 }
+export type TranslationPayload = QuranEncTranslationPayload;
 
-const cache = new Map<string, Promise<TranslationPayload>>();
+const cache = new Map<string, Promise<QuranEncTranslationPayload>>();
 
-export const QURAN_TRANSLATION_EDITIONS: TranslationEdition[] = [
+export const QURANENC_TRANSLATION_EDITIONS: QuranEncTranslationEdition[] = [
   {
     key: "english_rwwad",
     language: "en",
@@ -41,10 +45,10 @@ export const QURAN_TRANSLATION_EDITIONS: TranslationEdition[] = [
   },
 ];
 
-export function getQuranTranslation(
+export function getQuranEncTranslation(
   sura: number,
-  translation: TranslationKey,
-): Promise<TranslationPayload> {
+  translation: QuranEncTranslationKey,
+): Promise<QuranEncTranslationPayload> {
   const key = `${translation}:${sura}`;
   const existing = cache.get(key);
   if (existing) return existing;
@@ -57,7 +61,7 @@ export function getQuranTranslation(
       const body = await response.json().catch(() => ({})) as { message?: string };
       throw new Error(body.message || `HTTP ${response.status}`);
     }
-    return response.json() as Promise<TranslationPayload>;
+    return response.json() as Promise<QuranEncTranslationPayload>;
   }).catch((error) => {
     cache.delete(key);
     throw error;
@@ -66,3 +70,6 @@ export function getQuranTranslation(
   cache.set(key, request);
   return request;
 }
+
+export const QURAN_TRANSLATION_EDITIONS = QURANENC_TRANSLATION_EDITIONS;
+export const getQuranTranslation = getQuranEncTranslation;
