@@ -33,6 +33,7 @@ export function createApiApp(): Express {
   registerOpenLibraryRoutes(app);
   registerMp3QuranCatalogRoutes(app);
   registerQuranTranslationRoutes(app);
+  registerQuranTafsirRoutes(app);
   registerOpenItiReaderRoutes(app);
   registerRoutes(app);
   app.use(errorHandler);
