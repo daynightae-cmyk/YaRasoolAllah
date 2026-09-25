@@ -220,6 +220,32 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
               ))}
             </ul>
           )}
+          {book.externalResources.length > 0 ? (
+            <div style={{ marginTop: "0.9rem" }}>
+              <strong>موارد خارجية موثقة ({book.externalResources.length})</strong>
+              <p className="muted" style={{ fontSize: "0.8rem", lineHeight: 1.9 }}>
+                ملفات وصفحات تم التحقق من وجودها لدى المصدر. الحقوق غير محسومة:
+                تُفتح صفحة العنصر لدى المصدر فقط، ولا يوجد تنزيل ولا قراءة داخلية من هذه الموارد.
+              </p>
+              <ul>
+                {book.externalResources.map((resource) => (
+                  <li key={resource.resourceId}>
+                    <strong>{resource.provider} · {resource.format}</strong>
+                    <div className="muted">{resource.editionStatement}</div>
+                    <div className="muted">
+                      الحقوق: {resource.rightsState === "RIGHTS_UNCLEAR" ? "غير محسومة" : resource.rightsState === "OPEN_LICENSE" ? "ترخيص مفتوح" : "غير معلومة"}
+                      {resource.fileSize ? ` · ${(resource.fileSize / 1048576).toFixed(1)} م.ب` : ""}
+                    </div>
+                    <div className={styles.versionLinks}>
+                      <a href={resource.itemUrl} target="_blank" rel="noreferrer" className="btn-outline">
+                        <ExternalLink size={12} /> صفحة العنصر لدى المصدر
+                      </a>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
         </details>
       </div>
     </article>
