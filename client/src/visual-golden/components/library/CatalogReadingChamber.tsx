@@ -90,9 +90,7 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
   const pdfAvailable = canReadPdfInside(work);
   const iiifAvailable = canUseIiifInside(work);
   const downloadAvailable = canDownloadInside(work);
-  const [mode, setMode] = useState<"details" | "text" | "pdf" | "iiif">(
-    textAvailable ? "text" : pdfAvailable ? "pdf" : iiifAvailable ? "iiif" : "details",
-  );
+  const [mode, setMode] = useState<"details" | "text" | "pdf" | "iiif">("details");
   const [reader, setReader] = useState<ReaderState>({ state: "idle" });
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
@@ -163,7 +161,7 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
 
   const copy = lang === "ar" ? {
     details: "الكتاب",
-    text: "اقرأ",
+    text: "قراءة",
     pdf: "PDF",
     iiif: "المخطوط/الصور",
     download: "تحميل",
@@ -218,22 +216,22 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
           </button>
         </header>
 
-        <nav className={styles.tabs} aria-label={lang === "ar" ? "أوضاع الكتاب" : "Book modes"}>
-          <button type="button" className={mode === "details" ? styles.on : ""} onClick={() => setMode("details")}>
+        <nav className={styles.tabs} role="tablist" aria-label={lang === "ar" ? "أوضاع الكتاب" : "Book modes"}>
+          <button type="button" role="tab" aria-selected={mode === "details"} className={mode === "details" ? styles.on : ""} onClick={() => setMode("details")}>
             <FileText size={14} /> {copy.details}
           </button>
           {textAvailable ? (
-            <button type="button" className={mode === "text" ? styles.on : ""} onClick={() => setMode("text")}>
+            <button type="button" role="tab" aria-selected={mode === "text"} className={mode === "text" ? styles.on : ""} onClick={() => setMode("text")}>
               <BookOpen size={14} /> {copy.text}
             </button>
           ) : null}
           {pdfAvailable ? (
-            <button type="button" className={mode === "pdf" ? styles.on : ""} onClick={() => setMode("pdf")}>
+            <button type="button" role="tab" aria-selected={mode === "pdf"} className={mode === "pdf" ? styles.on : ""} onClick={() => setMode("pdf")}>
               <FileText size={14} /> {copy.pdf}
             </button>
           ) : null}
           {iiifAvailable ? (
-            <button type="button" className={mode === "iiif" ? styles.on : ""} onClick={() => setMode("iiif")}>
+            <button type="button" role="tab" aria-selected={mode === "iiif"} className={mode === "iiif" ? styles.on : ""} onClick={() => setMode("iiif")}>
               <BookOpen size={14} /> {copy.iiif}
             </button>
           ) : null}
@@ -285,7 +283,7 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
                     <span>{Math.round(fontScale * 100)}%</span>
                     <button type="button" onClick={() => setFontScale((value) => Math.min(1.4, value + .05))}><Plus size={14} /></button>
                   </div>
-                  <article className={styles.paper} dir="rtl" style={{ fontSize: `calc(1.08rem * ${fontScale})` }}>
+                  <div className={styles.readerIdentity}><strong>قراءة مباشرة · OpenITI</strong><span>الترقيم هنا مقاطع رقمية، وليس أرقام صفحات طبعة.</span></div>\n                  <article className={styles.paper} dir="rtl" style={{ fontSize: `calc(1.08rem * ${fontScale})` }}>
                     {pageSegments.map((segment, index) => {
                       const heading = segment.startsWith("### ");
                       return heading
