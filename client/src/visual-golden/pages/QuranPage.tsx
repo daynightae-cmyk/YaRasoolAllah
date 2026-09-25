@@ -12,6 +12,7 @@ import {
   Headphones,
   ShieldCheck,
   Search,
+  Languages,
 } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
