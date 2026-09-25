@@ -1,9 +1,9 @@
 import express, { type Express } from "express";
-import { registerMp3QuranCatalogRoutes } from "./mp3quran-catalog";
-import { registerOpenItiReaderRoutes } from "./openiti-reader";
-import { registerOpenLibraryRoutes } from "./open-library";
-import { registerQuranTranslationRoutes } from "./quran-translations";
-import { errorHandler, requestLogging } from "./logging";
+import { registerMp3QuranCatalogRoutes } from "./mp3quran-catalog.js";
+import { registerOpenItiReaderRoutes } from "./openiti-reader.js";
+import { registerOpenLibraryRoutes } from "./open-library.js";
+import { registerQuranTranslationRoutes } from "./quran-translations.js";
+import { errorHandler, requestLogging } from "./logging.js";
 
 function publicContentHeaders(
   req: express.Request,
