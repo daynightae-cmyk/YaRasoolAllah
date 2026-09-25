@@ -27,14 +27,13 @@ import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 import type { RightsDecision } from "@shared/source-governance";
+import {
+  EVIDENCE_STATUSES,
+  RIGHTS_DECISION_LABELS,
+  type EvidenceStatus,
+} from "@shared/evidence-contract";
 
-export type EditorialStatus =
-  | "verified"
-  | "scholarly_consensus"
-  | "multiple_sourced"
-  | "historically_approximate"
-  | "disputed"
-  | "editorial_review_pending";
+export type EditorialStatus = EvidenceStatus;
 
 export type HadithGradeType =
   | "sahih"
@@ -102,60 +101,47 @@ export interface SourceDrawerProps {
   viewMode?: "seerah" | "hadith" | "quran" | "general";
 }
 
-const STATUS_CONFIG: Record<
-  EditorialStatus,
-  {
-    labelAr: string;
-    labelEn: string;
-    dotColor: string;
-    descriptionAr: string;
-  }
+/**
+ * Presentation only (pip colour + the scholarly explanation). The status words
+ * themselves live once in `@shared/evidence-contract`, so this drawer can no
+ * longer drift away from the other evidence surfaces.
+ */
+const STATUS_PRESENTATION: Record<
+  EvidenceStatus,
+  { dotColor: string; descriptionAr: string }
 > = {
   verified: {
-    labelAr: "توثيق معتمد ومحقق",
-    labelEn: "Directly Sourced & Verified",
     dotColor: "bg-emerald-500",
     descriptionAr: "مروي بأسانيد صحيحة مثبتة في المصنفات الأصلية المعتمدة بإجماع المحدثين والمحققين.",
   },
   scholarly_consensus: {
-    labelAr: "إجماع الأئمة والمحققين",
-    labelEn: "Scholarly Consensus",
     dotColor: "bg-teal-500",
     descriptionAr: "ثابت بإجماع أئمة الصنعة الحديثية والتاريخية ونقلته الأمة بالقبول المتواتر.",
   },
   multiple_sourced: {
-    labelAr: "متعدد الروايات والشواهد",
-    labelEn: "Multiple Corroborated Reports",
     dotColor: "bg-cyan-500",
     descriptionAr: "ورد من عدة طرق متضافرة يعضد بعضها بعضاً وفق مناهج الاستدلال والترجيح المعتمدة.",
   },
   historically_approximate: {
-    labelAr: "تقريبي تاريخياً وجغرافياً",
-    labelEn: "Historically Approximate",
     dotColor: "bg-amber-500",
     descriptionAr: "موقع أو تسلسل تاريخي مقارب ومستقرأ من كتب المغازي والسير، مع وجود هامش تقريبي مشروع.",
   },
   disputed: {
-    labelAr: "محل خلاف علمي مدوّن",
-    labelEn: "Scholarly Divergence",
     dotColor: "bg-rose-500",
     descriptionAr: "تعددت فيه أقوال أئمة السير أو أهل الحديث، وأثبت هذا الخلاف التزاماً بالأمانة العلمية.",
   },
   editorial_review_pending: {
-    labelAr: "قيد المراجعة التحريرية",
-    labelEn: "Editorial Review Pending",
     dotColor: "bg-slate-400",
     descriptionAr: "بيانات هذا السجل لم تستكمل مراجعتها التحريرية أو مطابقتها بمورد موثق.",
   },
-};
-
-const RIGHTS_LABELS: Record<RightsDecision, string> = {
-  cleared: "مسموح وفق السجل الحالي",
-  api_only: "استخدام عبر API فقط",
-  reference_only: "فهرسة ورابط خارجي فقط",
-  development_only: "عينة تطوير فقط",
-  needs_review: "مراجعة الحقوق مطلوبة",
-  blocked: "الاستخدام محظور",
+  rights_review_pending: {
+    dotColor: "bg-orange-400",
+    descriptionAr: "الحقوق لم تُحسم بعد في سجل الحقوق، فلا يُعرض النص على أنه مملوك أو مسموح بنشره.",
+  },
+  blocked: {
+    dotColor: "bg-red-600",
+    descriptionAr: "محظور في السجل الحالي؛ لا يُعرض ولا يُlinking ولا يُنسخ حتى تغيّر قرار السجل صراحةً.",
+  },
 };
 
 export default function SourceDrawer({
@@ -188,7 +174,9 @@ export default function SourceDrawer({
   const arabicText = source.textAr || source.originalText || "";
   const englishText = source.textEn || source.translationExcerpt;
   const rawStatus = source.status ?? "editorial_review_pending";
-  const statusInfo = STATUS_CONFIG[rawStatus] ?? STATUS_CONFIG.editorial_review_pending;
+  const statusInfo = EVIDENCE_STATUSES[rawStatus] ?? EVIDENCE_STATUSES.editorial_review_pending;
+  const statusPresentation =
+    STATUS_PRESENTATION[rawStatus] ?? STATUS_PRESENTATION.editorial_review_pending;
   const grade = source.hadithGrade || source.grade;
 
   // Generate standardized academic citation
@@ -264,7 +252,7 @@ export default function SourceDrawer({
           <div className="flex items-center justify-between gap-3 mb-2">
             {/* Zero-Pill Status Indicator: Clean text with subtle dot */}
             <div className="flex items-center gap-2 text-xs font-cairo">
-              <span className={cn("w-2 h-2 rounded-full shrink-0", statusInfo.dotColor)} />
+              <span className={cn("w-2 h-2 rounded-full shrink-0", statusPresentation.dotColor)} />
               <span className="font-bold text-foreground">{statusInfo.labelAr}</span>
               <span className="text-muted-foreground">·</span>
               <span className="font-mono text-muted-foreground text-[11px]">
@@ -482,7 +470,8 @@ export default function SourceDrawer({
                 <div className="space-y-0.5 sm:col-span-2 border-t pt-2 mt-1">
                   <span className="text-[11px] text-muted-foreground block">قرار الحقوق ونطاق الاستخدام:</span>
                   <span className="font-semibold text-foreground block">
-                    {RIGHTS_LABELS[source.rightsDecision]}
+                    {RIGHTS_DECISION_LABELS[source.rightsDecision]?.labelAr ??
+                      RIGHTS_DECISION_LABELS.needs_review.labelAr}
                     {source.allowedUsageLabel ? ` · ${source.allowedUsageLabel}` : ""}
                   </span>
                   {source.rightsCheckedAt && (
@@ -504,7 +493,7 @@ export default function SourceDrawer({
               <span>حالة السجل وحدود الاعتماد</span>
             </div>
             <p className="text-muted-foreground leading-relaxed">
-              {statusInfo.descriptionAr} لا تعني فهرسة المورد أن نصه أو طبعته أو حق إعادة توزيعه أصبح معتمدًا.
+              {statusPresentation.descriptionAr} لا تعني فهرسة المورد أن نصه أو طبعته أو حق إعادة توزيعه أصبح معتمدًا.
             </p>
 
             {(source.reviewNote || source.uncertaintyNote) && (

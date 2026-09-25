@@ -10,6 +10,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, BookOpen, ExternalLink, Bookmark, Share2, AlertCircle } from "lucide-react";
 import type { RightsDecision } from "@shared/source-governance";
+import {
+  EVIDENCE_STATUSES,
+  EVIDENCE_UNREGISTERED_LABEL,
+  RIGHTS_DECISION_LABELS,
+  type EvidenceStatus,
+} from "@shared/evidence-contract";
 
 export interface EvidenceSource {
   title: string;
@@ -38,44 +44,15 @@ interface EvidenceDrawerProps {
   claimContext?: string;
 }
 
-const STATUS_CONFIG: Record<
-  EvidenceSource["status"],
-  { labelAr: string; labelEn: string; variant: "default" | "secondary" | "outline" | "destructive" }
-> = {
-  verified: {
-    labelAr: "توثيق معتمد",
-    labelEn: "Directly Sourced & Verified",
-    variant: "default",
-  },
-  multiple_sourced: {
-    labelAr: "روايات متعددة متطابقة",
-    labelEn: "Multiple Sourced Reports",
-    variant: "secondary",
-  },
-  historically_approximate: {
-    labelAr: "تقريبي تاريخياً / جغرافيًا",
-    labelEn: "Historically Approximate",
-    variant: "outline",
-  },
-  disputed: {
-    labelAr: "محل خلاف بين المؤرخين",
-    labelEn: "Disputed Among Sources",
-    variant: "outline",
-  },
-  editorial_review_pending: {
-    labelAr: "قيد المراجعة التحريرية",
-    labelEn: "Editorial Review Pending",
-    variant: "destructive",
-  },
-};
-
-const RIGHTS_LABELS: Record<RightsDecision, string> = {
-  cleared: "مسموح وفق السجل الحالي",
-  api_only: "استخدام عبر API فقط",
-  reference_only: "فهرسة ورابط خارجي فقط",
-  development_only: "عينة تطوير فقط",
-  needs_review: "مراجعة الحقوق مطلوبة",
-  blocked: "الاستخدام محظور",
+const STATUS_VARIANT: Record<EvidenceStatus, "default" | "secondary" | "outline" | "destructive"> = {
+  verified: "default",
+  scholarly_consensus: "default",
+  multiple_sourced: "secondary",
+  historically_approximate: "outline",
+  disputed: "outline",
+  editorial_review_pending: "destructive",
+  rights_review_pending: "destructive",
+  blocked: "destructive",
 };
 
 export default function EvidenceDrawer({
@@ -86,15 +63,15 @@ export default function EvidenceDrawer({
 }: EvidenceDrawerProps) {
   if (!evidence) return null;
 
-  const status =
-    STATUS_CONFIG[evidence.status] ?? STATUS_CONFIG.editorial_review_pending;
+  const status = EVIDENCE_STATUSES[evidence.status] ?? EVIDENCE_STATUSES.editorial_review_pending;
+  const variant = STATUS_VARIANT[evidence.status] ?? STATUS_VARIANT.editorial_review_pending;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl bg-white dark:bg-slate-900 border border-amber-900/20 dark:border-amber-500/20 shadow-2xl p-6 rounded-2xl">
         <DialogHeader className="text-right space-y-3">
           <div className="flex items-center justify-between">
-            <Badge variant={status.variant} className="px-3 py-1 text-xs font-tajawal">
+            <Badge variant={variant} className="px-3 py-1 text-xs font-tajawal">
               <ShieldCheck className="w-3.5 h-3.5 ml-1.5 inline" />
               {status.labelAr}
             </Badge>
@@ -179,7 +156,9 @@ export default function EvidenceDrawer({
 
           {/* Provenance */}
           <div className="text-[11px] text-muted-foreground font-mono flex items-center justify-between pt-2 border-t">
-            <span>سجل المصدر: {evidence.provenanceDataset || "غير مسجل"}</span>
+            <span>
+              سجل المصدر: {evidence.provenanceDataset ?? EVIDENCE_UNREGISTERED_LABEL}
+            </span>
             <span className="text-emerald-600 dark:text-emerald-400">خالٍ من التجسيد والتمثيل</span>
           </div>
 
@@ -194,7 +173,10 @@ export default function EvidenceDrawer({
               {evidence.rightsDecision && (
                 <p>
                   <span className="text-muted-foreground">قرار الحقوق: </span>
-                  <span className="font-semibold">{RIGHTS_LABELS[evidence.rightsDecision]}</span>
+                  <span className="font-semibold">
+                    {RIGHTS_DECISION_LABELS[evidence.rightsDecision]?.labelAr ??
+                      RIGHTS_DECISION_LABELS.needs_review.labelAr}
+                  </span>
                   {evidence.allowedUsageLabel ? ` · ${evidence.allowedUsageLabel}` : ""}
                 </p>
               )}
