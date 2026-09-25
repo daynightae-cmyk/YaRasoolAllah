@@ -206,18 +206,20 @@ try {
       await waitFor(session, 'document.querySelectorAll(\'[id^="quran-ayah-1-"]\').length === 7', `${item.name} verified verses`);
       const quranGeometry = await evaluate(session, `(() => {
         const reader = document.querySelector('section[aria-label="مصحف القراءة"]');
+        const catalog = document.getElementById("quran-surah-nav");
         const bounds = reader?.getBoundingClientRect().toJSON();
         return {
           viewport: innerWidth,
           documentWidth: document.documentElement.scrollWidth,
           reader: bounds,
+          catalogTop: catalog?.getBoundingClientRect().top,
           verseCount: reader?.querySelectorAll('button[id^="quran-ayah-1-"]').length,
           search: Boolean(document.getElementById("quran-verse-search")),
           theme: document.querySelector(".vg-shell")?.getAttribute("data-theme"),
           lang: document.querySelector(".vg-shell")?.getAttribute("data-lang")
         };
       })()`);
-      if (!quranGeometry.reader || quranGeometry.reader.left < -1 || quranGeometry.reader.right > quranGeometry.viewport + 1 || quranGeometry.documentWidth > quranGeometry.viewport + 1 || quranGeometry.verseCount !== 7 || !quranGeometry.search || quranGeometry.theme !== (item.theme ?? "dark") || quranGeometry.lang !== (item.lang ?? "ar")) {
+      if (!quranGeometry.reader || quranGeometry.reader.left < -1 || quranGeometry.reader.right > quranGeometry.viewport + 1 || quranGeometry.documentWidth > quranGeometry.viewport + 1 || quranGeometry.verseCount !== 7 || !quranGeometry.search || quranGeometry.theme !== (item.theme ?? "dark") || quranGeometry.lang !== (item.lang ?? "ar") || (item.width <= 1100 && !(quranGeometry.reader.top < quranGeometry.catalogTop))) {
         throw new Error(`${item.name} Quran reader failed: ${JSON.stringify(quranGeometry)}`);
       }
       diagnostics.geometry = quranGeometry;

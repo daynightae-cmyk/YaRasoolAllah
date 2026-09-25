@@ -325,7 +325,7 @@ export function QuranPage() {
 
       <div className={styles.workspace}>
         {focus ? null : (
-          <aside className={styles.surahNav} aria-label="فهرس القرآن">
+          <aside id="quran-surah-nav" className={styles.surahNav} aria-label="فهرس القرآن">
             <div className={styles.tabs}>
               <button
                 type="button"
@@ -439,10 +439,11 @@ export function QuranPage() {
                 )}
               </div>
             )}
+            <a className={styles.readerJump} href="#quran-reader">العودة إلى المصحف ↑</a>
           </aside>
         )}
 
-        <section className={styles.reader} aria-label="مصحف القراءة">
+        <section id="quran-reader" className={styles.reader} aria-label="مصحف القراءة">
           <div className={styles.sheetHead}>
             <span>
               {currentChapter
@@ -460,6 +461,7 @@ export function QuranPage() {
               {currentChapter ? `${currentChapter.ayahCount} آية` : "—"}
             </span>
           </div>
+          <a className={styles.catalogJump} href="#quran-surah-nav">فهرس السور والبحث ↓</a>
 
           <div
             className={`${styles.sheet} ${lamp ? styles.lampOn : ""}`}
