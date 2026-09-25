@@ -1195,12 +1195,13 @@ https://yarasoolallah.org
                           </span>
                         </div>
                         <h4 className="font-amiri font-semibold text-purple-700 dark:text-purple-400">
-                          المفتي المبين AI
+                          المساعد الذكي
                         </h4>
                       </div>
                       <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                        عند الضغط على "استفسار" في الآية اليومية، يجيب المفتي
-                        المبين بالذكاء الاصطناعي
+                        مساعد تعليمي يعرض المادة المسجّلة في هذا التطبيق فقط، وليس مفتياً
+                        ولا مصدرًا معتمدًا. استفسره عن الآية اليومية ليعرض ما هو مسجَّل
+                        لا حكمًا شرعيًا.
                       </p>
 
                       <div className="space-y-3">
@@ -1278,7 +1279,7 @@ https://yarasoolallah.org
                       <span className="material-symbols-outlined mr-2">
                         chat
                       </span>
-                      تجربة المفتي المبين الآن
+                      تجربة المساعد الذكي الآن
                     </Button>
                   </CardContent>
                 </Card>
