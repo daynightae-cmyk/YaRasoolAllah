@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Link, useRoute } from "wouter";
-import InstitutionShell from "@/components/Institution/InstitutionShell";
 import SourceDrawer, { SourceProvenanceItem } from "@/components/common/SourceDrawer";
 import LearningDepthSelector, { useLearningDepth } from "@/components/Institution/LearningDepthSelector";
 import { WHO_IS_MUHAMMAD_CHAPTERS, HumanityChapter } from "@/data/whoIsMuhammadData";
@@ -47,7 +46,7 @@ export default function WhoIsMuhammadPage({ defaultChapterId }: { defaultChapter
       : null;
 
   return (
-    <InstitutionShell activeWing="prophetic-seerah">
+    <>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10 text-right">
         {unknownChapterId && (
           <div
@@ -309,6 +308,6 @@ export default function WhoIsMuhammadPage({ defaultChapterId }: { defaultChapter
         source={selectedEvidence}
         viewMode="seerah"
       />
-    </InstitutionShell>
+    </>
   );
 }
