@@ -170,6 +170,7 @@ try {
         const hero = shell?.querySelector("main section");
         const copy = hero?.querySelector("h1")?.parentElement;
         const form = hero?.querySelector("form");
+        const wings = [...shell.querySelectorAll("main nav[aria-label] a")];
         const rect = (element) => element?.getBoundingClientRect();
         return {
           direction: shell?.getAttribute("dir"),
@@ -180,7 +181,8 @@ try {
           header: rect(header),
           search: rect(search),
           copy: rect(copy),
-          form: rect(form)
+          form: rect(form),
+          wings: wings.map((wing) => ({ href: wing.getAttribute("href"), ...rect(wing).toJSON() }))
         };
       })()`);
       const expectedLang = item.lang ?? "ar";
@@ -189,6 +191,9 @@ try {
       }
       if (geometry.documentWidth > geometry.viewport + 1 || geometry.search?.width < 32 || geometry.search?.left < -1 || geometry.search?.right > geometry.viewport + 1 || geometry.form?.left < -1 || geometry.form?.right > geometry.viewport + 1 || geometry.copy?.bottom > geometry.form?.top + 1) {
         throw new Error(`${item.name} clipped or overlapping shell: ${JSON.stringify(geometry)}`);
+      }
+      if (geometry.wings.length !== 8 || geometry.wings.some((wing) => wing.width < 80 || wing.left < -1 || wing.right > geometry.viewport + 1)) {
+        throw new Error(`${item.name} knowledge wings missing or clipped: ${JSON.stringify(geometry.wings)}`);
       }
       diagnostics.geometry = geometry;
     }

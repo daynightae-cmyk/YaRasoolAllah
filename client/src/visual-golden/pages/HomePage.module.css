@@ -126,11 +126,39 @@
   flex-wrap: wrap;
   margin-bottom: 0.35rem;
 }
+.wingEyebrow {
+  margin: 0 0 0.25rem;
+  color: var(--gold-300);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+}
 
 .gateGrid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0.85rem;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-auto-rows: minmax(180px, auto);
+  gap: 4px;
+  padding: 4px;
+  background: rgba(212, 160, 23, 0.18);
+  border: 1px solid rgba(212, 160, 23, 0.34);
+}
+.gateGrid .gateCard {
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+}
+.gateGrid .gateCard:first-child {
+  grid-column: span 6;
+  grid-row: span 2;
+}
+.gateGrid .gateCard:nth-child(n + 2):nth-child(-n + 5) {
+  grid-column: span 3;
+}
+.gateGrid .gateCard:nth-child(n + 6) {
+  grid-column: span 4;
+}
+.gateGrid .gateCard:first-child .gateBody h3 {
+  font-size: clamp(1.45rem, 2.8vw, 2.25rem);
 }
 .gateCard {
   position: relative;
@@ -185,20 +213,36 @@
   flex-direction: column;
   gap: 0.12rem;
 }
+.gateIndex {
+  color: var(--gold-300);
+  font: 600 0.64rem var(--font-latin);
+  letter-spacing: 0.1em;
+}
 .gateBody h3 {
   font-size: 1rem;
   color: var(--ivory-50);
   margin: 0;
 }
-.gateBody span {
+.gateSecondary {
   font-size: 0.66rem;
-  color: var(--text-muted);
+  color: var(--ivory-200);
   font-family: var(--font-latin);
 }
 .gateBody p {
   font-size: 0.75rem;
   color: var(--text-secondary);
   margin: 0.15rem 0 0.45rem;
+}
+.gatePreview {
+  align-self: flex-start;
+  border-top: 1px solid rgba(232, 197, 71, 0.45);
+  padding-top: 0.35rem;
+  color: var(--gold-300);
+  font-size: 0.68rem;
+  line-height: 1.5;
+}
+.gateCard:dir(ltr) .gateGo {
+  transform: rotate(180deg);
 }
 .gateGo {
   width: 28px;
@@ -405,7 +449,15 @@
 
 @media (max-width: 1180px) {
   .gateGrid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .gateGrid .gateCard:first-child {
+    grid-column: span 6;
+    grid-row: auto;
+    min-height: 270px;
+  }
+  .gateGrid .gateCard:nth-child(n + 2) {
+    grid-column: span 3;
   }
   .facts {
     grid-template-columns: repeat(3, 1fr);
@@ -414,9 +466,29 @@
     grid-template-columns: 1fr;
   }
 }
+@media (max-width: 760px) {
+  .gateGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .gateGrid .gateCard:first-child {
+    grid-column: span 2;
+  }
+  .gateGrid .gateCard:nth-child(n + 2) {
+    grid-column: span 1;
+    min-height: 210px;
+  }
+}
 @media (max-width: 700px) {
   .gateGrid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .gateGrid .gateCard:first-child,
+  .gateGrid .gateCard:nth-child(n + 2) {
+    grid-column: span 1;
+    min-height: 205px;
+  }
+  .gateGrid .gateCard:first-child {
+    min-height: 245px;
   }
   .heroCopy {
     padding: 1.5rem 1rem 1.25rem;
