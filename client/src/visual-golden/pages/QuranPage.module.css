@@ -372,6 +372,47 @@
   white-space: nowrap;
   background: rgba(4, 28, 24, 0.5);
 }
+.reciterSelect {
+  width: min(100%, 420px);
+  margin-top: 0.22rem;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid rgba(212, 160, 23, 0.28);
+  border-radius: 8px;
+  color: var(--ivory-100);
+  background: rgba(3, 29, 25, 0.92);
+  font-size: 0.72rem;
+}
+.inlineAudioControls {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+.audioPlay {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  border: 1px solid rgba(212, 160, 23, 0.4);
+  border-radius: 50%;
+  color: #082a23;
+  background: var(--gold-300);
+}
+.audioPlay:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+.inlineVolume {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--ivory-200);
+}
+.inlineVolume input {
+  width: 72px;
+  accent-color: var(--gold-300);
+}
 .play {
   width: 40px;
   height: 40px;

@@ -10,8 +10,11 @@ import {
   ChevronLeft,
   StickyNote,
   Headphones,
+  Pause,
+  Play,
   ShieldCheck,
   Search,
+  Volume2,
 } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
@@ -29,6 +32,11 @@ import {
   type QuranTranslationLanguage,
   type QuranTranslationResponse,
 } from "@/visual-golden/services/quran-translations";
+import {
+  getQuranRecitations,
+  type QuranRecitationPayload,
+  type QuranReciterStream,
+} from "@/visual-golden/services/quran-recitation";
 import styles from "./QuranPage.module.css";
 
 type SidebarTab = "surah" | "marks";
@@ -37,6 +45,10 @@ type TranslationState =
   | { state: "idle" | "loading" }
   | { state: "error"; message: string }
   | { state: "ready"; payload: QuranTranslationResponse };
+type RecitationState =
+  | { state: "idle" | "loading" }
+  | { state: "error"; message: string }
+  | { state: "ready"; payload: QuranRecitationPayload };
 
 const BOOKMARK_KEY = "quran-bookmarks";
 const NOTE_KEY = "quran-notes-v1";
@@ -113,6 +125,11 @@ export function QuranPage() {
   const [readingMode, setReadingMode] = useState<ReadingMode>("mushaf");
   const [translationLanguage, setTranslationLanguage] = useState<QuranTranslationLanguage>("en");
   const [translationState, setTranslationState] = useState<TranslationState>({ state: "idle" });
+  const [recitationState, setRecitationState] = useState<RecitationState>({ state: "idle" });
+  const [selectedReciterKey, setSelectedReciterKey] = useState<string | null>(null);
+  const [audioPlaying, setAudioPlaying] = useState(false);
+  const [audioVolume, setAudioVolume] = useState(0.78);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const [fontScale, setFontScale] = useState(() => safeReadReadingSettings().fontScale);
   const [lineHeight, setLineHeight] = useState(() => safeReadReadingSettings().lineHeight);
 
@@ -217,6 +234,32 @@ export function QuranPage() {
     return () => controller.abort();
   }, [active, readingMode, translationLanguage]);
 
+  useEffect(() => {
+    const controller = new AbortController();
+    setRecitationState({ state: "loading" });
+    setSelectedReciterKey(null);
+    setAudioPlaying(false);
+    getQuranRecitations(active, controller.signal)
+      .then((payload) => {
+        if (controller.signal.aborted) return;
+        setRecitationState({ state: "ready", payload });
+        const first = payload.reciters[0];
+        setSelectedReciterKey(first ? `${first.id}:${first.moshafId}` : null);
+      })
+      .catch((error: unknown) => {
+        if (controller.signal.aborted) return;
+        setRecitationState({
+          state: "error",
+          message: error instanceof Error ? error.message : "تعذر تحميل تلاوات السورة.",
+        });
+      });
+    return () => controller.abort();
+  }, [active]);
+
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.volume = audioVolume;
+  }, [audioVolume]);
+
   useEffect(() => () => { searchRequest.current += 1; }, []);
 
   const currentChapter =
@@ -230,6 +273,35 @@ export function QuranPage() {
   const selectedTranslation = selectedVerse
     ? translationByAyah.get(selectedVerse.ayah) ?? null
     : null;
+  const selectedReciter: QuranReciterStream | null = useMemo(() => {
+    if (recitationState.state !== "ready") return null;
+    const items = recitationState.payload.reciters;
+    return items.find((item) => `${item.id}:${item.moshafId}` === selectedReciterKey)
+      ?? items[0]
+      ?? null;
+  }, [recitationState, selectedReciterKey]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.pause();
+    audio.load();
+    setAudioPlaying(false);
+  }, [selectedReciter?.streamUrl]);
+
+  const toggleAudio = async () => {
+    const audio = audioRef.current;
+    if (!audio || !selectedReciter) return;
+    if (audioPlaying) {
+      audio.pause();
+      return;
+    }
+    try {
+      await audio.play();
+    } catch {
+      setAudioPlaying(false);
+    }
+  };
 
   const filteredChapters = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -629,17 +701,69 @@ export function QuranPage() {
           </div>
 
           <div className={styles.player}>
+            <audio
+              ref={audioRef}
+              src={selectedReciter?.streamUrl}
+              preload="metadata"
+              onPlay={() => setAudioPlaying(true)}
+              onPause={() => setAudioPlaying(false)}
+              onEnded={() => setAudioPlaying(false)}
+              onError={() => setAudioPlaying(false)}
+            />
             <img src={art.kaaba} alt="" />
             <div className={styles.playerCopy}>
-              <strong>التلاوة الصوتية</strong>
-              <span>
-                لم نربط بهذه الشاشة تسجيلًا صوتيًا معتمد الحقوق بعد.
-              </span>
+              <strong>تلاوة سورة {currentChapter?.arabicName ?? "القرآن"}</strong>
+              {recitationState.state === "loading" ? (
+                <span>جارٍ تحميل القراء المتاحين من MP3Quran…</span>
+              ) : recitationState.state === "error" ? (
+                <span role="alert">{recitationState.message}</span>
+              ) : selectedReciter ? (
+                <>
+                  <select
+                    className={styles.reciterSelect}
+                    value={selectedReciterKey ?? ""}
+                    onChange={(event) => setSelectedReciterKey(event.target.value)}
+                    aria-label="اختيار قارئ السورة"
+                  >
+                    {recitationState.state === "ready" ? recitationState.payload.reciters.map((item) => (
+                      <option key={`${item.id}:${item.moshafId}`} value={`${item.id}:${item.moshafId}`}>
+                        {item.name} · {item.reading}
+                      </option>
+                    )) : null}
+                  </select>
+                  <span>بث مباشر داخل المنصة · MP3Quran.net</span>
+                </>
+              ) : (
+                <span>لا توجد تلاوة متاحة لهذه السورة في استجابة المزوّد الآن.</span>
+              )}
             </div>
-            <Link href="/audio" className={styles.audioLink}>
-              <Headphones size={15} />
-              قسم التلاوات
-            </Link>
+            <div className={styles.inlineAudioControls}>
+              <button
+                type="button"
+                className={styles.audioPlay}
+                onClick={() => void toggleAudio()}
+                disabled={!selectedReciter}
+                aria-label={audioPlaying ? "إيقاف التلاوة مؤقتًا" : "تشغيل التلاوة"}
+              >
+                {audioPlaying ? <Pause size={17} /> : <Play size={17} />}
+              </button>
+              <label className={styles.inlineVolume}>
+                <Volume2 size={14} aria-hidden="true" />
+                <input
+                  type="range"
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  value={audioVolume}
+                  onChange={(event) => setAudioVolume(Number(event.target.value))}
+                  aria-label="مستوى صوت التلاوة"
+                />
+              </label>
+              <Link href="/audio" className={styles.audioLink}>
+                <Headphones size={15} />
+                كل القراء
+              </Link>
+            </div>
           </div>
         </section>
 
