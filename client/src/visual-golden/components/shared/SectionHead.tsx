@@ -32,11 +32,7 @@ export function SectionHead({ title, en, href, action = "عرض الكل" }: Pro
         <Link href={href} className={styles.viewAll}>
           {action} <ChevronLeft size={14} />
         </Link>
-      ) : (
-        <button type="button" className={styles.viewAll}>
-          {action} <ChevronLeft size={14} />
-        </button>
-      )}
+      ) : null}
     </div>
   );
 }

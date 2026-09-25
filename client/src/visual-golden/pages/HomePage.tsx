@@ -219,7 +219,7 @@ export function HomePage() {
             <p className={styles.wingEyebrow}>{lang === "ar" ? "خريطة المؤسسة" : "INSTITUTION MAP"}</p>
             <SectionHead title={lang === "ar" ? "أجنحة المعرفة" : "Knowledge Wings"} en="Eight distinct ways to explore" />
           </div>
-          <ViewSwitcher value={mode} onChange={setMode} />
+          <ViewSwitcher value={mode} onChange={setMode} lang={lang} />
         </div>
 
         {mode === "cards" ? (
