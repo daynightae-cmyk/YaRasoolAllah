@@ -55,6 +55,18 @@ interface CachedTranslation {
 const cache = new Map<string, CachedTranslation>();
 let nextRequestAt = 0;
 
+export function buildQuranEncSuraUrl(
+  translation: QuranEncTranslationKey,
+  sura: number,
+): string {
+  if (!Number.isInteger(sura) || sura < 1 || sura > 114) {
+    throw new Error("Invalid sura number");
+  }
+  const edition = QURANENC_TRANSLATIONS[translation];
+  if (!edition) throw new Error("Unsupported translation");
+  return `https://quranenc.com/api/v1/translation/sura/${edition.key}/${sura}`;
+}
+
 function normalizeFootnotes(value: unknown): unknown {
   if (value == null || typeof value === "string") return value;
   if (Array.isArray(value)) return value.slice(0, 50);
@@ -83,9 +95,7 @@ export function registerQuranEncTranslationRoutes(app: Express) {
     nextRequestAt = Date.now() + 900;
 
     const translation = QURANENC_TRANSLATIONS[parsed.data.translation];
-    const url = new URL(
-      `https://quranenc.com/api/v1/translation/sura/${translation.key}/${parsed.data.sura}`,
-    );
+    const url = new URL(buildQuranEncSuraUrl(parsed.data.translation, parsed.data.sura));
 
     try {
       const response = await fetch(url, {
