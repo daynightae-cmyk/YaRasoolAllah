@@ -29,8 +29,14 @@ import styles from "./LivingAtlasPage.module.css";
 
 const HIJAZ_PLATE = "/visual-golden/art/atlas-hero.webp";
 
+function initialPlace() {
+  const requested = new URLSearchParams(window.location.search).get("place");
+  return ATLAS_NODES.find((node) => node.id === requested)?.id ?? null;
+}
+
 export function AtlasPage() {
-  const [mode, setMode] = useState<"theatre" | "places">("theatre");
+  const [linkedPlace] = useState(initialPlace);
+  const [mode, setMode] = useState<"theatre" | "places">(linkedPlace ? "places" : "theatre");
   const [campaignId, setCampaignId] = useState(LIVING_CAMPAIGNS[0].id);
   const [phaseIndex, setPhaseIndex] = useState(0);
   const [markerId, setMarkerId] = useState(LIVING_CAMPAIGNS[0].markers[0]?.id ?? "");
@@ -39,7 +45,7 @@ export function AtlasPage() {
   const [showMarkers, setShowMarkers] = useState(true);
   const [listMode, setListMode] = useState(false);
   const [placeFilter, setPlaceFilter] = useState<AtlasFilter>("all");
-  const [placeId, setPlaceId] = useState(ATLAS_NODES[0]?.id ?? "");
+  const [placeId, setPlaceId] = useState(linkedPlace ?? ATLAS_NODES[0]?.id ?? "");
 
   const campaign = campaignById(campaignId);
   const phase = campaign.phases[Math.min(phaseIndex, campaign.phases.length - 1)];
@@ -253,9 +259,11 @@ export function AtlasPage() {
             <span className={styles.badge}>موضع تخطيطي — ليس إحداثيات</span>
             <h2>{place.name}</h2>
             <ul className={styles.mentions}>
-              {place.mentions.map((mention, index) => (
-                <li key={`${mention.chapterId}-${index}`}>
-                  <strong>{mention.eventTitle}</strong>
+              {place.mentions.map((mention) => (
+                <li key={`${mention.chapterId}-${mention.eventId}`}>
+                  <Link href={`/seerah?chapter=${encodeURIComponent(mention.chapterId)}&event=${encodeURIComponent(mention.eventId)}`}>
+                    <strong>{mention.eventTitle}</strong>
+                  </Link>
                   <span>
                     {mention.chapterTitle} · {mention.eventDate}
                   </span>

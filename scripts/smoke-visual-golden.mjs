@@ -26,6 +26,9 @@ const cases = [
   { name: "quran-390-rtl", path: "/quran", width: 390, height: 844 },
   { name: "quran-390-light", path: "/quran", width: 390, height: 844, theme: "light" },
   { name: "quran-390-ltr", path: "/quran", width: 390, height: 844, lang: "en" },
+  { name: "seerah-1440-rtl", path: "/seerah", width: 1440, height: 1000 },
+  { name: "seerah-768-rtl", path: "/seerah", width: 768, height: 900 },
+  { name: "seerah-390-rtl", path: "/seerah", width: 390, height: 844 },
   { name: "kids-360-rtl", path: "/kids", width: 360, height: 844 },
   { name: "library-1440-rtl", path: "/library", width: 1440, height: 1000 },
   { name: "sources-1440-rtl", path: "/sources", width: 1440, height: 1000 },
@@ -228,6 +231,48 @@ try {
         await waitFor(session, 'JSON.parse(localStorage.getItem("quran-last-position-v1") || "{}").ayah === 2', "saved Quran position");
         await session.send("Page.navigate", { url: `${origin}/quran` });
         await waitFor(session, 'document.getElementById("quran-ayah-1-2")?.getAttribute("aria-pressed") === "true"', "restored Quran position");
+      }
+    }
+    if (item.path === "/seerah") {
+      await waitFor(session, 'document.querySelectorAll(\'ol[aria-label="محطات الفصل"] button\').length > 1', `${item.name} events`);
+      const seerahGeometry = await evaluate(session, `(() => {
+        const detail = document.querySelector('article[aria-label="تفاصيل المحطة المختارة"]');
+        const bounds = detail?.getBoundingClientRect().toJSON();
+        const buttons = [...document.querySelectorAll('ol[aria-label="محطات الفصل"] button')];
+        return {
+          viewport: innerWidth,
+          documentWidth: document.documentElement.scrollWidth,
+          detail: bounds,
+          selected: buttons.filter((button) => button.getAttribute("aria-pressed") === "true").length,
+          placeLink: detail?.querySelector('a[href^="/atlas?place="]')?.getAttribute("href") ?? null,
+          dateUncertainty: detail?.textContent?.includes("غير موثقة في بيانات المحطة")
+        };
+      })()`);
+      if (!seerahGeometry.detail || seerahGeometry.detail.left < -1 || seerahGeometry.detail.right > seerahGeometry.viewport + 1 || seerahGeometry.documentWidth > seerahGeometry.viewport + 1 || seerahGeometry.selected !== 1 || !seerahGeometry.placeLink || !seerahGeometry.dateUncertainty) {
+        throw new Error(`${item.name} selected Seerah event failed: ${JSON.stringify(seerahGeometry)}`);
+      }
+      diagnostics.geometry = seerahGeometry;
+      if (item.name === "seerah-390-rtl") {
+        await evaluate(session, `(() => {
+          const buttons = document.querySelectorAll('ol[aria-label="محطات الفصل"] button');
+          if (!buttons[1]) throw new Error("Second Seerah event button is missing");
+          buttons[1].click();
+          return true;
+        })()`);
+        const selected = await waitFor(session, `(() => {
+          const buttons = document.querySelectorAll('ol[aria-label="محطات الفصل"] button');
+          const title = document.querySelector('article[aria-label="تفاصيل المحطة المختارة"] h3')?.textContent || "";
+          return buttons[1]?.getAttribute("aria-pressed") === "true" ? title : "";
+        })()`, "selected Seerah event");
+        const link = await waitFor(session, 'document.querySelector(\'article[aria-label="تفاصيل المحطة المختارة"] a[href^="/atlas?place="]\')?.getAttribute("href")', "event place link");
+        await evaluate(session, 'document.querySelector(\'article[aria-label="تفاصيل المحطة المختارة"] a[href^="/atlas?place="]\').click()');
+        await waitFor(session, `location.pathname === "/atlas" && location.search === ${JSON.stringify(new URL(link, origin).search)} && document.querySelector('[data-climate="places"]') !== null`, "linked Atlas place");
+        await waitFor(session, `document.querySelector('.vg-shell')?.textContent?.includes(${JSON.stringify(selected)})`, "Atlas event mention");
+        const returnLink = await evaluate(session, `document.querySelector('a[href^="/seerah?chapter="]')?.getAttribute("href")`);
+        if (!returnLink) throw new Error("Atlas place has no event return link");
+        await evaluate(session, 'document.querySelector(\'a[href^="/seerah?chapter="]\').click()');
+        await waitFor(session, `location.pathname === "/seerah" && document.querySelector('article[aria-label="تفاصيل المحطة المختارة"] h3')?.textContent === ${JSON.stringify(selected)}`, "restored Seerah event");
+        diagnostics.roundTrip = { link, returnLink, selected };
       }
     }
     const shot = await session.send("Page.captureScreenshot", {
