@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
-import { Heart, Share2, ExternalLink, ShieldCheck, Lock } from "lucide-react";
+import { ExternalLink, ShieldCheck, Lock } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import {
@@ -17,7 +17,6 @@ import styles from "./AudioPage.module.css";
 export function AudioPage() {
   const [chapters, setChapters] = useState<QuranChapter[]>([]);
   const [active, setActive] = useState(1);
-  const [loved, setLoved] = useState(false);
   const [reciterCatalog, setReciterCatalog] = useState<
     { state: "idle" | "loading" | "error" } | { state: "ready"; items: Array<{ id: number; name: string; reading: string | null }> }
   >({ state: "idle" });
@@ -80,18 +79,10 @@ export function AudioPage() {
               <span>سجل المزوّد</span>
               <span>التشغيل غير مُجاز</span>
             </div>
-            <div className={styles.mini}>
-              <button type="button" className={loved ? styles.on : ""} onClick={() => setLoved((v) => !v)} aria-label="حفظ محلي">
-                <Heart size={16} />
-              </button>
-              <button type="button" aria-label="مشاركة السجل" disabled title="لا يوجد تسجيل لمشاركته" style={{ opacity: 0.55 }}>
-                <Share2 size={16} />
-              </button>
-            </div>
           </div>
         </div>
         <aside className={styles.playlist}>
-          <h3>التصفح حسب السورة ({chapters.length || 114})</h3>
+          <h3>التصفح حسب السورة ({chapters.length || "—"})</h3>
           <ul>
             {chapters.slice(0, 24).map((chapter, i) => (
               <li key={chapter.number}>

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { Link } from "wouter";
 import {
   Bookmark,
@@ -23,12 +23,14 @@ import {
   type QuranVerse,
 } from "@/services/quranService";
 import { getGovernanceRecord } from "@shared/source-registry";
+import { searchVerifiedQuran, type QuranSearchHit } from "@/visual-golden/services/quran-search";
 import styles from "./QuranPage.module.css";
 
 type SidebarTab = "surah" | "marks";
 
 const BOOKMARK_KEY = "quran-bookmarks";
 const NOTE_KEY = "quran-notes-v1";
+const CONTINUE_KEY = "quran-last-position-v1";
 
 function safeReadJson<T>(key: string, fallback: T): T {
   try {
@@ -56,12 +58,13 @@ function initialQuranSelection() {
     const params = new URLSearchParams(window.location.search);
     const requestedSurah = Number(params.get("surah"));
     const requestedAyah = Number(params.get("ayah"));
+    const saved = safeReadJson<{ surah: number; ayah: number } | null>(CONTINUE_KEY, null);
+    const hasRequestedSurah = params.has("surah") && Number.isInteger(requestedSurah) && requestedSurah >= 1 && requestedSurah <= 114;
+    const surah = hasRequestedSurah ? requestedSurah : saved?.surah;
+    const ayah = hasRequestedSurah ? requestedAyah : saved?.ayah;
     return {
-      surah:
-        Number.isInteger(requestedSurah) && requestedSurah >= 1 && requestedSurah <= 114
-          ? requestedSurah
-          : 1,
-      ayah: Number.isInteger(requestedAyah) && requestedAyah >= 1 ? requestedAyah : 1,
+      surah: Number.isInteger(surah) && surah! >= 1 && surah! <= 114 ? surah! : 1,
+      ayah: Number.isInteger(ayah) && ayah! >= 1 ? ayah! : 1,
     };
   } catch {
     return { surah: 1, ayah: 1 };
@@ -78,6 +81,10 @@ export function QuranPage() {
   const [focus, setFocus] = useState(false);
   const [lamp, setLamp] = useState(true);
   const [query, setQuery] = useState("");
+  const [verseQuery, setVerseQuery] = useState("");
+  const [searchState, setSearchState] = useState<"idle" | "loading" | "ready" | "error">("idle");
+  const [searchResults, setSearchResults] = useState<QuranSearchHit[]>([]);
+  const searchRequest = useRef(0);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [bookmarks, setBookmarks] = useState<string[]>([]);
@@ -101,6 +108,7 @@ export function QuranPage() {
       url.searchParams.set("surah", String(active));
       url.searchParams.set("ayah", String(ayah));
       window.history.replaceState(window.history.state, "", `${url.pathname}${url.search}${url.hash}`);
+      safeWriteJson(CONTINUE_KEY, { surah: active, ayah });
     } catch {
       // URL synchronization is a convenience; Quran reading must still work.
     }
@@ -123,11 +131,16 @@ export function QuranPage() {
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
+    setVerses([]);
     setLoadError(null);
 
     getQuranChapterVerses(active)
       .then((items) => {
         if (cancelled) return;
+        if (items.length === 0) {
+          setLoadError("لم يُعثر على نص هذه السورة في المصحف المحلي الموثق.");
+          return;
+        }
         setVerses(items);
         setAyah((current) =>
           items.some((item) => item.ayah === current) ? current : 1,
@@ -147,6 +160,13 @@ export function QuranPage() {
       cancelled = true;
     };
   }, [active]);
+
+  useEffect(() => {
+    if (loading || ayah <= 1 || !verses.some((item) => item.ayah === ayah)) return;
+    document.getElementById(`quran-ayah-${active}-${ayah}`)?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }, [active, ayah, loading, verses]);
+
+  useEffect(() => () => { searchRequest.current += 1; }, []);
 
   const currentChapter =
     chapters.find((chapter) => chapter.number === active) ?? null;
@@ -203,6 +223,33 @@ export function QuranPage() {
     setActive(surahNumber);
     setAyah(targetAyah);
     setShowNote(false);
+  };
+
+  const stepAyah = (delta: -1 | 1) => {
+    if (!selectedVerse || !currentChapter) return;
+    const next = selectedVerse.ayah + delta;
+    if (next >= 1 && next <= currentChapter.ayahCount) {
+      setAyah(next);
+    } else {
+      const neighbor = chapters.find((chapter) => chapter.number === active + delta);
+      if (neighbor) selectSurah(neighbor.number, delta === 1 ? 1 : neighbor.ayahCount);
+    }
+  };
+
+  const searchVerses = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const term = verseQuery.trim();
+    if (term.length < 2) return;
+    const request = ++searchRequest.current;
+    setSearchState("loading");
+    try {
+      const hits = await searchVerifiedQuran(term, 20);
+      if (request !== searchRequest.current) return;
+      setSearchResults(hits);
+      setSearchState("ready");
+    } catch {
+      if (request === searchRequest.current) setSearchState("error");
+    }
   };
 
   const toggleBookmark = () => {
@@ -278,7 +325,7 @@ export function QuranPage() {
 
       <div className={styles.workspace}>
         {focus ? null : (
-          <aside className={styles.surahNav} aria-label="فهرس القرآن">
+          <aside id="quran-surah-nav" className={styles.surahNav} aria-label="فهرس القرآن">
             <div className={styles.tabs}>
               <button
                 type="button"
@@ -303,6 +350,31 @@ export function QuranPage() {
                 العلامات
               </button>
             </div>
+
+            <form className={styles.verseSearch} onSubmit={searchVerses} role="search">
+              <label htmlFor="quran-verse-search">بحث في نص الآيات العربي</label>
+              <div>
+                <input id="quran-verse-search" value={verseQuery} onChange={(event) => setVerseQuery(event.target.value)} minLength={2} placeholder="كلمة أو عبارة من القرآن…" />
+                <button type="submit" disabled={verseQuery.trim().length < 2 || searchState === "loading"} aria-label="ابحث في الآيات"><Search size={16} /></button>
+              </div>
+            </form>
+            {searchState !== "idle" ? (
+              <div className={styles.verseResults} aria-live="polite">
+                {searchState === "loading" ? <p>جارٍ البحث في المصحف المحلي…</p> : null}
+                {searchState === "error" ? <p>تعذر البحث الآن. حاول مرة أخرى.</p> : null}
+                {searchState === "ready" ? (
+                  <>
+                    <p>{searchResults.length ? `أول ${searchResults.length} نتيجة من النص الموثق` : "لا توجد نتائج مطابقة في النص المحلي."}</p>
+                    <ul>{searchResults.map((hit) => <li key={`${hit.surah}:${hit.ayah}`}>
+                      <button type="button" onClick={() => { selectSurah(hit.surah, hit.ayah); setSearchState("idle"); }}>
+                        <strong>سورة {hit.surahName} · الآية {hit.ayah}</strong>
+                        <span lang="ar" dir="rtl">{hit.arabic}</span>
+                      </button>
+                    </li>)}</ul>
+                  </>
+                ) : null}
+              </div>
+            ) : null}
 
             {tab === "surah" ? (
               <>
@@ -367,10 +439,11 @@ export function QuranPage() {
                 )}
               </div>
             )}
+            <a className={styles.readerJump} href="#quran-reader">العودة إلى المصحف ↑</a>
           </aside>
         )}
 
-        <main className={styles.reader}>
+        <section id="quran-reader" className={styles.reader} aria-label="مصحف القراءة">
           <div className={styles.sheetHead}>
             <span>
               {currentChapter
@@ -388,6 +461,7 @@ export function QuranPage() {
               {currentChapter ? `${currentChapter.ayahCount} آية` : "—"}
             </span>
           </div>
+          <a className={styles.catalogJump} href="#quran-surah-nav">فهرس السور والبحث ↓</a>
 
           <div
             className={`${styles.sheet} ${lamp ? styles.lampOn : ""}`}
@@ -404,7 +478,7 @@ export function QuranPage() {
               <ChevronRight size={18} />
             </button>
 
-            <div className={styles.ayat} aria-live="polite">
+            <div className={styles.ayat}>
               {loading ? (
                 <p className={styles.loadingState}>
                   جارٍ فتح السورة من المصحف المحلي…
@@ -458,7 +532,7 @@ export function QuranPage() {
               قسم التلاوات
             </Link>
           </div>
-        </main>
+        </section>
 
         {focus ? null : (
           <aside className={styles.sidePanel}>
@@ -473,6 +547,11 @@ export function QuranPage() {
                 الآية {selectedVerse?.ayah ?? "—"} من{" "}
                 {currentChapter?.ayahCount ?? "—"}
               </span>
+            </div>
+
+            <div className={styles.verseNavigation}>
+              <button type="button" onClick={() => stepAyah(-1)} disabled={active === 1 && (selectedVerse?.ayah ?? 1) === 1}>الآية السابقة</button>
+              <button type="button" onClick={() => stepAyah(1)} disabled={active === 114 && selectedVerse?.ayah === currentChapter?.ayahCount}>الآية التالية</button>
             </div>
 
             <h4>أدوات الآية</h4>
@@ -564,8 +643,8 @@ export function QuranPage() {
       {focus ? null : (
         <footer className={styles.progress}>
           <span>المصحف المحلي الموثق</span>
-          <b>{chapters.length || 114} سورة</b>
-          <span>{totalAyahs || 6236} آية</span>
+          <b>{chapters.length ? `${chapters.length} سورة` : "السور: —"}</b>
+          <span>{totalAyahs ? `${totalAyahs} آية` : "الآيات: —"}</span>
           <span>
             السورة الحالية: {currentChapter?.ayahCount ?? "—"} آية
           </span>
