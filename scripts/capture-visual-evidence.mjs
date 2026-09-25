@@ -18,6 +18,8 @@ export const cases = [
   { name: "library-360-light-ltr", path: "/library", width: 360, height: 900, theme: "light", language: "en" },
   { name: "quran-1440-light-rtl", path: "/quran", width: 1440, height: 1000, theme: "light", language: "ar" },
   { name: "quran-360-dark-ltr", path: "/quran", width: 360, height: 900, theme: "dark", language: "en" },
+  { name: "audio-1440-dark-rtl", path: "/audio", width: 1440, height: 1000, theme: "dark", language: "ar" },
+  { name: "audio-360-light-ltr", path: "/audio", width: 360, height: 900, theme: "light", language: "en" },
   { name: "seerah-1440-dark-rtl", path: "/seerah", width: 1440, height: 1000, theme: "dark", language: "ar" },
   { name: "atlas-1440-dark-rtl", path: "/atlas", width: 1440, height: 1000, theme: "dark", language: "ar", clickText: "مسرح الغزوات", scrollSelector: '[data-visual="atlas-theatre-evidence"]', scrollOffset: -80 },
   { name: "seerah-768-light-ltr", path: "/seerah", width: 768, height: 1024, theme: "light", language: "en" },

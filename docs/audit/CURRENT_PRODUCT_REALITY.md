@@ -1,6 +1,6 @@
 # Current product reality
 
-Audited against live `origin/main` = `7aebc0333de31a45e2fbb08f3869210ed997e367` after PR #93 merge on 2026-09-25.
+Audited against live `origin/main` = `f9807d31d6fb5c2ce5d2693df6fcb3161e52d762` after PR #95 merge on 2026-09-25, plus this slice's live verification.
 
 This document supersedes stale counts in older audit files. Historical
 percentages and “17 books / demo-token / 18 sample verses” claims are **not**
@@ -43,8 +43,8 @@ Contract: `client/src/visual-golden/lib/public-shell.ts`.
 |---|---|---|---|---|---|---|---|---|---|
 | Tanzil Arabic Quran | 114 surahs / 6236 ayahs | Tanzil | Governed, immutable Arabic | `/quran` | Yes | Yes | n/a | Yes (query-time) | Do not reimport |
 | AlQuran Cloud translations | EN/FR/UR editions via internal proxy | AlQuran Cloud | API display; not bundled corpus | `/quran` study mode | Yes | Yes when provider reachable | n/a | No | Honest failure if provider down; French included |
-| MP3Quran recitations | Catalog + governed stream URLs | MP3Quran.net | Streaming allowed per registry | `/audio`, inline `/quran` (PR #86) | Yes | n/a | Yes if stream allowed | Catalog | No fake ayah timings |
-| QuranEnc Muyassar tafsir (DEFECT: route unmounted) | Server proxy module + client study UI + governance record all exist; route mounted NOWHERE | QuranEnc `arabic_moyassar` API | Governed (`resource-quranenc-muyassar-tafsir`), API display | INTENDED `/quran` study reader + `/tafsir`, but the client fetch lands on the SPA fallback HTML | UI shell yes | No (endpoint unreachable) | n/a | No | DEFECT FOUND 2026-09-25: `registerQuranTafsirRoutes` is imported but never called in `server/create-app.ts` nor `server/create-public-content-app.ts`. Repair queued as next slice; P0 gate must assert route mounting, not just payload parsing |
+| MP3Quran recitations | Catalog + governed stream URLs | MP3Quran.net | Streaming allowed per registry | `/audio`, inline `/quran` (PR #86) | Yes | n/a | Yes if stream allowed | Catalog | Stream-element failures now surface honest `role=alert` messages on both players (this slice); catalog-fetch failures already honest |
+| QuranEnc Muyassar tafsir (REPAIRED PR #95) | Server proxy mounted on both servers; edition metadata served honestly without fabricated version | QuranEnc `arabic_moyassar` API | Governed (`resource-quranenc-muyassar-tafsir`), API display | `/quran` study reader | Yes | Yes when provider reachable | n/a | No | Repaired 2026-09-25: route mounted + metadata fetch removed (provider publishes no version for this edition; `version`/`lastUpdate` null with honest UI note). Runtime-verified: 200 governed JSON, real surah-112 text in study reader |
 | QuranEnc translations (DEFERRED) | Rowwad EN 1.0.19 / Junagarhi UR 1.1.3, server adapter + rights evidence exist on deferred branch only | QuranEnc.com | Republication allowed with attribution/version (terms evidence on branch) | NONE on main | No | No | n/a | No | Owner-deferred additive slice; see Git authority row |
 | OpenITI | Item-level reader when rights allow | OpenITI | Per digital version | `/library` | Yes | Conditional | n/a | Catalog | Exercise real records |
 | Library catalog | Thousands of shelf works (runtime catalog builder) | Internal catalog + Open Library discovery | Per work/version | `/library` | Yes | Conditional | n/a | Yes | No fake PDF/IIIF/download |
@@ -56,17 +56,16 @@ Contract: `client/src/visual-golden/lib/public-shell.ts`.
 | Basirah | Local governed index | Internal registries | Retrieval only | `/basirah` | Yes | Yes | n/a | Yes | No generative fatwa; AI credential optional |
 | Quran Foundation / Sunnah.com / GeoNames / YouTube Data API | — | Credential-gated | — | Adapters only | No | No | No | No | CREDENTIAL BLOCKED |
 | Qatar Digital Library | — | HTTP 403 | — | Dormant adapter | No | No | No | No | PROVIDER BLOCKED |
-| Vercel `/api/content` | Function added in #87; preview deploys completing again on PR #92/#93 | — | — | Preview APIs | Yes (preview) | Preview only | — | — | Quota cleared; production domain cutover unverified |
+| Vercel `/api/content` | Function added in #87; preview deploys intermittent (passed #92/#93/#95, rate-limited #94) | — | — | Preview APIs | Yes (preview) | Preview only | — | — | Quota is intermittent, not cleared; production domain cutover unverified |
 
 ## Remaining unblocked engineering (not credentials)
 
-1. Tafsir route mounting (DEFECT, next slice): call `registerQuranTafsirRoutes` in `server/create-app.ts` (and in `server/create-public-content-app.ts` if the public function should serve it), add a P0 mount assertion, runtime-verify governed JSON or honest provider failure.
-2. Hadith: credential adapters + corpus-scope honesty (no fabricated bulk copy).
-3. Seerah event graph from existing sourced chapters (no invented relations).
-4. Daily supporting content honesty (tasbih reward claims, daily-verse API).
-5. Sources/Evidence drawer semantic unification.
-6. Persistence: production `DATABASE_URL` required; memory fallback is not production.
-7. Multilingual closure: separate UI-language support from content-translation availability (AR/EN/FR/UR).
+1. Hadith: credential adapters + corpus-scope honesty (no fabricated bulk copy).
+2. Seerah event graph from existing sourced chapters (no invented relations).
+3. Daily supporting content honesty (tasbih reward claims, daily-verse API).
+4. Sources/Evidence drawer semantic unification.
+5. Persistence: production `DATABASE_URL` required; memory fallback is not production.
+6. Multilingual closure: separate UI-language support from content-translation availability (AR/EN/FR/UR).
 
 ## Status vocabulary for this SHA
 
@@ -74,8 +73,8 @@ Contract: `client/src/visual-golden/lib/public-shell.ts`.
 |---|---|
 | Quran Arabic | IMPLEMENTED AND VERIFIED |
 | Quran EN/FR/UR translations (AlQuran Cloud proxy) | IMPLEMENTED BUT NOT VERIFIED at production URL (Vercel quota) |
-| Quran Muyassar tafsir (QuranEnc proxy) | IMPLEMENTED BUT NOT RUNTIME-VERIFIED — DEFECT: route unmounted on both servers; repair queued |
-| Quran audio MP3Quran | IMPLEMENTED AND VERIFIED in CI/runtime locally (incl. inline `/quran` recitation, PR #86) |
+| Quran Muyassar tafsir (QuranEnc proxy) | IMPLEMENTED AND VERIFIED locally (PR #95: mounted, honest null version, real surah-112 text in study reader) |
+| Quran audio MP3Quran | IMPLEMENTED AND VERIFIED in CI/runtime locally (incl. inline `/quran` recitation, PR #86; stream-element failure alerts this slice) |
 | Library catalog + readers | IMPLEMENTED BUT NOT VERIFIED for every format combination |
 | Kids theatre | IMPLEMENTED AND VERIFIED (curtain); content PARTIAL |
 | Canonical public shell | IMPLEMENTED AND VERIFIED for supporting routes (PR #88); `/dashboard`, `/bab-alsamaa-settings` intentionally legacy |

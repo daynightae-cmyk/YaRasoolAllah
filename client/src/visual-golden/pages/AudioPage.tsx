@@ -51,6 +51,7 @@ export function AudioPage() {
   const [reciters, setReciters] = useState<ReciterState>({ state: "idle" });
   const [selectedReciterId, setSelectedReciterId] = useState<number | null>(null);
   const [playing, setPlaying] = useState(false);
+  const [streamError, setStreamError] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(0.78);
@@ -134,6 +135,7 @@ export function AudioPage() {
     audio.pause();
     audio.load();
     setPlaying(false);
+    setStreamError(null);
     setCurrentTime(0);
     setDuration(0);
   }, [selectedReciter?.streamUrl]);
@@ -153,11 +155,18 @@ export function AudioPage() {
       return;
     }
     try {
+      setStreamError(null);
       await audio.play();
       setPlaying(true);
     } catch {
       setPlaying(false);
+      setStreamError("تعذر تشغيل البث من MP3Quran لهذه السورة الآن.");
     }
+  };
+
+  const handleStreamError = () => {
+    setPlaying(false);
+    setStreamError("تعذر تشغيل البث من MP3Quran لهذه السورة الآن.");
   };
 
   const changeSurah = (next: number) => {
@@ -229,9 +238,9 @@ export function AudioPage() {
             onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)}
             onLoadedMetadata={(event) => setDuration(event.currentTarget.duration)}
             onPause={() => setPlaying(false)}
-            onPlay={() => setPlaying(true)}
+            onPlay={() => { setPlaying(true); setStreamError(null); }}
             onEnded={() => setPlaying(false)}
-            onError={() => setPlaying(false)}
+            onError={handleStreamError}
           />
 
           <button
@@ -269,6 +278,7 @@ export function AudioPage() {
               <span>{formatTime(duration)}</span>
             </div>
             <strong>{selectedReciter?.name ?? (reciters.state === "loading" ? "جارٍ جلب القراء…" : "لا توجد تلاوة متاحة")}</strong>
+            {streamError ? <span role="alert" className={styles.streamError}>{streamError}</span> : null}
           </div>
 
           <button type="button" className={styles.playerIconButton} onClick={() => changeSurah(active + 1)} disabled={active >= 114} aria-label="السورة التالية">
