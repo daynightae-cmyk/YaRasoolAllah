@@ -174,7 +174,7 @@ export function useEmotionalDetection() {
       "متضايق",
       "حزن",
       "ضيق",
-      "تع��ان",
+      "تعبان",
       "مش قادر",
     ];
     const happyWords = [

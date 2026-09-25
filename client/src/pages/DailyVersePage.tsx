@@ -876,7 +876,7 @@ https://yarasoolallah.org
                       <span className="material-symbols-outlined text-purple-600">
                         widgets
                       </span>
-                      معاينة Widget ��لعالمي
+                      معاينة Widget العالمي
                     </CardTitle>
                   </CardHeader>
                   <CardContent>

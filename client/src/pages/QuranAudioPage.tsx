@@ -102,7 +102,7 @@ export default function QuranAudioPage() {
     },
     {
       id: 2,
-      name: "��لبقرة",
+      name: "البقرة",
       arabicName: "سُورَةُ الْبَقَرَة",
       englishName: "Al-Baqarah",
       verses: 286,

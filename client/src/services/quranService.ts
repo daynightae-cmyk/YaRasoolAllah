@@ -719,7 +719,7 @@ const quranChapters: QuranChapter[] = [
   {
     number: 84,
     name: "الانشقاق",
-    arabicName: "الانش��اق",
+    arabicName: "الانشقاق",
     englishName: "Al-Inshiqaq",
     ayahCount: 25,
     revelationType: "meccan",
@@ -1117,7 +1117,7 @@ const sampleVerses: Record<string, QuranVerse> = {
     transliteration: "Fabi ayyi alaai rabbikuma tukaththiban",
     tafsir:
       "This refrain appears 31 times in Surah Ar-Rahman, repeatedly asking mankind and jinn to acknowledge Allah's countless blessings and not deny them.",
-    surahName: "الرحم��",
+    surahName: "الرحمن",
   },
   "112-1": {
     surah: 112,

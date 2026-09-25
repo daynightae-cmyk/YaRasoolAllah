@@ -260,7 +260,7 @@ export default function SpiritualHub() {
                 85%
               </div>
               <div className="text-xs text-gray-600 dark:text-gray-400 font-inter">
-                السك��نة
+                السكينة
               </div>
             </div>
             <div className="bg-white/20 dark:bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg p-3">
