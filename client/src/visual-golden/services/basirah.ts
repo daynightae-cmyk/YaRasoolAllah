@@ -84,7 +84,7 @@ export function buildLocalIndex(): BasirahRecord[] {
       titleEn: work.titleEn,
       kindAr: "سجل عمل",
       kindEn: "work record",
-      path: "/library",
+      path: `/library/work/${work.workId}`,
       hintAr: `${work.authorAr} · ${versions} نسخة فهرسية`,
       hintEn: work.openitiWorkUri ?? "no OpenITI version pinned",
       availabilityAr: "سجل فهرسي فقط — النص الكامل غير متاح",
