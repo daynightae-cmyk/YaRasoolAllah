@@ -2,25 +2,31 @@
 
 > Next agent: continue from here without repeating investigation. Git + current repo state are authority. Never convert NOT RUN / NOT VERIFIED into PASS.
 
-- Updated (local): 2026-09-25 02:50 +04
-- Updated (UTC): 2026-09-24T22:50Z
+- Updated (local): 2026-09-25 02:50 +04 — Slice 0/A/B checkpoints (see history below).
+- Updated (local): 2026-09-25 ~04:10 +04 — SERVER RESTART RECOVERY + MULTI-AGENT UPDATE (this revision).
 - Main repo root: `/mnt/d/Knoux Projects/Knoux_Project_Center/01_Ready/YaRasoolAllah`
 - Active overnight worktree root: `/mnt/d/Knoux Projects/Knoux_Project_Center/01_Ready/YaRasoolAllah-overnight-20260925`
 
 ## CURRENT MAIN SHA
-- `de45ec0b7aee610307ae5c59a79d8c9c25a47806` (`Merge pull request #68`) — verified via `git fetch origin --prune` 2026-09-25 02:50 +04.
+- `1a661c7bfbf3536841e9ee008f152d1e71874934` (`Quran: full governed Muyassar tafsir in study reader`) — verified via `git fetch origin --prune` ~04:05 +04. MOVED since Slice 0 (`de45ec0b`): merged PRs observed #82, #87, #88, #89 (Quran/audio/vercel/shell/docs). My branch base is stale (behind).
 
 ## CURRENT WORKTREE
-- Active: `/mnt/d/Knoux Projects/Knoux_Project_Center/01_Ready/YaRasoolAllah-overnight-20260925` @ `de45ec0b [feat/autonomous-production-closure-20260925]`, clean.
-- Preserved untouched: main worktree on `feat/product-recovery-integration-20260925` @ `50b5b526` (no modifications made there this window except prior inspection reports).
-- Note: first worktree attempt at `/tmp/opencode/...` abandoned — Windows npm/node cannot use WSL-only UNC paths (`npm run check` failed environmentally). Orphaned `/tmp/opencode/YaRasoolAllah-overnight-20260925/node_modules` remnants left (Windows file locks, harmless). Branch reused on D: drive.
-- 7 stale prunable traycer registrations untouched.
+- Active (RE-REGISTERED after restart): `/mnt/d/Knoux Projects/Knoux_Project_Center/01_Ready/YaRasoolAllah-overnight-20260925` @ branch `feat/autonomous-production-closure-20260925`.
+- Restart impact: my worktree's `.git/worktrees` admin entry vanished (owner reconcile scripts / another agent's prune suspected; other agents' worktrees IMPLEMENTATION/RECOVERY/main/pr83-fix now registered). Directory + branch + commits survived intact. Recovered via: rename to `-backup`, fresh `git worktree add` on my branch, copy back 3 changed files, move `node_modules` (fast same-fs), delete backup remainder.
+- Other agents ACTIVE in parallel (new branches: `docs/yra-current-reality-20260925`, `feat/canonical-search-deeplinks-20260925`, `feat/full-content-internalization-20260925`, `feat/quranenc-translations-internal-20260925`, `feat/yra-hadith-copy-deeplink-20260925`). Do NOT touch their worktrees/branches.
+- Preserved untouched: main worktree on `feat/product-recovery-integration-20260925` @ `50b5b526` (only prior inspection reports untracked).
 
 ## CURRENT BRANCH
-- `feat/autonomous-production-closure-20260925` (new, tracks `origin/main`, no remote yet — push pending after first slice).
+- `feat/autonomous-production-closure-20260925` (local-only, never pushed). Commits: `20923131` (handoff baseline), `0b283745` (Slice A shared query), `1766e67d` (Slice B gate), `b57cd2e4` (Slice C filters). Behind `origin/main` (base `de45ec0b`, main now `1a661c7b`). Rebase planned (see OVERLAP section).
 
 ## CURRENT HEAD
-- `de45ec0b7aee610307ae5c59a79d8c9c25a47806` == origin/main.
+- `b57cd2e4ce229c7d5e6e4f0426d75d8813a007c9` (`feat(library): add language and subcategory filters`). 4 commits ahead of stale base; behind origin/main.
+
+## OVERLAP WITH PARALLEL AGENTS (verified via git diff de45ec0b..origin/main)
+- Their merged work touches MY slice files: `LibraryCatalog.tsx` (+337/-? rewrite: multilingual UI `LibraryUiLanguage`, `languageLabel` ara/per display, detail fields), `LibraryPage.tsx` (+168), `package.json` (test:p0 now 12 suites incl. `library-catalog-presentation`, `library-full-shelves`, `mp3quran-stream`, `quran-translations/tafsir`, `vercel-content-api`, `public-shell-routes`, `canonical-search`, `kids-discovery-recovery`).
+- NOT subsumed: their catalog keeps its own `useState("")` query (no shared hero query — Slice A still unique); language is display-only (no filter selects — Slice C still adds value, but my raw-code labels are inferior to their `languageLabel` mapping → upgrade to their display names on rebase).
+- 50b5b526-lineage content appears LANDED on main via others (presentation/full-shelves suites) — my decision NOT to copy it is vindicated; no action on 50b5b526.
+- NEXT: rebase my branch onto `1a661c7b` (local-only history, safe), resolve conflicts in the 3 overlapping files, re-run gates, adapt language filter labels to `languageLabel`, then pivot to non-library slices to avoid racing parallel agents.
 
 ## 50b5b526 VERDICT (carried-over commit, preserved not copied)
 - `50b5b526 feat(library): localize governed catalog presentation` (Amp, 19 files, 1612+/725-).
@@ -37,12 +43,14 @@
 - #68 on origin/main (observed in log; URL NOT VERIFIED).
 
 ## LAST SUCCESSFUL SLICE
-- SLICE 0 — REALITY REFRESH + BASELINE (this window, in overnight worktree).
-- SLICE A — Library shared search query: COMMITTED locally as `0b283745` (amended message). IMPLEMENTED AND VERIFIED (tsc, test:p0, build, library smoke, CDP query-sync). Push BLOCKED_ENVIRONMENT (no auth). PR/CI BLOCKED_TOOLING.
-- SLICE B — Library shared-query gate: `scripts/library-shared-query.test.ts` (3 tests) wired into `test:p0` (now 14/14 PASS). Visual-golden smoke PASS (6 routes, evidence in gitignored artifacts/). COMMITTED locally (see HEAD below).
+- SLICE 0 — REALITY REFRESH + BASELINE (base `de45ec0b`, all PASS).
+- SLICE A — Library shared search query (`0b283745`): IMPLEMENTED AND VERIFIED (tsc, test:p0, build, library smoke PASS incl. 17 spines/4349-char reading/0 errors, CDP query-sync PASS).
+- SLICE B — Shared-query gate (`1766e67d`, test:p0 14/14) + visual-golden smoke PASS (6 routes, evidence in gitignored artifacts/).
+- SLICE C — Language/subcategory catalog filters (`b57cd2e4`): IMPLEMENTED + STATICALLY VERIFIED (tsc PASS, test:p0 15/15 PASS, vite+esbuild PASS on identical files, re-verified post-recovery). Browser click-behavior: NOT VERIFIED (BLOCKED_ENVIRONMENT — server down + WSL interop Vsock errors at verify time; earlier CDP filter runs timed out twice; code-split diagnosis cleared: filters ship in `LibraryPage-*.js` chunk, entry-only probe was misleading).
+- Push: BLOCKED_ENVIRONMENT (no credentials). PR/CI: BLOCKED_TOOLING (no gh).
 
 ## CURRENT SLICE
-- SLICE A+1 — Visual-golden regression smoke across institution routes (next; server still up).
+- REBASE onto `1a661c7b` + conflict resolution (next). Then pivot to non-library slices to avoid racing parallel agents.
 
 ## SLICE A DETAIL (first implementation slice, overnight worktree)
 - Files: `client/src/visual-golden/components/library/LibraryCatalog.tsx` (controlled/uncontrolled query: `query`/`onQuery` props, deep-link usage unchanged), `client/src/visual-golden/pages/LibraryPage.tsx` (passes hero `q`/`setQ` into catalog).
