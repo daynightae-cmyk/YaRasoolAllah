@@ -12,9 +12,12 @@ current truth unless re-verified below.
 |---|---|
 | Canonical remote | `https://github.com/daynightae-cmyk/YaRasoolAllah.git` |
 | Branch | `main` at audit start of this file, then this slice |
-| Start SHA (after PR #87 merge) | `7dd552bef6cafe8b9ac54ffec5b22c35ea15c490` |
-| PR #83 | Closed without merge: superseded by `431257d` (EN/FR/UR AlQuran Cloud translations already on main). Checks had been green; Vercel `build-rate-limit` is a hosting quota, not an application-code failure. |
+| Start SHA (after PR #88 merge) | `6b6293a57f2a467ebc23b5151875e878fa2f46d1` |
+| PR #83 | Closed WITHOUT merge by owner (`daynightae-cmyk`, 2026-09-25T08:55:14Z): `CONFLICTING` against current `main` because equivalent governed translation work already landed in `431257d` (EN/FR/UR AlQuran Cloud translations, French included). Code checks had been green; Vercel `build-rate-limit` is a hosting quota, not an application-code failure. QuranEnc editions (Rowwad EN / Junagarhi UR) remain a LATER ADDITIVE slice only, not a replacement of the merged AlQuran Cloud study-mode path. |
+| PR #86 | Merged: Quran reader inline governed MP3Quran recitation (`bd382893`). |
 | PR #87 | Merged: Vercel public content API bridge (`/api/content/*`). Application CI green. Deployment still subject to Vercel quota. |
+| PR #88 | Merged: canonical public shell for supporting routes (`8c516956`). |
+| QuranEnc coexistence branch (NOT merged, deferred) | `origin/feat/quranenc-translations-internal-20260925` @ `3b26f3f1` — conflict-resolved rebase of the closed PR #83 onto `d6824086`, keeping AlQuran Cloud AND QuranEnc side by side (distinct server routes `/api/content/quran/translations` + `/api/content/quran/translation`, distinct client modules, both P0 gates). Locally verified 2026-09-25: `tsc` PASS, `test:p0` 35/35 PASS, `validate:sources` PASS, `vite build` PASS, live runtime 200 on both endpoints with real Al-Fatiha translations. Do NOT merge or re-open without a new owner decision. |
 
 ## Shell
 
@@ -35,7 +38,8 @@ Contract: `client/src/visual-golden/lib/public-shell.ts`.
 |---|---|---|---|---|---|---|---|---|---|
 | Tanzil Arabic Quran | 114 surahs / 6236 ayahs | Tanzil | Governed, immutable Arabic | `/quran` | Yes | Yes | n/a | Yes (query-time) | Do not reimport |
 | AlQuran Cloud translations | EN/FR/UR editions via internal proxy | AlQuran Cloud | API display; not bundled corpus | `/quran` study mode | Yes | Yes when provider reachable | n/a | No | Honest failure if provider down; French included |
-| MP3Quran recitations | Catalog + governed stream URLs | MP3Quran.net | Streaming allowed per registry | `/audio`, inline `/quran` | Yes | n/a | Yes if stream allowed | Catalog | No fake ayah timings |
+| MP3Quran recitations | Catalog + governed stream URLs | MP3Quran.net | Streaming allowed per registry | `/audio`, inline `/quran` (PR #86) | Yes | n/a | Yes if stream allowed | Catalog | No fake ayah timings |
+| QuranEnc translations (DEFERRED) | Rowwad EN 1.0.19 / Junagarhi UR 1.1.3, server adapter + rights evidence exist on deferred branch only | QuranEnc.com | Republication allowed with attribution/version (terms evidence on branch) | NONE on main | No | No | n/a | No | Owner-deferred additive slice; see Git authority row |
 | OpenITI | Item-level reader when rights allow | OpenITI | Per digital version | `/library` | Yes | Conditional | n/a | Catalog | Exercise real records |
 | Library catalog | Thousands of shelf works (runtime catalog builder) | Internal catalog + Open Library discovery | Per work/version | `/library` | Yes | Conditional | n/a | Yes | No fake PDF/IIIF/download |
 | Kids approved YouTube catalog | Generated approved list empty; curated seeds exist; recovered queue pending | YouTube publishers + editorial pipeline | Embed/depiction pending for recovered items | `/kids` | Partial | n/a | Seed videos only | Filter | Do not auto-promote pending |
@@ -63,10 +67,10 @@ Contract: `client/src/visual-golden/lib/public-shell.ts`.
 |---|---|
 | Quran Arabic | IMPLEMENTED AND VERIFIED |
 | Quran EN/FR/UR translations (AlQuran Cloud proxy) | IMPLEMENTED BUT NOT VERIFIED at production URL (Vercel quota) |
-| Quran audio MP3Quran | IMPLEMENTED AND VERIFIED in CI/runtime locally |
+| Quran audio MP3Quran | IMPLEMENTED AND VERIFIED in CI/runtime locally (incl. inline `/quran` recitation, PR #86) |
 | Library catalog + readers | IMPLEMENTED BUT NOT VERIFIED for every format combination |
 | Kids theatre | IMPLEMENTED AND VERIFIED (curtain); content PARTIAL |
-| Canonical public shell | This slice |
+| Canonical public shell | IMPLEMENTED AND VERIFIED for supporting routes (PR #88); `/dashboard`, `/bab-alsamaa-settings` intentionally legacy |
 | Hadith full corpus | BLOCKED_EXTERNAL / PARTIAL sample |
 | Seerah event graph | PARTIAL |
 | Atlas geographic | NOT IMPLEMENTED (schematic preserved) |
