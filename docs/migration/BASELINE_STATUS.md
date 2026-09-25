@@ -11,7 +11,7 @@ Generated: 2026-09-23 00:59:16 +04:00
 - Project: يا رسول الله ﷺ
 - Domain: yarasoolallah.it.com
 - Repository: daynightae-cmyk/alketab-almubeen
-- Local: D:\YaRasoolAllah
+- Local: D:\Knoux Projects\Knoux_Project_Center\01_Ready\YaRasoolAllah
 
 ## Verification
 - npm ci: PASS

@@ -147,7 +147,25 @@ try {
   await waitFor(session, "document.readyState === 'complete' && location.pathname === '/library'", "library route");
   await waitFor(
     session,
-    `[...document.querySelectorAll("button[aria-label]")].some((button) =>
+    `[...document.querySelectorAll("button")].some((button) =>
+      button.textContent?.includes("السيرة النبوية")
+    )`,
+    "Seerah library gateway",
+  );
+  await evaluate(
+    session,
+    `(() => {
+      const gateway = [...document.querySelectorAll("button")].find((button) =>
+        button.textContent?.includes("السيرة النبوية")
+      );
+      if (!gateway) throw new Error("Seerah gateway missing");
+      gateway.click();
+      return true;
+    })()`,
+  );
+  await waitFor(
+    session,
+    `[...document.querySelectorAll("[data-book-spine]")].some((button) =>
       button.getAttribute("aria-label")?.includes("السيرة النبوية")
     )`,
     "Ibn Hisham shelf book",
