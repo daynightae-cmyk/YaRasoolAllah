@@ -32,6 +32,7 @@ import {
   type QuranTranslationLanguage,
   type QuranTranslationResponse,
 } from "@/visual-golden/services/quran-translations";
+import { translationChoices } from "@/visual-golden/services/content-language";
 import {
   getQuranRecitations,
   type QuranRecitationPayload,
@@ -655,9 +656,11 @@ export function QuranPage() {
                 onChange={(event) => setTranslationLanguage(event.target.value as QuranTranslationLanguage)}
                 aria-label="اختيار ترجمة القرآن"
               >
-                <option value="en">English · Saheeh International</option>
-                <option value="fr">Français · Muhammad Hamidullah</option>
-                <option value="ur">اردو · فتح محمد جالندھری</option>
+                {translationChoices("/quran").map((choice) => (
+                  <option key={choice.language} value={choice.language}>
+                    {choice.labelAr}
+                  </option>
+                ))}
               </select>
               <small>
                 {translationState.state === "ready"
