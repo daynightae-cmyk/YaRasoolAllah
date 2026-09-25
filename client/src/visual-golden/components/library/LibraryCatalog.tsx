@@ -57,6 +57,7 @@ interface CatalogPayload {
 
 interface Props {
   initialWorkId?: string;
+  initialCategory?: string;
   onOpenReader?: (work: CatalogWork) => void;
   canOpenReader?: (work: CatalogWork) => boolean;
 }
@@ -266,13 +267,13 @@ function resolveRegistryUri(id: string): string | null {
     ?? null;
 }
 
-export function LibraryCatalog({ initialWorkId, onOpenReader, canOpenReader }: Props) {
+export function LibraryCatalog({ initialWorkId, initialCategory, onOpenReader, canOpenReader }: Props) {
   const lang = useInstitution((state) => state.lang);
   const c = copy[lang];
   const [data, setData] = useState<CatalogPayload | null>(null);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("all");
+  const [category, setCategory] = useState(initialCategory ?? "all");
   const [availability, setAvailability] = useState<"all" | AvailabilityState>("all");
   const [page, setPage] = useState(1);
 
@@ -320,6 +321,11 @@ export function LibraryCatalog({ initialWorkId, onOpenReader, canOpenReader }: P
   }, [availability, category, data, lang, query]);
 
   useEffect(() => setPage(1), [availability, category, query]);
+
+  useEffect(() => {
+    setCategory(initialCategory ?? "all");
+    setPage(1);
+  }, [initialCategory]);
 
   if (error) return <p className={styles.state} role="alert">{error}</p>;
   if (!data) return <p className={styles.state} role="status">{c.loading}</p>;

@@ -22,6 +22,18 @@
   color: var(--ivory-50);
   font-family: var(--font-ui);
 }
+.searchHint { color: var(--ivory-300); font-size: 0.68rem; white-space: nowrap; }
+.gateways { margin: 1rem clamp(0.55rem, 2vw, 1rem); padding: 1rem; border: 1px solid rgba(212, 160, 23, 0.25); border-radius: 18px; background: rgba(4, 24, 20, 0.68); }
+.gatewayHeading { display: grid; gap: 0.25rem; margin-bottom: 0.8rem; }
+.gatewayHeading > span { color: var(--gold-300); font-size: 0.72rem; font-weight: 700; }
+.gatewayHeading h2 { margin: 0; color: var(--ivory-50); font-size: 1.15rem; }
+.gatewayHeading p { margin: 0; color: var(--ivory-300); font-size: 0.78rem; line-height: 1.7; }
+.gatewayGrid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0.55rem; }
+.gateway { min-height: 124px; display: grid; align-content: start; gap: 0.35rem; padding: 0.75rem; text-align: start; border: 1px solid rgba(212, 160, 23, 0.25); border-radius: 12px; color: var(--ivory-100); background: linear-gradient(145deg, rgba(12, 70, 55, 0.72), rgba(5, 29, 24, 0.84)); }
+.gateway:hover, .gateway:focus-visible { border-color: var(--gold-400); background: rgba(212, 160, 23, 0.12); }
+.gateway strong { color: var(--gold-200); font-size: 0.85rem; line-height: 1.45; }
+.gateway span { color: var(--ivory-200); font-size: 0.71rem; line-height: 1.55; }
+.gateway small { margin-top: auto; color: var(--ivory-300); font-size: 0.65rem; }
 .modeSwitch {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -276,6 +288,7 @@
 }
 
 @media (max-width: 1100px) {
+  .gatewayGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .externalGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .featured {
     grid-template-columns: repeat(2, 1fr);
@@ -286,6 +299,7 @@
   }
 }
 @media (max-width: 600px) {
+  .gatewayGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .modeSwitch { grid-template-columns: 1fr; }
   .externalGrid { grid-template-columns: 1fr; }
   .externalResults { margin: 0.8rem; }
