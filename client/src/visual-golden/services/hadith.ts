@@ -4,8 +4,10 @@ import {
   type HadithCollection,
   type HadithRecord,
 } from "@/data/hadithData";
+import type { HadithCorpusStatus } from "@shared/hadith";
 
 export type { HadithCollection, HadithRecord };
+export type { HadithCorpusStatus } from "@shared/hadith";
 
 export const COLLECTIONS: HadithCollection[] = HADITH_COLLECTIONS;
 
@@ -15,6 +17,18 @@ export const HADITH_COUNTS = {
   collections: HADITH_COLLECTIONS.length,
   localSamples: HADITH_DEVELOPMENT_SAMPLES.length,
 };
+
+export async function getHadithCorpusStatus(signal?: AbortSignal): Promise<HadithCorpusStatus> {
+  const response = await fetch("/api/content/hadith/status", { signal });
+  const body = await response.json().catch(() => null) as { message?: string } | null;
+  if (!response.ok) {
+    throw new Error(body?.message || `HTTP ${response.status}`);
+  }
+  if (!body) {
+    throw new Error("استجابة حالة مزودي الحديث غير صالحة.");
+  }
+  return body as HadithCorpusStatus;
+}
 
 export function getCollection(collectionId: string): HadithCollection | null {
   return COLLECTIONS.find((collection) => collection.id === collectionId) ?? null;

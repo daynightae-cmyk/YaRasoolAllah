@@ -361,6 +361,9 @@ try {
       if (item.path === "/hadith" && (!truthGeometry.text.includes("عينة تطوير") || !truthGeometry.text.includes("قيد المراجعة"))) {
         throw new Error(`${item.name} lost Hadith review boundary`);
       }
+      if (item.path === "/hadith" && (!truthGeometry.text.includes("نطاق المحتوى الحالي") || !truthGeometry.text.includes("Sunnah.com") || !truthGeometry.text.includes("Dorar") || !truthGeometry.text.includes("المتن الكامل غير متاح"))) {
+        throw new Error(`${item.name} lost Hadith corpus scope boundary`);
+      }
       if (item.path === "/basirah" && !truthGeometry.text.includes("ليست مفتي")) {
         throw new Error(`${item.name} lost Basirah non-mufti boundary`);
       }

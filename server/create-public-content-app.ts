@@ -4,6 +4,7 @@ import { registerOpenItiReaderRoutes } from "./openiti-reader.js";
 import { registerOpenLibraryRoutes } from "./open-library.js";
 import { registerQuranTranslationRoutes } from "./quran-translations.js";
 import { registerQuranTafsirRoutes } from "./quran-tafsir.js";
+import { registerHadithStatusRoutes } from "./hadith.js";
 import { errorHandler, requestLogging } from "./logging.js";
 
 function publicContentHeaders(
@@ -31,6 +32,7 @@ export function createPublicContentApp(): Express {
   registerMp3QuranCatalogRoutes(app);
   registerQuranTranslationRoutes(app);
   registerQuranTafsirRoutes(app);
+  registerHadithStatusRoutes(app);
   registerOpenItiReaderRoutes(app);
 
   app.use(errorHandler);
