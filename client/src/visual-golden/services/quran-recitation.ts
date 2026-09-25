@@ -15,7 +15,7 @@ export interface QuranRecitationPayload {
   reciters: QuranReciterStream[];
 }
 
-function isAllowedProviderStream(value: string): boolean {
+export function isAllowedProviderStream(value: string): boolean {
   try {
     const url = new URL(value);
     return url.protocol === "https:"
