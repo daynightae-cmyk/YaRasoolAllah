@@ -5,9 +5,11 @@ import {
 } from "@shared/audiobook-registry";
 import {
   digitalVersionRegistry,
+  getExternalResourcesForWork,
   workRegistry,
   type ContentAvailability,
   type DigitalVersionRecord,
+  type ExternalResourceRecord,
   type ReviewState,
   type WorkCategory,
   type WorkRecord,
@@ -37,6 +39,7 @@ export interface LibraryBook {
   audiobook: AudiobookRecord | null;
   tag: string;
   modes: BookMode[];
+  externalResources: ExternalResourceRecord[];
   cover: string;
   spine: {
     color: string;
@@ -138,6 +141,7 @@ function toLibraryBook(record: WorkRecord): LibraryBook {
     audiobook,
     tag: tagFor(record),
     modes,
+    externalResources: getExternalResourcesForWork(record.workId),
     cover: COVER_BY_CATEGORY[record.category] ?? art.books,
     spine: spineFor(record.workId),
   };

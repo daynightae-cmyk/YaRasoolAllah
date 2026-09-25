@@ -8,7 +8,7 @@
     "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
     "start": "cross-env NODE_ENV=production node dist/index.js",
     "check": "tsc",
-    "test:p0": "tsx --test server/auth.test.ts server/security-http.test.ts scripts/kids-player-policy.test.ts scripts/library-catalog-presentation.test.ts",
+    "test:p0": "tsx --test server/auth.test.ts server/security-http.test.ts scripts/kids-player-policy.test.ts scripts/library-catalog-presentation.test.ts scripts/external-resource-registry.test.ts",
     "validate:sources": "tsx scripts/validate-source-governance.ts",
     "capture:visual": "node scripts/capture-visual-evidence.mjs",
     "build:library-catalog": "python3 scripts/research/build_runtime_library_catalog.py",

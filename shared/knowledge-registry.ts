@@ -409,3 +409,222 @@ export const childrenAdaptationRegistry: ChildrenAdaptationRecord[] = [
 ];
 
 export const mediaAssetRegistry: never[] = [];
+
+/**
+ * Verified external file/reader resources (V3 acquisition).
+ *
+ * Separate from digitalVersionRegistry ON PURPOSE: those rows are pinned
+ * OpenITI historical texts with cleared in-app reading rights. The rows below
+ * are item-level verified files/pages on other providers whose scan/edition
+ * rights remain unclear. They must surface as source evidence with an item
+ * link — never as in-app reading, downloads, or approval.
+ */
+export type ExternalResourceProvider = "InternetArchive" | "Perseus" | "OPenn";
+
+export type ExternalResourceFormat = "PDF" | "EPUB" | "TXT" | "TEI" | "SCAN" | "ITEM_PAGE";
+
+export type ExternalResourceRights = "RIGHTS_UNCLEAR" | "UNKNOWN" | "OPEN_LICENSE";
+
+export interface ExternalResourceRecord {
+  resourceId: string;
+  workId: string;
+  provider: ExternalResourceProvider;
+  format: ExternalResourceFormat;
+  itemUrl: string;
+  fileUrl: string | null;
+  fileSize: number | null;
+  editionStatement: string;
+  rightsState: ExternalResourceRights;
+  rightsNote: string;
+  attribution: string;
+  checkedAt: string;
+}
+
+export const externalResourceRegistry: ExternalResourceRecord[] = [
+  {
+    resourceId: "ext-ia-sirat-hisham-01-pdf",
+    workId: "work-ibn-hisham-sira",
+    provider: "InternetArchive",
+    format: "PDF",
+    itemUrl: "https://archive.org/details/Sirat_Ibn_Hisham",
+    fileUrl: "https://archive.org/download/Sirat_Ibn_Hisham/01_94563.pdf",
+    fileSize: 7214144,
+    editionStatement: "Scan set edition not established; do not present as a named print edition.",
+    rightsState: "RIGHTS_UNCLEAR",
+    rightsNote: "Author death does not clear modern scan/OCR rights.",
+    attribution: "Internet Archive item Sirat_Ibn_Hisham (Yedali upload)",
+    checkedAt: "2026-09-25T01:38:46.563Z",
+  },
+  {
+    resourceId: "ext-ia-sirat-hisham-01-epub",
+    workId: "work-ibn-hisham-sira",
+    provider: "InternetArchive",
+    format: "EPUB",
+    itemUrl: "https://archive.org/details/Sirat_Ibn_Hisham",
+    fileUrl: "https://archive.org/download/Sirat_Ibn_Hisham/01_94563.epub",
+    fileSize: 627216,
+    editionStatement: "OCR-derived EPUB; text not reviewed.",
+    rightsState: "RIGHTS_UNCLEAR",
+    rightsNote: "Author death does not clear modern scan/OCR rights.",
+    attribution: "Internet Archive item Sirat_Ibn_Hisham (Yedali upload)",
+    checkedAt: "2026-09-25T01:38:49.263Z",
+  },
+  {
+    resourceId: "ext-ia-sirat-hisham-01-txt",
+    workId: "work-ibn-hisham-sira",
+    provider: "InternetArchive",
+    format: "TXT",
+    itemUrl: "https://archive.org/details/Sirat_Ibn_Hisham",
+    fileUrl: "https://archive.org/download/Sirat_Ibn_Hisham/01_94563_djvu.txt",
+    fileSize: 1076852,
+    editionStatement: "Uncorrected OCR text; OCR_NEEDS_REVIEW.",
+    rightsState: "RIGHTS_UNCLEAR",
+    rightsNote: "Author death does not clear modern scan/OCR rights.",
+    attribution: "Internet Archive item Sirat_Ibn_Hisham (Yedali upload)",
+    checkedAt: "2026-09-25T01:38:51.297Z",
+  },
+  {
+    resourceId: "ext-ia-asseirah-01-pdf",
+    workId: "work-ibn-hisham-sira",
+    provider: "InternetArchive",
+    format: "PDF",
+    itemUrl: "https://archive.org/details/asseirah",
+    fileUrl: "https://archive.org/download/asseirah/Asseirah_01.pdf",
+    fileSize: 187189807,
+    editionStatement: "Matba'at Hijazi, Cairo 1356/1937; ed. Muhammad Muhyi al-Din 'Abd al-Hamid. Vol 1 of 4-volume set.",
+    rightsState: "RIGHTS_UNCLEAR",
+    rightsNote: "1937 print edition metadata verified from item description; scan/OCR rights not established.",
+    attribution: "Internet Archive item asseirah",
+    checkedAt: "2026-09-25T05:10:00.000Z",
+  },
+  {
+    resourceId: "ext-ia-asseirah-01-epub",
+    workId: "work-ibn-hisham-sira",
+    provider: "InternetArchive",
+    format: "EPUB",
+    itemUrl: "https://archive.org/details/asseirah",
+    fileUrl: "https://archive.org/download/asseirah/Asseirah_01.epub",
+    fileSize: 515728,
+    editionStatement: "OCR-derived EPUB of the 1937 set; text not reviewed.",
+    rightsState: "RIGHTS_UNCLEAR",
+    rightsNote: "Scan/OCR rights not established.",
+    attribution: "Internet Archive item asseirah",
+    checkedAt: "2026-09-25T05:10:00.000Z",
+  },
+  {
+    resourceId: "ext-ia-asseirah-01-txt",
+    workId: "work-ibn-hisham-sira",
+    provider: "InternetArchive",
+    format: "TXT",
+    itemUrl: "https://archive.org/details/asseirah",
+    fileUrl: "https://archive.org/download/asseirah/Asseirah_01_djvu.txt",
+    fileSize: 689994,
+    editionStatement: "Uncorrected OCR text; OCR_NEEDS_REVIEW.",
+    rightsState: "RIGHTS_UNCLEAR",
+    rightsNote: "Scan/OCR rights not established.",
+    attribution: "Internet Archive item asseirah",
+    checkedAt: "2026-09-25T05:10:00.000Z",
+  },
+  {
+    resourceId: "ext-ia-sert-ibnkatheer-pdf",
+    workId: "work-ibn-hisham-sira",
+    provider: "InternetArchive",
+    format: "PDF",
+    itemUrl: "https://archive.org/details/sert-ibn-hesham-ibnkatheer-hq",
+    fileUrl: "https://archive.org/download/sert-ibn-hesham-ibnkatheer-hq/%D8%A7%D9%84%D8%B3%D9%8A%D8%B1%D8%A9%20%D8%A7%D9%84%D9%86%D8%A8%D9%88%D9%8A%D8%A9%20%D9%84%D8%A7%D8%A8%D9%86%20%D9%87%D8%B4%D8%A7%D9%85%20-%D8%B75%20%D8%AF%D8%A7%D8%B1%20%D8%A7%D8%A8%D9%86%20%D9%83%D8%AB%D9%8A%D8%B1%20(%D9%86%D8%B3%D8%AE%D8%A9%20%D9%85%D9%84%D9%88%D9%86%D8%A9).pdf",
+    fileSize: 370268995,
+    editionStatement: "Dar Ibn Kathir, 5th colorful edition; publication year not established.",
+    rightsState: "RIGHTS_UNCLEAR",
+    rightsNote: "Modern edition and scan rights not established in any form.",
+    attribution: "Internet Archive item sert-ibn-hesham-ibnkatheer-hq",
+    checkedAt: "2026-09-25T05:10:00.000Z",
+  },
+  {
+    resourceId: "ext-ia-sert-ibnkatheer-epub",
+    workId: "work-ibn-hisham-sira",
+    provider: "InternetArchive",
+    format: "EPUB",
+    itemUrl: "https://archive.org/details/sert-ibn-hesham-ibnkatheer-hq",
+    fileUrl: "https://archive.org/download/sert-ibn-hesham-ibnkatheer-hq/%D8%A7%D9%84%D8%B3%D9%8A%D8%B1%D8%A9%20%D8%A7%D9%84%D9%86%D8%A8%D9%88%D9%8A%D8%A9%20%D9%84%D8%A7%D8%A8%D9%86%20%D9%87%D8%B4%D8%A7%D9%85%20-%D8%B75%20%D8%AF%D8%A7%D8%B1%20%D8%A7%D8%A8%D9%86%20%D9%83%D8%AB%D9%8A%D8%B1%20(%D9%86%D8%B3%D8%AE%D8%A9%20%D9%85%D9%84%D9%88%D9%86%D8%A9).epub",
+    fileSize: 2357121,
+    editionStatement: "OCR-derived EPUB; text not reviewed.",
+    rightsState: "RIGHTS_UNCLEAR",
+    rightsNote: "Modern edition and scan rights not established in any form.",
+    attribution: "Internet Archive item sert-ibn-hesham-ibnkatheer-hq",
+    checkedAt: "2026-09-25T05:10:00.000Z",
+  },
+  {
+    resourceId: "ext-ia-sert-ibnkatheer-txt",
+    workId: "work-ibn-hisham-sira",
+    provider: "InternetArchive",
+    format: "TXT",
+    itemUrl: "https://archive.org/details/sert-ibn-hesham-ibnkatheer-hq",
+    fileUrl: "https://archive.org/download/sert-ibn-hesham-ibnkatheer-hq/%D8%A7%D9%84%D8%B3%D9%8A%D8%B1%D8%A9%20%D8%A7%D9%84%D9%86%D8%A8%D9%88%D9%8A%D8%A9%20%D9%84%D8%A7%D8%A8%D9%86%20%D9%87%D8%B4%D8%A7%D9%85%20-%D8%B75%20%D8%AF%D8%A7%D8%B1%20%D8%A7%D8%A8%D9%86%20%D9%83%D8%AB%D9%8A%D8%B1%20(%D9%86%D8%B3%D8%AE%D8%A9%20%D9%85%D9%84%D9%88%D9%86%D8%A9)_djvu.txt",
+    fileSize: 3880939,
+    editionStatement: "Uncorrected OCR text; OCR_NEEDS_REVIEW.",
+    rightsState: "RIGHTS_UNCLEAR",
+    rightsNote: "Modern edition and scan rights not established in any form.",
+    attribution: "Internet Archive item sert-ibn-hesham-ibnkatheer-hq",
+    checkedAt: "2026-09-25T05:10:00.000Z",
+  },
+  {
+    resourceId: "ext-ia-vols34-pdf",
+    workId: "work-ibn-hisham-sira",
+    provider: "InternetArchive",
+    format: "PDF",
+    itemUrl: "https://archive.org/details/IbnHishamSiratVols3And4Arabic",
+    fileUrl: "https://archive.org/download/IbnHishamSiratVols3And4Arabic/Ibn%20Hisham%20Sirat%20vols%203%20and%204%20Arabic.pdf",
+    fileSize: 5608192,
+    editionStatement: "2016 user-upload scan set (vols 1-6); underlying print edition not established.",
+    rightsState: "RIGHTS_UNCLEAR",
+    rightsNote: "Print, scan, and OCR rights not established.",
+    attribution: "Internet Archive item IbnHishamSiratVols3And4Arabic",
+    checkedAt: "2026-09-25T05:10:00.000Z",
+  },
+  {
+    resourceId: "ext-ia-vols34-epub",
+    workId: "work-ibn-hisham-sira",
+    provider: "InternetArchive",
+    format: "EPUB",
+    itemUrl: "https://archive.org/details/IbnHishamSiratVols3And4Arabic",
+    fileUrl: "https://archive.org/download/IbnHishamSiratVols3And4Arabic/Ibn%20Hisham%20Sirat%20vols%203%20and%204%20Arabic.epub",
+    fileSize: 734857,
+    editionStatement: "OCR-derived EPUB; text not reviewed.",
+    rightsState: "RIGHTS_UNCLEAR",
+    rightsNote: "Print, scan, and OCR rights not established.",
+    attribution: "Internet Archive item IbnHishamSiratVols3And4Arabic",
+    checkedAt: "2026-09-25T05:10:00.000Z",
+  },
+  {
+    resourceId: "ext-ia-vols34-txt",
+    workId: "work-ibn-hisham-sira",
+    provider: "InternetArchive",
+    format: "TXT",
+    itemUrl: "https://archive.org/details/IbnHishamSiratVols3And4Arabic",
+    fileUrl: "https://archive.org/download/IbnHishamSiratVols3And4Arabic/Ibn%20Hisham%20Sirat%20vols%203%20and%204%20Arabic_djvu.txt",
+    fileSize: 1200952,
+    editionStatement: "Uncorrected OCR text; OCR_NEEDS_REVIEW.",
+    rightsState: "RIGHTS_UNCLEAR",
+    rightsNote: "Print, scan, and OCR rights not established.",
+    attribution: "Internet Archive item IbnHishamSiratVols3And4Arabic",
+    checkedAt: "2026-09-25T05:10:00.000Z",
+  },
+  {
+    resourceId: "ext-perseus-ibn-hisham-shamela-ara2",
+    workId: "work-ibn-hisham-sira",
+    provider: "Perseus",
+    format: "ITEM_PAGE",
+    itemUrl: "https://catalog.perseus.org/catalog/urn:cts:arabicLit:0213IbnHisham.SiraNabawiyya.Shamela-ara2",
+    fileUrl: null,
+    fileSize: null,
+    editionStatement: "Mustafa al-Babi al-Halabi 2nd ed., 1375/1955; eds. al-Saqqa, al-Abyari, al-Shalabi. Catalog page only; raw text not acquired.",
+    rightsState: "UNKNOWN",
+    rightsNote: "Edition metadata verified; text bytes and rights not established.",
+    attribution: "Perseus Catalog; OpenITI book URI 0213IbnHisham.SiraNabawiyya",
+    checkedAt: "2026-09-25T05:10:00.000Z",
+  },
+];
+
+export function getExternalResourcesForWork(workId: string): ExternalResourceRecord[] {
+  return externalResourceRegistry.filter((resource) => resource.workId === workId);
+}
