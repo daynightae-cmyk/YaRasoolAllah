@@ -12,7 +12,14 @@ import {
   SEERAH_COUNTS,
   getRelatedChapters,
 } from "@/visual-golden/services/seerah";
-import { ATLAS_NODES } from "@/visual-golden/services/atlas";
+import {
+  SEERAH_GRAPH,
+  SEERAH_GRAPH_COUNTS,
+  SEERAH_GRAPH_DEFERRED,
+  SEERAH_GRAPH_EDGE_LABELS,
+  getSeerahEventNode,
+  type SeerahGraphEventNode,
+} from "@/visual-golden/services/seerah-graph";
 import styles from "./SeerahPage.module.css";
 
 const READ_KEY = "seerah-read-chapters-v1";
@@ -35,6 +42,10 @@ function safeReadRead(): string[] {
   }
 }
 
+function findEvent(key: string): SeerahGraphEventNode | null {
+  return SEERAH_GRAPH.events.find((event) => event.key === key) ?? null;
+}
+
 const STAGE_ART = [
   art.reciterKaaba,
   art.lanternGlow,
@@ -55,11 +66,15 @@ export function SeerahPage() {
   const related = useMemo(() => getRelatedChapters(chapter.id), [chapter.id]);
   const events = chapter.timelineEvents ?? [];
   const selectedEvent = events.find((event) => event.id === selection.eventId) ?? events[0] ?? null;
-  const place = ATLAS_NODES.find(
-    (node) => node.name === selectedEvent?.location && node.mentions.some(
-      (mention) => mention.chapterId === chapter.id && mention.eventId === selectedEvent.id,
-    ),
-  );
+  const eventNode = selectedEvent ? getSeerahEventNode(chapter.id, selectedEvent.id) : undefined;
+  const place = eventNode?.place ?? null;
+
+  const selectEvent = (target: SeerahGraphEventNode) =>
+    setSelection({ chapterId: target.chapterId, eventId: target.eventId });
+
+  const previousEvent = eventNode?.previousKey ? findEvent(eventNode.previousKey) : null;
+  const nextEvent = eventNode?.nextKey ? findEvent(eventNode.nextKey) : null;
+  const continuedEvent = eventNode?.continuesIntoKey ? findEvent(eventNode.continuesIntoKey) : null;
 
   const readCount = CHAPTERS.filter((c) => read.includes(c.id)).length;
   const percent = Math.round((readCount / CHAPTERS.length) * 100);
@@ -184,11 +199,96 @@ export function SeerahPage() {
                 <div><dt>الموضع المذكور</dt><dd>{selectedEvent.location || "غير مسجل"}</dd></div>
               </dl>
               {place ? (
-                <Link href={`/atlas?place=${encodeURIComponent(place.id)}`} className={styles.eventLink}>
+                <Link href={`/atlas?place=${encodeURIComponent(place.nodeId)}`} className={styles.eventLink}>
                   <Map size={14} /> شاهد {place.name} في الأطلس التخطيطي
                 </Link>
+              ) : (
+                <p className={styles.eventCaveat}>
+                  الموضع «{eventNode?.locationText ?? "غير مسجل"}» خارج المواضع التخطيطية المعتمدة، فلا رابط خريطة له.
+                </p>
+              )}
+              {eventNode ? (
+                <section
+                  className={styles.graph}
+                  data-visual="seerah-event-graph"
+                  aria-label="علاقات المحطة المسجلة"
+                >
+                  <h4>علاقات المحطة المسجّلة في البيانات</h4>
+                  <ul className={styles.graphList} data-graph-relations>
+                    <li>
+                      <span>الفصل الحاوي</span>
+                      <strong>مرحلة {chapter.order} · {chapter.title}</strong>
+                    </li>
+                    <li>
+                      <span>الموضع</span>
+                      <strong>
+                        {eventNode.place
+                          ? `${eventNode.place.name} · موضع تخطيطي`
+                          : "غير مرتبط بموضع تخطيطي"}
+                      </strong>
+                    </li>
+                    <li>
+                      <span>الترتيب داخل الفصل</span>
+                      <strong>
+                        {previousEvent ? "تسبقها محطة مسجّلة" : "أول محطة في الفصل"}
+                        {" · "}
+                        {nextEvent ? "يليها محطة مسجّلة" : "آخر محطة في الفصل"}
+                      </strong>
+                    </li>
+                    <li>
+                      <span>فصول مرتبطة مسجّلة</span>
+                      <strong>
+                        {related.length > 0
+                          ? `${related.length} فصل · ${SEERAH_GRAPH_EDGE_LABELS["chapter-relation"]}`
+                          : "لا روابط مسجّلة لهذا الفصل"}
+                      </strong>
+                    </li>
+                  </ul>
+                  <div className={styles.graphNav}>
+                    {previousEvent ? (
+                      <button type="button" className={styles.graphButton} onClick={() => selectEvent(previousEvent)}>
+                        <ChevronRight size={14} /> {previousEvent.title}
+                      </button>
+                    ) : null}
+                    {nextEvent ? (
+                      <button type="button" className={styles.graphButton} onClick={() => selectEvent(nextEvent)}>
+                        {nextEvent.title} <ChevronLeft size={14} />
+                      </button>
+                    ) : null}
+                    {continuedEvent ? (
+                      <button
+                        type="button"
+                        className={styles.graphButton}
+                        onClick={() => selectEvent(continuedEvent)}
+                      >
+                        <ChevronLeft size={14} /> تكملة السرد: {continuedEvent.title}
+                      </button>
+                    ) : null}
+                  </div>
+                  <p className={styles.graphLabel}>
+                    الروابط أعلاه مبنية على {SEERAH_GRAPH_EDGE_LABELS["event-sequence"]} و
+                    {SEERAH_GRAPH_EDGE_LABELS["chapter-continuity"]} — ترتيب سردي لا تقويم تاريخي.
+                  </p>
+                  <div className={styles.graphDeferred} data-graph-deferred>
+                    <h5>علاقات غير مسجّلة في البيانات الحالية</h5>
+                    <ul>
+                      {SEERAH_GRAPH_DEFERRED.map((relation) => (
+                        <li key={relation.kind}>
+                          <strong>{relation.label}</strong>
+                          <span>{relation.reason}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <p>
+                      {SEERAH_GRAPH_COUNTS.events} محطة · {SEERAH_GRAPH_COUNTS.edges} علاقة مسجّلة ·{" "}
+                      {SEERAH_GRAPH_COUNTS.deferredKinds} أنواع علاقات مؤجّلة
+                    </p>
+                  </div>
+                </section>
               ) : null}
-              <p className={styles.eventCaveat}>إحالات المحطة إلى الأشخاص والقرآن والحديث والمراجع التفصيلية غير مسجلة هنا بعد.</p>
+              <p className={styles.eventCaveat}>
+                التواريخ من نصوص بيانات الفصل ولا تُحسَب منها تواريخ مطلقة.
+              </p>
             </article>
           ) : null}
           <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", marginTop: "0.6rem" }}>

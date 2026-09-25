@@ -168,6 +168,105 @@
   outline: 2px solid var(--gold-400);
   outline-offset: 3px;
 }
+.graph {
+  margin-top: 0.9rem;
+  padding: 0.75rem;
+  border: 1px solid rgba(212, 160, 23, 0.3);
+  border-radius: 12px;
+  background: rgba(6, 28, 24, 0.55);
+}
+.graph h4 {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+}
+.graphList {
+  list-style: none;
+  margin: 0 0 0.6rem;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.45rem;
+}
+.graphList li {
+  min-width: 0;
+  padding: 0.4rem 0.5rem;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.2);
+}
+.graphList span {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--gold-300);
+}
+.graphList strong {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.graphNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.graphButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  max-width: 100%;
+  border: 1px solid var(--border-gold);
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.72rem;
+  color: var(--gold-300);
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+.graphButton:hover,
+.graphButton:focus-visible {
+  border-color: var(--gold-400);
+  color: var(--ivory-50);
+}
+.graphLabel {
+  margin: 0.5rem 0 0;
+  font-size: 0.7rem;
+  color: var(--gold-300);
+  line-height: 1.8;
+}
+.graphDeferred {
+  margin-top: 0.7rem;
+  padding-top: 0.6rem;
+  border-top: 1px dashed rgba(212, 160, 23, 0.35);
+}
+.graphDeferred h5 {
+  margin: 0 0 0.4rem;
+  font-size: 0.78rem;
+  color: var(--gold-300);
+}
+.graphDeferred ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+.graphDeferred li {
+  min-width: 0;
+  font-size: 0.72rem;
+  line-height: 1.75;
+}
+.graphDeferred li strong {
+  color: var(--gold-300);
+  margin-inline-end: 0.3rem;
+}
+.graphDeferred li span {
+  overflow-wrap: anywhere;
+}
+.graphDeferred p {
+  margin: 0.5rem 0 0;
+  font-size: 0.68rem;
+  color: var(--gold-300);
+}
 .mapCard {
   background: rgba(5, 42, 36, 0.55);
   border: 1px solid rgba(212, 160, 23, 0.28);

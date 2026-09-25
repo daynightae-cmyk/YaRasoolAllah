@@ -27,6 +27,9 @@ This matrix inventories live datasets, registries, adapters, and source-governan
 | Quran surahs | 114 |
 | Seerah chapters | 8 |
 | Seerah categories | 3 |
+| Seerah recorded timeline events (graph nodes) | 23 |
+| Seerah recorded graph edges | 62 |
+| Seerah deferred relation kinds | 7 |
 | Hadith collections | 6 |
 | Hadith development samples | 4 |
 | Who-is-Muhammad chapters | 12 |
@@ -52,7 +55,8 @@ This matrix inventories live datasets, registries, adapters, and source-governan
 | `data-sources/tanzil/quran-uthmani-min-1.1.txt` | 6236 lines | Tanzil downloaded immutable file | Cleared for verbatim Arabic display with attribution | `ingest:quran` source artifact | Build-time/data maintenance | Not directly | No | No | No | Source file only | No | Arabic | IMPLEMENTED BUT NOT VERIFIED | Keep checksum validation in ingestion and link evidence in docs. |
 | `client/src/data/quranAudio.ts::quranRecitations` | 8 | Static audio provider records | External/recording-level rights not cleared for bundling | `QuranAudioPage`, audio components | `/quran-audio` | Yes | Intended reciter selection/playback | Category browsing | No | Metadata only | Not verified; likely external URLs | Names multilingual-ish | IMPLEMENTED BUT NOT VERIFIED | Runtime-test actual play/pause and mark every recording with provider/rights constraints. |
 | `client/src/data/quranAudio.ts::quranAudioCategories` | 5 | Static taxonomy | Same as audio records | `ReciterSelector` | `/quran-audio` | Yes | Filter/category controls | Partial | No | Metadata only | n/a | Arabic labels | IMPLEMENTED BUT NOT VERIFIED | Add rights-aware category empty/error states. |
-| `client/src/data/seerahData.ts::seerahChapters` | 8 | Internal structured Seerah content | Scholarly and edition review pending | `SeerahPage`, `GateOfLightPage`, `GlobalSearchDialog` | `/seerah`, `/`, global search | Yes | Chapter selection/evidence | Search dialog only | No | Yes, summaries/details | No | Arabic content | PARTIAL | Add event workspace model with date/place certainty and source evidence per event. |
+| `client/src/data/seerahData.ts::seerahChapters` | 8 | Internal structured Seerah content | Scholarly and edition review pending | `SeerahPage`, `GateOfLightPage`, `GlobalSearchDialog` | `/seerah`, `/`, global search | Yes | Chapter selection/evidence | Search dialog only | No | Yes, summaries/details | No | Arabic content | PARTIAL | Recorded-relation event graph shipped this slice (`seerah-graph.ts`); remaining gap is sourced evidence per event (no reference fields exist in the data). |
+| `client/src/visual-golden/services/seerah-graph.ts` | 23 event nodes / 62 recorded edges | Derived only from recorded chapter fields (`order`, `timelineEvents[]`, `relatedChapters[]`, `event.location` → curated Atlas slot) | No new rights; carries existing chapter review status | `SeerahPage` | `/seerah` | Yes | Event relations, narrative sequencing, Atlas place link, deferred-relation disclosure | No | No | Yes, per-event relation list | No | Arabic UI labels | IMPLEMENTED AND VERIFIED (recorded relations only) | Admit person/Quran/hadith/reference edges only after the source data carries IDs and citations; never infer them. |
 | `client/src/data/seerahData.ts::seerahCategories` | 3 | Internal taxonomy | Same as Seerah content | `SeerahPage` | `/seerah` | Yes | Category navigation | Partial | No | Labels only | No | Arabic | PARTIAL | Tie categories to timeline/map/people filters. |
 | `client/src/components/Seerah/MountainousBattlefieldMap.tsx` data | Component-local schematic data | Internal interpretive map layer | Must not be treated as exact geodata | `SeerahPage` | `/seerah` atlas section | Yes | Map/atlas interaction | No | No | Interpretive labels | No | Arabic | PARTIAL | Promote to governed atlas dataset with route certainty, stages, source confidence, and reduced-motion controls. |
 | `client/src/data/hadithData.ts::HADITH_COLLECTIONS` | 6 | Internal collection metadata | Bibliographic/source review pending | `HadithPage`, `SunnahPage` | `/hadith`, `/sunnah` | Yes | Collection selection | Partial | No | Metadata only | No | Arabic/English fields | PARTIAL | Keep bibliographic counts separate from any future cleared corpus. |
@@ -95,7 +99,7 @@ The following data is approved enough to be visible but is not yet used to its f
 |---|---|---|
 | 33 OpenITI version records | Library shows metadata but no rich version comparison or reading-desk unavailable state depth | Version-aware reading desk with explicit `CATALOG RECORD — DIGITAL TEXT NOT AVAILABLE`. |
 | 6236 Arabic Quran ayahs | Route reads ayah-by-ayah, but no full search or audio integration on same sacred workspace | Search, bookmarks/notes, and source-aware recitation handoff. |
-| 8 Seerah chapters | Experience is chapter-based, not event-workspace based | Normalize into events with date/place certainty, people, Quran/Hadith links, evidence. |
+| 8 Seerah chapters | Events are normalized with recorded relations, but no sourced evidence per event and no people/Quran/Hadith links | Add reference fields to the event data first, then admit those edges; never infer links from free text. |
 | 5 children adaptations | Route exists but not a real story journey or theatre | Story reader, parent area, favorites only after persistence truth is settled. |
 | Provider policies | Mostly governance pages | Inline route affordances showing why a button is disabled or external-only. |
 
@@ -110,4 +114,6 @@ These promotions are explicitly blocked until new evidence exists:
 | Show children videos | Cleared media asset count is 0. |
 | Present hadith samples as a verified corpus | Samples are development records pending editorial review and assessor-grade attribution. |
 | Make atlas coordinates from schematic SVG/component positions | Current atlas is interpretive; no acquired historical geodata supports exact movements. |
+| Derive Seerah event→person/Quran/Hadith edges from free-text descriptions and keywords | The event data carries no person registry, surah/ayah reference, hadith reference or source field, so any such link would be an invention rather than a citation. |
+| Present the Seerah narrative sequence as a dated chronology | Date strings mix Hijri years, relative ages and estimates with no normalized timestamp, so ordering stays narrative. |
 | Use AI as a mufti or religious authority | Grounded retrieval, citation contract, and editorial workflow are not implemented. |
