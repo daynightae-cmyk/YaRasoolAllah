@@ -49,6 +49,29 @@ export const ROUTE_CONTENT_DECLARATIONS: RouteContentDeclaration[] = [
     reason: "Chapter text is Arabic only; no translated edition is recorded.",
   },
   {
+    path: "/character",
+    contentLanguage: "ar",
+    reason:
+      "Same surface as /who-is-muhammad (App.tsx renders WhoIsMuhammadPage with a fixed chapter), so the same Arabic-only chapters apply.",
+  },
+  {
+    path: "/five-pillars",
+    contentLanguage: "ar",
+    reason:
+      "FivePillarsPage records the pillars' rulings and reasoning (detailedContent) in Arabic only.",
+  },
+  {
+    path: "/women-in-islam",
+    contentLanguage: "ar",
+    reason:
+      "WomenInIslamPage records its rulings and the evidence it cites in Arabic only.",
+  },
+  {
+    path: "/prayer-guide",
+    contentLanguage: "ar",
+    reason: "PrayerGuidePage labels and devotional classifications are Arabic only.",
+  },
+  {
     path: "/kids",
     contentLanguage: "ar",
     reason: "Children adaptations are recorded in Arabic; cleared media count is 0.",
@@ -105,3 +128,15 @@ export const CONTENT_LANGUAGE_FACTS = {
   declaredRoutes: ROUTE_CONTENT_DECLARATIONS.length,
   contentLanguages: [...new Set(ROUTE_CONTENT_DECLARATIONS.map((item) => item.contentLanguage))],
 } as const;
+
+/**
+ * Routes that carry English content and must therefore never be declared
+ * Arabic-only. Recorded from the components themselves, so adding a
+ * declaration that contradicts them is a visible mistake rather than a silent
+ * one.
+ *
+ *  - `/quran` has governed EN/FR/UR translation editions.
+ *  - `/prophetic-day` and `/24-hours` both render PropheticDayPage, which carries
+ *    `hadithTextEn` and `timeframeEn` alongside the Arabic.
+ */
+export const ROUTES_WITH_ENGLISH_CONTENT = ["/quran", "/prophetic-day", "/24-hours"] as const;
