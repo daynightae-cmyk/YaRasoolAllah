@@ -14,7 +14,15 @@ export function ContentLanguageNotice({ pathname }: { pathname: string }) {
   if (!notice) return null;
 
   return (
-    <p className={styles.contentLanguage} data-visual="content-language-notice" lang="en" dir="ltr">
+    <p
+      className={styles.contentLanguage}
+      data-visual="content-language-notice"
+      data-content-languages={notice.contentLanguages.join(",")}
+      data-available-languages={notice.available.join(",")}
+      data-reason={notice.reason}
+      lang="en"
+      dir="ltr"
+    >
       <Languages size={14} aria-hidden />
       <span>{notice.textEn}</span>
       <span className={styles.contentLanguageAr} lang="ar" dir="rtl">

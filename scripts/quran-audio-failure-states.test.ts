@@ -74,3 +74,27 @@ test("the audio failure gate re-dispatches instead of racing the handler", () =>
   assert.match(audioBlock, /dispatchEvent\(new Event\("pause"\)\)/);
   assert.match(audioBlock, /stream pause/, "the pause step must assert a state, not fire and forget");
 });
+
+test("a throwing poke cannot defeat the retry loop", () => {
+  const audioBlock = visualSmoke.slice(
+    visualSmoke.indexOf("async function verifyAudioFailureState"),
+    visualSmoke.indexOf("const summary = []"),
+  );
+  assert.equal(
+    /Audio element is missing/.test(visualSmoke),
+    false,
+    "the <audio> element mounts only after the catalog resolves, so the poke must not throw while it is absent",
+  );
+  assert.match(
+    audioBlock,
+    /if \(!document\.querySelector\("audio"\)\) return null;/,
+    "the check must wait for the element instead of assuming it is there",
+  );
+  for (const step of ["error", "play", "pause"]) {
+    assert.match(
+      audioBlock,
+      new RegExp(`\\?\\.dispatchEvent\\(new Event\\("${step}"\\)\\)`),
+      `the ${step} poke must be a no-op while the element is missing`,
+    );
+  }
+});

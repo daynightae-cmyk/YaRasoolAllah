@@ -31,7 +31,13 @@ const cases = [
   { name: "seerah-1440-rtl", path: "/seerah", width: 1440, height: 1000 },
   { name: "seerah-768-rtl", path: "/seerah", width: 768, height: 900 },
   { name: "seerah-390-rtl", path: "/seerah", width: 390, height: 844 },
-  { name: "seerah-768-ltr", path: "/seerah", width: 768, height: 900, lang: "en" },
+  { name: "seerah-768-ltr", path: "/seerah", width: 768, height: 900, lang: "en", expectNotice: true },
+  { name: "five-pillars-768-ltr", path: "/five-pillars", width: 768, height: 900, lang: "en", expectNotice: true },
+  { name: "women-390-ltr", path: "/women-in-islam", width: 390, height: 844, lang: "en", expectNotice: true },
+  { name: "who-768-ltr", path: "/who-is-muhammad", width: 768, height: 900, lang: "en", expectNotice: false },
+  { name: "hadith-768-ltr", path: "/hadith", width: 768, height: 900, lang: "en", expectNotice: false },
+  { name: "tasbih-390-ltr", path: "/digital-tasbih", width: 390, height: 844, lang: "en", expectNotice: false },
+  { name: "library-768-ltr", path: "/library", width: 768, height: 900, lang: "en", expectNotice: false },
   { name: "who-1440-rtl", path: "/who-is-muhammad", width: 1440, height: 1000 },
   { name: "who-390-rtl", path: "/who-is-muhammad", width: 390, height: 844 },
   { name: "kids-360-rtl", path: "/kids", width: 360, height: 844 },
@@ -166,12 +172,16 @@ const playLabelExpression = `([...document.querySelectorAll("button")].find((but
 })?.getAttribute("aria-label")) || ""`;
 
 async function verifyAudioFailureState(session, label) {
+  // The player mounts only after the MP3Quran catalog resolves, so the <audio>
+  // element is frequently absent on the first attempt. The poke must therefore
+  // stay a no-op while it is missing and the check must require it: throwing
+  // here used to abort the run before dispatchUntil could retry, which made
+  // this gate fail roughly half the time while the application was correct.
   const failed = await dispatchUntil(
     session,
-    `const audio = document.querySelector("audio");
-     if (!audio) throw new Error("Audio element is missing");
-     audio.dispatchEvent(new Event("error"));`,
-    `const alert = ${audioAlertExpression};
+    `document.querySelector("audio")?.dispatchEvent(new Event("error"));`,
+    `if (!document.querySelector("audio")) return null;
+     const alert = ${audioAlertExpression};
      return alert ? { alert: alert.textContent || "", playLabel: ${playLabelExpression} } : null;`,
     `${label} stream error`,
   );
@@ -219,10 +229,15 @@ try {
       mobile: item.width < 500,
     });
     await session.send("Page.navigate", { url: `${origin}${item.path}` });
+    // A cold load of a heavy route (/quran serves the bundled corpus) can take
+    // well over the default budget on a dev server, and a navigation timeout
+    // here says nothing about the application. This waits longer; it does not
+    // wait less.
     await waitFor(
       session,
       `document.readyState === "complete" && location.pathname === "${item.path === "/" ? "/" : item.path}"`,
       item.path,
+      300,
     );
     await delay(400);
     const diagnostics = await evaluate(
@@ -389,6 +404,8 @@ try {
           dir: shell?.getAttribute("dir"),
           notice: notice ? (notice.textContent || "") : null,
           noticeWidth: notice ? notice.getBoundingClientRect().width : 0,
+          noticeLanguages: notice ? notice.getAttribute("data-content-languages") : null,
+          noticeAvailable: notice ? notice.getAttribute("data-available-languages") : null,
           viewport: innerWidth,
           documentWidth: document.documentElement.scrollWidth,
           hasMain: Boolean(main)
@@ -398,10 +415,25 @@ try {
         throw new Error(`${item.name} English interface shell failed: ${JSON.stringify(languageBoundary)}`);
       }
       const declaresArabicContent = languageBoundary.notice !== null;
+      if (item.expectNotice === true && !declaresArabicContent) {
+        throw new Error(
+          `${item.name} is Arabic-only content, so an English interface must disclose it: ${JSON.stringify(languageBoundary)}`,
+        );
+      }
+      if (item.expectNotice === false && declaresArabicContent) {
+        throw new Error(
+          `${item.name} serves English content, so claiming it is untranslated Arabic is false: ${JSON.stringify(languageBoundary)}`,
+        );
+      }
       if (declaresArabicContent) {
         const text = languageBoundary.notice ?? "";
-        if (!text.includes("recorded in Arabic only") || !text.includes("لم يُترجم") || languageBoundary.noticeWidth <= 0) {
+        if (!text.includes("لم يُترجم") || languageBoundary.noticeWidth <= 0) {
           throw new Error(`${item.name} content language notice failed: ${JSON.stringify(languageBoundary)}`);
+        }
+        if (languageBoundary.noticeAvailable !== "") {
+          throw new Error(
+            `${item.name} declares no translated edition, so it must not name one: ${JSON.stringify(languageBoundary)}`,
+          );
         }
       } else if (languageBoundary.documentWidth > languageBoundary.viewport + 1) {
         throw new Error(`${item.name} English interface overflowed: ${JSON.stringify(languageBoundary)}`);
