@@ -13,7 +13,6 @@ import {
 import { art } from "@/visual-golden/mock/art";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
-import { TiltCard } from "@/visual-golden/components/present/TiltCard";
 import { ViewSwitcher, type ViewMode } from "@/visual-golden/components/present/ViewSwitcher";
 import {
   getDailyVerse,
@@ -30,36 +29,65 @@ const gateways = [
     to: "/seerah" as const,
     title: "السيرة النبوية",
     en: "Prophetic Biography",
-    desc: "رحلة في حياة خير الخلق ﷺ",
+    desc: "رحلة سردية موثقة في حياة النبي ﷺ",
+    enDesc: "A sourced narrative journey through the Prophet's life ﷺ",
     img: art.domeCard,
   },
   {
+    to: "/quran" as const,
+    title: "القرآن الكريم",
+    en: "The Qur'an",
+    desc: "المصحف العربي والقراءة والبحث",
+    enDesc: "Arabic text, reading and search",
+    img: art.mushafOpen,
+  },
+  {
     to: "/hadith" as const,
-    title: "الأحاديث النبوية",
-    en: "Hadith Collection",
-    desc: "كنوز من هدي المصطفى",
+    title: "السنة والحديث",
+    en: "Sunnah & Hadith",
+    desc: "فهرس المصادر وسجلات محلية قيد المراجعة",
+    enDesc: "Source catalog and local records under review",
     img: art.books,
   },
   {
     to: "/library" as const,
-    title: "العلوم الإسلامية",
-    en: "Islamic Sciences",
-    desc: "معرفة راسخة ومنهج وسطي",
-    img: art.arches,
+    title: "المكتبة الكبرى",
+    en: "The Great Library",
+    desc: "رفوف الأعمال ونسخها وحقوق الوصول",
+    enDesc: "Works, editions and access rights",
+    img: art.library,
   },
   {
-    to: "/basirah" as const,
-    title: "بصيرة",
-    en: "Basirah",
-    desc: "رفيق البحث الموثَّق في المصادر",
-    img: art.lantern,
+    to: "/atlas" as const,
+    title: "الأطلس التاريخي",
+    en: "Historical Atlas",
+    desc: "مواضع ومسارات تخطيطية للسيرة",
+    enDesc: "Schematic places and routes through the Seerah",
+    img: art.desert,
   },
   {
     to: "/kids" as const,
-    title: "الأطفال والعائلة",
-    en: "Kids & Family",
-    desc: "مسرح قصص دافئ للأسرة",
-    img: art.archesNight,
+    title: "الأسرة والطفل",
+    en: "Family & Children",
+    desc: "قصص تعليمية بمحتوى خاضع للمراجعة",
+    enDesc: "Educational stories with governed content",
+    img: art.kidsRead,
+  },
+  {
+    to: "/daily" as const,
+    title: "محراب اليوم",
+    en: "Daily Sanctuary",
+    desc: "مواقيت الصلاة والذكر حسب المكان",
+    enDesc: "Prayer times and remembrance by location",
+    img: art.lantern,
+  },
+  {
+    to: "/sources" as const,
+    title: "خزانة المصادر",
+    en: "Sources Vault",
+    desc: "الأصول والحقوق والمزوّدون",
+    enDesc: "Origins, rights and providers",
+    img: art.arches,
   },
 ];
 
@@ -74,15 +102,17 @@ const quick = [
   { to: "/hadith" as const, label: "الحديث", icon: BookMarked },
 ];
 
-function GateBody({ g }: { g: (typeof gateways)[number] }) {
+function GateBody({ g, lang, preview }: { g: (typeof gateways)[number]; lang: "ar" | "en"; preview?: string }) {
   return (
     <>
       <img src={g.img} alt="" />
       <div className={styles.gateBody}>
-        <h3>{g.title}</h3>
-        <span>{g.en}</span>
-        <p>{g.desc}</p>
-        <i className={styles.gateGo}>←</i>
+        <span className={styles.gateIndex}>{String(gateways.indexOf(g) + 1).padStart(2, "0")} / 08</span>
+        <h3>{lang === "ar" ? g.title : g.en}</h3>
+        <span className={styles.gateSecondary}>{lang === "ar" ? g.en : g.title}</span>
+        <p>{lang === "ar" ? g.desc : g.enDesc}</p>
+        {preview ? <small className={styles.gatePreview}>{preview}</small> : null}
+        <i className={styles.gateGo} aria-hidden="true">←</i>
       </div>
     </>
   );
@@ -139,6 +169,14 @@ export function HomePage() {
 
   const facts = discoveryFacts(chapters);
   const recentFavorites = favorites.slice(0, 3);
+  const previewFor = (path: (typeof gateways)[number]["to"]) => {
+    if (path === "/quran" && facts.surahs) return lang === "ar" ? `${facts.surahs} سورة في النص المحلي` : `${facts.surahs} chapters in the local text`;
+    if (path === "/seerah" && facts.seerahChapters) return lang === "ar" ? `${facts.seerahChapters} فصلًا سرديًا` : `${facts.seerahChapters} narrative chapters`;
+    if (path === "/library" && facts.works) return lang === "ar" ? `${facts.works} عملًا مسجلًا · ${facts.versions} نسخة مفهرسة` : `${facts.works} registered works · ${facts.versions} cataloged editions`;
+    if (path === "/hadith" && facts.hadithSamples) return lang === "ar" ? `${facts.hadithSamples} عينات محلية قيد المراجعة` : `${facts.hadithSamples} local samples under review`;
+    if (path === "/daily" && daily) return lang === "ar" ? `آية اليوم: ${daily.surahName} · ${daily.ayah}` : `Today's verse: ${daily.surahName} · ${daily.ayah}`;
+    return undefined;
+  };
 
   return (
     <div className={styles.page}>
@@ -148,12 +186,11 @@ export function HomePage() {
         <div className={`${styles.mash} ${styles.mashL}`} />
         <div className={`${styles.mash} ${styles.mashR}`} />
         <div className={styles.heroCopy}>
-          <p className={styles.invoke}>يا رسول الله</p>
-          <h1 className="gold-shimmer">بوابة النور</h1>
-          <p className={styles.heroSub}>رحلة معرفية إلى سيرة خير البشر ﷺ</p>
+          <p className={styles.invoke}>{lang === "ar" ? "يا رسول الله" : "YA RASOOL ALLAH"}</p>
+          <h1 className="gold-shimmer">{lang === "ar" ? "بوابة النور" : "Gateway of Light"}</h1>
+          <p className={styles.heroSub}>{lang === "ar" ? "رحلة معرفية إلى سيرة خير البشر ﷺ" : "A journey through the life and legacy of the Prophet ﷺ"}</p>
           <p className={styles.heroDesc}>
-            من هنا نبدأ رحلتنا في طلب العلم، على هدي النبي محمد ﷺ. نكتشف سيرته، وأخلاقه،
-            وهديه، وننهل من نوره الذي أضاء للعالمين.
+            {lang === "ar" ? "من هنا نبدأ رحلتنا في طلب العلم، على هدي النبي محمد ﷺ. نكتشف سيرته، وأخلاقه، وهديه، وننهل من نوره الذي أضاء للعالمين." : "Explore the Qur'an, Seerah, Sunnah and the source library through their own spaces and verified records."}
           </p>
         </div>
         <form
@@ -167,38 +204,39 @@ export function HomePage() {
           <input
             value={heroQ}
             onChange={(e) => setHeroQ(e.target.value)}
-            placeholder="ماذا تريد أن تتعلم اليوم؟"
-            aria-label="البحث في بصيرة"
+            placeholder={lang === "ar" ? "ماذا تريد أن تتعلم اليوم؟" : "What would you like to explore?"}
+            aria-label={lang === "ar" ? "البحث في بصيرة" : "Search Basirah"}
           />
           <button className="btn-gold" type="submit">
-            بحث
+            {lang === "ar" ? "بحث" : "Search"}
           </button>
         </form>
       </section>
 
       <section className={styles.section}>
         <div className={styles.headRow}>
-          <SectionHead title="بوابات المعرفة الرئيسية" en="Featured Knowledge Gateways" href="/library" action="استكشف جميع البوابات" />
-          <ViewSwitcher value={mode} onChange={setMode} />
+          <div>
+            <p className={styles.wingEyebrow}>{lang === "ar" ? "خريطة المؤسسة" : "INSTITUTION MAP"}</p>
+            <SectionHead title={lang === "ar" ? "أجنحة المعرفة" : "Knowledge Wings"} en="Eight distinct ways to explore" />
+          </div>
+          <ViewSwitcher value={mode} onChange={setMode} lang={lang} />
         </div>
 
         {mode === "cards" ? (
-          <div className={`${styles.gateGrid} stagger`}>
+          <nav className={styles.gateGrid} aria-label={lang === "ar" ? "أجنحة المعرفة" : "Knowledge wings"}>
             {gateways.map((g) => (
-              <TiltCard key={g.title}>
-                <Link href={g.to} className={`${styles.gateCard} ${styles.mashOpen}`}>
-                  <GateBody g={g} />
-                </Link>
-              </TiltCard>
+              <Link key={g.to} href={g.to} className={`${styles.gateCard} ${styles.mashOpen}`}>
+                <GateBody g={g} lang={lang} preview={previewFor(g.to)} />
+              </Link>
             ))}
-          </div>
+          </nav>
         ) : null}
 
         {mode === "panorama" ? (
           <div className={p.panorama}>
             {gateways.map((g) => (
               <Link key={g.title} href={g.to} className={`${styles.gateCard} ${styles.mashOpen}`}>
-                <GateBody g={g} />
+                <GateBody g={g} lang={lang} preview={previewFor(g.to)} />
               </Link>
             ))}
           </div>
@@ -213,7 +251,7 @@ export function HomePage() {
                 <Link href={g.to} className={p.pathCard}>
                   <img src={g.img} alt="" />
                   <div>
-                    <h3>{g.title}</h3>
+                    <h3>{lang === "ar" ? g.title : g.en}</h3>
                   </div>
                 </Link>
               </div>
