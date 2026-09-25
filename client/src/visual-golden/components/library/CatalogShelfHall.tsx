@@ -203,7 +203,7 @@ export function CatalogShelfHall({ query, initialCategory, onOpen }: Props) {
         </>
       ) : (
         <>
-          <div className={styles.hallBar}>
+          <div className={styles.hallBar} data-shelf-plate>
             <button type="button" onClick={() => { setCategory(null); setSubcategory(null); }}>
               {lang === "ar" ? <ArrowRight size={16} /> : <ArrowLeft size={16} />}
               {labels.back}
@@ -251,6 +251,7 @@ export function CatalogShelfHall({ query, initialCategory, onOpen }: Props) {
                     <button
                       type="button"
                       className={styles.book}
+                      data-book-spine
                       style={style}
                       onClick={() => onOpen(work)}
                       aria-label={`${labels.open}: ${displayTitle(work, lang)}`}
