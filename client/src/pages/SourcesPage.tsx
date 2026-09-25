@@ -20,33 +20,32 @@ import {
   providerPolicyRegistry,
   workRegistry,
 } from "@shared/knowledge-registry";
+import {
+  EVIDENCE_STATUSES,
+  PROVIDER_RIGHTS_STATE_LABELS,
+  RIGHTS_DECISION_LABELS,
+  type EvidenceStatus,
+} from "@shared/evidence-contract";
 import styles from "./SourcesPage.module.css";
 
-function rightsLabel(value: string) {
-  const labels: Record<string, string> = {
-    cleared: "مسموح بسجل صريح",
-    api_only: "API فقط",
-    reference_only: "فهرس/مرجع فقط",
-    development_only: "تطوير فقط",
-    needs_review: "مراجعة حقوق",
-    blocked: "محظور",
-    cleared_with_attribution: "مسموح مع النسبة",
-    external_link_only: "رابط خارجي فقط",
-    needs_license_review: "مراجعة ترخيص",
-    needs_credential: "بيانات اعتماد مطلوبة",
-    item_by_item_review: "مراجعة كل عنصر",
-  };
-  return labels[value] ?? value;
+/**
+ * `RightsDecision` (a decision about a governed source) and
+ * `providerPolicyRegistry.rightsState` (a provider's content state) are
+ * different vocabularies that share some values, so they are labelled from
+ * two separate tables. `api_only` exists in both and means different things.
+ */
+function rightsDecisionLabel(value: string) {
+  const labels = RIGHTS_DECISION_LABELS as Record<string, { labelAr: string } | undefined>;
+  return labels[value]?.labelAr ?? value;
+}
+
+function providerRightsStateLabel(value: string) {
+  return PROVIDER_RIGHTS_STATE_LABELS[value]?.labelAr ?? value;
 }
 
 function reviewLabel(value: string) {
-  const labels: Record<string, string> = {
-    verified: "تحقق محدد النطاق",
-    editorial_review_pending: "مراجعة تحريرية",
-    rights_review_pending: "مراجعة حقوق",
-    blocked: "محظور",
-  };
-  return labels[value] ?? value;
+  const status = EVIDENCE_STATUSES[value as EvidenceStatus];
+  return status?.labelAr ?? value;
 }
 
 function includesQuery(query: string, ...values: Array<string | null | undefined>) {
@@ -334,7 +333,7 @@ export default function SourcesPage() {
                     <span className={styles.eyebrow}>{provider.domain}</span>
                     <h3>{provider.provider}</h3>
                   </div>
-                  <span className={styles.badge}>{rightsLabel(provider.rightsState)}</span>
+                  <span className={styles.badge}>{providerRightsStateLabel(provider.rightsState)}</span>
                 </div>
                 <p>{provider.productionUse}</p>
                 <dl className={styles.facts}>
@@ -385,7 +384,7 @@ export default function SourcesPage() {
                   </div>
                   <p dir="ltr">{resource.resourceId}</p>
                   <dl className={styles.facts}>
-                    <div><dt>قرار الحقوق</dt><dd>{rights ? rightsLabel(rights.decision) : "غير مرتبط"}</dd></div>
+                    <div><dt>قرار الحقوق</dt><dd>{rights ? rightsDecisionLabel(rights.decision) : "غير مرتبط"}</dd></div>
                     <div><dt>نمط الدمج</dt><dd>{resource.integrationMode}</dd></div>
                     <div><dt>الاكتساب</dt><dd>{resource.acquisitionStatus}</dd></div>
                     <div><dt>الاستخدامات</dt><dd>{resource.allowedUsages.length ? resource.allowedUsages.join(" · ") : "مغلقة"}</dd></div>
