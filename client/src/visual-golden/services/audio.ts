@@ -38,6 +38,10 @@ export const AUDIO_COUNTS = {
   ).length,
 };
 
+export function isPlaybackAbortError(error: unknown): boolean {
+  return Boolean(error && typeof error === "object" && "name" in error && error.name === "AbortError");
+}
+
 export function rightsLabel(rightsState: string): string {
   switch (rightsState) {
     case "cleared_with_attribution":

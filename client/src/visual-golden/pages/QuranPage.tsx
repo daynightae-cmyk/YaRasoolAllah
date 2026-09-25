@@ -42,6 +42,7 @@ import {
   type QuranTafsirAyah,
   type QuranTafsirResponse,
 } from "@/visual-golden/services/quran-tafsir";
+import { isPlaybackAbortError } from "@/visual-golden/services/audio";
 import styles from "./QuranPage.module.css";
 
 type SidebarTab = "surah" | "marks";
@@ -138,6 +139,7 @@ export function QuranPage() {
   const [recitationState, setRecitationState] = useState<RecitationState>({ state: "idle" });
   const [selectedReciterKey, setSelectedReciterKey] = useState<string | null>(null);
   const [audioPlaying, setAudioPlaying] = useState(false);
+  const [audioStreamError, setAudioStreamError] = useState<string | null>(null);
   const [audioVolume, setAudioVolume] = useState(0.78);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [fontScale, setFontScale] = useState(() => safeReadReadingSettings().fontScale);
@@ -327,19 +329,29 @@ export function QuranPage() {
     audio.pause();
     audio.load();
     setAudioPlaying(false);
+    setAudioStreamError(null);
   }, [selectedReciter?.streamUrl]);
+
+  const handleAudioStreamError = () => {
+    setAudioPlaying(false);
+    setAudioStreamError("تعذر تشغيل البث من MP3Quran لهذه السورة الآن. نص المصحف والترجمة والتفسير ما تزال متاحة.");
+  };
 
   const toggleAudio = async () => {
     const audio = audioRef.current;
     if (!audio || !selectedReciter) return;
+    const source = audio.src;
     if (audioPlaying) {
       audio.pause();
       return;
     }
     try {
+      setAudioStreamError(null);
       await audio.play();
-    } catch {
-      setAudioPlaying(false);
+      if (audio.src !== source) return;
+    } catch (error) {
+      if (audio.src !== source || isPlaybackAbortError(error)) return;
+      handleAudioStreamError();
     }
   };
 
@@ -774,10 +786,10 @@ export function QuranPage() {
               ref={audioRef}
               src={selectedReciter?.streamUrl}
               preload="metadata"
-              onPlay={() => setAudioPlaying(true)}
+              onPlay={() => { setAudioPlaying(true); setAudioStreamError(null); }}
               onPause={() => setAudioPlaying(false)}
               onEnded={() => setAudioPlaying(false)}
-              onError={() => setAudioPlaying(false)}
+              onError={handleAudioStreamError}
             />
             <img src={art.kaaba} alt="" />
             <div className={styles.playerCopy}>
@@ -801,6 +813,7 @@ export function QuranPage() {
                     )) : null}
                   </select>
                   <span>بث مباشر داخل المنصة · MP3Quran.net</span>
+                  {audioStreamError ? <span role="alert">{audioStreamError}</span> : null}
                 </>
               ) : (
                 <span>لا توجد تلاوة متاحة لهذه السورة في استجابة المزوّد الآن.</span>
