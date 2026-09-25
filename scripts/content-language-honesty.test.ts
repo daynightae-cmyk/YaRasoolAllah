@@ -5,6 +5,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   CONTENT_LANGUAGE_FACTS,
+  ROUTES_WITH_ENGLISH_CONTENT,
   ROUTE_CONTENT_DECLARATIONS,
   contentLanguageNotice,
   routeContentDeclaration,
@@ -50,6 +51,33 @@ describe("content language is declared, not assumed", () => {
     assert.equal(routeContentDeclaration("/library"), undefined);
     assert.equal(routeContentDeclaration("/sources"), undefined);
     assert.equal(routeContentDeclaration("/does-not-exist"), undefined);
+  });
+
+  it("never declares a route that carries English content", () => {
+    for (const path of ROUTES_WITH_ENGLISH_CONTENT) {
+      assert.equal(
+        routeContentDeclaration(path),
+        undefined,
+        `${path} carries English content and must not be declared Arabic-only`,
+      );
+    }
+    const propheticDay = readFileSync(join(repoRoot, "client/src/pages/PropheticDayPage.tsx"), "utf8");
+    assert.match(
+      propheticDay,
+      /hadithTextEn/,
+      "the reason /prophetic-day stays undeclared must remain true of the component",
+    );
+  });
+
+  it("declares a route only alongside the component that serves it", () => {
+    const app = readFileSync(join(repoRoot, "client/src/App.tsx"), "utf8");
+    assert.match(app, /path="\/character"[\s\S]{0,160}WhoIsMuhammadPage/);
+    for (const declaration of ROUTE_CONTENT_DECLARATIONS) {
+      assert.ok(
+        app.includes(`path="${declaration.path}"`),
+        `${declaration.path} is declared but not routed`,
+      );
+    }
   });
 
   it("tolerates trailing slashes", () => {
