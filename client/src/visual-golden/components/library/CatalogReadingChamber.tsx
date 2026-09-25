@@ -15,10 +15,12 @@ import {
 } from "lucide-react";
 import { DeviceTtsFallback } from "./DeviceTtsFallback";
 import {
+  buildPresentationEmbedUrl,
   canDownloadInside,
   canReadPdfInside,
   canReadTextInside,
   canUseIiifInside,
+  canViewPresentationInside,
   displayAuthor,
   displayTitle,
   type CatalogWork,
@@ -90,7 +92,9 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
   const pdfAvailable = canReadPdfInside(work);
   const iiifAvailable = canUseIiifInside(work);
   const downloadAvailable = canDownloadInside(work);
-  const [mode, setMode] = useState<"details" | "text" | "pdf" | "iiif">("details");
+  const presentationAvailable = canViewPresentationInside(work);
+  const presentationUrl = buildPresentationEmbedUrl(work);
+  const [mode, setMode] = useState<"details" | "text" | "pdf" | "iiif" | "presentation">("details");
   const [reader, setReader] = useState<ReaderState>({ state: "idle" });
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
@@ -164,6 +168,7 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
     text: "قراءة",
     pdf: "PDF",
     iiif: "المخطوط/الصور",
+    presentation: "عرض شرائح",
     download: "تحميل",
     source: "المصادر والتوثيق",
     rights: "حالة الحقوق",
@@ -181,6 +186,7 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
     text: "Read",
     pdf: "PDF",
     iiif: "Scan / IIIF",
+    presentation: "Slides",
     download: "Download",
     source: "Sources & provenance",
     rights: "Rights state",
@@ -235,6 +241,11 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
               <BookOpen size={14} /> {copy.iiif}
             </button>
           ) : null}
+          {presentationAvailable && presentationUrl ? (
+            <button type="button" role="tab" aria-selected={mode === "presentation"} className={mode === "presentation" ? styles.on : ""} onClick={() => setMode("presentation")}>
+              <FileText size={14} /> {copy.presentation}
+            </button>
+          ) : null}
           {downloadAvailable && work.digital?.fileUrl ? (
             <a href={work.digital.fileUrl} download>
               <Download size={14} /> {copy.download}
@@ -257,7 +268,7 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
                   <div><dt>{copy.rights}</dt><dd>{work.digital?.rights || (lang === "ar" ? "غير مثبتة" : "Not established")}</dd></div>
                   <div><dt>{lang === "ar" ? "الصيغة" : "Format"}</dt><dd>{work.digital?.format || "—"}</dd></div>
                 </dl>
-                {!textAvailable && !pdfAvailable && !iiifAvailable ? <p className={styles.notice}>{copy.noInternal}</p> : null}
+                {!textAvailable && !pdfAvailable && !iiifAvailable && !presentationAvailable ? <p className={styles.notice}>{copy.noInternal}</p> : null}
                 <details className={styles.provenance}>
                   <summary><ShieldCheck size={14} /> {copy.source}</summary>
                   <p>{work.source}</p>
@@ -283,7 +294,10 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
                     <span>{Math.round(fontScale * 100)}%</span>
                     <button type="button" onClick={() => setFontScale((value) => Math.min(1.4, value + .05))}><Plus size={14} /></button>
                   </div>
-                  <div className={styles.readerIdentity}><strong>قراءة مباشرة · OpenITI</strong><span>الترقيم هنا مقاطع رقمية، وليس أرقام صفحات طبعة.</span></div>\n                  <article className={styles.paper} dir="rtl" style={{ fontSize: `calc(1.08rem * ${fontScale})` }}>
+                  <div className={styles.readerIdentity}>
+                    <strong>قراءة داخلية · {work.digital?.provider || "مورد موثق"}</strong>
+                    <span>{work.digital?.format || "TEXT"} · الترقيم هنا مقاطع رقمية، وليس أرقام صفحات طبعة إلا إذا نص المورد على ذلك.</span>
+                  </div>\n                  <article className={styles.paper} dir="rtl" style={{ fontSize: `calc(1.08rem * ${fontScale})` }}>
                     {pageSegments.map((segment, index) => {
                       const heading = segment.startsWith("### ");
                       return heading
@@ -316,6 +330,25 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
 
           {mode === "iiif" && work.digital?.iiifUrl ? (
             <iframe className={styles.frame} src={work.digital.iiifUrl} title={title} />
+          ) : null}
+
+          {mode === "presentation" && presentationUrl ? (
+            <section className={styles.reader}>
+              <div className={styles.readerIdentity}>
+                <strong>{lang === "ar" ? "عرض PowerPoint داخل المكتبة" : "PowerPoint inside the library"}</strong>
+                <span>
+                  {lang === "ar"
+                    ? "العرض يتم داخل إطار المؤسسة عبر Microsoft Office Web Viewer؛ الملف الأصلي يبقى في مصدره ولا تعيد المنصة استضافته."
+                    : "The deck stays at its governed source and is rendered inside the institution through Microsoft Office Web Viewer."}
+                </span>
+              </div>
+              <iframe
+                className={styles.frame}
+                src={presentationUrl}
+                title={`${title} · ${copy.presentation}`}
+                referrerPolicy="strict-origin-when-cross-origin"
+              />
+            </section>
           ) : null}
         </div>
       </section>
