@@ -253,11 +253,17 @@ try {
       }
       diagnostics.geometry = seerahGeometry;
       if (item.name === "seerah-390-rtl") {
-        const selected = await evaluate(session, `(() => {
+        await evaluate(session, `(() => {
           const buttons = document.querySelectorAll('ol[aria-label="محطات الفصل"] button');
+          if (!buttons[1]) throw new Error("Second Seerah event button is missing");
           buttons[1].click();
-          return document.querySelector('article[aria-label="تفاصيل المحطة المختارة"] h3')?.textContent;
+          return true;
         })()`);
+        const selected = await waitFor(session, `(() => {
+          const buttons = document.querySelectorAll('ol[aria-label="محطات الفصل"] button');
+          const title = document.querySelector('article[aria-label="تفاصيل المحطة المختارة"] h3')?.textContent || "";
+          return buttons[1]?.getAttribute("aria-pressed") === "true" ? title : "";
+        })()`, "selected Seerah event");
         const link = await waitFor(session, 'document.querySelector(\'article[aria-label="تفاصيل المحطة المختارة"] a[href^="/atlas?place="]\')?.getAttribute("href")', "event place link");
         await evaluate(session, 'document.querySelector(\'article[aria-label="تفاصيل المحطة المختارة"] a[href^="/atlas?place="]\').click()');
         await waitFor(session, `location.pathname === "/atlas" && location.search === ${JSON.stringify(new URL(link, origin).search)} && document.querySelector('[data-climate="places"]') !== null`, "linked Atlas place");
