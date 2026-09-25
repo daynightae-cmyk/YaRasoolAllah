@@ -232,9 +232,13 @@ try {
       if (!dialog) return false;
       if (dialog.textContent?.includes("تعذر فتح النص")) throw new Error("Reader returned an error state");
       const paper = [...dialog.querySelectorAll("article")].find((article) => article.textContent?.trim().length > 180);
-      return Boolean(paper && dialog.textContent?.includes("قراءة مباشرة"));
+      return Boolean(
+        paper
+        && dialog.textContent?.includes("قراءة داخلية")
+        && dialog.textContent?.includes("OpenITI")
+      );
     })()`,
-    "real OpenITI reading text",
+    "real governed internal reading text",
     180,
   );
 
