@@ -58,6 +58,66 @@
   color: var(--ivory-50);
   font-family: var(--font-ui);
 }
+.verseSearch {
+  display: grid;
+  gap: 0.3rem;
+  margin-bottom: 0.65rem;
+}
+.verseSearch label {
+  color: var(--gold-300);
+  font-size: 0.75rem;
+}
+.verseSearch > div {
+  display: flex;
+  min-width: 0;
+  border: 1px solid rgba(212, 160, 23, 0.35);
+  border-radius: 10px;
+  background: rgba(4, 22, 20, 0.7);
+}
+.verseSearch input {
+  min-width: 0;
+  flex: 1;
+  background: transparent;
+  color: var(--ivory-50);
+  border: 0;
+  padding: 0.5rem;
+  font-family: inherit;
+}
+.verseSearch button {
+  flex: none;
+  color: var(--gold-300);
+  padding: 0.4rem 0.65rem;
+}
+.verseSearch button:disabled { opacity: 0.45; }
+.verseResults {
+  margin-bottom: 0.7rem;
+  border: 1px solid rgba(212, 160, 23, 0.28);
+  border-radius: 10px;
+  padding: 0.45rem;
+}
+.verseResults p {
+  margin: 0.15rem 0.25rem 0.4rem;
+  color: var(--ivory-200);
+  font-size: 0.72rem;
+}
+.verseResults ul {
+  max-height: 280px;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.verseResults button {
+  display: grid;
+  width: 100%;
+  padding: 0.55rem;
+  gap: 0.2rem;
+  text-align: start;
+  border-top: 1px solid rgba(212, 160, 23, 0.18);
+  color: var(--ivory-100);
+}
+.verseResults button strong { color: var(--gold-300); font-size: 0.75rem; }
+.verseResults button span { font-size: 0.78rem; line-height: 1.8; }
 .surahNav ul {
   list-style: none;
   margin: 0;
@@ -436,6 +496,21 @@
   color: var(--text-muted);
   font-size: 0.72rem;
 }
+.verseNavigation {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  margin: 0 0 0.85rem;
+}
+.verseNavigation button {
+  padding: 0.4rem;
+  border: 1px solid rgba(212, 160, 23, 0.3);
+  border-radius: 8px;
+  color: var(--ivory-100);
+  background: rgba(4, 28, 24, 0.55);
+  font-size: 0.75rem;
+}
+.verseNavigation button:disabled { opacity: 0.45; }
 
 .noteBox,
 .unavailableBox,

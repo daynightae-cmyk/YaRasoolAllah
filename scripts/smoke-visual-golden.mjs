@@ -22,6 +22,10 @@ const cases = [
   { name: "home-390-light", path: "/", width: 390, height: 844, theme: "light" },
   { name: "home-390-ltr", path: "/", width: 390, height: 844, lang: "en" },
   { name: "quran-1440-rtl", path: "/quran", width: 1440, height: 1000 },
+  { name: "quran-768-rtl", path: "/quran", width: 768, height: 900 },
+  { name: "quran-390-rtl", path: "/quran", width: 390, height: 844 },
+  { name: "quran-390-light", path: "/quran", width: 390, height: 844, theme: "light" },
+  { name: "quran-390-ltr", path: "/quran", width: 390, height: 844, lang: "en" },
   { name: "kids-360-rtl", path: "/kids", width: 360, height: 844 },
   { name: "library-1440-rtl", path: "/library", width: 1440, height: 1000 },
   { name: "sources-1440-rtl", path: "/sources", width: 1440, height: 1000 },
@@ -136,6 +140,7 @@ try {
       const key = "yra-visual-golden-v1";
       const saved = JSON.parse(localStorage.getItem(key) || "{}");
       localStorage.setItem(key, JSON.stringify({ ...saved, theme: ${JSON.stringify(item.theme ?? "dark")}, lang: ${JSON.stringify(item.lang ?? "ar")} }));
+      ${item.path === "/quran" ? 'localStorage.setItem("quran-last-position-v1", JSON.stringify({ surah: 1, ayah: 1 }));' : ""}
     })()`);
     await session.send("Emulation.setDeviceMetricsOverride", {
       width: item.width,
@@ -196,6 +201,32 @@ try {
         throw new Error(`${item.name} knowledge wings missing or clipped: ${JSON.stringify(geometry.wings)}`);
       }
       diagnostics.geometry = geometry;
+    }
+    if (item.path === "/quran") {
+      await waitFor(session, 'document.querySelectorAll(\'[id^="quran-ayah-1-"]\').length === 7', `${item.name} verified verses`);
+      const quranGeometry = await evaluate(session, `(() => {
+        const reader = document.querySelector('section[aria-label="مصحف القراءة"]');
+        const bounds = reader?.getBoundingClientRect().toJSON();
+        return {
+          viewport: innerWidth,
+          documentWidth: document.documentElement.scrollWidth,
+          reader: bounds,
+          verseCount: reader?.querySelectorAll('button[id^="quran-ayah-1-"]').length,
+          search: Boolean(document.getElementById("quran-verse-search")),
+          theme: document.querySelector(".vg-shell")?.getAttribute("data-theme"),
+          lang: document.querySelector(".vg-shell")?.getAttribute("data-lang")
+        };
+      })()`);
+      if (!quranGeometry.reader || quranGeometry.reader.left < -1 || quranGeometry.reader.right > quranGeometry.viewport + 1 || quranGeometry.documentWidth > quranGeometry.viewport + 1 || quranGeometry.verseCount !== 7 || !quranGeometry.search || quranGeometry.theme !== (item.theme ?? "dark") || quranGeometry.lang !== (item.lang ?? "ar")) {
+        throw new Error(`${item.name} Quran reader failed: ${JSON.stringify(quranGeometry)}`);
+      }
+      diagnostics.geometry = quranGeometry;
+      if (item.name === "quran-1440-rtl") {
+        await evaluate(session, 'document.getElementById("quran-ayah-1-2").click()');
+        await waitFor(session, 'JSON.parse(localStorage.getItem("quran-last-position-v1") || "{}").ayah === 2', "saved Quran position");
+        await session.send("Page.navigate", { url: `${origin}/quran` });
+        await waitFor(session, 'document.getElementById("quran-ayah-1-2")?.getAttribute("aria-pressed") === "true"', "restored Quran position");
+      }
     }
     const shot = await session.send("Page.captureScreenshot", {
       format: "jpeg",
