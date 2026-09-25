@@ -2,15 +2,15 @@ import { spawn } from "node:child_process";
 import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import WebSocket from "ws";
 
 const origin = process.env.VISUAL_BASE_URL ?? "http://127.0.0.1:4173";
 const chromePath = process.env.CHROME_PATH ?? "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
 const evidenceDir = resolve("artifacts", "visual-evidence");
-const profileDir = mkdtempSync(join(tmpdir(), "yra-visual-evidence-"));
 const debuggingPort = 9337;
 
-const cases = [
+export const cases = [
   { name: "gate-1440-light-rtl", path: "/", width: 1440, height: 1000, theme: "light", language: "ar" },
   { name: "gate-360-dark-ltr", path: "/", width: 360, height: 900, theme: "dark", language: "en" },
   { name: "gate-768-dark-rtl", path: "/home", width: 768, height: 1024, theme: "dark", language: "ur" },
@@ -19,7 +19,7 @@ const cases = [
   { name: "quran-1440-light-rtl", path: "/quran", width: 1440, height: 1000, theme: "light", language: "ar" },
   { name: "quran-360-dark-ltr", path: "/quran", width: 360, height: 900, theme: "dark", language: "en" },
   { name: "seerah-1440-dark-rtl", path: "/seerah", width: 1440, height: 1000, theme: "dark", language: "ar" },
-  { name: "atlas-1440-dark-rtl", path: "/seerah", width: 1440, height: 1000, theme: "dark", language: "ar", clickText: "الأطلس التضاريسي التفسيري", scrollSelector: ".atlas-evidence-strip", scrollOffset: -80 },
+  { name: "atlas-1440-dark-rtl", path: "/atlas", width: 1440, height: 1000, theme: "dark", language: "ar", clickText: "مسرح الغزوات", scrollSelector: '[data-visual="atlas-theatre-evidence"]', scrollOffset: -80 },
   { name: "seerah-768-light-ltr", path: "/seerah", width: 768, height: 1024, theme: "light", language: "en" },
   { name: "children-360-light-rtl", path: "/kids", width: 360, height: 900, theme: "light", language: "ar" },
   { name: "children-1440-dark-ltr", path: "/children-tv", width: 1440, height: 1000, theme: "dark", language: "en" },
@@ -33,7 +33,9 @@ const cases = [
   { name: "prophetic-day-status-360-dark-rtl", path: "/prophetic-day", width: 360, height: 900, theme: "dark", language: "ar", scrollSelector: ".reflection-nook__summary", scrollOffset: -120 },
 ];
 
+async function main() {
 mkdirSync(evidenceDir, { recursive: true });
+const profileDir = mkdtempSync(join(tmpdir(), "yra-visual-evidence-"));
 
 const chrome = spawn(chromePath, [
   "--headless=new",
@@ -296,4 +298,10 @@ try {
 } finally {
   session?.close();
   chrome.kill();
+}
+}
+
+const invokedDirectly = process.argv[1] === fileURLToPath(import.meta.url);
+if (invokedDirectly) {
+  await main();
 }
