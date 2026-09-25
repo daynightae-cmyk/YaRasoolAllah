@@ -133,11 +133,14 @@ export function AudioPage() {
     if (!audio) return;
     audio.pause();
     audio.load();
-    audio.volume = volume;
     setPlaying(false);
     setCurrentTime(0);
     setDuration(0);
-  }, [selectedReciter?.streamUrl, volume]);
+  }, [selectedReciter?.streamUrl]);
+
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.volume = volume;
+  }, [volume]);
 
   useEffect(() => () => requestRef.current?.abort(), []);
 
