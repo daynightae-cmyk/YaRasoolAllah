@@ -25,7 +25,7 @@ export default function DownloadManager({
   useEffect(() => {
     if (!isOpen) return;
 
-    // ت��ديث قائمة التحميلات
+    // تحديث قائمة التحميلات
     setDownloads(downloadService.getAllDownloads());
 
     // الاستماع للتغييرات

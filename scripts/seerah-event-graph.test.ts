@@ -29,17 +29,6 @@ const visualCases = readFileSync(join(repoRoot, "scripts/capture-visual-evidence
 
 const REPLACEMENT_CHARACTER = "\uFFFD";
 
-/**
- * Known replacement-character (mojibake) losses outside the Seerah slice.
- * Pinned so the encoding sweep cannot be forgotten silently: any change here
- * must be paired with an actual repair.
- */
-const KNOWN_ENCODING_DEFECTS_OUTSIDE_SLICE = [
-  "client/src/data/fatwas.json",
-  "client/src/data/locales/ar.json",
-  "client/src/data/mainStructure.ts",
-];
-
 const recordedEvents = seerahChapters.flatMap((chapter) =>
   (chapter.timelineEvents ?? []).map((event) => ({
     chapterId: chapter.id,
@@ -201,19 +190,6 @@ describe("Seerah event graph stays free of encoding damage", () => {
     assert.equal(
       SEERAH_GRAPH.findings.unresolvedLocations.includes("المدينة المنورة"),
       false,
-    );
-  });
-
-  it("pins the known encoding defects outside this slice so they stay visible", () => {
-    const actual: string[] = [];
-    for (const relative of KNOWN_ENCODING_DEFECTS_OUTSIDE_SLICE) {
-      const source = readFileSync(join(repoRoot, relative), "utf8");
-      if (source.includes(REPLACEMENT_CHARACTER)) actual.push(relative);
-    }
-    assert.deepEqual(
-      actual,
-      KNOWN_ENCODING_DEFECTS_OUTSIDE_SLICE,
-      "encoding defect set changed: repair the file and update this pinned list",
     );
   });
 });

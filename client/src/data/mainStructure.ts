@@ -245,7 +245,7 @@ export const mainStructure: MainSection[] = [
       {
         id: "sawm",
         title: "الصيام",
-        description: "أحكام الصيام و��لاعتكاف",
+        description: "أحكام الصيام والاعتكاف",
         icon: "schedule",
         count: 35,
       },

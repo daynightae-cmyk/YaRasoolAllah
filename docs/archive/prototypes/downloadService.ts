@@ -161,7 +161,7 @@ class DownloadService {
 // إنشاء مثيل واحد للخدمة
 export const downloadService = new DownloadService();
 
-// تحمي�� البيانات عند بدء التطبيق
+// تحمية البيانات عند بدء التطبيق
 downloadService.loadFromStorage();
 
 // حفظ البيانات عند تغييرها

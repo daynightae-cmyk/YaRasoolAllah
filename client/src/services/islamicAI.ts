@@ -382,7 +382,7 @@ ${context}
       }
 
       if (categories.includes("عبادة")) {
-        questions.push("ما الحكمة من هذ�� العبادة؟");
+        questions.push("ما الحكمة من هذه العبادة؟");
       }
 
       if (categories.includes("أخلاق")) {
