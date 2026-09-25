@@ -30,7 +30,7 @@ interface ReciterStream {
 const cache = new Map<number, { expiresAt: number; reciters: ReciterStream[] }>();
 let nextRequestAt = 0;
 
-function providerStreamUrl(server: string, sura: number): string | null {
+export function buildMp3QuranStreamUrl(server: string, sura: number): string | null {
   try {
     const url = new URL(server);
     if (url.protocol !== "https:") return null;
@@ -102,7 +102,7 @@ export function registerMp3QuranCatalogRoutes(app: Express) {
         });
         if (!matching) return [];
 
-        const streamUrl = providerStreamUrl(matching.server, sura.data);
+        const streamUrl = buildMp3QuranStreamUrl(matching.server, sura.data);
         if (!streamUrl) return [];
 
         return [{
