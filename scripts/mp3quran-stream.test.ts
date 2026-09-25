@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { buildMp3QuranStreamUrl } from "../server/mp3quran-catalog";
 import { isAllowedProviderStream } from "../client/src/visual-golden/services/quran-recitation";
+import { isPlaybackAbortError } from "../client/src/visual-golden/services/audio";
 
 test("MP3Quran stream builder pins audio to provider HTTPS hosts", () => {
   assert.equal(
@@ -27,4 +28,11 @@ test("Quran reader accepts only HTTPS MP3Quran provider streams", () => {
   assert.equal(isAllowedProviderStream("http://server6.mp3quran.net/akdr/001.mp3"), false);
   assert.equal(isAllowedProviderStream("https://example.com/001.mp3"), false);
   assert.equal(isAllowedProviderStream("not-a-url"), false);
+});
+
+test("Playback aborts are distinguished from provider failures", () => {
+  assert.equal(isPlaybackAbortError({ name: "AbortError" }), true);
+  assert.equal(isPlaybackAbortError({ name: "NotAllowedError" }), false);
+  assert.equal(isPlaybackAbortError(new Error("network")), false);
+  assert.equal(isPlaybackAbortError(null), false);
 });

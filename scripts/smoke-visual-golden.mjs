@@ -26,6 +26,8 @@ const cases = [
   { name: "quran-390-rtl", path: "/quran", width: 390, height: 844 },
   { name: "quran-390-light", path: "/quran", width: 390, height: 844, theme: "light" },
   { name: "quran-390-ltr", path: "/quran", width: 390, height: 844, lang: "en" },
+  { name: "audio-1440-rtl", path: "/audio", width: 1440, height: 1000 },
+  { name: "audio-390-rtl", path: "/audio", width: 390, height: 844 },
   { name: "seerah-1440-rtl", path: "/seerah", width: 1440, height: 1000 },
   { name: "seerah-768-rtl", path: "/seerah", width: 768, height: 900 },
   { name: "seerah-390-rtl", path: "/seerah", width: 390, height: 844 },
@@ -135,6 +137,42 @@ async function waitFor(session, expression, label, attempts = 80) {
   throw new Error(`Timed out waiting for ${label}`);
 }
 
+async function verifyAudioFailureState(session, label) {
+  await evaluate(session, `(() => {
+    const audio = document.querySelector("audio");
+    if (!audio) throw new Error("Audio element is missing");
+    audio.dispatchEvent(new Event("error"));
+    return true;
+  })()`);
+  await waitFor(
+    session,
+    `[...document.querySelectorAll('[role="alert"]')].some((element) => element.textContent?.includes("تعذر تشغيل البث من MP3Quran"))`,
+    `${label} stream error`,
+  );
+  const failed = await evaluate(session, `(() => {
+    const alert = [...document.querySelectorAll('[role="alert"]')].find((element) => element.textContent?.includes("تعذر تشغيل البث من MP3Quran"));
+    const playButton = [...document.querySelectorAll("button")].find((button) => {
+      const label = button.getAttribute("aria-label") || "";
+      return label.includes("تشغيل التلاوة") || label.includes("إيقاف التلاوة");
+    });
+    return {
+      alert: alert?.textContent || "",
+      playLabel: playButton?.getAttribute("aria-label") || "",
+    };
+  })()`);
+  if (!failed.alert || !failed.playLabel.includes("تشغيل التلاوة")) {
+    throw new Error(`${label} stream error state failed: ${JSON.stringify(failed)}`);
+  }
+  await evaluate(session, 'document.querySelector("audio")?.dispatchEvent(new Event("play"))');
+  await waitFor(
+    session,
+    `![...document.querySelectorAll('[role="alert"]')].some((element) => element.textContent?.includes("تعذر تشغيل البث من MP3Quran"))`,
+    `${label} stream recovery`,
+  );
+  await evaluate(session, 'document.querySelector("audio")?.dispatchEvent(new Event("pause"))');
+  return failed;
+}
+
 let session;
 const summary = [];
 try {
@@ -240,6 +278,9 @@ try {
         await session.send("Page.navigate", { url: `${origin}/quran` });
         await waitFor(session, 'document.getElementById("quran-ayah-1-2")?.getAttribute("aria-pressed") === "true"', "restored Quran position");
       }
+    }
+    if (["quran-1440-rtl", "audio-1440-rtl"].includes(item.name)) {
+      diagnostics.audioFailure = await verifyAudioFailureState(session, item.name);
     }
     if (item.path === "/seerah") {
       await waitFor(session, 'document.querySelectorAll(\'ol[aria-label="محطات الفصل"] button\').length > 1', `${item.name} events`);

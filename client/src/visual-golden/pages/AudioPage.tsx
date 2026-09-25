@@ -19,6 +19,7 @@ import {
 import {
   AUDIO_COUNTS,
   AUDIO_PROVIDERS,
+  isPlaybackAbortError,
   rightsLabel,
 } from "@/visual-golden/services/audio";
 import styles from "./AudioPage.module.css";
@@ -149,6 +150,7 @@ export function AudioPage() {
   const togglePlay = async () => {
     const audio = audioRef.current;
     if (!audio || !selectedReciter) return;
+    const source = audio.src;
     if (playing) {
       audio.pause();
       setPlaying(false);
@@ -157,8 +159,10 @@ export function AudioPage() {
     try {
       setStreamError(null);
       await audio.play();
+      if (audio.src !== source) return;
       setPlaying(true);
-    } catch {
+    } catch (error) {
+      if (audio.src !== source || isPlaybackAbortError(error)) return;
       setPlaying(false);
       setStreamError("تعذر تشغيل البث من MP3Quran لهذه السورة الآن.");
     }

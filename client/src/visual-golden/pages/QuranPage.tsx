@@ -42,6 +42,7 @@ import {
   type QuranTafsirAyah,
   type QuranTafsirResponse,
 } from "@/visual-golden/services/quran-tafsir";
+import { isPlaybackAbortError } from "@/visual-golden/services/audio";
 import styles from "./QuranPage.module.css";
 
 type SidebarTab = "surah" | "marks";
@@ -339,6 +340,7 @@ export function QuranPage() {
   const toggleAudio = async () => {
     const audio = audioRef.current;
     if (!audio || !selectedReciter) return;
+    const source = audio.src;
     if (audioPlaying) {
       audio.pause();
       return;
@@ -346,7 +348,9 @@ export function QuranPage() {
     try {
       setAudioStreamError(null);
       await audio.play();
-    } catch {
+      if (audio.src !== source) return;
+    } catch (error) {
+      if (audio.src !== source || isPlaybackAbortError(error)) return;
       handleAudioStreamError();
     }
   };
