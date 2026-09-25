@@ -2,11 +2,13 @@ import { useEffect, useMemo, useState } from "react";
 import { BookOpen, ExternalLink, Info, Search, ShieldCheck } from "lucide-react";
 import { Link } from "wouter";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
+import { getLibraryBook, getLibraryBookByOpenitiUri } from "@/visual-golden/services/library";
 import {
   availabilityLabel,
   availabilityState,
   categoryLabel,
   formatLabel,
+  resolveCatalogWorkId,
   rightsLabel,
   type AvailabilityState,
   type CatalogDigitalEvidence,
@@ -258,6 +260,12 @@ function WorkDetail({
   );
 }
 
+function resolveRegistryUri(id: string): string | null {
+  return getLibraryBook(id)?.openitiWorkUri
+    ?? getLibraryBookByOpenitiUri(id)?.openitiWorkUri
+    ?? null;
+}
+
 export function LibraryCatalog({ initialWorkId, onOpenReader, canOpenReader }: Props) {
   const lang = useInstitution((state) => state.lang);
   const c = copy[lang];
@@ -317,7 +325,8 @@ export function LibraryCatalog({ initialWorkId, onOpenReader, canOpenReader }: P
   if (!data) return <p className={styles.state} role="status">{c.loading}</p>;
 
   if (initialWorkId) {
-    const work = data.works.find((candidate) => candidate.id === initialWorkId);
+    const resolvedId = resolveCatalogWorkId(data.works, resolveRegistryUri, initialWorkId);
+    const work = resolvedId ? data.works.find((candidate) => candidate.id === resolvedId) ?? null : null;
     return work ? (
       <WorkDetail
         work={work}

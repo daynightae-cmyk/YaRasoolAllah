@@ -128,6 +128,18 @@ export interface ShelfPromotionCandidate {
   versionCount: number;
 }
 
+export interface CatalogWorkIdentity {
+  id: string;
+  openitiUri: string | null;
+}
+
+/**
+ * Resolve a deep-link work id to a catalog record id.
+ *
+ * Direct catalog ids win. Otherwise bridge through the governed work registry:
+ * a registry workId resolves to the catalog record sharing its OpenITI URI.
+ * Returns null when neither matches — the caller must render not-found.
+ */
 export function qualifiesForArchitecturalShelf(candidate: ShelfPromotionCandidate): boolean {
   return Boolean(
     candidate.titleAr.trim()
@@ -139,4 +151,15 @@ export function qualifiesForArchitecturalShelf(candidate: ShelfPromotionCandidat
       && candidate.bibliographicStatus === "verified_bibliographic"
       && candidate.versionCount > 0,
   );
+}
+
+export function resolveCatalogWorkId(
+  works: CatalogWorkIdentity[],
+  registryUriFor: (id: string) => string | null,
+  id: string,
+): string | null {
+  if (works.some((work) => work.id === id)) return id;
+  const uri = registryUriFor(id);
+  if (!uri) return null;
+  return works.find((work) => work.openitiUri === uri)?.id ?? null;
 }
