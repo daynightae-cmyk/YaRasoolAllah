@@ -10,6 +10,7 @@ import { ProgressProvider } from "./contexts/ProgressContext";
 import { BabAlsamaaProvider, useBabAlsamaa } from "./hooks/useBabAlsamaa";
 import { DepthProvider } from "./components/Institution/LearningDepthSelector";
 import { InstitutionShell as VisualInstitutionShell } from "@/visual-golden/components/shell/InstitutionShell";
+import { isCanonicalVisualPath } from "@/visual-golden/lib/public-shell";
 import "@/visual-golden/visual-base.css";
 
 const AppLayout = lazy(() => import("./components/Layout/AppLayout"));
@@ -47,27 +48,20 @@ function LibraryWorkRoute({ params }: { params: { workId: string } }) {
   return <VisualRoute><VisualLibraryPage initialWorkId={decodeURIComponent(params.workId)} /></VisualRoute>;
 }
 
-
-const VISUAL_PATHS = new Set([
-  "/", "/library", "/digital-library", "/books", "/quran", "/tafsir", "/seerah", "/atlas",
-  "/sunnah", "/hadith", "/kids", "/children-tv", "/daily", "/quran-audio", "/audio", "/basirah", "/sources",
-  "/ai-assistant", "/al-mufti-al-mubeen", "/who-is-muhammad", "/character"
-]);
-
-const VISUAL_PREFIXES = ["/library/work/", "/who-is-muhammad/"];
-
-function isVisualPath(path: string) {
-  return VISUAL_PATHS.has(path) || VISUAL_PREFIXES.some((prefix) => path.startsWith(prefix));
-}
-
 function VisualRoute({ children }: { children: ReactNode }) {
-  return <VisualInstitutionShell><Suspense fallback={<div className="vg-page-loading" role="status">جاري فتح الباب…</div>}>{children}</Suspense></VisualInstitutionShell>;
+  return (
+    <VisualInstitutionShell>
+      <Suspense fallback={<div className="vg-page-loading" role="status">جاري فتح الباب…</div>}>
+        {children}
+      </Suspense>
+    </VisualInstitutionShell>
+  );
 }
 
 function AppContent() {
   const { isOpen, closeBab, triggerContext } = useBabAlsamaa();
   const [location] = useLocation();
-  const isVisualRoute = isVisualPath(location);
+  const isVisualRoute = isCanonicalVisualPath(location);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
 
   useEffect(() => {
@@ -115,10 +109,10 @@ function AppContent() {
           {() => <VisualRoute><WhoIsMuhammadPage defaultChapterId="family-and-personal-character" /></VisualRoute>}
         </Route>
         <Route path="/prophetic-day">
-          {() => <PropheticDayPage />}
+          {() => <VisualRoute><PropheticDayPage /></VisualRoute>}
         </Route>
         <Route path="/24-hours">
-          {() => <PropheticDayPage />}
+          {() => <VisualRoute><PropheticDayPage /></VisualRoute>}
         </Route>
         <Route path="/library/work/:workId" component={LibraryWorkRoute} />
         <Route path="/library">
@@ -143,11 +137,7 @@ function AppContent() {
           {() => <VisualRoute><VisualAudioPage /></VisualRoute>}
         </Route>
         <Route path="/daily-verse">
-          {() => (
-            <AppLayout>
-              <DailyVersePage />
-            </AppLayout>
-          )}
+          {() => <VisualRoute><DailyVersePage /></VisualRoute>}
         </Route>
         <Route path="/bab-alsamaa-settings">
           {() => (
@@ -178,35 +168,19 @@ function AppContent() {
           {() => <VisualRoute><VisualAtlasPage /></VisualRoute>}
         </Route>
         <Route path="/prayer-guide">
-          {() => (
-            <AppLayout>
-              <PrayerGuidePage />
-            </AppLayout>
-          )}
+          {() => <VisualRoute><PrayerGuidePage /></VisualRoute>}
         </Route>
         <Route path="/daily-reminders">
           {() => <Redirect to="/daily" />}
         </Route>
         <Route path="/islamic-knowledge">
-          {() => (
-            <AppLayout>
-              <IslamicKnowledgePage />
-            </AppLayout>
-          )}
+          {() => <VisualRoute><IslamicKnowledgePage /></VisualRoute>}
         </Route>
         <Route path="/five-pillars">
-          {() => (
-            <AppLayout>
-              <FivePillarsPage />
-            </AppLayout>
-          )}
+          {() => <VisualRoute><FivePillarsPage /></VisualRoute>}
         </Route>
         <Route path="/women-in-islam">
-          {() => (
-            <AppLayout>
-              <WomenInIslamPage />
-            </AppLayout>
-          )}
+          {() => <VisualRoute><WomenInIslamPage /></VisualRoute>}
         </Route>
         <Route path="/kids">
           {() => <VisualRoute><VisualKidsPage /></VisualRoute>}
@@ -218,25 +192,13 @@ function AppContent() {
           {() => <Redirect to="/basirah" />}
         </Route>
         <Route path="/calendar">
-          {() => (
-            <AppLayout>
-              <IslamicCalendarPage />
-            </AppLayout>
-          )}
+          {() => <VisualRoute><IslamicCalendarPage /></VisualRoute>}
         </Route>
         <Route path="/digital-tasbih">
-          {() => (
-            <AppLayout>
-              <DigitalTasbihPage />
-            </AppLayout>
-          )}
+          {() => <VisualRoute><DigitalTasbihPage /></VisualRoute>}
         </Route>
         <Route path="/qibla-compass">
-          {() => (
-            <AppLayout>
-              <QiblaCompassPage />
-            </AppLayout>
-          )}
+          {() => <VisualRoute><QiblaCompassPage /></VisualRoute>}
         </Route>
         <Route path="/dashboard">
           {() => (

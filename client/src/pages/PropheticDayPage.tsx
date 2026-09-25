@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import InstitutionShell from "@/components/Institution/InstitutionShell";
 import EvidenceDrawer, { EvidenceSource } from "@/components/Institution/EvidenceDrawer";
 import LearningDepthSelector, { useLearningDepth } from "@/components/Institution/LearningDepthSelector";
 import { PROPHETIC_DAY_STATIONS, DailyStation } from "@/data/propheticDailyData";
@@ -61,7 +60,7 @@ export default function PropheticDayPage() {
   };
 
   return (
-    <InstitutionShell activeWing="prophetic-day">
+    <>
       <div className="prophetic-journey text-right">
         {/* Banner */}
         <section className="wing-hero wing-hero--daily" aria-labelledby="prophetic-day-title">
@@ -250,6 +249,6 @@ export default function PropheticDayPage() {
         onClose={() => setSelectedEvidence(null)}
         evidence={selectedEvidence}
       />
-    </InstitutionShell>
+    </>
   );
 }

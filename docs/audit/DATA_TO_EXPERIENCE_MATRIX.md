@@ -1,3 +1,7 @@
+> **SUPERSEDED AS CURRENT TRUTH.** Counts, shells, and provider states in this file
+> were recorded against an older SHA. Use `docs/audit/CURRENT_PRODUCT_REALITY.md`
+> for live authority. This file remains as historical evidence only.
+
 # Data To Experience Matrix
 
 **Product:** Ya Rasool Allah ﷺ / يا رسول الله ﷺ  
