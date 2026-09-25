@@ -151,7 +151,7 @@
   grid-column: span 6;
   grid-row: span 2;
 }
-.gateGrid .gateCard:nth-child(n + 2):nth-child(-n + 5) {
+.gateGrid .gateCard:nth-child(n + 2) {
   grid-column: span 3;
 }
 .gateGrid .gateCard:nth-child(n + 6) {
