@@ -288,17 +288,27 @@ try {
         const detail = document.querySelector('article[aria-label="تفاصيل المحطة المختارة"]');
         const bounds = detail?.getBoundingClientRect().toJSON();
         const buttons = [...document.querySelectorAll('ol[aria-label="محطات الفصل"] button')];
+        const graph = document.querySelector('[data-visual="seerah-event-graph"]');
+        const graphBounds = graph?.getBoundingClientRect().toJSON();
         return {
           viewport: innerWidth,
           documentWidth: document.documentElement.scrollWidth,
           detail: bounds,
           selected: buttons.filter((button) => button.getAttribute("aria-pressed") === "true").length,
           placeLink: detail?.querySelector('a[href^="/atlas?place="]')?.getAttribute("href") ?? null,
-          dateUncertainty: detail?.textContent?.includes("غير موثقة في بيانات المحطة")
+          dateUncertainty: detail?.textContent?.includes("غير موثقة في بيانات المحطة"),
+          graph: graphBounds ?? null,
+          graphRelations: graph?.querySelectorAll("[data-graph-relations] li").length ?? 0,
+          graphButtons: graph?.querySelectorAll("button").length ?? 0,
+          graphDeferred: graph?.querySelectorAll("[data-graph-deferred] li").length ?? 0,
+          graphNarrativeNote: graph?.textContent?.includes("ترتيب سردي لا تقويم تاريخي") ?? false
         };
       })()`);
       if (!seerahGeometry.detail || seerahGeometry.detail.left < -1 || seerahGeometry.detail.right > seerahGeometry.viewport + 1 || seerahGeometry.documentWidth > seerahGeometry.viewport + 1 || seerahGeometry.selected !== 1 || !seerahGeometry.placeLink || !seerahGeometry.dateUncertainty) {
         throw new Error(`${item.name} selected Seerah event failed: ${JSON.stringify(seerahGeometry)}`);
+      }
+      if (!seerahGeometry.graph || seerahGeometry.graph.left < -1 || seerahGeometry.graph.right > seerahGeometry.viewport + 1 || seerahGeometry.graphRelations < 4 || seerahGeometry.graphButtons < 1 || seerahGeometry.graphDeferred < 4 || !seerahGeometry.graphNarrativeNote) {
+        throw new Error(`${item.name} Seerah event graph failed: ${JSON.stringify(seerahGeometry)}`);
       }
       diagnostics.geometry = seerahGeometry;
       if (item.name === "seerah-390-rtl") {
@@ -322,6 +332,11 @@ try {
         await evaluate(session, 'document.querySelector(\'a[href^="/seerah?chapter="]\').click()');
         await waitFor(session, `location.pathname === "/seerah" && document.querySelector('article[aria-label="تفاصيل المحطة المختارة"] h3')?.textContent === ${JSON.stringify(selected)}`, "restored Seerah event");
         diagnostics.roundTrip = { link, returnLink, selected };
+        const beforeGraphTitle = await evaluate(session, 'document.querySelector(\'article[aria-label="تفاصيل المحطة المختارة"] h3\')?.textContent || ""');
+        const graphNavClicked = await evaluate(session, '(() => { const button = document.querySelector(\'[data-visual="seerah-event-graph"] button\'); if (!button) return false; button.click(); return true; })()');
+        if (!graphNavClicked) throw new Error("Seerah event graph has no navigation button");
+        const afterGraphTitle = await waitFor(session, `(() => { const title = document.querySelector('article[aria-label="تفاصيل المحطة المختارة"] h3')?.textContent || ""; return title && title !== ${JSON.stringify(beforeGraphTitle)} ? title : ""; })()`, "Seerah graph navigation");
+        diagnostics.graphNavigation = { before: beforeGraphTitle, after: afterGraphTitle };
       }
     }
     if (item.path === "/who-is-muhammad") {
@@ -344,6 +359,10 @@ try {
       diagnostics.geometry = whoGeometry;
     }
     if (["/hadith", "/daily", "/basirah"].includes(item.path)) {
+      await waitFor(session, '(document.querySelector(".vg-shell main h1")?.textContent || "").trim().length > 0', `${item.name} supporting wing heading`);
+      if (item.path === "/hadith") {
+        await waitFor(session, 'document.querySelector(".vg-shell main")?.textContent?.includes("نطاق المحتوى الحالي")', `${item.name} Hadith corpus scope panel`);
+      }
       const truthGeometry = await evaluate(session, `(() => {
         const shell = document.querySelector(".vg-shell");
         const main = shell?.querySelector("main");

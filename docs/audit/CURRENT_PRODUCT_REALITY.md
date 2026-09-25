@@ -1,6 +1,6 @@
 # Current product reality
 
-Audited against live `origin/main` = `4048dbda205f5383419b79a2bbeed2f0f9d76ad5` after PR #96 merge on 2026-09-25, plus this slice's live verification.
+Audited against live `origin/main` = `79dd480701613333d35e16c7d961c858a36b13a1` after PR #97 merge on 2026-09-25, plus this slice's live verification.
 
 This document supersedes stale counts in older audit files. Historical
 percentages and “17 books / demo-token / 18 sample verses” claims are **not**
@@ -18,6 +18,8 @@ current truth unless re-verified below.
 | PR #92 | Merged `3565cd4f`: Hadith honest copy-matn/link, deep-link sync, invalid-sample notice, `scripts/hadith-share.test.ts`. Runtime-verified locally (deep links, copy success/failure, 390/768/1440 RTL/LTR dark/light, no overflow, no console errors). |
 | PR #93 | Merged `7aebc033`: rewired stale `atlas-1440-dark-rtl` visual-evidence case to the real `/atlas` theatre view; harness import-safe; `scripts/visual-evidence-cases.test.ts` (22 checks) in `test:p0`. `capture:visual` now covers 22/22 cases with zero mount/overflow/runtime/unnamed failures. |
 | PR #96 | Merged `4048dbda`: honest MP3Quran stream failure alerts, stale playback/AbortError guards, mobile audio layout, and `/audio` visual evidence. |
+| PR #97 | Merged `79dd4807`: Hadith corpus/provider status contract at `/api/content/hadith/status` mounted on both servers, corpus-scope panel in `/hadith`, `scripts/hadith-share.test.ts`, `server/hadith-status-mount.test.ts`. |
+| This slice (Seerah event graph) | Branch `feat/yra-seerah-event-graph-20260925` from `79dd4807`: `client/src/visual-golden/services/seerah-graph.ts` normalizes the recorded chapters into 8 chapter nodes + 23 chapter-scoped event nodes and 62 recorded edges, with an explicit admission boundary (5 admitted edge kinds, 7 deferred relation kinds with reasons). `/seerah` shows recorded relations, narrative-only sequencing, and the deferred list. Also repaired 3 U+FFFD byte losses in `client/src/data/seerahData.ts` and pinned 3 known out-of-slice encoding defects. Gates: `tsc` PASS, `test:p0` 97/97 PASS, `vite build` PASS, rendered smoke 29/29, `capture:visual` 25/25 with 0 runtime-error cases. |
 | Vercel quota | INTERMITTENT: preview deployments completed on PR #92/#93/#95 and the current PR preview, while some runs are rate-limited. Production domain (`yarasoolallah.it.com`) cutover still unverified. |
 | PR #83 | Closed WITHOUT merge by owner (`daynightae-cmyk`, 2026-09-25T08:55:14Z): `CONFLICTING` against current `main` because equivalent governed translation work already landed in `431257d` (EN/FR/UR AlQuran Cloud translations, French included). Code checks had been green; Vercel `build-rate-limit` is a hosting quota, not an application-code failure. QuranEnc editions (Rowwad EN / Junagarhi UR) remain a LATER ADDITIVE slice only, not a replacement of the merged AlQuran Cloud study-mode path. |
 | PR #86 | Merged: Quran reader inline governed MP3Quran recitation (`bd382893`). |
@@ -51,7 +53,7 @@ Contract: `client/src/visual-golden/lib/public-shell.ts`.
 | Library catalog | Thousands of shelf works (runtime catalog builder) | Internal catalog + Open Library discovery | Per work/version | `/library` | Yes | Conditional | n/a | Yes | No fake PDF/IIIF/download |
 | Kids approved YouTube catalog | Generated approved list empty; curated seeds exist; recovered queue pending | YouTube publishers + editorial pipeline | Embed/depiction pending for recovered items | `/kids` | Partial | n/a | Seed videos only | Filter | Do not auto-promote pending |
 | Hadith | 4 local development samples, 6 bibliographic collections; copy-matn/link + deep-link contracts live (PR #92); provider status contract at `/api/content/hadith/status` | Local samples + provider policy registry | Not a full corpus; Sunnah credentials absent, Dorar reference-only | `/hadith`, `/sunnah`, `/api/content/hadith/status` | Yes | Sample only | n/a | Sample | Status contract IMPLEMENTED AND VERIFIED; full corpus BLOCKED_EXTERNAL pending lawful source, credentials, rights, and editorial review |
-| Seerah | Chapter journey | Editorial chapters + OpenITI links | Review continues | `/seerah` | Yes | Chapters | n/a | Partial | Event graph still PARTIAL |
+| Seerah | 8 chapters, 3 categories, 23 recorded timeline events normalized into a recorded event graph (62 edges; 20 placed events, 3 unresolved composite locations) | Editorial chapters + OpenITI links | Review continues | `/seerah` | Yes | Chapters + event relations | n/a | Partial | Recorded-relation graph IMPLEMENTED AND VERIFIED; person/Quran/hadith/reference/absolute-chronology edges deliberately DEFERRED (no IDs or citations in source) |
 | Atlas | Schematic + living theatre (campaign phases, certainty badge, witness citation, Seerah links) | Internal schematic + governed campaign data | Not geographic fact; schematic labeled in-UI | `/atlas` | Yes | Schematic + theatre | n/a | n/a | Geographic layer BLOCKED until sourced coordinates; visual-evidence coverage restored (PR #93) |
 | Daily / Adhkar | Prayer observatory live (AlAdhan); adhkar corpus unbound | AlAdhan + honest empty adhkar | Prayer calculation ≠ worship text rights | `/daily` | Yes | Prayer yes; adhkar no | n/a | n/a | Adhkar BLOCKED pending sourced corpus |
 | Basirah | Local governed index | Internal registries | Retrieval only | `/basirah` | Yes | Yes | n/a | Yes | No generative fatwa; AI credential optional |
@@ -61,7 +63,7 @@ Contract: `client/src/visual-golden/lib/public-shell.ts`.
 
 ## Remaining unblocked engineering (not credentials)
 
-1. Seerah event graph from existing sourced chapters (no invented relations).
+1. Data encoding integrity sweep: 3 known U+FFFD byte losses outside the Seerah slice, pinned by `scripts/seerah-event-graph.test.ts` — `client/src/data/fatwas.json:211` (`راحلته`), `client/src/data/locales/ar.json:171` (`المراجع`), `client/src/data/mainStructure.ts:248` (`والاعتكاف`).
 2. Daily supporting content honesty (tasbih reward claims, daily-verse API).
 3. Sources/Evidence drawer semantic unification.
 4. Persistence: production `DATABASE_URL` required; memory fallback is not production.
@@ -81,8 +83,8 @@ Contract: `client/src/visual-golden/lib/public-shell.ts`.
 | Hadith sample contracts (copy/deep-link/search) | IMPLEMENTED AND VERIFIED locally 2026-09-25 (PR #92) |
 | Hadith provider/corpus status contract | IMPLEMENTED AND VERIFIED locally 2026-09-25 (`/api/content/hadith/status`, both servers) |
 | Hadith full corpus | BLOCKED_EXTERNAL / PARTIAL sample |
-| Seerah event graph | PARTIAL |
+| Seerah event graph | IMPLEMENTED AND VERIFIED for recorded relations only (this slice: 23 event nodes, 62 recorded edges, 7 deferred relation kinds with stated reasons); entity, scripture, hadith, reference and absolute-chronology edges remain NOT IMPLEMENTED because the source data carries no IDs or citations |
 | Atlas theatre + schematic | IMPLEMENTED AND VERIFIED locally (PR #93 evidence); geographic layer NOT IMPLEMENTED |
 | Adhkar corpus | BLOCKED (rights/editorial) |
-| Visual evidence harness | IMPLEMENTED AND VERIFIED: 24/24 cases, zero failures (current capture) |
+| Visual evidence harness | IMPLEMENTED AND VERIFIED: 25/25 cases, zero failures (current capture) |
 | Production deploy | PARTIAL: Vercel quota intermittent, preview deploys completing; production domain cutover unverified |

@@ -21,6 +21,7 @@ export const cases = [
   { name: "audio-1440-dark-rtl", path: "/audio", width: 1440, height: 1000, theme: "dark", language: "ar" },
   { name: "audio-360-light-ltr", path: "/audio", width: 360, height: 900, theme: "light", language: "en" },
   { name: "seerah-1440-dark-rtl", path: "/seerah", width: 1440, height: 1000, theme: "dark", language: "ar" },
+  { name: "seerah-graph-768-dark-rtl", path: "/seerah", width: 768, height: 1024, theme: "dark", language: "ar", scrollSelector: '[data-visual="seerah-event-graph"]', scrollOffset: -80 },
   { name: "atlas-1440-dark-rtl", path: "/atlas", width: 1440, height: 1000, theme: "dark", language: "ar", clickText: "مسرح الغزوات", scrollSelector: '[data-visual="atlas-theatre-evidence"]', scrollOffset: -80 },
   { name: "seerah-768-light-ltr", path: "/seerah", width: 768, height: 1024, theme: "light", language: "en" },
   { name: "children-360-light-rtl", path: "/kids", width: 360, height: 900, theme: "light", language: "ar" },
