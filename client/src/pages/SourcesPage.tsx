@@ -54,8 +54,16 @@ function includesQuery(query: string, ...values: Array<string | null | undefined
   return values.filter(Boolean).join(" ").toLowerCase().includes(query);
 }
 
+function initialSourceQuery() {
+  try {
+    return new URLSearchParams(window.location.search).get("q") ?? "";
+  } catch {
+    return "";
+  }
+}
+
 export default function SourcesPage() {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialSourceQuery);
   const normalizedQuery = query.trim().toLowerCase();
 
   const sources = useMemo(
