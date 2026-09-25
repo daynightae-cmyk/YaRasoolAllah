@@ -8,8 +8,8 @@ export interface QuranTafsirResponse {
   source: "QuranEnc.com";
   edition: "arabic_moyassar";
   title: string;
-  version: string;
-  lastUpdate: string;
+  version: string | null;
+  lastUpdate: string | null;
   attribution: string;
   rightsUrl: string | null;
   ayahs: QuranTafsirAyah[];

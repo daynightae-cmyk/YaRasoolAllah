@@ -30,6 +30,7 @@ export function createPublicContentApp(): Express {
   registerOpenLibraryRoutes(app);
   registerMp3QuranCatalogRoutes(app);
   registerQuranTranslationRoutes(app);
+  registerQuranTafsirRoutes(app);
   registerOpenItiReaderRoutes(app);
 
   app.use(errorHandler);

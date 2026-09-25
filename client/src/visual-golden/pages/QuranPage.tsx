@@ -664,7 +664,9 @@ export function QuranPage() {
               <strong>التفسير الميسر · QuranEnc.com</strong>
               <small>
                 {tafsirState.state === "ready"
-                  ? `الإصدار ${tafsirState.payload.version} · آخر تحديث ${tafsirState.payload.lastUpdate}`
+                  ? (tafsirState.payload.version
+                    ? `الإصدار ${tafsirState.payload.version} · آخر تحديث ${tafsirState.payload.lastUpdate ?? "غير منشور"}`
+                    : "المصدر لا ينشر رقم إصدار لهذه الطبعة")
                   : tafsirState.state === "loading"
                     ? "جارٍ تحميل التفسير الميسر من المصدر…"
                     : tafsirState.state === "error"
@@ -930,7 +932,7 @@ export function QuranPage() {
                 <>
                   <p><strong>التفسير الميسر:</strong> {selectedTafsir.text}</p>
                   {selectedTafsir.footnotes ? <p><strong>هامش المصدر:</strong> {selectedTafsir.footnotes}</p> : null}
-                  <small>{tafsirState.payload.attribution} · آخر تحديث {tafsirState.payload.lastUpdate}</small>
+                  <small>{tafsirState.payload.attribution}{tafsirState.payload.lastUpdate ? ` · آخر تحديث ${tafsirState.payload.lastUpdate}` : ""}</small>
                 </>
               ) : (
                 <p>التفسير غير متاح من المصدر لهذا الموضع حاليًا.</p>
@@ -964,7 +966,7 @@ export function QuranPage() {
               <small>
                 النص العربي يُعرض كما هو من Tanzil دون تعديل. ترجمة وضع الدراسة مستقلة
                 وتأتي عبر AlQuran Cloud، والتفسير الميسر مستقل ويأتي من QuranEnc.com دون
-                تعديل مع المصدر ورقم الإصدار وآخر تحديث.
+                تعديل؛ ولا ينشر المصدر رقم إصدار لطبعة التفسير الميسر.
               </small>
             </div>
           </aside>

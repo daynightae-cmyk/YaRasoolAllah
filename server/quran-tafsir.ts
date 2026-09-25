@@ -17,15 +17,6 @@ const tafsirRowSchema = z.object({
   footnotes: z.string().nullable().optional(),
 }).passthrough();
 
-const metadataRowSchema = z.object({
-  key: z.string().min(1),
-  language_iso_code: z.string().optional(),
-  version: z.union([z.string(), z.number()]).transform(String),
-  last_update: z.union([z.string(), z.number()]).transform(String),
-  title: z.string().optional(),
-  description: z.string().optional(),
-}).passthrough();
-
 function unwrapArray(value: unknown): unknown[] {
   if (Array.isArray(value)) return value;
   if (!value || typeof value !== "object") return [];
@@ -44,12 +35,6 @@ export function buildQuranEncTafsirUrl(surah: number): string | null {
 export function parseQuranEncTafsirPayload(value: unknown) {
   const parsed = z.array(tafsirRowSchema).safeParse(unwrapArray(value));
   return parsed.success ? parsed.data : null;
-}
-
-export function parseQuranEncMetadata(value: unknown) {
-  const parsed = z.array(metadataRowSchema).safeParse(unwrapArray(value));
-  if (!parsed.success) return null;
-  return parsed.data.find((item) => item.key === QURANENC_TAFSIR_KEY) ?? null;
 }
 
 export function registerQuranTafsirRoutes(app: Express) {
@@ -82,38 +67,28 @@ export function registerQuranTafsirRoutes(app: Express) {
         Accept: "application/json",
         "User-Agent": "YaRasoolAllah/1.0 QuranEnc tafsir proxy",
       };
-      const [tafsirResponse, metadataResponse] = await Promise.all([
-        fetch(tafsirUrl, {
-          signal: AbortSignal.timeout(8_000),
-          headers,
-          cache: "no-store",
-        }),
-        fetch(`${QURANENC_API}/translations/list/ar?localization=ar`, {
-          signal: AbortSignal.timeout(8_000),
-          headers,
-          cache: "no-store",
-        }),
-      ]);
+      const tafsirResponse = await fetch(tafsirUrl, {
+        signal: AbortSignal.timeout(8_000),
+        headers,
+        cache: "no-store",
+      });
 
-      if (!tafsirResponse.ok || !metadataResponse.ok) {
-        throw new Error(
-          `QuranEnc HTTP tafsir=${tafsirResponse.status} metadata=${metadataResponse.status}`,
-        );
+      if (!tafsirResponse.ok) {
+        throw new Error(`QuranEnc HTTP tafsir=${tafsirResponse.status}`);
       }
 
       const tafsir = parseQuranEncTafsirPayload(await tafsirResponse.json());
-      const metadata = parseQuranEncMetadata(await metadataResponse.json());
-      if (!tafsir?.length || !metadata?.version || !metadata.last_update) {
+      if (!tafsir?.length) {
         throw new Error("Unexpected QuranEnc response");
       }
 
       return res.json({
         source: "QuranEnc.com",
         edition: QURANENC_TAFSIR_KEY,
-        title: metadata.title || "التفسير الميسر",
-        version: metadata.version,
-        lastUpdate: metadata.last_update,
-        attribution: `QuranEnc.com · ${metadata.title || "التفسير الميسر"} · الإصدار ${metadata.version}`,
+        title: "التفسير الميسر",
+        version: null,
+        lastUpdate: null,
+        attribution: "QuranEnc.com · التفسير الميسر · لا ينشر المصدر رقم إصدار لهذه الطبعة",
         rightsUrl: governance.rights.licenseUrl,
         ayahs: tafsir
           .filter((item) => item.sura === query.data.surah)
