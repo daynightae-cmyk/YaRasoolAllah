@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Armchair, BookOpen, LibraryBig, Search, ExternalLink } from "lucide-react";
+import { Armchair, BookOpen, LibraryBig, Search } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import {
   getLibraryBookByOpenitiUri,
@@ -21,7 +21,23 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
   const [selected, setSelected] = useState<LibraryBook | null>(null);
   const [open, setOpen] = useState<{ book: LibraryBook; mode?: BookMode } | null>(null);
   const [view, setView] = useState<"shelves" | "catalog">(initialWorkId ? "catalog" : "shelves");
+  const [catalogCategory, setCatalogCategory] = useState<string | undefined>();
   const readableSelection = selected?.modes.includes("قراءة") ? selected : null;
+  const gateways = lang === "ar" ? [
+    ["A-القرآن وعلومه", "القرآن وعلومه", "المصحف والتفسير وعلوم الوحي"],
+    ["D-السيرة النبوية", "السيرة النبوية", "العصور والأحداث والرحلات"],
+    ["C-الحديث النبوي", "الحديث وعلومه", "المجاميع والأبواب والرواية"],
+    ["J-الفقه", "الفقه", "العبادات والمعاملات والمذاهب"],
+    ["I-العقيدة", "العقيدة", "أصول الاعتقاد وشروحها"],
+    ["P-اللغة العربية", "اللغة والأدب", "اللغة والشعر والبلاغة"],
+  ] : [
+    ["A-القرآن وعلومه", "Qur'an and its sciences", "Mushaf, exegesis, and revelation studies"],
+    ["D-السيرة النبوية", "Prophetic biography", "Eras, events, and journeys"],
+    ["C-الحديث النبوي", "Hadith and its sciences", "Collections, chapters, and transmission"],
+    ["J-الفقه", "Jurisprudence", "Worship, transactions, and schools"],
+    ["I-العقيدة", "Creed", "Foundations and commentaries"],
+    ["P-اللغة العربية", "Arabic language and literature", "Language, poetry, and rhetoric"],
+  ];
   const labels = lang === "ar" ? {
     title: "المكتبة الكبرى",
     subtitle: `مكتبة رقمية مؤسسية · ${LIBRARY_COUNTS.works.toLocaleString("ar")} عملاً منقحاً على الرفوف · ٩٬١٢٩ عملاً في الفهرس العلمي`,
@@ -74,18 +90,26 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
             placeholder={labels.search}
             aria-label={labels.searchLabel}
           />
-          {q.trim().length > 1 ? (
-            <a
-              className="btn-outline"
-              href={`https://openlibrary.org/search?q=${encodeURIComponent(q.trim())}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {labels.globalSearch} <ExternalLink size={13} />
-            </a>
-          ) : null}
+          {q.trim().length > 1 ? <span className={styles.searchHint}>{lang === "ar" ? "يُبحث داخل الرفوف والفهرس" : "Searches the shelves and catalog"}</span> : null}
         </div>
       </PageHero>
+
+      <section className={styles.gateways} aria-labelledby="library-gateways-title">
+        <div className={styles.gatewayHeading}>
+          <span>{lang === "ar" ? "بوابات المكتبة" : "Library gateways"}</span>
+          <h2 id="library-gateways-title">{lang === "ar" ? "ادخل إلى المجال ثم إلى الرف" : "Enter a domain, then its shelves"}</h2>
+          <p>{lang === "ar" ? "الفهرس الكامل قابل للوصول تدريجيًا؛ لا تُحمّل آلاف السجلات في الصفحة دفعة واحدة." : "The full catalog is progressively reachable; thousands of records are never rendered at once."}</p>
+        </div>
+        <div className={styles.gatewayGrid}>
+          {gateways.map(([key, title, description]) => (
+            <button key={key} type="button" className={styles.gateway} onClick={() => { setCatalogCategory(key); setView("catalog"); }}>
+              <strong>{title}</strong>
+              <span>{description}</span>
+              <small>{lang === "ar" ? "فتح المجال في الفهرس" : "Open domain in catalog"}</small>
+            </button>
+          ))}
+        </div>
+      </section>
 
       {!initialWorkId ? (
         <nav className={styles.modeSwitch} aria-label={labels.modesLabel}>
@@ -111,9 +135,10 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
           query={q}
         />
       ) : (
-        <LibraryCatalog
-          initialWorkId={initialWorkId}
-          canOpenReader={(work) => Boolean(getLibraryBookByOpenitiUri(work.openitiUri)?.modes.includes("قراءة"))}
+            <LibraryCatalog
+              initialWorkId={initialWorkId}
+              initialCategory={catalogCategory}
+              canOpenReader={(work) => Boolean(getLibraryBookByOpenitiUri(work.openitiUri)?.modes.includes("قراءة"))}
           onOpenReader={openCatalogReader}
         />
       )}

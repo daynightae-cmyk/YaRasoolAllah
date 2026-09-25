@@ -4,9 +4,13 @@ import {
   BookOpen,
   ChevronLeft,
   ChevronRight,
+  Copy,
   ExternalLink,
   Eye,
   Headphones,
+  Minus,
+  Plus,
+  Search,
   ShieldCheck,
   X,
 } from "lucide-react";
@@ -32,6 +36,46 @@ type ReaderState =
   | { state: "ready"; data: DirectReaderPayload };
 
 const BOOKMARK_KEY = "library-shelf-bookmarks-v1";
+const READER_STATE_KEY = "library-reader-state-v1";
+const READER_SETTINGS_KEY = "library-reader-settings-v1";
+
+function safeReadReaderState(workId: string): number {
+  try {
+    const raw = localStorage.getItem(READER_STATE_KEY);
+    const state = raw ? (JSON.parse(raw) as Record<string, number>) : {};
+    return Number.isFinite(state[workId]) ? Math.max(0, state[workId]) : 0;
+  } catch {
+    return 0;
+  }
+}
+
+function safeReadReaderSettings() {
+  try {
+    const raw = localStorage.getItem(READER_SETTINGS_KEY);
+    const settings = raw ? (JSON.parse(raw) as { fontScale?: number; lineHeight?: number }) : {};
+    return {
+      fontScale: Math.min(1.35, Math.max(0.9, settings.fontScale ?? 1)),
+      lineHeight: Math.min(2.6, Math.max(1.7, settings.lineHeight ?? 2.05)),
+    };
+  } catch {
+    return { fontScale: 1, lineHeight: 2.05 };
+  }
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function highlightText(text: string, query: string) {
+  const needle = query.trim();
+  if (!needle) return text;
+  const parts = text.split(new RegExp(`(${escapeRegExp(needle)})`, "ig"));
+  return parts.map((part, index) =>
+    part.toLocaleLowerCase() === needle.toLocaleLowerCase()
+      ? <mark key={`${part}-${index}`}>{part}</mark>
+      : part,
+  );
+}
 
 function safeReadBookmarks(): string[] {
   try {
@@ -52,6 +96,10 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
   const [cursor, setCursor] = useState(0);
   const [reader, setReader] = useState<ReaderState>({ state: "idle" });
   const [retryToken, setRetryToken] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [fontScale, setFontScale] = useState(() => safeReadReaderSettings().fontScale);
+  const [lineHeight, setLineHeight] = useState(() => safeReadReaderSettings().lineHeight);
+  const [copyState, setCopyState] = useState<"idle" | "copied">("idle");
   const chamberRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const openerRef = useRef<HTMLElement | null>(null);
@@ -67,9 +115,23 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
   useEffect(() => {
     setSaved(safeReadBookmarks().includes(book.workId));
     setMode(allowedMode(book, initialMode));
-    setCursor(0);
+    setCursor(safeReadReaderState(book.workId));
     setReader({ state: "idle" });
+    setSearchQuery("");
+    setCopyState("idle");
   }, [book, initialMode]);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(READER_STATE_KEY);
+      const state = raw ? (JSON.parse(raw) as Record<string, number>) : {};
+      state[book.workId] = cursor;
+      localStorage.setItem(READER_STATE_KEY, JSON.stringify(state));
+      localStorage.setItem(READER_SETTINGS_KEY, JSON.stringify({ fontScale, lineHeight }));
+    } catch {
+      // Reading remains usable when browser storage is unavailable.
+    }
+  }, [book.workId, cursor, fontScale, lineHeight]);
 
   useEffect(() => {
     openerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
@@ -150,6 +212,25 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
   const switchMode = (nextMode: BookMode) => {
     if (!book.modes.includes(nextMode)) return;
     setMode(nextMode);
+  };
+
+  const matchCount = useMemo(() => {
+    if (reader.state !== "ready" || !searchQuery.trim()) return 0;
+    const expression = new RegExp(escapeRegExp(searchQuery.trim()), "gi");
+    return reader.data.reader.segments.reduce((count, segment) => count + (segment.text.match(expression)?.length ?? 0), 0);
+  }, [reader, searchQuery]);
+
+  const copyCitation = async () => {
+    if (reader.state !== "ready") return;
+    const locator = reader.data.reader.segments.find((segment) => segment.locator)?.locator;
+    const citation = `${book.title} — ${book.author}${locator ? `، ${locator}` : ""}، OpenITI URI: ${reader.data.version.openitiUri}`;
+    try {
+      await navigator.clipboard.writeText(citation);
+      setCopyState("copied");
+      window.setTimeout(() => setCopyState("idle"), 1800);
+    } catch {
+      setCopyState("idle");
+    }
   };
 
   const catalogView = (
@@ -297,14 +378,31 @@ export function ReadingChamber({ book, initialMode, onClose }: Props) {
           </small>
         </header>
 
-        <article className={styles.readerText} dir="rtl">
+        <div className={styles.readerTools} aria-label="أدوات القراءة">
+          <label className={styles.readerSearch}>
+            <Search size={15} aria-hidden="true" />
+            <span className="sr-only">البحث داخل النص الحالي</span>
+            <input value={searchQuery} onChange={(event) => setSearchQuery(event.target.value)} placeholder="ابحث داخل النص الحالي…" />
+            {searchQuery ? <small>{matchCount} نتيجة</small> : null}
+          </label>
+          <div className={styles.readerControls} aria-label="ضبط النص">
+            <button type="button" onClick={() => setFontScale((value) => Math.max(0.9, value - 0.05))} aria-label="تصغير الخط"><Minus size={14} /></button>
+            <span>{Math.round(fontScale * 100)}%</span>
+            <button type="button" onClick={() => setFontScale((value) => Math.min(1.35, value + 0.05))} aria-label="تكبير الخط"><Plus size={14} /></button>
+            <button type="button" onClick={() => setLineHeight((value) => Math.max(1.7, Number((value - 0.1).toFixed(2))))} aria-label="تقليل تباعد السطور">−</button>
+            <button type="button" onClick={() => setLineHeight((value) => Math.min(2.6, Number((value + 0.1).toFixed(2))))} aria-label="زيادة تباعد السطور">＋</button>
+            <button type="button" onClick={copyCitation} aria-label="نسخ الاقتباس"><Copy size={14} /> {copyState === "copied" ? "تم النسخ" : "اقتباس"}</button>
+          </div>
+        </div>
+
+        <article className={styles.readerText} dir="rtl" style={{ fontSize: `calc(clamp(1.03rem, 1.5vw, 1.22rem) * ${fontScale})`, lineHeight }}>
           {reader.data.reader.segments.map((segment) =>
             segment.kind === "heading" ? (
-              <h3 key={segment.index}>{segment.text}</h3>
+              <h3 key={segment.index}>{highlightText(segment.text, searchQuery)}</h3>
             ) : (
               <div key={segment.index}>
                 {segment.text.split("\n\n").map((paragraph, paragraphIndex) => (
-                  <p key={`${segment.index}-${paragraphIndex}`}>{paragraph}</p>
+                  <p key={`${segment.index}-${paragraphIndex}`}>{highlightText(paragraph, searchQuery)}</p>
                 ))}
                 {segment.locator ? <small className={styles.locator}>{segment.locator}</small> : null}
               </div>
