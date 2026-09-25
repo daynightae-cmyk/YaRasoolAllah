@@ -186,6 +186,25 @@
   color: #f8efc2;
   font-size: 1.05rem;
 }
+.readingModes {
+  display: flex;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  border: 1px solid rgba(212, 160, 23, 0.25);
+  border-radius: 999px;
+  background: rgba(5, 42, 36, 0.58);
+}
+.readingModes button {
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  color: var(--ivory-200);
+  font-size: 0.75rem;
+}
+.readingModes .modeOn {
+  color: var(--gold-300);
+  background: rgba(232, 197, 71, 0.2);
+}
 .sheet {
   position: relative;
   background:
@@ -234,6 +253,23 @@
   line-height: 2.35;
   text-align: center;
 }
+.studyAyat { text-align: right; }
+.studyCard {
+  margin-top: 1.1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(115, 78, 28, 0.28);
+  border-radius: 12px;
+  color: #4e3518;
+  background: rgba(255, 255, 255, 0.28);
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  line-height: 1.8;
+  text-align: right;
+}
+.studyCard strong { color: #754b16; }
+.studyCard p { margin: 0.35rem 0; }
+.studyCard small { color: #76552b; font-size: 0.68rem; }
+.pendingStudy { color: #76552b; }
 .ayah {
   display: inline;
   margin: 0;
@@ -371,6 +407,26 @@
 .toolOn {
   border-color: var(--gold-400) !important;
   color: var(--gold-300) !important;
+}
+.readingControls {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.9rem;
+  color: var(--ivory-200);
+  font-size: 0.7rem;
+}
+.readingControls button {
+  padding: 0.35rem 0.45rem;
+  border: 1px solid rgba(212, 160, 23, 0.24);
+  border-radius: 7px;
+  color: var(--ivory-100);
+  background: rgba(4, 28, 24, 0.55);
+}
+.readingControls button:hover, .readingControls button:focus-visible {
+  border-color: var(--gold-400);
+  color: var(--gold-300);
 }
 .tafsirBox {
   font-size: 0.82rem;

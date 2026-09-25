@@ -27,10 +27,12 @@ import { searchVerifiedQuran, type QuranSearchHit } from "@/visual-golden/servic
 import styles from "./QuranPage.module.css";
 
 type SidebarTab = "surah" | "marks";
+type ReadingMode = "mushaf" | "study";
 
 const BOOKMARK_KEY = "quran-bookmarks";
 const NOTE_KEY = "quran-notes-v1";
 const CONTINUE_KEY = "quran-last-position-v1";
+const READING_SETTINGS_KEY = "quran-reading-settings-v1";
 
 function safeReadJson<T>(key: string, fallback: T): T {
   try {
@@ -47,6 +49,14 @@ function safeWriteJson(key: string, value: unknown) {
   } catch {
     // Reading remains usable when storage is unavailable.
   }
+}
+
+function safeReadReadingSettings() {
+  const settings = safeReadJson<{ fontScale?: number; lineHeight?: number }>(READING_SETTINGS_KEY, {});
+  return {
+    fontScale: Math.min(1.35, Math.max(0.9, settings.fontScale ?? 1)),
+    lineHeight: Math.min(2.8, Math.max(1.8, settings.lineHeight ?? 2.35)),
+  };
 }
 
 function verseKey(surah: number, ayah: number) {
@@ -91,6 +101,9 @@ export function QuranPage() {
   const [notes, setNotes] = useState<Record<string, string>>({});
   const [showNote, setShowNote] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [readingMode, setReadingMode] = useState<ReadingMode>("mushaf");
+  const [fontScale, setFontScale] = useState(() => safeReadReadingSettings().fontScale);
+  const [lineHeight, setLineHeight] = useState(() => safeReadReadingSettings().lineHeight);
 
   const governance = useMemo(
     () => getGovernanceRecord("resource-tanzil-uthmani-min-1-1"),
@@ -113,6 +126,10 @@ export function QuranPage() {
       // URL synchronization is a convenience; Quran reading must still work.
     }
   }, [active, ayah]);
+
+  useEffect(() => {
+    safeWriteJson(READING_SETTINGS_KEY, { fontScale, lineHeight });
+  }, [fontScale, lineHeight]);
 
   useEffect(() => {
     let cancelled = false;
@@ -461,6 +478,10 @@ export function QuranPage() {
               {currentChapter ? `${currentChapter.ayahCount} آية` : "—"}
             </span>
           </div>
+          <div className={styles.readingModes} role="tablist" aria-label="وضع القراءة">
+            <button type="button" role="tab" aria-selected={readingMode === "mushaf"} className={readingMode === "mushaf" ? styles.modeOn : ""} onClick={() => setReadingMode("mushaf")}>مصحف</button>
+            <button type="button" role="tab" aria-selected={readingMode === "study"} className={readingMode === "study" ? styles.modeOn : ""} onClick={() => setReadingMode("study")}>دراسة</button>
+          </div>
           <a className={styles.catalogJump} href="#quran-surah-nav">فهرس السور والبحث ↓</a>
 
           <div
@@ -478,7 +499,7 @@ export function QuranPage() {
               <ChevronRight size={18} />
             </button>
 
-            <div className={styles.ayat}>
+            <div className={`${styles.ayat} ${readingMode === "study" ? styles.studyAyat : ""}`} style={{ fontSize: `calc(clamp(1.25rem, 2.2vw, 1.7rem) * ${fontScale})`, lineHeight }}>
               {loading ? (
                 <p className={styles.loadingState}>
                   جارٍ فتح السورة من المصحف المحلي…
@@ -507,6 +528,14 @@ export function QuranPage() {
                 ))
               )}
             </div>
+            {readingMode === "study" && selectedVerse ? (
+              <div className={styles.studyCard} aria-live="polite">
+                <strong>مادة الدراسة · الآية {selectedVerse.ayah}</strong>
+                {selectedVerse.translation ? <p><b>ترجمة:</b> {selectedVerse.translation}</p> : <p className={styles.pendingStudy}>لا توجد ترجمة إنتاجية موثقة مربوطة بهذا الموضع بعد.</p>}
+                {selectedVerse.tafsir ? <p><b>تفسير:</b> {selectedVerse.tafsir}</p> : <p className={styles.pendingStudy}>لا يوجد تفسير إنتاجي موثق مربوط بهذا الموضع بعد.</p>}
+                <small>النص العربي مستقل عن الترجمة والتفسير؛ لا تُعرض مادة عينة بوصفها corpus إنتاجيًا كاملًا.</small>
+              </div>
+            ) : null}
 
             <button
               className={styles.sheetNav}
@@ -583,6 +612,14 @@ export function QuranPage() {
               </button>
             </div>
 
+            <div className={styles.readingControls} aria-label="ضبط عرض القرآن">
+              <span>الخط {Math.round(fontScale * 100)}%</span>
+              <button type="button" onClick={() => setFontScale((value) => Math.max(0.9, Number((value - 0.05).toFixed(2))))} aria-label="تصغير خط القرآن">−</button>
+              <button type="button" onClick={() => setFontScale((value) => Math.min(1.35, Number((value + 0.05).toFixed(2))))} aria-label="تكبير خط القرآن">＋</button>
+              <button type="button" onClick={() => setLineHeight((value) => Math.max(1.8, Number((value - 0.1).toFixed(2))))} aria-label="تقليل تباعد السطور">تضييق</button>
+              <button type="button" onClick={() => setLineHeight((value) => Math.min(2.8, Number((value + 0.1).toFixed(2))))} aria-label="زيادة تباعد السطور">توسيع</button>
+            </div>
+
             {showNote && selectedKey ? (
               <div className={styles.noteBox}>
                 <label htmlFor="quran-personal-note">
@@ -601,10 +638,9 @@ export function QuranPage() {
             ) : null}
 
             <h4>التفسير والترجمة</h4>
-            <div className={styles.unavailableBox}>
-              <p>
-                لم يُربط بهذه الواجهة حتى الآن تفسير أو ترجمة معتمدة للإنتاج.
-              </p>
+            <div className={styles.tafsirBox}>
+              {selectedVerse?.translation ? <p><strong>الترجمة:</strong> {selectedVerse.translation}</p> : <p>لا توجد ترجمة إنتاجية موثقة لهذا الموضع بعد.</p>}
+              {selectedVerse?.tafsir ? <p><strong>التفسير:</strong> {selectedVerse.tafsir}</p> : <p>لا يوجد تفسير إنتاجي موثق لهذا الموضع بعد.</p>}
               <Link href="/tafsir">فتح مساحة التفسير والتدبر</Link>
             </div>
 
