@@ -8,6 +8,7 @@ import p from "@/visual-golden/components/present/present.module.css";
 import {
   COLLECTIONS,
   HADITH_COUNTS,
+  LOCAL_SAMPLES,
   getCollection,
   searchSamples,
 } from "@/visual-golden/services/hadith";
@@ -26,10 +27,37 @@ function safeReadBookmarks(): string[] {
 
 const COLLECTION_ART = [art.books, art.bookStack, art.mushaf, art.lanternGlow, art.archesNight, art.mushafOpen];
 
+function initialHadithSelection() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const requestedSampleId = params.get("sample");
+    const requestedSample = requestedSampleId
+      ? LOCAL_SAMPLES.find((sample) => sample.id === requestedSampleId) ?? null
+      : null;
+    const requestedCollection = params.get("collection");
+    const validRequestedCollection =
+      requestedCollection && COLLECTIONS.some((collection) => collection.id === requestedCollection)
+        ? requestedCollection
+        : null;
+    return {
+      activeId: requestedSample?.id ?? LOCAL_SAMPLES[0]?.id ?? "",
+      collectionId: requestedSample?.collectionId ?? validRequestedCollection ?? "all",
+      invalidRequestedSample: Boolean(requestedSampleId && !requestedSample),
+    };
+  } catch {
+    return {
+      activeId: LOCAL_SAMPLES[0]?.id ?? "",
+      collectionId: "all" as const,
+      invalidRequestedSample: false,
+    };
+  }
+}
+
 export function HadithPage() {
+  const initial = useMemo(initialHadithSelection, []);
   const [q, setQ] = useState("");
-  const [collectionId, setCollectionId] = useState<string | "all">("all");
-  const [activeId, setActiveId] = useState("bukhari-1");
+  const [collectionId, setCollectionId] = useState<string | "all">(initial.collectionId);
+  const [activeId, setActiveId] = useState(initial.activeId);
   const [bookmarks, setBookmarks] = useState<string[]>(() => safeReadBookmarks());
 
   const results = useMemo(() => searchSamples(q, collectionId), [q, collectionId]);
@@ -86,6 +114,12 @@ export function HadithPage() {
           ))}
         </div>
       </PageHero>
+
+      {initial.invalidRequestedSample ? (
+        <p className="muted" role="status" style={{ margin: "0.8rem 1.3rem 0", fontSize: "0.8rem" }}>
+          السجل المطلوب غير موجود في العينات المحلية الحالية، لذلك عُرض أول سجل متاح دون اختراع بديل.
+        </p>
+      ) : null}
 
       <section className={styles.pad}>
         <SectionHead title="المصنفات الببليوغرافية" en="Collection Metadata — not local corpus" href="/library" />
