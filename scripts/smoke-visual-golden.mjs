@@ -32,6 +32,12 @@ const cases = [
   { name: "who-1440-rtl", path: "/who-is-muhammad", width: 1440, height: 1000 },
   { name: "who-390-rtl", path: "/who-is-muhammad", width: 390, height: 844 },
   { name: "kids-360-rtl", path: "/kids", width: 360, height: 844 },
+  { name: "hadith-1440-rtl", path: "/hadith", width: 1440, height: 1000 },
+  { name: "hadith-390-rtl", path: "/hadith", width: 390, height: 844 },
+  { name: "daily-1440-rtl", path: "/daily", width: 1440, height: 1000 },
+  { name: "daily-390-rtl", path: "/daily", width: 390, height: 844 },
+  { name: "basirah-1440-rtl", path: "/basirah", width: 1440, height: 1000 },
+  { name: "basirah-390-rtl", path: "/basirah", width: 390, height: 844 },
   { name: "library-1440-rtl", path: "/library", width: 1440, height: 1000 },
   { name: "sources-1440-rtl", path: "/sources", width: 1440, height: 1000 },
   { name: "sources-360-rtl", path: "/sources", width: 360, height: 844 },
@@ -295,6 +301,29 @@ try {
         throw new Error(`${item.name} canonical shell failed: ${JSON.stringify(whoGeometry)}`);
       }
       diagnostics.geometry = whoGeometry;
+    }
+    if (["/hadith", "/daily", "/basirah"].includes(item.path)) {
+      const truthGeometry = await evaluate(session, `(() => {
+        const shell = document.querySelector(".vg-shell");
+        const main = shell?.querySelector("main");
+        return {
+          viewport: innerWidth,
+          documentWidth: document.documentElement.scrollWidth,
+          heading: main?.querySelector("h1")?.textContent || "",
+          text: main?.textContent || "",
+          shellCount: document.querySelectorAll(".vg-shell").length
+        };
+      })()`);
+      if (truthGeometry.shellCount !== 1 || truthGeometry.documentWidth > truthGeometry.viewport + 1 || !truthGeometry.heading) {
+        throw new Error(`${item.name} supporting wing shell failed: ${JSON.stringify(truthGeometry)}`);
+      }
+      if (item.path === "/hadith" && (!truthGeometry.text.includes("عينة تطوير") || !truthGeometry.text.includes("قيد المراجعة"))) {
+        throw new Error(`${item.name} lost Hadith review boundary`);
+      }
+      if (item.path === "/basirah" && !truthGeometry.text.includes("ليست مفتي")) {
+        throw new Error(`${item.name} lost Basirah non-mufti boundary`);
+      }
+      diagnostics.geometry = truthGeometry;
     }
     const shot = await session.send("Page.captureScreenshot", {
       format: "jpeg",

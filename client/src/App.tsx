@@ -25,7 +25,6 @@ const FivePillarsPage = lazy(() => import("./pages/FivePillarsPage"));
 const WomenInIslamPage = lazy(() => import("./pages/WomenInIslamPage"));
 const DailyVersePage = lazy(() => import("./pages/DailyVersePage"));
 const BabAlsamaaSettingsPage = lazy(() => import("./pages/BabAlsamaaSettingsPage"));
-const IslamicAIManagementPage = lazy(() => import("./pages/IslamicAIManagementPage"));
 const IslamicCalendarPage = lazy(() => import("./pages/IslamicCalendarPage"));
 const DigitalTasbihPage = lazy(() => import("./pages/DigitalTasbihPage"));
 const QiblaCompassPage = lazy(() => import("./pages/QiblaCompassPage"));
@@ -158,11 +157,7 @@ function AppContent() {
           )}
         </Route>
         <Route path="/islamic-ai-management">
-          {() => (
-            <AppLayout>
-              <IslamicAIManagementPage />
-            </AppLayout>
-          )}
+          {() => <Redirect to="/basirah" />}
         </Route>
         <Route path="/al-mufti-al-mubeen">
           {() => <Redirect to="/basirah" />}
