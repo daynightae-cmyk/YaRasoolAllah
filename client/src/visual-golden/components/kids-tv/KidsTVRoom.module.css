@@ -303,6 +303,22 @@
 .errorState strong { color: #fff0bd; }
 .errorState span { color: rgba(255, 248, 233, 0.72); font-size: 0.8rem; }
 
+.pendingScreen {
+  position: absolute;
+  z-index: 20;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.45rem;
+  padding: 1.1rem 1.2rem;
+  background: rgba(4, 12, 20, 0.94);
+  text-align: center;
+}
+.pendingScreen > * { max-width: 440px; }
+.pendingScreen strong { color: #fff0bd; font-size: 1.02rem; }
+.pendingScreen span { color: rgba(255, 248, 233, 0.78); font-size: 0.82rem; line-height: 1.9; }
+
 .tvBar {
   display: flex;
   align-items: center;
