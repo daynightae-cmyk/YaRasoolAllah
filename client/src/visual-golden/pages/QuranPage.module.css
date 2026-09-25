@@ -205,6 +205,38 @@
   color: var(--gold-300);
   background: rgba(232, 197, 71, 0.2);
 }
+.translationPicker {
+  width: min(100%, 720px);
+  margin: 0.55rem auto 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.35rem 0.6rem;
+  color: var(--ivory-200);
+  font-size: 0.72rem;
+}
+.translationPicker > span {
+  color: var(--gold-300);
+  font-weight: 700;
+}
+.translationPicker select {
+  min-width: 0;
+  padding: 0.42rem 0.65rem;
+  border: 1px solid rgba(212, 160, 23, 0.32);
+  border-radius: 10px;
+  color: var(--ivory-100);
+  background: rgba(5, 42, 36, 0.86);
+}
+.translationPicker small {
+  grid-column: 1 / -1;
+  color: var(--ivory-300);
+  text-align: center;
+  line-height: 1.6;
+}
+.translationText {
+  padding-inline: 0.15rem;
+  unicode-bidi: plaintext;
+}
 .sheet {
   position: relative;
   background:
