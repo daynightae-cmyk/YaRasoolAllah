@@ -15,6 +15,12 @@ mkdirSync(evidenceDir, { recursive: true });
 
 const cases = [
   { name: "home-1440-rtl", path: "/", width: 1440, height: 1000 },
+  { name: "home-1024-rtl", path: "/", width: 1024, height: 900 },
+  { name: "home-768-rtl", path: "/", width: 768, height: 900 },
+  { name: "home-390-rtl", path: "/", width: 390, height: 844 },
+  { name: "home-360-rtl", path: "/", width: 360, height: 800 },
+  { name: "home-390-light", path: "/", width: 390, height: 844, theme: "light" },
+  { name: "home-390-ltr", path: "/", width: 390, height: 844, lang: "en" },
   { name: "quran-1440-rtl", path: "/quran", width: 1440, height: 1000 },
   { name: "kids-360-rtl", path: "/kids", width: 360, height: 844 },
   { name: "library-1440-rtl", path: "/library", width: 1440, height: 1000 },
@@ -121,8 +127,16 @@ try {
   await session.open();
   await session.send("Page.enable");
   await session.send("Runtime.enable");
+  await session.send("Page.navigate", { url: `${origin}/` });
+  await waitFor(session, 'document.readyState === "complete"', "initial origin");
+  await evaluate(session, 'sessionStorage.setItem("yra-splash", "1")');
 
   for (const item of cases) {
+    await evaluate(session, `(() => {
+      const key = "yra-visual-golden-v1";
+      const saved = JSON.parse(localStorage.getItem(key) || "{}");
+      localStorage.setItem(key, JSON.stringify({ ...saved, theme: ${JSON.stringify(item.theme ?? "dark")}, lang: ${JSON.stringify(item.lang ?? "ar")} }));
+    })()`);
     await session.send("Emulation.setDeviceMetricsOverride", {
       width: item.width,
       height: item.height,
@@ -146,6 +160,37 @@ try {
     );
     if (!diagnostics.text || diagnostics.rootChildren < 1) {
       throw new Error(`${item.name} rendered without visible content`);
+    }
+    if (item.path === "/") {
+      await waitFor(session, 'document.querySelector(".vg-shell main h1") !== null', `${item.name} home`);
+      const geometry = await evaluate(session, `(() => {
+        const shell = document.querySelector(".vg-shell");
+        const header = shell?.querySelector("header");
+        const search = header?.querySelectorAll("button")[1];
+        const hero = shell?.querySelector("main section");
+        const copy = hero?.querySelector("h1")?.parentElement;
+        const form = hero?.querySelector("form");
+        const rect = (element) => element?.getBoundingClientRect();
+        return {
+          direction: shell?.getAttribute("dir"),
+          theme: shell?.getAttribute("data-theme"),
+          lang: shell?.getAttribute("data-lang"),
+          viewport: innerWidth,
+          documentWidth: document.documentElement.scrollWidth,
+          header: rect(header),
+          search: rect(search),
+          copy: rect(copy),
+          form: rect(form)
+        };
+      })()`);
+      const expectedLang = item.lang ?? "ar";
+      if (geometry.lang !== expectedLang || geometry.theme !== (item.theme ?? "dark") || geometry.direction !== (expectedLang === "ar" ? "rtl" : "ltr")) {
+        throw new Error(`${item.name} language/theme did not hydrate: ${JSON.stringify(geometry)}`);
+      }
+      if (geometry.documentWidth > geometry.viewport + 1 || geometry.search?.width < 32 || geometry.search?.left < -1 || geometry.search?.right > geometry.viewport + 1 || geometry.form?.left < -1 || geometry.form?.right > geometry.viewport + 1 || geometry.copy?.bottom > geometry.form?.top + 1) {
+        throw new Error(`${item.name} clipped or overlapping shell: ${JSON.stringify(geometry)}`);
+      }
+      diagnostics.geometry = geometry;
     }
     const shot = await session.send("Page.captureScreenshot", {
       format: "jpeg",
