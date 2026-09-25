@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { z } from "zod";
-import { evaluateResourceUsage } from "../shared/source-governance";
-import { getGovernanceRecord } from "../shared/source-registry";
+import { evaluateResourceUsage } from "../shared/source-governance.js";
+import { getGovernanceRecord } from "../shared/source-registry.js";
 
 export const QURAN_TRANSLATION_EDITIONS = {
   en: { edition: "en.sahih", translator: "Saheeh International", direction: "ltr" },
