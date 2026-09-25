@@ -26,3 +26,12 @@ test("shelves view still filters from the same hero query", () => {
   assert.match(page, /<CatalogShelfHall[\s\S]*?query=\{q\}/);
   assert.match(hall, /function workMatches\(work: CatalogWork, query: string\)/);
 });
+
+test("catalog exposes language and subcategory filters over real record fields", () => {
+  assert.match(catalog, /allSubcategories: "/);
+  assert.match(catalog, /allLanguages: "/);
+  assert.match(catalog, /work\.language/);
+  assert.match(catalog, /work\.subcategory/);
+  assert.match(catalog, /setSubcategory\(event\.target\.value\)/);
+  assert.match(catalog, /setLanguage\(event\.target\.value\)/);
+});

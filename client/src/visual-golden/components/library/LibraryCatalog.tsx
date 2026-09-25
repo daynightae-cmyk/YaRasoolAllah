@@ -101,6 +101,9 @@ const copy = {
     search: "العنوان أو المؤلف",
     searchPlaceholder: "ابحث في العناوين وأسماء المؤلفين…",
     allCategories: "كل الأقسام",
+    subcategory: "القسم الفرعي",
+    allSubcategories: "كل الأقسام الفرعية",
+    allLanguages: "كل اللغات",
     availability: "الإتاحة",
     allAvailability: "كل حالات الإتاحة",
     results: (count: string) => `${count} نتيجة`,
@@ -148,6 +151,9 @@ const copy = {
     search: "Title or author",
     searchPlaceholder: "Search titles and author names…",
     allCategories: "All subjects",
+    subcategory: "Subcategory",
+    allSubcategories: "All subcategories",
+    allLanguages: "All languages",
     availability: "Availability",
     allAvailability: "All availability states",
     results: (count: string) => `${count} results`,
@@ -307,12 +313,25 @@ export function LibraryCatalog({ initialWorkId, initialCategory, onOpenReader, c
     () => [...new Set((data?.works ?? []).map((work) => availabilityState(work.digital, work.versionCount)))],
     [data],
   );
+  const [language, setLanguage] = useState("all");
+  const [subcategory, setSubcategory] = useState("all");
+
+  const languages = useMemo(
+    () => [...new Set((data?.works ?? []).map((work) => work.language || "غير محدد"))].sort(),
+    [data],
+  );
+  const subcategories = useMemo(
+    () => [...new Set((data?.works ?? []).map((work) => work.subcategory).filter(Boolean) as string[])].sort(),
+    [data],
+  );
 
   const filtered = useMemo(() => {
     const needle = normalize(query.trim());
     return (data?.works ?? []).filter((work) => {
       const rawCategory = work.category || "UNCLASSIFIED_OPENITI";
       if (category !== "all" && rawCategory !== category) return false;
+      if (language !== "all" && (work.language || "غير محدد") !== language) return false;
+      if (subcategory !== "all" && work.subcategory !== subcategory) return false;
       if (availability !== "all" && availabilityState(work.digital, work.versionCount) !== availability) return false;
       if (!needle) return true;
       return normalize([
@@ -323,9 +342,9 @@ export function LibraryCatalog({ initialWorkId, initialCategory, onOpenReader, c
         categoryLabel(work.category, lang),
       ].filter(Boolean).join(" ")).includes(needle);
     });
-  }, [availability, category, data, lang, query]);
+  }, [availability, category, data, lang, language, query, subcategory]);
 
-  useEffect(() => setPage(1), [availability, category, query]);
+  useEffect(() => setPage(1), [availability, category, language, query, subcategory]);
 
   useEffect(() => {
     setCategory(initialCategory ?? "all");
@@ -380,6 +399,8 @@ export function LibraryCatalog({ initialWorkId, initialCategory, onOpenReader, c
           <span className={styles.searchBox}><Search size={16} aria-hidden="true" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={c.searchPlaceholder} /></span>
         </label>
         <label><span>{c.category}</span><select value={category} onChange={(event) => setCategory(event.target.value)}><option value="all">{c.allCategories}</option>{categories.map((item) => <option key={item} value={item}>{categoryLabel(item, lang)}</option>)}</select></label>
+        <label><span>{c.subcategory}</span><select value={subcategory} onChange={(event) => setSubcategory(event.target.value)}><option value="all">{c.allSubcategories}</option>{subcategories.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+        <label><span>{c.language}</span><select value={language} onChange={(event) => setLanguage(event.target.value)}><option value="all">{c.allLanguages}</option>{languages.map((item) => { const known = languageLabel(item === "غير محدد" ? null : item, lang); return <option key={item} value={item}>{known === c.unknown ? item : known}</option>; })}</select></label>
         <label><span>{c.availability}</span><select value={availability} onChange={(event) => setAvailability(event.target.value as "all" | AvailabilityState)}><option value="all">{c.allAvailability}</option>{availabilityOptions.map((item) => <option key={item} value={item}>{availabilityLabel(item, lang)}</option>)}</select></label>
       </div>
 
