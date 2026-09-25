@@ -342,3 +342,121 @@
   .nowPlaying { flex-direction: column; }
   .coverWrap { width: 100px; height: 120px; }
 }
+
+
+.sourceNote {
+  display: flex;
+  align-items: flex-start;
+  gap: .4rem;
+  max-width: 760px;
+  margin: .45rem 0;
+  color: rgba(255,248,233,.76);
+  font-size: .76rem;
+  line-height: 1.7;
+}
+.sourceNote svg { flex: none; margin-top: .18rem; color: var(--gold-300); }
+
+.player {
+  flex-wrap: wrap;
+}
+.player button:disabled { opacity: .38; cursor: not-allowed; }
+
+.playerIconButton {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(212,160,23,.28);
+  border-radius: 50%;
+  color: var(--ivory-100);
+  background: rgba(0,0,0,.16);
+}
+
+.playerCenter {
+  flex: 1 1 340px;
+  min-width: 220px;
+  display: grid;
+  gap: .3rem;
+}
+.playerCenter > strong {
+  color: var(--ivory-100);
+  font-size: .78rem;
+  text-align: center;
+}
+.seek {
+  flex: 1;
+  accent-color: var(--gold-400);
+}
+
+.volume {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  min-width: 120px;
+}
+.volume input { width: 90px; accent-color: var(--gold-400); }
+
+.streamReciters {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: .55rem;
+  max-height: 360px;
+  overflow-y: auto;
+  padding: .1rem;
+}
+.streamReciters button {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .65rem .7rem;
+  border: 1px solid rgba(212,160,23,.2);
+  border-radius: 12px;
+  color: var(--ivory-100);
+  background: rgba(0,0,0,.14);
+  text-align: start;
+}
+.streamReciters button:hover,
+.streamReciterOn {
+  border-color: var(--gold-400) !important;
+  background: rgba(212,160,23,.12) !important;
+}
+.streamReciters button > span {
+  min-width: 0;
+  display: grid;
+  gap: .15rem;
+}
+.streamReciters strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: .76rem;
+}
+.streamReciters small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--ivory-300);
+  font-size: .65rem;
+}
+.rightsLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .3rem;
+  color: var(--ivory-300);
+}
+.rightsLine a {
+  display: inline-flex;
+  align-items: center;
+  gap: .2rem;
+}
+
+@media (max-width: 1050px) {
+  .streamReciters { grid-template-columns: repeat(3, minmax(0,1fr)); }
+}
+@media (max-width: 760px) {
+  .streamReciters { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .player { align-items: center; }
+  .volume { width: 100%; justify-content: center; }
+}

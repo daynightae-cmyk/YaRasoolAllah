@@ -138,6 +138,19 @@ export const sourceRegistry: SourceRegistryEntry[] = sourceRegistryEntrySchema.a
       "QuranicAudio رابط خارجي فقط، EveryAyah يحتاج مراجعة ترخيص، وموارد Quran Foundation تخضع لعقد المورد. لا تسجيلات مجمعة.",
   },
   {
+    sourceId: "src-mp3quran-streaming",
+    title: "MP3Quran.net recitation streaming API",
+    provider: "MP3Quran.net",
+    kind: "audio_recording",
+    canonicalUrl: "https://www.mp3quran.net/ar/api/2",
+    version: "API v3 / provider policy checked 2026-09-25",
+    artifactSha256: null,
+    checkedAt: "2026-09-25T11:35:00+04:00",
+    editorialStatus: "verified",
+    notes:
+      "Provider API returns reciter/moshaf server bases and surah lists. Provider privacy/copyright policy explicitly permits visitors and developers to copy site material or use site links. Production use streams provider-hosted MP3 files directly; no local re-hosting.",
+  },
+  {
     sourceId: "src-librivox-audiobooks-candidate",
     title: "LibriVox Arabic audiobooks — rights-review candidate",
     provider: "LibriVox",
@@ -325,6 +338,26 @@ export const rightsLedger: RightsLedgerEntry[] = rightsLedgerEntrySchema.array()
     checkedAt: CHECKED_AT,
     reviewNote:
       "يُسمح بعرض النص التاريخي المثبت من OpenITI داخل القارئ مع الإسناد. لا يشمل ذلك مواد الطبعة الحديثة المحذوفة من corpus، ولا يرفع حالة المراجعة العلمية للعمل.",
+  },
+  {
+    rightsId: "rights-mp3quran-streaming",
+    sourceId: "src-mp3quran-streaming",
+    decision: "cleared",
+    licenseName: "MP3Quran published site-use permission",
+    licenseUrl: "https://www.mp3quran.net/ar/privacy",
+    termsSnapshotPath: null,
+    attribution: "MP3Quran.net",
+    permissions: {
+      apiAccess: "allowed",
+      caching: "allowed",
+      streaming: "allowed",
+      offline: "unknown",
+      redistribution: "allowed",
+      commercial: "unknown",
+    },
+    checkedAt: "2026-09-25T11:35:00+04:00",
+    reviewNote:
+      "Use direct provider streams and visible attribution. Do not manufacture duration, reciter identity, riwayah, or local download claims; values come from the provider API.",
   },
   {
     rightsId: "rights-librivox-audiobooks-candidate",

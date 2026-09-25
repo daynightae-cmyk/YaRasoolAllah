@@ -12,7 +12,8 @@ export type WorkCategory =
 export type ContentAvailability =
   | "catalog_only"
   | "external_link_only"
-  | "full_text_cleared";
+  | "full_text_cleared"
+  | "streaming_cleared";
 
 export type ReviewState =
   | "verified_bibliographic"
@@ -390,6 +391,7 @@ export const providerPolicyRegistry: ProviderPolicyRecord[] = [
   { providerId: "provider-nasadem", provider: "NASA Earthdata / NASADEM", domain: "maps", canonicalUrl: "https://www.earthdata.nasa.gov/data/catalog/lpcloud-nasadem-hgt-001", rightsUrl: null, rightsState: "needs_license_review", contentAvailability: "catalog_only", credentialsRequired: true, productionUse: "Candidate terrain relief; not acquired or bundled.", attribution: "NASA Earthdata if acquired and used", checkedAt: KNOWLEDGE_CHECKED_AT },
   { providerId: "provider-quranic-audio", provider: "QuranicAudio", domain: "audio", canonicalUrl: "https://quranicaudio.com/", rightsUrl: null, rightsState: "external_link_only", contentAvailability: "external_link_only", credentialsRequired: false, productionUse: "External discovery link only pending recording-level permission.", attribution: null, checkedAt: KNOWLEDGE_CHECKED_AT },
   { providerId: "provider-everyayah", provider: "EveryAyah", domain: "audio", canonicalUrl: "https://everyayah.com/data/", rightsUrl: null, rightsState: "needs_license_review", contentAvailability: "catalog_only", credentialsRequired: false, productionUse: "No recordings bundled; license review required per recitation/resource.", attribution: null, checkedAt: KNOWLEDGE_CHECKED_AT },
+  { providerId: "provider-mp3quran", provider: "MP3Quran.net", domain: "audio", canonicalUrl: "https://www.mp3quran.net/ar/api/2", rightsUrl: "https://www.mp3quran.net/ar/privacy", rightsState: "cleared_with_attribution", contentAvailability: "streaming_cleared", credentialsRequired: false, productionUse: "Direct in-platform streaming from MP3Quran provider servers is permitted by the provider's published policy allowing visitors and developers to copy site material or use site links. Audio remains hosted by MP3Quran; YaRasoolAllah does not re-host or fabricate recordings.", attribution: "Audio stream: MP3Quran.net", checkedAt: "2026-09-25T11:35:00+04:00" },
   { providerId: "provider-aladhan", provider: "AlAdhan", domain: "daily", canonicalUrl: "https://aladhan.com/prayer-times-api", rightsUrl: "https://aladhan.com/calculation-methods", rightsState: "api_only", contentAvailability: "external_link_only", credentialsRequired: false, productionUse: "Live prayer-time calculation with visible method attribution; no claim of universal single-method correctness.", attribution: "Prayer calculations: AlAdhan API", checkedAt: KNOWLEDGE_CHECKED_AT },
   { providerId: "provider-qdl", provider: "Qatar Digital Library", domain: "media", canonicalUrl: "https://www.qdl.qa/", rightsUrl: null, rightsState: "item_by_item_review", contentAvailability: "catalog_only", credentialsRequired: false, productionUse: "Candidate institution only; zero production assets registered.", attribution: null, checkedAt: KNOWLEDGE_CHECKED_AT },
   { providerId: "provider-gallica", provider: "BnF Gallica", domain: "media", canonicalUrl: "https://gallica.bnf.fr/", rightsUrl: null, rightsState: "item_by_item_review", contentAvailability: "catalog_only", credentialsRequired: false, productionUse: "Candidate institution only; zero production assets registered.", attribution: null, checkedAt: KNOWLEDGE_CHECKED_AT },

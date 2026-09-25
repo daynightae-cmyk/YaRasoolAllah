@@ -1,6 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "wouter";
-import { ExternalLink, ShieldCheck, Lock } from "lucide-react";
+import {
+  ExternalLink,
+  Headphones,
+  Pause,
+  Play,
+  ShieldCheck,
+  SkipBack,
+  SkipForward,
+  Volume2,
+} from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import {
@@ -14,30 +23,39 @@ import {
 } from "@/visual-golden/services/audio";
 import styles from "./AudioPage.module.css";
 
+interface StreamReciter {
+  id: number;
+  name: string;
+  reading: string;
+  moshafId: number;
+  surahTotal: number;
+  streamUrl: string;
+  attribution: "MP3Quran.net";
+}
+
+type ReciterState =
+  | { state: "idle" | "loading" }
+  | { state: "error"; message: string }
+  | { state: "ready"; items: StreamReciter[]; rightsUrl: string };
+
+function formatTime(seconds: number) {
+  if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
+  const minutes = Math.floor(seconds / 60);
+  const remainder = Math.floor(seconds % 60);
+  return `${minutes}:${String(remainder).padStart(2, "0")}`;
+}
+
 export function AudioPage() {
   const [chapters, setChapters] = useState<QuranChapter[]>([]);
   const [active, setActive] = useState(1);
-  const [reciterCatalog, setReciterCatalog] = useState<
-    { state: "idle" | "loading" | "error" } | { state: "ready"; items: Array<{ id: number; name: string; reading: string | null }> }
-  >({ state: "idle" });
-  const reciterRequest = useRef<AbortController | null>(null);
-
-  useEffect(() => () => reciterRequest.current?.abort(), []);
-
-  const discoverReciters = async () => {
-    reciterRequest.current?.abort();
-    const controller = new AbortController();
-    reciterRequest.current = controller;
-    setReciterCatalog({ state: "loading" });
-    try {
-      const response = await fetch(`/api/content/audio/reciters?sura=${active}`, { signal: controller.signal });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const data: { reciters: Array<{ id: number; name: string; reading: string | null }> } = await response.json();
-      if (!controller.signal.aborted) setReciterCatalog({ state: "ready", items: data.reciters });
-    } catch {
-      if (!controller.signal.aborted) setReciterCatalog({ state: "error" });
-    }
-  };
+  const [reciters, setReciters] = useState<ReciterState>({ state: "idle" });
+  const [selectedReciterId, setSelectedReciterId] = useState<number | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(0.78);
+  const requestRef = useRef<AbortController | null>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -53,87 +71,282 @@ export function AudioPage() {
     };
   }, []);
 
+  useEffect(() => {
+    requestRef.current?.abort();
+    const controller = new AbortController();
+    requestRef.current = controller;
+    setReciters({ state: "loading" });
+    setSelectedReciterId(null);
+    setPlaying(false);
+    setCurrentTime(0);
+    setDuration(0);
+
+    fetch(`/api/content/audio/reciters?sura=${active}`, { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) {
+          const body = await response.json().catch(() => ({})) as { message?: string };
+          throw new Error(body.message || `HTTP ${response.status}`);
+        }
+        return response.json() as Promise<{
+          availability: string;
+          rightsUrl: string;
+          reciters: StreamReciter[];
+        }>;
+      })
+      .then((data) => {
+        if (controller.signal.aborted) return;
+        const items = data.reciters.filter((item) => {
+          try {
+            const url = new URL(item.streamUrl);
+            return url.protocol === "https:"
+              && (url.hostname === "mp3quran.net" || url.hostname.endsWith(".mp3quran.net"));
+          } catch {
+            return false;
+          }
+        });
+        setReciters({
+          state: "ready",
+          items,
+          rightsUrl: data.rightsUrl,
+        });
+        setSelectedReciterId(items[0]?.id ?? null);
+      })
+      .catch((error: unknown) => {
+        if (controller.signal.aborted) return;
+        setReciters({
+          state: "error",
+          message: error instanceof Error ? error.message : "تعذر جلب التلاوات.",
+        });
+      });
+
+    return () => controller.abort();
+  }, [active]);
+
   const current = chapters.find((chapter) => chapter.number === active) ?? null;
+  const selectedReciter = useMemo(() => {
+    if (reciters.state !== "ready") return null;
+    return reciters.items.find((item) => item.id === selectedReciterId) ?? reciters.items[0] ?? null;
+  }, [reciters, selectedReciterId]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.pause();
+    audio.load();
+    setPlaying(false);
+    setCurrentTime(0);
+    setDuration(0);
+  }, [selectedReciter?.streamUrl]);
+
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.volume = volume;
+  }, [volume]);
+
+  useEffect(() => () => requestRef.current?.abort(), []);
+
+  const togglePlay = async () => {
+    const audio = audioRef.current;
+    if (!audio || !selectedReciter) return;
+    if (playing) {
+      audio.pause();
+      setPlaying(false);
+      return;
+    }
+    try {
+      await audio.play();
+      setPlaying(true);
+    } catch {
+      setPlaying(false);
+    }
+  };
+
+  const changeSurah = (next: number) => {
+    if (next < 1 || next > 114) return;
+    setActive(next);
+  };
 
   return (
     <div className={styles.page}>
       <header className={styles.hero}>
         <img className={styles.bg} src={art.kaaba} alt="" />
         <div className={styles.nowPlaying}>
-          <div className={styles.coverWrap} aria-hidden="true">
+          <div className={`${styles.coverWrap} ${playing ? styles.coverPlaying : ""}`} aria-hidden="true">
             <img className={styles.cover} src={art.mushaf} alt="" />
           </div>
           <div>
-            <span className={styles.label}>مسرح الاستماع · سجل المزوّدين</span>
+            <span className={styles.label}>مسرح الاستماع · تلاوة داخل المنصة</span>
             <h1>{current ? `سورة ${current.arabicName}` : "التلاوات الصوتية"}</h1>
             <p>
-              {current
-                ? `${current.englishName} · ${current.ayahCount} آية — لا يوجد تسجيل معتمد مربوط بهذه السورة`
-                : "جارٍ تحميل فهرس السور…"}
+              {selectedReciter
+                ? `${selectedReciter.name} · ${selectedReciter.reading}`
+                : current
+                  ? `${current.englishName} · ${current.ayahCount} آية`
+                  : "جارٍ تحميل فهرس السور…"}
             </p>
-            <p className="muted" style={{ display: "flex", gap: 4, alignItems: "center" }}>
-              <Lock size={13} /> التشغيل غير مفعّل — {AUDIO_COUNTS.clearedRecordings} تسجيلات مُجازة
-              داخل المنصة
+            <p className={styles.sourceNote}>
+              <ShieldCheck size={14} aria-hidden="true" />
+              البث مباشر من خوادم MP3Quran.net داخل المشغل. لا نعيد استضافة التسجيل ولا ننسب صوتًا مصطنعًا لقارئ.
             </p>
             <div className={styles.tags}>
-              <span>سجل المزوّد</span>
-              <span>التشغيل غير مُجاز</span>
+              <span>MP3Quran API v3</span>
+              <span>{AUDIO_COUNTS.streamingProviders} مزوّد تشغيل مُجاز</span>
             </div>
           </div>
         </div>
+
         <aside className={styles.playlist}>
-          <h3>التصفح حسب السورة ({chapters.length || "—"})</h3>
+          <h3>السور ({chapters.length || 114})</h3>
           <ul>
-            {chapters.slice(0, 24).map((chapter, i) => (
+            {(chapters.length ? chapters : Array.from({ length: 114 }, (_, index) => ({
+              number: index + 1,
+              arabicName: String(index + 1),
+              englishName: "",
+              ayahCount: 0,
+            } as QuranChapter))).map((chapter) => (
               <li key={chapter.number}>
                 <button
                   type="button"
                   className={`${styles.track} ${chapter.number === active ? styles.activeTrack : ""}`}
                   aria-current={chapter.number === active ? "true" : undefined}
-                  onClick={() => {
-                  reciterRequest.current?.abort();
-                  setActive(chapter.number);
-                  setReciterCatalog({ state: "idle" });
-                  }}
+                  onClick={() => changeSurah(chapter.number)}
                 >
-                <span>{i + 1}</span>
-                <div>
-                  <strong>سورة {chapter.arabicName}</strong>
-                  <em>{chapter.ayahCount} آية · بدون تسجيل معتمد</em>
-                </div>
+                  <span>{chapter.number}</span>
+                  <div>
+                    <strong>{chapter.arabicName.startsWith("سورة") ? chapter.arabicName : `سورة ${chapter.arabicName}`}</strong>
+                    <em>{chapter.englishName || "اختر للاستماع"}</em>
+                  </div>
                 </button>
               </li>
             ))}
           </ul>
-          <p className="muted" style={{ fontSize: "0.75rem", padding: "0 0.6rem" }}>
-            أول 24 سورة من الفهرس الموثق — التصفح الكامل للسور في{" "}
-            <Link href="/quran">رواق القرآن</Link>.
-          </p>
         </aside>
+
         <div className={styles.player}>
-          <Lock size={17} aria-hidden="true" />
-          <p>مساحة الاستماع تُفتح عند اعتماد تسجيل ومراجعة حق عرضه. يمكنك الآن تصفح السور وفهرس القراء.</p>
+          <audio
+            ref={audioRef}
+            src={selectedReciter?.streamUrl}
+            preload="metadata"
+            onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)}
+            onLoadedMetadata={(event) => setDuration(event.currentTarget.duration)}
+            onPause={() => setPlaying(false)}
+            onPlay={() => setPlaying(true)}
+            onEnded={() => setPlaying(false)}
+            onError={() => setPlaying(false)}
+          />
+
+          <button
+            type="button"
+            className={styles.playBtn}
+            onClick={() => void togglePlay()}
+            disabled={!selectedReciter}
+            aria-label={playing ? "إيقاف التلاوة مؤقتًا" : "تشغيل التلاوة"}
+          >
+            {playing ? <Pause size={24} /> : <Play size={24} />}
+          </button>
+
+          <button type="button" className={styles.playerIconButton} onClick={() => changeSurah(active - 1)} disabled={active <= 1} aria-label="السورة السابقة">
+            <SkipBack size={18} />
+          </button>
+
+          <div className={styles.playerCenter}>
+            <div className={styles.progress}>
+              <span>{formatTime(currentTime)}</span>
+              <input
+                className={styles.seek}
+                type="range"
+                min={0}
+                max={Number.isFinite(duration) && duration > 0 ? duration : 1}
+                step={1}
+                value={Math.min(currentTime, Number.isFinite(duration) && duration > 0 ? duration : 1)}
+                disabled={!duration}
+                onChange={(event) => {
+                  const next = Number(event.target.value);
+                  if (audioRef.current) audioRef.current.currentTime = next;
+                  setCurrentTime(next);
+                }}
+                aria-label="موضع التلاوة"
+              />
+              <span>{formatTime(duration)}</span>
+            </div>
+            <strong>{selectedReciter?.name ?? (reciters.state === "loading" ? "جارٍ جلب القراء…" : "لا توجد تلاوة متاحة")}</strong>
+          </div>
+
+          <button type="button" className={styles.playerIconButton} onClick={() => changeSurah(active + 1)} disabled={active >= 114} aria-label="السورة التالية">
+            <SkipForward size={18} />
+          </button>
+
+          <label className={styles.volume}>
+            <Volume2 size={16} />
+            <input
+              type="range"
+              min={0}
+              max={1}
+              step={0.05}
+              value={volume}
+              onChange={(event) => {
+                const next = Number(event.target.value);
+                setVolume(next);
+                if (audioRef.current) audioRef.current.volume = next;
+              }}
+              aria-label="مستوى الصوت"
+            />
+          </label>
         </div>
       </header>
 
+      <section className={styles.pad} aria-label="اختيار القارئ">
+        <div className={styles.reciterDiscovery}>
+          <div>
+            <SectionHead title="اختر القارئ والرواية" en="Live reciters from MP3Quran" />
+            <p>
+              القائمة تأتي من API الرسمي للسورة المختارة. اختيار القارئ يغيّر مصدر الصوت داخل نفس المشغل،
+              ولا يخرج الزائر من المؤسسة.
+            </p>
+          </div>
+
+          {reciters.state === "loading" ? <p role="status">جارٍ تحميل القراء المتاحين لهذه السورة…</p> : null}
+          {reciters.state === "error" ? <p role="alert">{reciters.message}</p> : null}
+          {reciters.state === "ready" && !reciters.items.length ? <p role="status">لا توجد تلاوة في استجابة المزوّد لهذه السورة الآن.</p> : null}
+
+          {reciters.state === "ready" && reciters.items.length ? (
+            <div className={styles.streamReciters}>
+              {reciters.items.map((item) => (
+                <button
+                  key={`${item.id}-${item.moshafId}`}
+                  type="button"
+                  className={item.id === selectedReciter?.id && item.moshafId === selectedReciter.moshafId ? styles.streamReciterOn : ""}
+                  onClick={() => setSelectedReciterId(item.id)}
+                >
+                  <Headphones size={16} aria-hidden="true" />
+                  <span><strong>{item.name}</strong><small>{item.reading}</small></span>
+                </button>
+              ))}
+            </div>
+          ) : null}
+
+          {reciters.state === "ready" ? (
+            <small className={styles.rightsLine}>
+              <ShieldCheck size={13} />
+              مصدر الصوت: MP3Quran.net · التشغيل من رابط المزوّد مباشرة ·
+              <a href={reciters.rightsUrl} target="_blank" rel="noopener noreferrer"> سياسة الاستخدام <ExternalLink size={12} /></a>
+            </small>
+          ) : null}
+        </div>
+      </section>
+
       <section className={styles.pad}>
-        <SectionHead title="سجل المزوّدين الصوتيين" en="Provider catalog — playback not cleared" />
+        <SectionHead title="سجل المزوّدين الصوتيين" en="Provider governance" />
         <div className={`${styles.reciters} stagger`}>
           {AUDIO_PROVIDERS.map((provider) => (
-            <article key={provider.providerId} className={styles.reciter} style={{ cursor: "default" }}>
+            <article key={provider.providerId} className={styles.reciter}>
               <div style={{ padding: "0.7rem", textAlign: "start" }}>
                 <strong style={{ display: "block", fontSize: "0.92rem" }}>{provider.provider}</strong>
                 <span style={{ fontSize: "0.75rem", display: "flex", gap: 4, alignItems: "center" }}>
                   <ShieldCheck size={12} /> {rightsLabel(provider.rightsState)}
                 </span>
                 <span style={{ fontSize: "0.72rem", opacity: 0.85 }}>{provider.productionUse}</span>
-                <a
-                  href={provider.canonicalUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{ fontSize: "0.75rem", display: "inline-flex", alignItems: "center", gap: 4, marginTop: "0.3rem" }}
-                >
-                  <ExternalLink size={12} /> الموقع الرسمي
+                <a href={provider.canonicalUrl} target="_blank" rel="noreferrer" style={{ fontSize: "0.72rem", color: "var(--gold-300)", marginTop: 6, display: "inline-flex", gap: 4, alignItems: "center" }}>
+                  التوثيق فقط <ExternalLink size={12} />
                 </a>
               </div>
             </article>
@@ -141,50 +354,26 @@ export function AudioPage() {
         </div>
       </section>
 
-      <section className={styles.pad} aria-label="اكتشاف القراء من المصدر">
-        <div className={styles.reciterDiscovery}>
-          <div>
-            <SectionHead title="اكتشف القراء من الفهرس الرسمي" en="MP3Quran catalog metadata" />
-            <p>أسماء القراء والروايات المتاحة في فهرس المزوّد للسورة المختارة؛ لا تشغيل ولا تنزيل ولا تسجيلات مُجازة داخل المنصة.</p>
-          </div>
-          <button type="button" onClick={discoverReciters} disabled={reciterCatalog.state === "loading"}>
-            {reciterCatalog.state === "loading" ? "جارٍ جلب الفهرس…" : `اعرض قراء سورة ${current?.arabicName ?? active}`}
-          </button>
-          {reciterCatalog.state === "error" ? <p role="status">تعذر جلب الفهرس الآن. <a href="https://mp3quran.net/" target="_blank" rel="noopener noreferrer">افتح المصدر الرسمي <ExternalLink size={13} aria-hidden="true" /></a></p> : null}
-          {reciterCatalog.state === "ready" ? (
-            reciterCatalog.items.length ? <ul className={styles.reciterList}>
-              {reciterCatalog.items.map((item) => <li key={item.id}>
-                <strong>{item.name}</strong><span>{item.reading ?? "الرواية غير مذكورة في هذه النتيجة"}</span>
-              </li>)}
-            </ul> : <p role="status">لا يظهر قارئ لهذه السورة في استجابة المزوّد حاليًا.</p>
-          ) : null}
-          <small>المصدر: <a href="https://mp3quran.net/ar/api" target="_blank" rel="noopener noreferrer">توثيق MP3Quran API</a> · حالة العرض: بيانات فهرسية فقط.</small>
-        </div>
-      </section>
-
       <div className={styles.lower}>
         <section className={styles.box}>
-          <SectionHead title="مكتب الحقوق الصوتية" en="Rights desk" />
+          <SectionHead title="الاستماع داخل المؤسسة" en="Internal listening" />
           <p className="muted" style={{ fontSize: "0.82rem", lineHeight: 1.9 }}>
-            لا تُحوَّل روابط المزوّدين الخارجيين إلى ادعاء تشغيل إنتاجي. كل تسجيل يحتاج مراجعة
-            حقوق على مستوى التسجيل قبل التفعيل — عدد التسجيلات المُجازة حاليًا:{" "}
-            {AUDIO_COUNTS.clearedRecordings}. لا تُعرض مدد مزيفة ولا تقدّم زائف ولا عدّادات
-            استماع.
+            زر التشغيل الحقيقي موجود هنا. الملف يبقى على خادم المزوّد، والمستخدم يستمع إليه داخل
+            واجهة «يا رسول الله ﷺ» بدل تحويله إلى موقع آخر.
           </p>
         </section>
         <section className={styles.box}>
           <SectionHead title="النص العربي الموثق" en="Verified Arabic text" />
           <p className="muted" style={{ fontSize: "0.82rem", lineHeight: 1.9 }}>
-            النص العربي الكامل متاح للقراءة في{" "}
-            <Link href="/quran">رواق القرآن</Link> (Tanzil Uthmani-min 1.1) — الصوت فقط هو
-            غير المربوط.
+            النص العربي الكامل متاح في <Link href="/quran">رواق القرآن</Link> من أصل Tanzil المثبت،
+            والصوت مستقل عنه ولا يغيّر النص القرآني.
           </p>
         </section>
         <section className={styles.box}>
-          <SectionHead title="شروط التفعيل" en="What enabling requires" />
+          <SectionHead title="حدود الأمانة" en="Integrity boundary" />
           <p className="muted" style={{ fontSize: "0.82rem", lineHeight: 1.9 }}>
-            لا يُفعَّل أي زر تشغيل أو تنزيل قبل: تسجيل مُكتسب قانونيًا، مراجعة ترخيص كل
-            تسجيل على حدة، ونسبة المصدر ظاهرة بجانب كل تسجيل.
+            لا أصوات مولدة، لا مدد مختلقة، ولا تنزيلات وهمية. اسم القارئ والرواية ورابط التسجيل
+            مصدرها استجابة MP3Quran الرسمية لكل سورة.
           </p>
         </section>
       </div>
