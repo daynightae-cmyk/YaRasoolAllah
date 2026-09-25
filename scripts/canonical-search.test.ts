@@ -49,3 +49,36 @@ test("registry work ids bridge to catalog records through shared OpenITI URIs", 
   assert.equal(resolveCatalogWorkId(works, registryUriFor, "work-unknown-zzz"), null);
   assert.equal(resolveCatalogWorkId(works, () => null, "work-ibn-hisham-sira"), null);
 });
+
+
+test("canonical index deep-links Seerah, Hadith, and Sources to stable entity state", () => {
+  const records = buildLocalIndex();
+
+  const seerah = records.find((record) => record.scope === "seerah");
+  assert.ok(seerah, "seerah scope must not be empty");
+  assert.match(seerah.path, /^\/seerah\?chapter=[^&]+$/);
+
+  const hadith = records.find((record) => record.scope === "hadith");
+  assert.ok(hadith, "hadith scope must not be empty");
+  assert.match(hadith.path, /^\/hadith\?sample=[^&]+&collection=[^&]+$/);
+
+  const source = records.find((record) => record.scope === "sources");
+  assert.ok(source, "sources scope must not be empty");
+  assert.match(source.path, /^\/sources\?q=.+$/);
+
+  assert.equal(
+    new URL(seerah.path, "https://example.test").searchParams.has("chapter"),
+    true,
+    "Seerah deep link must carry chapter state",
+  );
+  assert.equal(
+    new URL(hadith.path, "https://example.test").searchParams.has("sample"),
+    true,
+    "Hadith deep link must carry sample state",
+  );
+  assert.equal(
+    new URL(source.path, "https://example.test").searchParams.has("q"),
+    true,
+    "Sources deep link must carry search state",
+  );
+});
