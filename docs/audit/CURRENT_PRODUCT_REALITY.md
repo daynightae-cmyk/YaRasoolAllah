@@ -1,6 +1,6 @@
 # Current product reality
 
-Audited against live `origin/main` after Git operations on 2026-09-25.
+Audited against live `origin/main` = `7aebc0333de31a45e2fbb08f3869210ed997e367` after PR #93 merge on 2026-09-25.
 
 This document supersedes stale counts in older audit files. Historical
 percentages and “17 books / demo-token / 18 sample verses” claims are **not**
@@ -12,7 +12,12 @@ current truth unless re-verified below.
 |---|---|
 | Canonical remote | `https://github.com/daynightae-cmyk/YaRasoolAllah.git` |
 | Branch | `main` at audit start of this file, then this slice |
-| Start SHA (after PR #88 merge) | `6b6293a57f2a467ebc23b5151875e878fa2f46d1` |
+| Start SHA (this refresh) | `7aebc0333de31a45e2fbb08f3869210ed997e367` (merge of PR #93) |
+| PR #89 | Merged: audit-docs refresh to `5dacde1c`. |
+| Tafsir direct push | `1a661c7b` “Quran: full governed Muyassar tafsir in study reader” landed WITHOUT a PR (direct push by `daynightae-cmyk`). Adds `server/quran-tafsir.ts` (QuranEnc `arabic_moyassar` proxy with governance gate), client study-reader UI, `scripts/quran-tafsir.test.ts`. |
+| PR #92 | Merged `3565cd4f`: Hadith honest copy-matn/link, deep-link sync, invalid-sample notice, `scripts/hadith-share.test.ts`. Runtime-verified locally (deep links, copy success/failure, 390/768/1440 RTL/LTR dark/light, no overflow, no console errors). |
+| PR #93 | Merged `7aebc033`: rewired stale `atlas-1440-dark-rtl` visual-evidence case to the real `/atlas` theatre view; harness import-safe; `scripts/visual-evidence-cases.test.ts` (22 checks) in `test:p0`. `capture:visual` back to 20/20 with zero mount/overflow/runtime/unnamed failures. |
+| Vercel quota | CLEARED: Vercel preview deployments completed on PR #92 and PR #93. Production domain (`yarasoolallah.it.com`) cutover still unverified. |
 | PR #83 | Closed WITHOUT merge by owner (`daynightae-cmyk`, 2026-09-25T08:55:14Z): `CONFLICTING` against current `main` because equivalent governed translation work already landed in `431257d` (EN/FR/UR AlQuran Cloud translations, French included). Code checks had been green; Vercel `build-rate-limit` is a hosting quota, not an application-code failure. QuranEnc editions (Rowwad EN / Junagarhi UR) remain a LATER ADDITIVE slice only, not a replacement of the merged AlQuran Cloud study-mode path. |
 | PR #86 | Merged: Quran reader inline governed MP3Quran recitation (`bd382893`). |
 | PR #87 | Merged: Vercel public content API bridge (`/api/content/*`). Application CI green. Deployment still subject to Vercel quota. |
@@ -39,27 +44,29 @@ Contract: `client/src/visual-golden/lib/public-shell.ts`.
 | Tanzil Arabic Quran | 114 surahs / 6236 ayahs | Tanzil | Governed, immutable Arabic | `/quran` | Yes | Yes | n/a | Yes (query-time) | Do not reimport |
 | AlQuran Cloud translations | EN/FR/UR editions via internal proxy | AlQuran Cloud | API display; not bundled corpus | `/quran` study mode | Yes | Yes when provider reachable | n/a | No | Honest failure if provider down; French included |
 | MP3Quran recitations | Catalog + governed stream URLs | MP3Quran.net | Streaming allowed per registry | `/audio`, inline `/quran` (PR #86) | Yes | n/a | Yes if stream allowed | Catalog | No fake ayah timings |
+| QuranEnc Muyassar tafsir (DEFECT: route unmounted) | Server proxy module + client study UI + governance record all exist; route mounted NOWHERE | QuranEnc `arabic_moyassar` API | Governed (`resource-quranenc-muyassar-tafsir`), API display | INTENDED `/quran` study reader + `/tafsir`, but the client fetch lands on the SPA fallback HTML | UI shell yes | No (endpoint unreachable) | n/a | No | DEFECT FOUND 2026-09-25: `registerQuranTafsirRoutes` is imported but never called in `server/create-app.ts` nor `server/create-public-content-app.ts`. Repair queued as next slice; P0 gate must assert route mounting, not just payload parsing |
 | QuranEnc translations (DEFERRED) | Rowwad EN 1.0.19 / Junagarhi UR 1.1.3, server adapter + rights evidence exist on deferred branch only | QuranEnc.com | Republication allowed with attribution/version (terms evidence on branch) | NONE on main | No | No | n/a | No | Owner-deferred additive slice; see Git authority row |
 | OpenITI | Item-level reader when rights allow | OpenITI | Per digital version | `/library` | Yes | Conditional | n/a | Catalog | Exercise real records |
 | Library catalog | Thousands of shelf works (runtime catalog builder) | Internal catalog + Open Library discovery | Per work/version | `/library` | Yes | Conditional | n/a | Yes | No fake PDF/IIIF/download |
 | Kids approved YouTube catalog | Generated approved list empty; curated seeds exist; recovered queue pending | YouTube publishers + editorial pipeline | Embed/depiction pending for recovered items | `/kids` | Partial | n/a | Seed videos only | Filter | Do not auto-promote pending |
-| Hadith | Small local development sample | Local samples | Not a full corpus | `/hadith` | Yes | Sample only | n/a | Sample | BLOCKED_EXTERNAL for full corpus without lawful source |
+| Hadith | 4 local development samples, 6 bibliographic collections; copy-matn/link + deep-link contracts live (PR #92) | Local samples | Not a full corpus | `/hadith`, `/sunnah` | Yes | Sample only | n/a | Sample | BLOCKED_EXTERNAL for full corpus without lawful source; contracts runtime-verified 2026-09-25 |
 | Seerah | Chapter journey | Editorial chapters + OpenITI links | Review continues | `/seerah` | Yes | Chapters | n/a | Partial | Event graph still PARTIAL |
-| Atlas | Schematic | Internal schematic | Not geographic fact | `/atlas` | Yes | Schematic | n/a | n/a | Geographic layer BLOCKED until sourced coordinates |
+| Atlas | Schematic + living theatre (campaign phases, certainty badge, witness citation, Seerah links) | Internal schematic + governed campaign data | Not geographic fact; schematic labeled in-UI | `/atlas` | Yes | Schematic + theatre | n/a | n/a | Geographic layer BLOCKED until sourced coordinates; visual-evidence coverage restored (PR #93) |
 | Daily / Adhkar | Prayer observatory live (AlAdhan); adhkar corpus unbound | AlAdhan + honest empty adhkar | Prayer calculation ≠ worship text rights | `/daily` | Yes | Prayer yes; adhkar no | n/a | n/a | Adhkar BLOCKED pending sourced corpus |
 | Basirah | Local governed index | Internal registries | Retrieval only | `/basirah` | Yes | Yes | n/a | Yes | No generative fatwa; AI credential optional |
 | Quran Foundation / Sunnah.com / GeoNames / YouTube Data API | — | Credential-gated | — | Adapters only | No | No | No | No | CREDENTIAL BLOCKED |
 | Qatar Digital Library | — | HTTP 403 | — | Dormant adapter | No | No | No | No | PROVIDER BLOCKED |
-| Vercel production `/api/content` | Function added in #87 | — | — | Deployed APIs | BLOCKED | BLOCKED | — | — | Hosting `build-rate-limit` quota |
+| Vercel `/api/content` | Function added in #87; preview deploys completing again on PR #92/#93 | — | — | Preview APIs | Yes (preview) | Preview only | — | — | Quota cleared; production domain cutover unverified |
 
 ## Remaining unblocked engineering (not credentials)
 
-1. Hadith: honest corpus-scope UI + adapters (no fabricated bulk copy).
-2. Seerah event graph from existing sourced chapters (no invented relations).
-3. Daily supporting content honesty (tasbih reward claims, daily-verse API).
-4. Tafsir: real edition text only when source+rights exist.
+1. Tafsir route mounting (DEFECT, next slice): call `registerQuranTafsirRoutes` in `server/create-app.ts` (and in `server/create-public-content-app.ts` if the public function should serve it), add a P0 mount assertion, runtime-verify governed JSON or honest provider failure.
+2. Hadith: credential adapters + corpus-scope honesty (no fabricated bulk copy).
+3. Seerah event graph from existing sourced chapters (no invented relations).
+4. Daily supporting content honesty (tasbih reward claims, daily-verse API).
 5. Sources/Evidence drawer semantic unification.
 6. Persistence: production `DATABASE_URL` required; memory fallback is not production.
+7. Multilingual closure: separate UI-language support from content-translation availability (AR/EN/FR/UR).
 
 ## Status vocabulary for this SHA
 
@@ -67,12 +74,15 @@ Contract: `client/src/visual-golden/lib/public-shell.ts`.
 |---|---|
 | Quran Arabic | IMPLEMENTED AND VERIFIED |
 | Quran EN/FR/UR translations (AlQuran Cloud proxy) | IMPLEMENTED BUT NOT VERIFIED at production URL (Vercel quota) |
+| Quran Muyassar tafsir (QuranEnc proxy) | IMPLEMENTED BUT NOT RUNTIME-VERIFIED — DEFECT: route unmounted on both servers; repair queued |
 | Quran audio MP3Quran | IMPLEMENTED AND VERIFIED in CI/runtime locally (incl. inline `/quran` recitation, PR #86) |
 | Library catalog + readers | IMPLEMENTED BUT NOT VERIFIED for every format combination |
 | Kids theatre | IMPLEMENTED AND VERIFIED (curtain); content PARTIAL |
 | Canonical public shell | IMPLEMENTED AND VERIFIED for supporting routes (PR #88); `/dashboard`, `/bab-alsamaa-settings` intentionally legacy |
+| Hadith sample contracts (copy/deep-link/search) | IMPLEMENTED AND VERIFIED locally 2026-09-25 (PR #92) |
 | Hadith full corpus | BLOCKED_EXTERNAL / PARTIAL sample |
 | Seerah event graph | PARTIAL |
-| Atlas geographic | NOT IMPLEMENTED (schematic preserved) |
+| Atlas theatre + schematic | IMPLEMENTED AND VERIFIED locally (PR #93 evidence); geographic layer NOT IMPLEMENTED |
 | Adhkar corpus | BLOCKED (rights/editorial) |
-| Production deploy | BLOCKED: Vercel `build-rate-limit` |
+| Visual evidence harness | IMPLEMENTED AND VERIFIED: 20/20 cases, zero failures (PR #93) |
+| Production deploy | PARTIAL: Vercel quota cleared, preview deploys completing; production domain cutover unverified |
