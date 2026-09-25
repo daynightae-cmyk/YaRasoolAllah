@@ -241,7 +241,7 @@ export function AtlasPage() {
         </aside>
 
         {mode === "theatre" && marker ? (
-          <aside className={styles.floatCard} aria-live="polite">
+          <aside className={styles.floatCard} aria-live="polite" data-visual="atlas-theatre-evidence">
             <span className={styles.badge}>{CERTAINTY_LABEL[marker.certainty]}</span>
             <h2>{marker.labelAr}</h2>
             <p>{marker.descriptionAr}</p>
