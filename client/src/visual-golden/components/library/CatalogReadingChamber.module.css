@@ -191,6 +191,16 @@
   background: rgba(0,0,0,.12);
 }
 .tools > span { color: var(--ivory-300); font-size: .68rem; }
+.readerIdentity {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: .55rem .75rem;
+  color: var(--ivory-300);
+  font-size: .7rem;
+}
+.readerIdentity strong { color: var(--gold-200); }
 .paper {
   min-height: 440px;
   padding: clamp(1.2rem, 4vw, 3rem);
