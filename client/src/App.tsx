@@ -52,8 +52,14 @@ function LibraryWorkRoute({ params }: { params: { workId: string } }) {
 const VISUAL_PATHS = new Set([
   "/", "/library", "/digital-library", "/books", "/quran", "/tafsir", "/seerah", "/atlas",
   "/sunnah", "/hadith", "/kids", "/children-tv", "/daily", "/quran-audio", "/audio", "/basirah", "/sources",
-  "/ai-assistant", "/al-mufti-al-mubeen"
+  "/ai-assistant", "/al-mufti-al-mubeen", "/who-is-muhammad", "/character"
 ]);
+
+const VISUAL_PREFIXES = ["/library/work/", "/who-is-muhammad/"];
+
+function isVisualPath(path: string) {
+  return VISUAL_PATHS.has(path) || VISUAL_PREFIXES.some((prefix) => path.startsWith(prefix));
+}
 
 function VisualRoute({ children }: { children: ReactNode }) {
   return <VisualInstitutionShell><Suspense fallback={<div className="vg-page-loading" role="status">جاري فتح الباب…</div>}>{children}</Suspense></VisualInstitutionShell>;
@@ -62,7 +68,7 @@ function VisualRoute({ children }: { children: ReactNode }) {
 function AppContent() {
   const { isOpen, closeBab, triggerContext } = useBabAlsamaa();
   const [location] = useLocation();
-  const isVisualRoute = VISUAL_PATHS.has(location);
+  const isVisualRoute = isVisualPath(location);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
 
   useEffect(() => {
@@ -92,10 +98,10 @@ function AppContent() {
           {() => <VisualRoute><VisualHomePage /></VisualRoute>}
         </Route>
         <Route path="/who-is-muhammad">
-          {() => <WhoIsMuhammadPage />}
+          {() => <VisualRoute><WhoIsMuhammadPage /></VisualRoute>}
         </Route>
         <Route path="/who-is-muhammad/:chapter">
-          {() => <WhoIsMuhammadPage />}
+          {() => <VisualRoute><WhoIsMuhammadPage /></VisualRoute>}
         </Route>
         <Route path="/sunnah">
           {() => <VisualRoute><VisualHadithPage /></VisualRoute>}
@@ -107,7 +113,7 @@ function AppContent() {
           {() => <VisualRoute><SourcesPage /></VisualRoute>}
         </Route>
         <Route path="/character">
-          {() => <WhoIsMuhammadPage defaultChapterId="family-and-personal-character" />}
+          {() => <VisualRoute><WhoIsMuhammadPage defaultChapterId="family-and-personal-character" /></VisualRoute>}
         </Route>
         <Route path="/prophetic-day">
           {() => <PropheticDayPage />}
