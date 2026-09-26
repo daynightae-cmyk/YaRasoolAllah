@@ -31,13 +31,14 @@ const cases = [
   { name: "seerah-1440-rtl", path: "/seerah", width: 1440, height: 1000 },
   { name: "seerah-768-rtl", path: "/seerah", width: 768, height: 900 },
   { name: "seerah-390-rtl", path: "/seerah", width: 390, height: 844 },
-  { name: "seerah-768-ltr", path: "/seerah", width: 768, height: 900, lang: "en", expectNotice: true },
-  { name: "five-pillars-768-ltr", path: "/five-pillars", width: 768, height: 900, lang: "en", expectNotice: true },
-  { name: "women-390-ltr", path: "/women-in-islam", width: 390, height: 844, lang: "en", expectNotice: true },
-  { name: "who-768-ltr", path: "/who-is-muhammad", width: 768, height: 900, lang: "en", expectNotice: false },
-  { name: "hadith-768-ltr", path: "/hadith", width: 768, height: 900, lang: "en", expectNotice: false },
-  { name: "tasbih-390-ltr", path: "/digital-tasbih", width: 390, height: 844, lang: "en", expectNotice: false },
-  { name: "library-768-ltr", path: "/library", width: 768, height: 900, lang: "en", expectNotice: false },
+  { name: "seerah-768-ltr", path: "/seerah", width: 768, height: 900, lang: "en", expectNotice: "arabic_only" },
+  { name: "five-pillars-768-ltr", path: "/five-pillars", width: 768, height: 900, lang: "en", expectNotice: "arabic_only" },
+  { name: "women-390-ltr", path: "/women-in-islam", width: 390, height: 844, lang: "en", expectNotice: "arabic_only" },
+  { name: "who-768-ltr", path: "/who-is-muhammad", width: 768, height: 900, lang: "en", expectNotice: "partly_translated" },
+  { name: "hadith-768-ltr", path: "/hadith", width: 768, height: 900, lang: "en", expectNotice: "partly_translated" },
+  { name: "tasbih-390-ltr", path: "/digital-tasbih", width: 390, height: 844, lang: "en", expectNotice: "partly_translated" },
+  { name: "library-768-ltr", path: "/library", width: 768, height: 900, lang: "en", expectNotice: "partly_translated" },
+  { name: "quran-768-ltr", path: "/quran", width: 768, height: 900, lang: "en", expectNotice: "none" },
   { name: "who-1440-rtl", path: "/who-is-muhammad", width: 1440, height: 1000 },
   { name: "who-390-rtl", path: "/who-is-muhammad", width: 390, height: 844 },
   { name: "kids-360-rtl", path: "/kids", width: 360, height: 844 },
@@ -404,8 +405,12 @@ try {
           dir: shell?.getAttribute("dir"),
           notice: notice ? (notice.textContent || "") : null,
           noticeWidth: notice ? notice.getBoundingClientRect().width : 0,
+          noticeShape: notice ? notice.getAttribute("data-content-shape") : null,
           noticeLanguages: notice ? notice.getAttribute("data-content-languages") : null,
           noticeAvailable: notice ? notice.getAttribute("data-available-languages") : null,
+          noticeCaveat: notice
+            ? (notice.querySelector('[data-visual="content-language-caveat"]')?.textContent || "")
+            : "",
           viewport: innerWidth,
           documentWidth: document.documentElement.scrollWidth,
           hasMain: Boolean(main)
@@ -415,25 +420,52 @@ try {
         throw new Error(`${item.name} English interface shell failed: ${JSON.stringify(languageBoundary)}`);
       }
       const declaresArabicContent = languageBoundary.notice !== null;
-      if (item.expectNotice === true && !declaresArabicContent) {
+      const expectedShape = item.expectNotice ?? null;
+      if (expectedShape === "none" && declaresArabicContent) {
         throw new Error(
-          `${item.name} is Arabic-only content, so an English interface must disclose it: ${JSON.stringify(languageBoundary)}`,
+          `${item.name} lets the reader choose their own edition, so claiming untranslated material is false: ${JSON.stringify(languageBoundary)}`,
         );
       }
-      if (item.expectNotice === false && declaresArabicContent) {
+      if (expectedShape && expectedShape !== "none" && !declaresArabicContent) {
         throw new Error(
-          `${item.name} serves English content, so claiming it is untranslated Arabic is false: ${JSON.stringify(languageBoundary)}`,
+          `${item.name} must disclose its content shape (${expectedShape}): ${JSON.stringify(languageBoundary)}`,
+        );
+      }
+      if (expectedShape && expectedShape !== "none" && languageBoundary.noticeShape !== expectedShape) {
+        throw new Error(
+          `${item.name} disclosed the wrong shape, ${languageBoundary.noticeShape} instead of ${expectedShape}: ${JSON.stringify(languageBoundary)}`,
         );
       }
       if (declaresArabicContent) {
         const text = languageBoundary.notice ?? "";
-        if (!text.includes("لم يُترجم") || languageBoundary.noticeWidth <= 0) {
+        if (languageBoundary.noticeWidth <= 0) {
           throw new Error(`${item.name} content language notice failed: ${JSON.stringify(languageBoundary)}`);
         }
-        if (languageBoundary.noticeAvailable !== "") {
-          throw new Error(
-            `${item.name} declares no translated edition, so it must not name one: ${JSON.stringify(languageBoundary)}`,
-          );
+        if (languageBoundary.noticeShape === "arabic_only") {
+          if (!text.includes("recorded in Arabic only") || !text.includes("لم يُترجم")) {
+            throw new Error(`${item.name} content language notice failed: ${JSON.stringify(languageBoundary)}`);
+          }
+          if (languageBoundary.noticeAvailable !== "") {
+            throw new Error(
+              `${item.name} declares no translated edition, so it must not name one: ${JSON.stringify(languageBoundary)}`,
+            );
+          }
+        }
+        if (languageBoundary.noticeShape === "partly_translated") {
+          if (
+            !text.includes("Part of this page appears in English") ||
+            !text.includes("untranslated") ||
+            !text.includes("غير مترجم")
+          ) {
+            throw new Error(
+              `${item.name} must say which part is English and which is untranslated: ${JSON.stringify(languageBoundary)}`,
+            );
+          }
+          if (!languageBoundary.noticeCaveat) {
+            throw new Error(
+              `${item.name} shows English and must say what kind of English it is: ${JSON.stringify(languageBoundary)}`,
+            );
+          }
         }
       } else if (languageBoundary.documentWidth > languageBoundary.viewport + 1) {
         throw new Error(`${item.name} English interface overflowed: ${JSON.stringify(languageBoundary)}`);

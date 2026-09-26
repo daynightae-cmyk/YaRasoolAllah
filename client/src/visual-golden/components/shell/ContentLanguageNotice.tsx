@@ -17,6 +17,7 @@ export function ContentLanguageNotice({ pathname }: { pathname: string }) {
     <p
       className={styles.contentLanguage}
       data-visual="content-language-notice"
+      data-content-shape={notice.shape}
       data-content-languages={notice.contentLanguages.join(",")}
       data-available-languages={notice.available.join(",")}
       data-reason={notice.reason}
@@ -25,6 +26,11 @@ export function ContentLanguageNotice({ pathname }: { pathname: string }) {
     >
       <Languages size={14} aria-hidden />
       <span>{notice.textEn}</span>
+      {notice.englishCaveat ? (
+        <span className={styles.contentLanguageAr} data-visual="content-language-caveat" lang="en" dir="ltr">
+          {notice.englishCaveat}
+        </span>
+      ) : null}
       <span className={styles.contentLanguageAr} lang="ar" dir="rtl">
         {notice.textAr}
       </span>
