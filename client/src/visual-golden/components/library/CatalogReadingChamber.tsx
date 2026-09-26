@@ -26,6 +26,7 @@ import {
   type CatalogWork,
 } from "@/visual-golden/services/catalog-library";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
+import { formatLabel, rightsLabel } from "@/visual-golden/services/library-catalog-presentation";
 import styles from "./CatalogReadingChamber.module.css";
 
 interface Props {
@@ -35,9 +36,85 @@ interface Props {
 
 type ReaderState =
   | { state: "idle" | "loading" }
-  | { state: "error"; message: string }
+  | { state: "error"; code: ReaderErrorCode; status?: number }
   | { state: "ready"; segments: string[] };
 
+/**
+ * A stable, translatable failure code.
+ *
+ * The reader used to throw Arabic sentences straight from the fetch handler and
+ * render whatever came out, so an English interface met Arabic errors and a raw
+ * `HTTP 404`. Throwing a code instead keeps the diagnosis machine-checkable and
+ * lets the message be chosen in the reader's own interface language.
+ */
+class ReaderError extends Error {
+  constructor(
+    readonly code: ReaderErrorCode,
+    readonly status?: number,
+  ) {
+    super(code);
+  }
+}
+
+type ReaderErrorCode = "too_large" | "no_text" | "http" | "timeout" | "failed";
+
+const READER_ERRORS: Record<ReaderErrorCode, { ar: string; en: string }> = {
+  too_large: {
+    ar: "حجم النص أكبر من حد القارئ الداخلي.",
+    en: "This text is larger than the internal reader limit.",
+  },
+  no_text: {
+    ar: "المورد لا يحتوي نصًا قابلاً للعرض.",
+    en: "This resource contains no displayable text.",
+  },
+  http: {
+    ar: "تعذّر جلب النص من المصدر (HTTP).",
+    en: "The text could not be fetched from its source (HTTP).",
+  },
+  timeout: {
+    ar: "استغرق تحميل النص وقتًا أطول من المتوقع.",
+    en: "Loading the text took longer than expected.",
+  },
+  failed: {
+    ar: "تعذر فتح النص.",
+    en: "The text could not be opened.",
+  },
+};
+
+function readerErrorMessage(
+  code: ReaderErrorCode,
+  status: number | undefined,
+  lang: "ar" | "en",
+): string {
+  const base = READER_ERRORS[code][lang];
+  return code === "http" && status ? `${base} (${status})` : base;
+}
+const READER_POSITION_KEY = "library-reader-position-v1";
+
+/** Stored positions are user data from a previous session, so they are clamped. */
+function readStoredPage(workId: string, totalPages: number): number {
+  try {
+    const raw = window.localStorage.getItem(READER_POSITION_KEY);
+    if (!raw) return 1;
+    const stored = JSON.parse(raw) as Record<string, number>;
+    const value = Number(stored[workId]);
+    if (!Number.isFinite(value) || value < 1) return 1;
+    return Math.min(Math.floor(value), Math.max(1, totalPages));
+  } catch {
+    return 1;
+  }
+}
+
+function writeStoredPage(workId: string, page: number) {
+  try {
+    const raw = window.localStorage.getItem(READER_POSITION_KEY);
+    const stored = raw ? (JSON.parse(raw) as Record<string, number>) : {};
+    stored[workId] = page;
+    window.localStorage.setItem(READER_POSITION_KEY, JSON.stringify(stored));
+  } catch {
+    // A reader without storage still reads; it just cannot resume.
+  }
+}
 const PAGE_SIZE = 24;
 const MAX_BYTES = 12 * 1024 * 1024;
 const PAGE_MARKER = /PageV\d{2}P\d{3}[AB]?/g;
@@ -94,22 +171,45 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
   const downloadAvailable = canDownloadInside(work);
   const presentationAvailable = canViewPresentationInside(work);
   const presentationUrl = buildPresentationEmbedUrl(work);
+  // Both catalogued scripts are right-to-left, so the direction is not in doubt;
+  // what differed was the language: 8,755 Arabic and 351 Persian records, and the
+  // article carried no lang attribute at all, so a Persian text was announced as
+  // Arabic and assistive technology was given no language to work from.
+  const textLanguage = work.language === "per" ? "fa" : "ar";
+  const textDirection: "rtl" | "ltr" = "rtl";
   const [mode, setMode] = useState<"details" | "text" | "pdf" | "iiif" | "presentation">("details");
   const [reader, setReader] = useState<ReaderState>({ state: "idle" });
   const [page, setPage] = useState(1);
+  const [resumeFrom, setResumeFrom] = useState(1);
   const [query, setQuery] = useState("");
   const [fontScale, setFontScale] = useState(1);
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
+    // Focus went into the dialog, so it has to come back out. Previously the
+    // reader closed and left focus on the body, losing the reader's place in
+    // the catalog entirely.
+    const opener = document.activeElement as HTMLElement | null;
     closeRef.current?.focus();
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      if (opener && document.contains(opener)) opener.focus();
+    };
   }, [onClose]);
+
+  useEffect(() => {
+    writeStoredPage(work.id, page);
+  }, [work.id, page]);
+
+  useEffect(() => {
+    if (reader.state !== "ready") return;
+    setPage(readStoredPage(work.id, Math.max(1, Math.ceil(reader.segments.length / PAGE_SIZE))));
+  }, [reader.state, work.id]);
 
   useEffect(() => {
     if (mode !== "text" || !textAvailable || !work.digital?.fileUrl) return;
@@ -123,22 +223,23 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
       headers: { Accept: "text/plain" },
     })
       .then(async (response) => {
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        if (!response.ok) throw new ReaderError("http", response.status);
         const declared = Number(response.headers.get("content-length") || "0");
-        if (declared > MAX_BYTES) throw new Error("حجم النص أكبر من حد القارئ الداخلي.");
+        if (declared > MAX_BYTES) throw new ReaderError("too_large");
         const raw = await response.text();
-        if (new Blob([raw]).size > MAX_BYTES) throw new Error("حجم النص أكبر من حد القارئ الداخلي.");
+        if (new Blob([raw]).size > MAX_BYTES) throw new ReaderError("too_large");
         const segments = segmentText(cleanText(raw));
-        if (!segments.length) throw new Error("المورد لا يحتوي نصًا قابلاً للعرض.");
+        if (!segments.length) throw new ReaderError("no_text");
         if (active) setReader({ state: "ready", segments });
       })
       .catch((error: unknown) => {
         if (!active) return;
         setReader({
           state: "error",
-          message: controller.signal.aborted
-            ? "استغرق تحميل النص وقتًا أطول من المتوقع."
-            : error instanceof Error ? error.message : "تعذر فتح النص.",
+          code: controller.signal.aborted
+            ? "timeout"
+            : error instanceof ReaderError ? error.code : "failed",
+          status: error instanceof ReaderError ? error.status : undefined,
         });
       })
       .finally(() => window.clearTimeout(timer));
@@ -265,8 +366,8 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
                 <dl>
                   <div><dt>{copy.editions}</dt><dd>{work.editionCount.toLocaleString(lang)}</dd></div>
                   <div><dt>{copy.versions}</dt><dd>{work.versionCount.toLocaleString(lang)}</dd></div>
-                  <div><dt>{copy.rights}</dt><dd>{work.digital?.rights || (lang === "ar" ? "غير مثبتة" : "Not established")}</dd></div>
-                  <div><dt>{lang === "ar" ? "الصيغة" : "Format"}</dt><dd>{work.digital?.format || "—"}</dd></div>
+                  <div><dt>{copy.rights}</dt><dd>{work.digital?.rights ? rightsLabel(work.digital.rights, lang) : (lang === "ar" ? "غير مثبتة" : "Not established")}</dd></div>
+                  <div><dt>{lang === "ar" ? "الصيغة" : "Format"}</dt><dd>{work.digital?.format ? formatLabel(work.digital.format, lang) : (lang === "ar" ? "غير مثبتة" : "Not established")}</dd></div>
                 </dl>
                 {!textAvailable && !pdfAvailable && !iiifAvailable && !presentationAvailable ? <p className={styles.notice}>{copy.noInternal}</p> : null}
                 <details className={styles.provenance}>
@@ -281,23 +382,23 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
 
           {mode === "text" ? (
             <section className={styles.reader}>
-              {reader.state === "loading" || reader.state === "idle" ? <div className={styles.state}>{copy.loading}</div> : null}
-              {reader.state === "error" ? <div className={styles.state} role="alert">{reader.message}</div> : null}
+              {reader.state === "loading" || reader.state === "idle" ? <div className={styles.state} role="status">{copy.loading}</div> : null}
+              {reader.state === "error" ? <div className={styles.state} role="alert">{readerErrorMessage(reader.code, reader.status, lang)}</div> : null}
               {reader.state === "ready" ? (
                 <>
                   <div className={styles.tools}>
                     <label>
                       <Search size={14} />
-                      <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={copy.search} />
+                      <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={copy.search} aria-label={lang === "ar" ? "بحث داخل نص الكتاب" : "Search inside the book text"} />
                     </label>
-                    <button type="button" onClick={() => setFontScale((value) => Math.max(.9, value - .05))}><Minus size={14} /></button>
+                    <button type="button" aria-label={lang === "ar" ? "تصغير الخط" : "Decrease text size"} onClick={() => setFontScale((value) => Math.max(.9, value - .05))}><Minus size={14} /></button>
                     <span>{Math.round(fontScale * 100)}%</span>
-                    <button type="button" onClick={() => setFontScale((value) => Math.min(1.4, value + .05))}><Plus size={14} /></button>
+                    <button type="button" aria-label={lang === "ar" ? "تكبير الخط" : "Increase text size"} onClick={() => setFontScale((value) => Math.min(1.4, value + .05))}><Plus size={14} /></button>
                   </div>
                   <div className={styles.readerIdentity}>
-                    <strong>قراءة داخلية · {work.digital?.provider || "مورد موثق"}</strong>
-                    <span>{work.digital?.format || "TEXT"} · الترقيم هنا مقاطع رقمية، وليس أرقام صفحات طبعة إلا إذا نص المورد على ذلك.</span>
-                  </div>\n                  <article className={styles.paper} dir="rtl" style={{ fontSize: `calc(1.08rem * ${fontScale})` }}>
+                    <strong>{lang === "ar" ? "قراءة داخلية" : "In-app reading"} · {work.digital?.provider || (lang === "ar" ? "مورد موثق" : "Verified resource")}</strong>
+                    <span>{work.digital?.format ? formatLabel(work.digital.format, lang) : (lang === "ar" ? "نص" : "Text")} · {lang === "ar" ? "الترقيم هنا مقاطع رقمية وليس أرقام صفحات طبعة إلا إذا نص المورد على ذلك." : "The numbering here is digital segments, not print page numbers, unless the source states otherwise."}</span>
+                  </div>\n                  <article className={styles.paper} dir={textDirection} lang={textLanguage} style={{ fontSize: `calc(1.08rem * ${fontScale})` }}>
                     {pageSegments.map((segment, index) => {
                       const heading = segment.startsWith("### ");
                       return heading

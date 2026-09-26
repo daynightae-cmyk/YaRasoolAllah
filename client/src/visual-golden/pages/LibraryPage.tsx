@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { catalogCapabilityReport, loadFullLibraryCatalog, type CatalogCapabilityReport } from "@/visual-golden/services/catalog-library";
 import { BookOpen, LibraryBig, Search } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
@@ -16,6 +17,17 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
   const [shelfDomain, setShelfDomain] = useState<string | undefined>();
   const [catalogCategory, setCatalogCategory] = useState<string | undefined>();
   const [openWork, setOpenWork] = useState<CatalogWork | null>(null);
+  const [capability, setCapability] = useState<CatalogCapabilityReport | null>(null);
+
+  // The memoized loader is shared with both children, so this costs no extra
+  // download and the announced counts cannot drift from the catalog.
+  useEffect(() => {
+    let active = true;
+    loadFullLibraryCatalog()
+      .then((payload) => { if (active) setCapability(catalogCapabilityReport(payload)); })
+      .catch(() => { if (active) setCapability(null); });
+    return () => { active = false; };
+  }, []);
 
   const gateways = lang === "ar" ? [
     ["A-القرآن وعلومه", "القرآن وعلومه", "المصحف والتفسير وعلوم الوحي"],
@@ -37,10 +49,25 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
     ["P-اللغة العربية", "Arabic language and literature", "Language, poetry, and rhetoric"],
   ];
 
+  // Announced from the catalog itself rather than typed in by hand. The old
+  // figure (13,679) was the research pipeline's raw row count and overstated
+  // what a reader can open by 47%, because only one digital record is attached
+  // per work and the pipeline keeps rows marked DO_NOT_INGEST.
+  const arNumber = new Intl.NumberFormat("ar-EG");
+  const enNumber = new Intl.NumberFormat("en-US");
+  const pendingAr = "جارٍ قياس ما يمكن فتحه فعليًا من الفهرس…";
+  const pendingEn = "Measuring what the catalog can actually open…";
+  const pending = capability;
+  const openableAr = pending
+    ? `${arNumber.format(pending.readableText)} نسخة نصية قابلة للقراءة الآن من ${arNumber.format(pending.works)} عملاً مصنفًا، و${arNumber.format(pending.metadataOnly)} سجلاً فهرسياً فقط بلا نسخة مرفقة.`
+    : pendingAr;
+  const openableEn = pending
+    ? `${enNumber.format(pending.readableText)} texts readable now out of ${enNumber.format(pending.works)} catalogued works; ${enNumber.format(pending.metadataOnly)} records are catalog metadata only with nothing attached.`
+    : pendingEn;
   const labels = lang === "ar" ? {
     title: "المكتبة الكبرى",
-    subtitle: "٩٬١٢٩ عملاً على الرفوف الرقمية · ١٠٬٦٩٥ سجل طبعة · ١٣٬٦٧٩ نسخة رقمية",
-    description: "كل عمل في الفهرس أصبح قابلاً للوصول من قاعات المكتبة ورفوفها. المصدر للتوثيق، أمّا القراءة والاستماع والتنزيل المسموح فتبدأ من داخل المؤسسة.",
+    subtitle: openableAr,
+    description: "كل عمل في الفهرس أصبح قابلاً للوصول من قاعات المكتبة ورفوفها. المصدر للتوثيق، أمّا القراءة والتنزيل المسموح فتبدأ من داخل المؤسسة. لا توجد تسجيلات صوتية معتمدة بعد.",
     search: "ابحث في كل الكتب والرفوف باسم الكتاب أو المؤلف أو القسم…",
     searchLabel: "بحث داخل المكتبة الكاملة",
     shelves: "المكتبة والرفوف",
@@ -50,8 +77,8 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
     modesLabel: "طرق استكشاف المكتبة",
   } : {
     title: "The Grand Library",
-    subtitle: "9,129 works on digital shelves · 10,695 edition records · 13,679 digital versions",
-    description: "Every catalogued work is reachable through Library halls and shelves. Sources remain provenance; permitted reading, listening, and downloads begin inside the institution.",
+    subtitle: openableEn,
+    description: "Every catalogued work is reachable through Library halls and shelves. Sources remain provenance; permitted reading and downloads begin inside the institution. No approved audio recording is available yet.",
     search: "Search every book and shelf by title, author, or subject…",
     searchLabel: "Search the complete Library",
     shelves: "Library & Shelves",
@@ -151,6 +178,8 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
         <LibraryCatalog
           initialWorkId={initialWorkId}
           initialCategory={catalogCategory}
+      query={q}
+      onQueryChange={setQ}
           canOpenReader={() => true}
           onOpenReader={(work) => setOpenWork(work as CatalogWork)}
         />

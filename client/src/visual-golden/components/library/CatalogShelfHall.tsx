@@ -6,6 +6,7 @@ import {
   displayAuthor,
   displayTitle,
   hashWorkId,
+  canReadTextInside,
   loadFullLibraryCatalog,
   type CatalogPayload,
   type CatalogWork,
@@ -112,6 +113,13 @@ export function CatalogShelfHall({ query, initialCategory, onOpen }: Props) {
     );
   }, [categoryWorks, lang, subcategory]);
 
+  // payload.counts.digitalVersions is the research pipeline's row count, not
+  // what a reader can open. This figure is derived the same way the reader
+  // decides, so the hall cannot announce more books than exist.
+  const readableCount = useMemo(
+    () => (payload?.works ?? []).filter((work) => canReadTextInside(work)).length,
+    [payload],
+  );
   const totalPages = Math.max(1, Math.ceil(visibleWorks.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
   const pageWorks = visibleWorks.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
@@ -169,7 +177,7 @@ export function CatalogShelfHall({ query, initialCategory, onOpen }: Props) {
         <div className={styles.stats}>
           <strong>{payload.counts.works.toLocaleString(lang)}</strong>
           <span>{labels.books}</span>
-          <small>{payload.counts.digitalVersions.toLocaleString(lang)} {lang === "ar" ? "نسخة رقمية" : "digital versions"}</small>
+          <small>{readableCount.toLocaleString(lang)} {lang === "ar" ? "نسخة نصية قابلة للقراءة" : "texts readable now"}</small>
         </div>
       </header>
 
@@ -180,7 +188,7 @@ export function CatalogShelfHall({ query, initialCategory, onOpen }: Props) {
             <strong>{labels.domains}</strong>
             <span><Search size={14} /> {labels.search}</span>
           </div>
-          <div className={styles.domains}>
+          <div className={styles.domains} data-visual="library-domains">
             {categoryCounts.map(([key, count]) => {
               const title = key === "UNCLASSIFIED" || key.startsWith("UNCLASSIFIED")
                 ? labels.unclassified

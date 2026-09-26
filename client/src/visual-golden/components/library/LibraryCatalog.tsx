@@ -3,6 +3,7 @@ import { BookOpen, ExternalLink, Info, Search, ShieldCheck } from "lucide-react"
 import { Link } from "wouter";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { getLibraryBook, getLibraryBookByOpenitiUri } from "@/visual-golden/services/library";
+import { loadFullLibraryCatalog } from "@/visual-golden/services/catalog-library";
 import {
   availabilityLabel,
   availabilityState,
@@ -58,6 +59,8 @@ interface CatalogPayload {
 interface Props {
   initialWorkId?: string;
   initialCategory?: string;
+  query?: string;
+  onQueryChange?: (value: string) => void;
   onOpenReader?: (work: CatalogWork) => void;
   canOpenReader?: (work: CatalogWork) => boolean;
 }
@@ -136,7 +139,7 @@ const copy = {
     notFoundBody: "No work with this identifier exists in the current catalog release.",
     backCatalog: "Back to Library catalog",
     loading: "Loading the institutional catalog…",
-    loadError: "The local catalog could not be loaded. Curated shelves remain available.",
+    loadError: "The local catalog could not be loaded, so no works can be listed right now.",
     title: "Scholarly Catalog",
     versionLabel: "Catalog release",
     dataSource: "Data source",
@@ -267,29 +270,36 @@ function resolveRegistryUri(id: string): string | null {
     ?? null;
 }
 
-export function LibraryCatalog({ initialWorkId, initialCategory, onOpenReader, canOpenReader }: Props) {
+export function LibraryCatalog({
+  initialWorkId,
+  initialCategory,
+  query: externalQuery,
+  onQueryChange,
+  onOpenReader,
+  canOpenReader,
+}: Props) {
   const lang = useInstitution((state) => state.lang);
   const c = copy[lang];
   const [data, setData] = useState<CatalogPayload | null>(null);
   const [error, setError] = useState("");
-  const [query, setQuery] = useState("");
+  // The route has one search term. This view used to keep a second private box,
+  // so the prominent hero search did nothing in the catalog view.
+  const [ownQuery, setOwnQuery] = useState("");
+  const query = externalQuery ?? ownQuery;
+  const setQuery = onQueryChange ?? setOwnQuery;
   const [category, setCategory] = useState(initialCategory ?? "all");
   const [availability, setAvailability] = useState<"all" | AvailabilityState>("all");
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    const controller = new AbortController();
-    fetch("/data/library-catalog.v1.json", { signal: controller.signal })
-      .then((response) => {
-        if (!response.ok) throw new Error(`catalog HTTP ${response.status}`);
-        return response.json() as Promise<CatalogPayload>;
-      })
-      .then(setData)
-      .catch((reason: unknown) => {
-        if (reason instanceof DOMException && reason.name === "AbortError") return;
-        setError(c.loadError);
-      });
-    return () => controller.abort();
+    // The catalog is 10.7 MB. This view used to fetch it a second time on its
+    // own and outside the shared cache, so switching between halls and catalog
+    // downloaded all of it again.
+    let active = true;
+    loadFullLibraryCatalog()
+      .then((payload: CatalogPayload) => { if (active) setData(payload); })
+      .catch(() => { if (active) setError(c.loadError); });
+    return () => { active = false; };
   }, [c.loadError]);
 
   const categories = useMemo(
@@ -372,7 +382,7 @@ export function LibraryCatalog({ initialWorkId, initialCategory, onOpenReader, c
       <div className={styles.filters}>
         <label>
           <span>{c.search}</span>
-          <span className={styles.searchBox}><Search size={16} aria-hidden="true" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={c.searchPlaceholder} /></span>
+          <span className={styles.searchBox}><Search size={16} aria-hidden="true" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={c.searchPlaceholder} aria-label={lang === "ar" ? "بحث في فهرس المكتبة" : "Search the Library catalog"} /></span>
         </label>
         <label><span>{c.category}</span><select value={category} onChange={(event) => setCategory(event.target.value)}><option value="all">{c.allCategories}</option>{categories.map((item) => <option key={item} value={item}>{categoryLabel(item, lang)}</option>)}</select></label>
         <label><span>{c.availability}</span><select value={availability} onChange={(event) => setAvailability(event.target.value as "all" | AvailabilityState)}><option value="all">{c.allAvailability}</option>{availabilityOptions.map((item) => <option key={item} value={item}>{availabilityLabel(item, lang)}</option>)}</select></label>

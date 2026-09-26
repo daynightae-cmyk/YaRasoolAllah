@@ -13,7 +13,7 @@ import {
   translationChoices,
   type ContentShape,
 } from "../client/src/visual-golden/services/content-language";
-import { CANONICAL_VISUAL_PATHS } from "../client/src/visual-golden/lib/public-shell";
+import { CANONICAL_VISUAL_PATHS, CANONICAL_VISUAL_PREFIXES } from "../client/src/visual-golden/lib/public-shell";
 import { routeComponentMap, scanRouteContent } from "./lib/content-language-scan";
 import { QURAN_TRANSLATION_EDITIONS } from "../server/quran-translations";
 
@@ -35,21 +35,47 @@ describe("every canonical route declares its content language", () => {
   });
 
   it("declares no route the shell does not serve", () => {
+    const served = [
+      ...(CANONICAL_VISUAL_PATHS as readonly string[]),
+      ...(CANONICAL_VISUAL_PREFIXES as readonly string[]),
+    ];
     for (const declaration of declarations) {
       assert.ok(
-        (CANONICAL_VISUAL_PATHS as readonly string[]).includes(declaration.path),
+        served.includes(declaration.path),
         `${declaration.path} is declared but is not a canonical public route`,
       );
+      if (declaration.pathPrefix) {
+        assert.ok(
+          (CANONICAL_VISUAL_PREFIXES as readonly string[]).includes(declaration.path),
+          `${declaration.path} is marked as a prefix but is not a canonical prefix`,
+        );
+      }
     }
   });
 
   it("declares no route that App.tsx does not route", () => {
     for (const declaration of declarations) {
+      if (declaration.pathPrefix) {
+        const stem = declaration.path.replace(/\/$/, "");
+        assert.ok(
+          app.includes(`path="${stem}/:`),
+          `${declaration.path} is declared as a prefix but App.tsx routes no dynamic path under it`,
+        );
+        continue;
+      }
       assert.ok(
         app.includes(`path="${declaration.path}"`),
         `${declaration.path} is declared but not routed`,
       );
     }
+  });
+
+  it("leaves no canonical route prefix undeclared", () => {
+    // A deep link is a real reader surface. /library was declared while
+    // /library/work/ was not, so opening a book directly disclosed nothing.
+    const declared = new Set(declarations.map((item) => item.path));
+    const missing = CANONICAL_VISUAL_PREFIXES.filter((prefix) => !declared.has(prefix));
+    assert.deepEqual(missing, [], "a canonical route prefix is undeclared, so it makes no claim");
   });
 
   it("states a reason and the files it was read from", () => {
@@ -246,6 +272,7 @@ describe("the notice tells the truth in all three cases, not one", () => {
       "/qibla-compass": "arabic_only",
       // English the reader did not choose, shown beside untranslated Arabic.
       "/who-is-muhammad": "partly_translated",
+      "/who-is-muhammad/": "partly_translated",
       "/character": "partly_translated",
       "/hadith": "partly_translated",
       "/sunnah": "partly_translated",
@@ -256,6 +283,7 @@ describe("the notice tells the truth in all three cases, not one", () => {
       "/prophetic-day": "partly_translated",
       "/24-hours": "partly_translated",
       "/library": "partly_translated",
+      "/library/work/": "partly_translated",
       "/books": "partly_translated",
       "/digital-library": "partly_translated",
       // English the reader picks from a labelled edition list.
