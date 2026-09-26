@@ -11,7 +11,7 @@ Generated: 2026-09-23 00:59:16 +04:00
 - Project: يا رسول الله ﷺ
 - Domain: yarasoolallah.it.com
 - Repository: daynightae-cmyk/alketab-almubeen
-- Local: D:\YaRasoolAllah
+- Local: D:\Knoux Projects\Knoux_Project_Center\01_Ready\YaRasoolAllah
 
 ## Verification
 - npm ci: PASS
@@ -31,3 +31,4 @@ This commit MUST NOT be described as Production Ready unless all required gates 
 - Memory-only backend storage is not production persistence.
 - Quran/search services contain sample/fallback data paths that require provenance review.
 - Duplicate component/localization structures need consolidation.
+
