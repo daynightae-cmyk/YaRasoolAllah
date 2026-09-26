@@ -26,6 +26,11 @@ const PLAYER_ACTIVE_STATES: KidsTVState[] = ["playing", "paused", "loading", "en
 
 export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) {
   const playable = useMemo(() => videos.filter((video) => video.embeddable), [videos]);
+  // The catalogue is empty until an episode clears content, depiction, age and
+  // rights review, so the transport is offered honestly: disabled, with a
+  // reason, rather than enabled and inert.
+  const nothingPlayable = playable.length === 0;
+  const transportReason = "لا توجد حلقة معتمدة للتشغيل بعد";
   const [currentId, setCurrentId] = useState(playable[0]?.id ?? "");
   const current = playable.find((video) => video.id === currentId) ?? playable[0];
   const [tvState, setTvState] = useState<KidsTVState>("idle");
@@ -406,6 +411,8 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
               playing={false}
               muted={muted}
               captions={captions}
+              nothingPlayable={nothingPlayable}
+              unavailableReason={transportReason}
               onCommand={handleCommand}
             />
           </div>
@@ -414,6 +421,8 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
             playing={false}
             muted={muted}
             captions={captions}
+            nothingPlayable={nothingPlayable}
+            unavailableReason={transportReason}
             onCommand={handleCommand}
           />
         </div>
@@ -513,6 +522,8 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
             playing={isPlaying}
             muted={muted}
             captions={captions}
+            nothingPlayable={nothingPlayable}
+            unavailableReason={transportReason}
             onCommand={handleCommand}
           />
 
@@ -550,6 +561,8 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
           playing={isPlaying}
           muted={muted}
           captions={captions}
+          nothingPlayable={nothingPlayable}
+          unavailableReason={transportReason}
           onCommand={handleCommand}
         />
       </div>
@@ -566,6 +579,8 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
               playing={isPlaying}
               muted={muted}
               captions={captions}
+              nothingPlayable={nothingPlayable}
+              unavailableReason={transportReason}
               onCommand={handleCommand}
             />
           </div>

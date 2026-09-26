@@ -75,6 +75,28 @@ test("the audio failure gate re-dispatches instead of racing the handler", () =>
   assert.match(audioBlock, /stream pause/, "the pause step must assert a state, not fire and forget");
 });
 
+test("the audio gate waits long enough for a cold player to mount", () => {
+  // The <audio> element only exists after the recitation catalog resolves. On a
+  // cold dev server that is well past the 12s default, so the gate was failing
+  // on a healthy application. Waiting longer asserts the same thing; it does not
+  // assert less, because the alert must still appear.
+  assert.match(visualSmoke, /const AUDIO_GATE_ATTEMPTS = \d+;/);
+  const attempts = Number(/const AUDIO_GATE_ATTEMPTS = (\d+);/.exec(visualSmoke)?.[1] ?? 0);
+  assert.ok(
+    attempts * 150 >= 30_000,
+    "the audio gate must allow at least 30s for the player to mount",
+  );
+  for (const step of ["stream error", "stream recovery", "stream pause"]) {
+    const lines = visualSmoke.split(/\r?\n/);
+    const index = lines.findIndex((candidate) => candidate.includes("${label} " + step));
+    assert.ok(index >= 0, `the ${step} step must exist`);
+    assert.match(
+      lines.slice(index, index + 3).join("\n"),
+      /AUDIO_GATE_ATTEMPTS/,
+      `the ${step} step must use the real budget`,
+    );
+  }
+});
 test("a throwing poke cannot defeat the retry loop", () => {
   const audioBlock = visualSmoke.slice(
     visualSmoke.indexOf("async function verifyAudioFailureState"),
