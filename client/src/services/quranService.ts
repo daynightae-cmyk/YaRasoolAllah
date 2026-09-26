@@ -1153,9 +1153,8 @@ export async function getQuranChapters(): Promise<QuranChapter[]> {
 export async function getQuranVerse(
   surah: number,
   ayah: number,
-  language?: string,
+  _language?: string,
 ): Promise<QuranVerse | null> {
-  // In a real implementation, this would fetch from a proper Quran API
   const key = `${surah}-${ayah}`;
   const verse = sampleVerses[key];
 
@@ -1163,18 +1162,8 @@ export async function getQuranVerse(
     return Promise.resolve(verse);
   }
 
-  // Fallback for verses not in sample data
-  const chapter = quranChapters.find((c) => c.number === surah);
-  if (chapter && ayah <= chapter.ayahCount) {
-    return Promise.resolve({
-      surah,
-      ayah,
-      arabic: "نص الآية غير متوفر حالياً",
-      translation: "Verse text not available at the moment",
-      surahName: chapter.arabicName,
-    });
-  }
-
+  // Absence is represented as absence. Never place a status message inside
+  // the sacred-text field or synthesize a verse to fill a corpus gap.
   return Promise.resolve(null);
 }
 

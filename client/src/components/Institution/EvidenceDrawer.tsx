@@ -9,6 +9,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, BookOpen, ExternalLink, Bookmark, Share2, AlertCircle } from "lucide-react";
+import type { RightsDecision } from "@shared/source-governance";
 
 export interface EvidenceSource {
   title: string;
@@ -20,9 +21,14 @@ export interface EvidenceSource {
   translationExcerpt?: string;
   status: "verified" | "multiple_sourced" | "historically_approximate" | "disputed" | "editorial_review_pending";
   grade?: string;
+  reviewNote?: string;
   uncertaintyNote?: string;
   provenanceDataset?: string;
   sourceUrl?: string;
+  sourceRegistryId?: string;
+  rightsDecision?: RightsDecision;
+  allowedUsageLabel?: string;
+  rightsCheckedAt?: string;
 }
 
 interface EvidenceDrawerProps {
@@ -63,6 +69,15 @@ const STATUS_CONFIG: Record<
   },
 };
 
+const RIGHTS_LABELS: Record<RightsDecision, string> = {
+  cleared: "مسموح وفق السجل الحالي",
+  api_only: "استخدام عبر API فقط",
+  reference_only: "فهرسة ورابط خارجي فقط",
+  development_only: "عينة تطوير فقط",
+  needs_review: "مراجعة الحقوق مطلوبة",
+  blocked: "الاستخدام محظور",
+};
+
 export default function EvidenceDrawer({
   isOpen,
   onClose,
@@ -71,7 +86,8 @@ export default function EvidenceDrawer({
 }: EvidenceDrawerProps) {
   if (!evidence) return null;
 
-  const status = STATUS_CONFIG[evidence.status] || STATUS_CONFIG.verified;
+  const status =
+    STATUS_CONFIG[evidence.status] ?? STATUS_CONFIG.editorial_review_pending;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -143,27 +159,52 @@ export default function EvidenceDrawer({
           {/* Translation excerpt if present */}
           {evidence.translationExcerpt && (
             <div className="space-y-1 p-3 rounded-lg bg-muted/30 text-xs text-muted-foreground font-inter">
-              <span className="font-semibold block font-cairo">الترجمة الإنجليزية المعتمدة:</span>
+              <span className="font-semibold block font-cairo">نص الترجمة المسجل:</span>
               <p>"{evidence.translationExcerpt}"</p>
             </div>
           )}
 
           {/* Uncertainty / Cautionary Note if historically approximate or disputed */}
-          {evidence.uncertaintyNote && (
+          {(evidence.reviewNote || evidence.uncertaintyNote) && (
             <div className="flex items-start gap-2.5 p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs text-blue-900 dark:text-blue-200">
               <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-blue-600 dark:text-blue-400" />
               <div>
                 <span className="font-bold block font-cairo">إيضاح منهجي وتحقيقي:</span>
-                <p className="font-cairo leading-relaxed">{evidence.uncertaintyNote}</p>
+                <p className="font-cairo leading-relaxed">
+                  {evidence.reviewNote || evidence.uncertaintyNote}
+                </p>
               </div>
             </div>
           )}
 
           {/* Provenance */}
           <div className="text-[11px] text-muted-foreground font-mono flex items-center justify-between pt-2 border-t">
-            <span>سجل التحقيق: {evidence.provenanceDataset || "مجموعة السيرة النبوية المعتمدة v1.0"}</span>
+            <span>سجل المصدر: {evidence.provenanceDataset || "غير مسجل"}</span>
             <span className="text-emerald-600 dark:text-emerald-400">خالٍ من التجسيد والتمثيل</span>
           </div>
+
+          {(evidence.sourceRegistryId || evidence.rightsDecision) && (
+            <div className="rounded-xl border border-border bg-muted/30 p-3 text-xs font-cairo space-y-1">
+              {evidence.sourceRegistryId && (
+                <p>
+                  <span className="text-muted-foreground">معرف المصدر: </span>
+                  <span className="font-mono" dir="ltr">{evidence.sourceRegistryId}</span>
+                </p>
+              )}
+              {evidence.rightsDecision && (
+                <p>
+                  <span className="text-muted-foreground">قرار الحقوق: </span>
+                  <span className="font-semibold">{RIGHTS_LABELS[evidence.rightsDecision]}</span>
+                  {evidence.allowedUsageLabel ? ` · ${evidence.allowedUsageLabel}` : ""}
+                </p>
+              )}
+              {evidence.rightsCheckedAt && (
+                <p className="font-mono text-[10px] text-muted-foreground" dir="ltr">
+                  checked_at: {evidence.rightsCheckedAt}
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="flex items-center justify-between pt-3 border-t mt-2">
@@ -175,7 +216,7 @@ export default function EvidenceDrawer({
               variant="outline"
               size="sm"
               className="font-cairo gap-1.5"
-              onClick={() => window.open(evidence.sourceUrl, "_blank")}
+              onClick={() => window.open(evidence.sourceUrl, "_blank", "noopener,noreferrer")}
             >
               <ExternalLink className="w-3.5 h-3.5" />
               الاطلاع على الأصل

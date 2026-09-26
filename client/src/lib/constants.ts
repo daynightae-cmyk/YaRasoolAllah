@@ -29,8 +29,7 @@ export const ISLAMIC_MONTHS = {
 };
 
 export const API_ENDPOINTS = {
-  PRAYER_TIMES: "http://api.aladhan.com/v1/timings",
-  GEMINI_API: "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
+  PRAYER_TIMES: "https://api.aladhan.com/v1/timings",
 };
 
 export const CALCULATION_METHODS = {

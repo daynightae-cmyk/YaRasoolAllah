@@ -65,7 +65,7 @@ export default function LearningDepthSelector({ className, compact = false }: Se
   return (
     <div
       className={cn(
-        "inline-flex items-center p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200/80 dark:border-slate-700/80 shadow-xs",
+        "inline-flex max-w-full items-center p-1 bg-slate-100 dark:bg-slate-800/80 rounded-xl border border-slate-200/80 dark:border-slate-700/80 shadow-xs",
         className
       )}
       role="radiogroup"
@@ -83,7 +83,7 @@ export default function LearningDepthSelector({ className, compact = false }: Se
             onClick={() => setDepth(item.id)}
             title={`${item.nameAr}: ${item.descriptionAr}`}
             className={cn(
-              "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-cairo font-medium transition-all duration-200",
+              "flex items-center gap-1 px-2 py-1.5 rounded-lg text-[11px] sm:gap-1.5 sm:px-3 sm:text-xs font-cairo font-medium transition-all duration-200",
               isActive
                 ? "bg-emerald-700 text-white shadow-xs font-bold dark:bg-emerald-600"
                 : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-slate-700/50"

@@ -112,9 +112,6 @@ interface RealisticBookshelfProps {
   categoryIcon?: string;
   books: LibraryBook[];
   onSelectBook: (book: LibraryBook) => void;
-  onReadBook: (book: LibraryBook) => void;
-  onDownloadBook: (book: LibraryBook) => void;
-  onInspectProvenance: (book: LibraryBook) => void;
 }
 
 export default function RealisticBookshelf({
@@ -123,9 +120,6 @@ export default function RealisticBookshelf({
   shelfDescriptionAr,
   books,
   onSelectBook,
-  onReadBook,
-  onDownloadBook,
-  onInspectProvenance,
 }: RealisticBookshelfProps) {
   const [hoveredBookId, setHoveredBookId] = useState<string | null>(null);
 

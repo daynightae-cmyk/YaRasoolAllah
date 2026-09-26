@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import type { RightsDecision } from "@shared/source-governance";
 
 export type EditorialStatus =
   | "verified"
@@ -78,6 +79,10 @@ export interface SourceProvenanceItem {
   manuscriptReference?: string;
   sourceUrl?: string;
   provenanceDataset?: string;
+  sourceRegistryId?: string;
+  rightsDecision?: RightsDecision;
+  allowedUsageLabel?: string;
+  rightsCheckedAt?: string;
 
   // Backwards compatibility with EvidenceSource
   authorOrCompiler?: string;
@@ -139,8 +144,17 @@ const STATUS_CONFIG: Record<
     labelAr: "قيد المراجعة التحريرية",
     labelEn: "Editorial Review Pending",
     dotColor: "bg-slate-400",
-    descriptionAr: "بيانات هذه الرواية قيد التدقيق ومطابقة المخطوطات من قبل اللجنة العلمية التحريرية.",
+    descriptionAr: "بيانات هذا السجل لم تستكمل مراجعتها التحريرية أو مطابقتها بمورد موثق.",
   },
+};
+
+const RIGHTS_LABELS: Record<RightsDecision, string> = {
+  cleared: "مسموح وفق السجل الحالي",
+  api_only: "استخدام عبر API فقط",
+  reference_only: "فهرسة ورابط خارجي فقط",
+  development_only: "عينة تطوير فقط",
+  needs_review: "مراجعة الحقوق مطلوبة",
+  blocked: "الاستخدام محظور",
 };
 
 export default function SourceDrawer({
@@ -159,14 +173,20 @@ export default function SourceDrawer({
 
   // Normalized fields for cross-compatibility
   const title = source.title;
-  const collection = source.collectionNameAr || source.collectionOrWork || "مصنف معتمد";
-  const compiler = source.compilerAr || source.authorOrCompiler || "محدث / مؤرخ معتمد";
+  const collection =
+    source.collectionNameAr ||
+    source.collectionOrWork ||
+    "غير محدد في سجل المصدر";
+  const compiler =
+    source.compilerAr ||
+    source.authorOrCompiler ||
+    "غير محدد في سجل المصدر";
   const chapter = source.chapterNameAr || source.chapter;
   const refNum = source.referenceNumber;
   const arabicText = source.textAr || source.originalText || "";
   const englishText = source.textEn || source.translationExcerpt;
-  const rawStatus = (source.status || "verified") as EditorialStatus;
-  const statusInfo = STATUS_CONFIG[rawStatus] || STATUS_CONFIG.verified;
+  const rawStatus = source.status ?? "editorial_review_pending";
+  const statusInfo = STATUS_CONFIG[rawStatus] ?? STATUS_CONFIG.editorial_review_pending;
   const grade = source.hadithGrade || source.grade;
 
   // Generate standardized academic citation
@@ -184,29 +204,47 @@ export default function SourceDrawer({
     return parts.join("، ");
   };
 
-  const handleCopyCitation = () => {
+  const handleCopyCitation = async () => {
     const citation = generateCitation();
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(citation);
+    try {
+      if (!navigator.clipboard) {
+        throw new Error("Clipboard API unavailable");
+      }
+      await navigator.clipboard.writeText(citation);
       setCopiedCitation(true);
       toast({
         title: "تم نسخ العزو الأكاديمي",
         description: "تم نسخ بيانات المصدر والتوثيق إلى الحافظة بصيغة موحدة.",
       });
       setTimeout(() => setCopiedCitation(false), 2500);
+    } catch {
+      toast({
+        variant: "destructive",
+        title: "تعذر نسخ العزو",
+        description: "لم تمنح المتصفح إذن الوصول إلى الحافظة. حاول مرة أخرى بعد السماح بالنسخ.",
+      });
     }
   };
 
-  const handleCopyText = () => {
+  const handleCopyText = async () => {
     const fullText = `«${arabicText}»\n\n[المصدر: ${collection} - ${compiler}]`;
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(fullText);
+    try {
+      if (!navigator.clipboard) {
+        throw new Error("Clipboard API unavailable");
+      }
+      await navigator.clipboard.writeText(fullText);
       setCopiedText(true);
       toast({
         title: "تم نسخ النص الأصلي",
         description: "تم نسخ المتن موثقاً بالمصدر إلى الحافظة بنجاح.",
       });
       setTimeout(() => setCopiedText(false), 2500);
+    } catch {
+      toast({
+        variant: "destructive",
+        title: "تعذر نسخ النص",
+        description: "لم تمنح المتصفح إذن الوصول إلى الحافظة. حاول مرة أخرى بعد السماح بالنسخ.",
+      });
     }
   };
 
@@ -428,6 +466,30 @@ export default function SourceDrawer({
                   </span>
                 </div>
               )}
+
+              {source.sourceRegistryId && (
+                <div className="space-y-0.5 sm:col-span-2 border-t pt-2 mt-1">
+                  <span className="text-[11px] text-muted-foreground block">معرف سجل المصدر:</span>
+                  <span className="font-mono text-[11px] text-slate-500 block">
+                    {source.sourceRegistryId}
+                  </span>
+                </div>
+              )}
+
+              {source.rightsDecision && (
+                <div className="space-y-0.5 sm:col-span-2 border-t pt-2 mt-1">
+                  <span className="text-[11px] text-muted-foreground block">قرار الحقوق ونطاق الاستخدام:</span>
+                  <span className="font-semibold text-foreground block">
+                    {RIGHTS_LABELS[source.rightsDecision]}
+                    {source.allowedUsageLabel ? ` · ${source.allowedUsageLabel}` : ""}
+                  </span>
+                  {source.rightsCheckedAt && (
+                    <span className="font-mono text-[10px] text-muted-foreground block mt-1" dir="ltr">
+                      checked_at: {source.rightsCheckedAt}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
@@ -437,15 +499,15 @@ export default function SourceDrawer({
           <div className="p-4 rounded-2xl bg-emerald-500/5 dark:bg-emerald-950/20 border border-emerald-500/20 space-y-1.5 text-xs font-cairo">
             <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 font-bold">
               <Scale className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>ميثاق الأمانة والتحقيق المؤسسي</span>
+              <span>حالة السجل وحدود الاعتماد</span>
             </div>
             <p className="text-muted-foreground leading-relaxed">
-              {statusInfo.descriptionAr} تلتزم منصة يا رسول الله ﷺ بالمعايير الصارمة لعلماء الحديث والتاريخ، مع حظر كامل للأحاديث الموضوعة والمكذوبة، وعزو كل معلومة لأصلها المطبوع.
+              {statusInfo.descriptionAr} لا تعني فهرسة المورد أن نصه أو طبعته أو حق إعادة توزيعه أصبح معتمدًا.
             </p>
 
             {(source.reviewNote || source.uncertaintyNote) && (
               <div className="pt-2 border-t border-emerald-500/20 text-slate-700 dark:text-slate-300">
-                <span className="font-bold block mb-0.5">ملاحظة اللجنة العلمية:</span>
+                <span className="font-bold block mb-0.5">ملاحظة المراجعة:</span>
                 {source.reviewNote || source.uncertaintyNote}
               </div>
             )}

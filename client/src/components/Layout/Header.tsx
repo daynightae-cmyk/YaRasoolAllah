@@ -4,8 +4,8 @@ import { useTheme } from "../../contexts/ThemeContext";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import ThemeToggle from "../Common/ThemeToggle";
-import LanguageSwitcher from "../Common/LanguageSwitcher";
+import ThemeToggle from "../common/ThemeToggle";
+import LanguageSwitcher from "../common/LanguageSwitcher";
 import { BRAND } from "@/config/brand";
 
 export default function Header() {

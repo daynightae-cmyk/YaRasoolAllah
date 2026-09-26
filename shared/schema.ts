@@ -154,6 +154,57 @@ export const readingProgress = pgTable("reading_progress", {
   completedAt: timestamp("completed_at"),
 });
 
+// Source governance is intentionally separate from content tables. A work,
+// digital artifact and provider endpoint can have different rights decisions.
+export const sourceRegistryEntries = pgTable("source_registry", {
+  sourceId: text("source_id").primaryKey(),
+  title: text("title").notNull(),
+  provider: text("provider").notNull(),
+  kind: text("kind").notNull(),
+  canonicalUrl: text("canonical_url"),
+  version: text("version"),
+  artifactSha256: text("artifact_sha256"),
+  checkedAt: timestamp("checked_at", { withTimezone: true }).notNull(),
+  editorialStatus: text("editorial_status").notNull(),
+  notes: text("notes").notNull(),
+});
+
+export const rightsLedgerEntries = pgTable("rights_ledger", {
+  rightsId: text("rights_id").primaryKey(),
+  sourceId: text("source_id")
+    .references(() => sourceRegistryEntries.sourceId)
+    .notNull(),
+  decision: text("decision").notNull(),
+  licenseName: text("license_name"),
+  licenseUrl: text("license_url"),
+  termsSnapshotPath: text("terms_snapshot_path"),
+  attribution: text("attribution"),
+  permissions: jsonb("permissions").notNull(),
+  checkedAt: timestamp("checked_at", { withTimezone: true }).notNull(),
+  reviewNote: text("review_note").notNull(),
+});
+
+export const providerResourceRegistryEntries = pgTable(
+  "provider_resource_registry",
+  {
+    resourceId: text("resource_id").primaryKey(),
+    sourceId: text("source_id")
+      .references(() => sourceRegistryEntries.sourceId)
+      .notNull(),
+    rightsId: text("rights_id")
+      .references(() => rightsLedgerEntries.rightsId)
+      .notNull(),
+    provider: text("provider").notNull(),
+    resourceType: text("resource_type").notNull(),
+    endpoint: text("endpoint"),
+    acquisitionStatus: text("acquisition_status").notNull(),
+    credentialsRequired: boolean("credentials_required").notNull().default(false),
+    credentialsConfigured: boolean("credentials_configured").notNull().default(false),
+    allowedUsages: jsonb("allowed_usages").notNull().default([]),
+    productionReady: boolean("production_ready").notNull().default(false),
+  },
+);
+
 // Schema validation
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
@@ -212,6 +263,12 @@ export const insertReadingProgressSchema = createInsertSchema(
   completedAt: true,
 });
 
+export const insertSourceRegistryEntrySchema = createInsertSchema(sourceRegistryEntries);
+export const insertRightsLedgerEntrySchema = createInsertSchema(rightsLedgerEntries);
+export const insertProviderResourceRegistryEntrySchema = createInsertSchema(
+  providerResourceRegistryEntries,
+);
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -242,3 +299,15 @@ export type InsertAudioTrack = z.infer<typeof insertAudioTrackSchema>;
 
 export type ReadingProgress = typeof readingProgress.$inferSelect;
 export type InsertReadingProgress = z.infer<typeof insertReadingProgressSchema>;
+
+export type SourceRegistryRow = typeof sourceRegistryEntries.$inferSelect;
+export type InsertSourceRegistryRow = z.infer<typeof insertSourceRegistryEntrySchema>;
+
+export type RightsLedgerRow = typeof rightsLedgerEntries.$inferSelect;
+export type InsertRightsLedgerRow = z.infer<typeof insertRightsLedgerEntrySchema>;
+
+export type ProviderResourceRegistryRow =
+  typeof providerResourceRegistryEntries.$inferSelect;
+export type InsertProviderResourceRegistryRow = z.infer<
+  typeof insertProviderResourceRegistryEntrySchema
+>;

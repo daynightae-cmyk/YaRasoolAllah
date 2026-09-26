@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { BRAND, INSTITUTION_WINGS } from "@/config/brand";
 import { Button } from "@/components/ui/button";
@@ -39,6 +39,18 @@ export default function InstitutionalHeader() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
+  useEffect(() => {
+    const handleSearchShortcut = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        setIsSearchOpen(true);
+      }
+    };
+
+    window.addEventListener("keydown", handleSearchShortcut);
+    return () => window.removeEventListener("keydown", handleSearchShortcut);
+  }, []);
+
   return (
     <>
       <header className="sticky top-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-amber-900/10 dark:border-amber-500/10 shadow-xs transition-colors">
@@ -64,7 +76,7 @@ export default function InstitutionalHeader() {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden xl:flex items-center gap-1 text-sm font-cairo">
+            <nav className="hidden 2xl:flex items-center gap-1 text-sm font-cairo">
               {NAV_ITEMS.map((item) => {
                 const Icon = item.icon;
                 const isActive = location === item.href;
@@ -121,7 +133,7 @@ export default function InstitutionalHeader() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="xl:hidden w-9 h-9 rounded-xl"
+                className="2xl:hidden w-9 h-9 rounded-xl"
                 aria-label="القائمة الرئيسية"
               >
                 {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -132,7 +144,7 @@ export default function InstitutionalHeader() {
 
         {/* Mobile Navigation Drawer */}
         {isMobileMenuOpen && (
-          <div className="xl:hidden border-t border-slate-200 dark:border-slate-800 bg-white/98 dark:bg-slate-900/98 p-4 space-y-4 shadow-xl animate-in slide-in-from-top-2">
+          <div className="2xl:hidden border-t border-slate-200 dark:border-slate-800 bg-white/98 dark:bg-slate-900/98 p-4 space-y-4 shadow-xl animate-in slide-in-from-top-2">
             <div className="flex items-center justify-between pb-2 border-b">
               <span className="text-xs font-cairo text-muted-foreground">عمق المعرفة:</span>
               <LearningDepthSelector compact />

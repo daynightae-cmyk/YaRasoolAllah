@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useLocation } from "wouter";
 import {
   Dialog,
@@ -40,18 +40,6 @@ export default function InstitutionalSearchDialog({
 }: InstitutionalSearchDialogProps) {
   const [, setLocation] = useLocation();
   const [query, setQuery] = useState("");
-
-  // Hotkey support (Cmd+K / Ctrl+K)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        // Handled via parent state toggle if needed
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
 
   const results: SearchResultItem[] = [];
 
