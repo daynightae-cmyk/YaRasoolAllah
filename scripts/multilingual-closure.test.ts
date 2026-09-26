@@ -7,9 +7,11 @@ import {
   CONTENT_LANGUAGE_FACTS,
   ROUTE_CONTENT_DECLARATIONS,
   contentLanguageNotice,
+  contentShape,
   isArabicOnly,
   routeContentDeclaration,
   translationChoices,
+  type ContentShape,
 } from "../client/src/visual-golden/services/content-language";
 import { CANONICAL_VISUAL_PATHS } from "../client/src/visual-golden/lib/public-shell";
 import { routeComponentMap, scanRouteContent } from "./lib/content-language-scan";
@@ -221,7 +223,74 @@ describe("translation availability is published per route", () => {
   });
 });
 
-describe("the notice appears only when the interface cannot present the content", () => {
+describe("the notice tells the truth in all three cases, not one", () => {
+  it("derives each route's shape from the data rather than from a label", () => {
+    const expected: Record<string, ContentShape> = {
+      "/": "no_content",
+      "/ai-assistant": "no_content",
+      "/al-mufti-al-mubeen": "no_content",
+      // Arabic and nothing else.
+      "/seerah": "arabic_only",
+      "/atlas": "arabic_only",
+      "/tafsir": "arabic_only",
+      "/audio": "arabic_only",
+      "/quran-audio": "arabic_only",
+      "/daily": "arabic_only",
+      "/kids": "arabic_only",
+      "/children-tv": "arabic_only",
+      "/prayer-guide": "arabic_only",
+      "/islamic-knowledge": "arabic_only",
+      "/five-pillars": "arabic_only",
+      "/women-in-islam": "arabic_only",
+      "/calendar": "arabic_only",
+      "/qibla-compass": "arabic_only",
+      // English the reader did not choose, shown beside untranslated Arabic.
+      "/who-is-muhammad": "partly_translated",
+      "/character": "partly_translated",
+      "/hadith": "partly_translated",
+      "/sunnah": "partly_translated",
+      "/daily-verse": "partly_translated",
+      "/digital-tasbih": "partly_translated",
+      "/basirah": "partly_translated",
+      "/sources": "partly_translated",
+      "/prophetic-day": "partly_translated",
+      "/24-hours": "partly_translated",
+      "/library": "partly_translated",
+      "/books": "partly_translated",
+      "/digital-library": "partly_translated",
+      // English the reader picks from a labelled edition list.
+      "/quran": "selectable_translations",
+    };
+    for (const declaration of declarations) {
+      assert.equal(
+        contentShape(declaration),
+        expected[declaration.path],
+        `${declaration.path} has the wrong content shape`,
+      );
+    }
+    assert.equal(
+      declarations.length,
+      Object.keys(expected).length,
+      "a canonical route is missing from the expected-shape table",
+    );
+  });
+
+  it("says what kind of English a partly-translated route is showing", () => {
+    for (const declaration of declarations) {
+      if (contentShape(declaration) !== "partly_translated") continue;
+      assert.ok(
+        declaration.englishCaveat && declaration.englishCaveat.length > 30,
+        `${declaration.path} shows English, so it must say whether that English is a published edition, a platform passage, or a development sample`,
+      );
+    }
+  });
+
+  it("never attaches a caveat to a route whose English the reader chose", () => {
+    const quran = routeContentDeclaration("/quran");
+    assert.equal(contentShape(quran!), "selectable_translations");
+    assert.equal(quran!.englishCaveat, undefined);
+  });
+
   it("stays silent for an Arabic interface over Arabic-only content", () => {
     assert.equal(contentLanguageNotice("/seerah", "ar"), null);
   });
@@ -229,20 +298,49 @@ describe("the notice appears only when the interface cannot present the content"
   it("discloses an Arabic-only route to an English interface", () => {
     const notice = contentLanguageNotice("/seerah", "en");
     assert.ok(notice, "an English interface over Arabic content must be disclosed");
+    assert.equal(notice!.shape, "arabic_only");
     assert.match(notice!.textEn, /recorded in Arabic only and has not been translated/);
     assert.match(notice!.textAr, /مسجَّل بالعربية فقط ولم يُترجم/);
     assert.deepEqual(notice!.available, []);
+    assert.equal(notice!.englishCaveat, null);
   });
 
-  it("stays silent on a bilingual route because English content exists", () => {
-    assert.equal(contentLanguageNotice("/hadith", "en"), null);
-    assert.equal(contentLanguageNotice("/who-is-muhammad", "en"), null);
-    assert.equal(contentLanguageNotice("/daily-verse", "en"), null);
+  it("tells an English reader which part of a bilingual page is still Arabic", () => {
+    const notice = contentLanguageNotice("/who-is-muhammad", "en");
+    assert.ok(notice, "unconditional English beside untranslated Arabic must still be disclosed");
+    assert.equal(notice!.shape, "partly_translated");
+    assert.match(notice!.textEn, /Part of this page appears in English/);
+    assert.match(notice!.textEn, /anything not shown in English is untranslated/);
+    assert.match(notice!.textAr, /جزء من هذه الصفحة بالإنجليزية/);
+    assert.match(notice!.textAr, /غير مترجم/);
+    assert.ok(
+      notice!.englishCaveat?.includes("Arabic only"),
+      "the reader must be told the narrative itself is Arabic only",
+    );
   });
 
-  it("does not claim English is an edition on a route with no English", () => {
-    const tasbih = contentLanguageNotice("/digital-tasbih", "ar");
-    assert.equal(tasbih, null, "Arabic content under an Arabic interface needs no notice");
+  it("distinguishes a development sample from a published translation", () => {
+    const hadith = contentLanguageNotice("/hadith", "en");
+    assert.match(hadith!.englishCaveat ?? "", /development sample/);
+    assert.match(hadith!.englishCaveat ?? "", /not a published translation/);
+  });
+
+  it("does not present platform-authored English as a published edition", () => {
+    for (const path of ["/who-is-muhammad", "/basirah", "/sources", "/library", "/daily-verse", "/digital-tasbih", "/prophetic-day"]) {
+      const notice = contentLanguageNotice(path, "en");
+      assert.ok(notice, `${path} must disclose its mixed content`);
+      assert.doesNotMatch(
+        notice!.textEn,
+        /is an English edition|has been translated/,
+        `${path} must not imply the whole page is available in English`,
+      );
+    }
+  });
+
+  it("stays silent where the reader chose the English themselves", () => {
+    // Choosing a governed edition from a labelled list is not a mismatch, so
+    // /quran must not claim the reader is looking at untranslated material.
+    assert.equal(contentLanguageNotice("/quran", "en"), null);
   });
 
   it("never appears for a route that carries no content of its own", () => {
@@ -250,6 +348,18 @@ describe("the notice appears only when the interface cannot present the content"
     assert.equal(contentLanguageNotice("/al-mufti-al-mubeen", "en"), null);
     assert.equal(contentLanguageNotice("/", "en"), null);
     assert.equal(contentLanguageNotice("/does-not-exist", "en"), null);
+  });
+
+  it("discloses every partly-translated route rather than only the Arabic-only ones", () => {
+    for (const declaration of declarations) {
+      if (contentShape(declaration) === "no_content") continue;
+      if (declaration.contentLanguages.includes("en")) continue;
+      const notice = contentLanguageNotice(declaration.path, "en");
+      assert.ok(
+        notice,
+        `${declaration.path} has no English content, so an English interface must be told the boundary`,
+      );
+    }
   });
 
   it("tolerates trailing slashes", () => {

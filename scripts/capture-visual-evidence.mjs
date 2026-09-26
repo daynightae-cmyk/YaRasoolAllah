@@ -241,6 +241,9 @@ try {
           direction: document.documentElement.dir,
           shellLanguage: document.querySelector(".vg-shell")?.getAttribute("data-lang") ?? null,
           contentLanguageNotice: Boolean(document.querySelector('[data-visual="content-language-notice"]')),
+      contentLanguageShape: document
+        .querySelector('[data-visual="content-language-notice"]')
+        ?.getAttribute("data-content-shape") ?? null,
           horizontalOverflow: document.documentElement.scrollWidth > viewportWidth + 1,
           overflowElements,
           visiblyUnnamedInteractive: [...document.querySelectorAll("button, a[href], [role='button'], [role='link']")]
