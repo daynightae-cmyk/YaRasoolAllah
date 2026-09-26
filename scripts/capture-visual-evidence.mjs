@@ -14,8 +14,8 @@ export const cases = [
   { name: "gate-1440-light-rtl", path: "/", width: 1440, height: 1000, theme: "light", language: "ar" },
   { name: "gate-360-dark-ltr", path: "/", width: 360, height: 900, theme: "dark", language: "en" },
   { name: "gate-768-dark-rtl", path: "/home", width: 768, height: 1024, theme: "dark", language: "ur" },
-  { name: "library-1440-dark-rtl", path: "/library", width: 1440, height: 1000, theme: "dark", language: "ar" },
-  { name: "library-360-light-ltr", path: "/library", width: 360, height: 900, theme: "light", language: "en" },
+  { name: "library-1440-dark-rtl", path: "/library", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-visual="library-domains"]' },
+  { name: "library-360-light-ltr", path: "/library", width: 360, height: 900, theme: "light", language: "en", readySelector: '[data-visual="library-domains"]' },
   { name: "quran-1440-light-rtl", path: "/quran", width: 1440, height: 1000, theme: "light", language: "ar" },
   { name: "quran-360-dark-ltr", path: "/quran", width: 360, height: 900, theme: "dark", language: "en" },
   { name: "audio-1440-dark-rtl", path: "/audio", width: 1440, height: 1000, theme: "dark", language: "ar" },
@@ -181,6 +181,26 @@ try {
     await session.send("Page.navigate", { url: `${origin}${testCase.path}` });
     await waitForDocument(session, testCase.path === "/home" ? "/" : testCase.path);
 
+    if (testCase.readySelector) {
+      // A 10.7 MB catalog cannot be assumed to be on screen when
+      // readyState completes. Without this the Library evidence was a
+      // screenshot of the loading spinner.
+      const deadline = Date.now() + 120_000;
+      let found = false;
+      while (Date.now() < deadline) {
+        const probe = await session.send("Runtime.evaluate", {
+          expression: `Boolean(document.querySelector(${JSON.stringify(testCase.readySelector)}))`,
+          returnByValue: true,
+        });
+        if (probe.result?.value === true) {
+          found = true;
+          break;
+        }
+        await delay(500);
+      }
+      if (!found) throw new Error(`Visual evidence never became ready for ${testCase.name}: ${testCase.readySelector}`);
+      await delay(300);
+    }
     if (testCase.clickText) {
       const actionResult = await session.send("Runtime.evaluate", {
         expression: `(() => {

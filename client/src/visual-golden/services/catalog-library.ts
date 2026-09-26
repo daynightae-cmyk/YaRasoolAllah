@@ -137,3 +137,59 @@ export function hashWorkId(id: string): number {
   }
   return hash >>> 0;
 }
+
+/**
+ * What the Library can *actually* open, derived from the loaded catalog by
+ * applying the same gate functions the reader uses.
+ *
+ * This exists because the numbers the interface announced were typed into a
+ * string by hand. The catalog's own `counts.digitalVersions` is the raw
+ * research-pipeline row count: 13,679, while only 9,106 works carry an openable
+ * file URL, because the pipeline keeps rows marked `DO_NOT_INGEST` and the app
+ * attaches at most one digital record per work. Announcing 13,679 overstated
+ * what a reader could open by 47%. Every user-facing count is now read from
+ * here, so it cannot drift from the data, and
+ * `scripts/library-reader-truth.test.ts` asserts the two agree.
+ */
+export interface CatalogCapabilityReport {
+  works: number;
+  withDigitalRecord: number;
+  readableText: number;
+  readablePdf: number;
+  iiif: number;
+  presentation: number;
+  downloadable: number;
+  metadataOnly: number;
+  formats: Record<string, number>;
+}
+
+export function catalogCapabilityReport(payload: CatalogPayload): CatalogCapabilityReport {
+  const formats: Record<string, number> = {};
+  const report: CatalogCapabilityReport = {
+    works: payload.works.length,
+    withDigitalRecord: 0,
+    readableText: 0,
+    readablePdf: 0,
+    iiif: 0,
+    presentation: 0,
+    downloadable: 0,
+    metadataOnly: 0,
+    formats,
+  };
+
+  for (const work of payload.works) {
+    if (!work.digital) {
+      report.metadataOnly += 1;
+      continue;
+    }
+    report.withDigitalRecord += 1;
+    formats[work.digital.format] = (formats[work.digital.format] ?? 0) + 1;
+    if (canReadTextInside(work)) report.readableText += 1;
+    if (canReadPdfInside(work)) report.readablePdf += 1;
+    if (canUseIiifInside(work)) report.iiif += 1;
+    if (canViewPresentationInside(work)) report.presentation += 1;
+    if (canDownloadInside(work)) report.downloadable += 1;
+  }
+
+  return report;
+}

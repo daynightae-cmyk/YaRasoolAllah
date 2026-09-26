@@ -65,6 +65,13 @@ export interface RouteContentDeclaration {
    * published edition, a platform-authored passage, or a development sample.
    */
   readonly englishCaveat?: string;
+  /**
+   * True when path is a prefix such as /library/work/, so the
+   * declaration covers a dynamic route. /library was declared but its
+   * reader deep link was not, which left the reading surface with no
+   * language disclosure at all.
+   */
+  readonly pathPrefix?: boolean;
   /** Repo-relative files that were read to make this claim. */
   readonly verifiedIn: readonly string[];
   /** Non-Arabic knowledge content this route shows, each with an anchor. */
@@ -241,6 +248,24 @@ export const ROUTE_CONTENT_DECLARATIONS: readonly RouteContentDeclaration[] = [
     translations: [ARABIC_ORIGINAL],
   },
   {
+    path: "/library/work/",
+    pathPrefix: true,
+    kind: "knowledge",
+    contentLanguages: ["ar", "en"],
+    reason:
+      "The work detail and reading chamber are the same Library surface reached by deep link. The opened text is Arabic (8,755 records) or Persian (351), while the title, author and rights labels follow the interface language, and 531 works have no recorded Arabic title so the English one is shown in its place.",
+    englishCaveat:
+      "The English is a bibliographic title, author and rights label. The opened text itself is Arabic or Persian and is not translated here.",
+    verifiedIn: [
+      "client/src/visual-golden/components/library/CatalogReadingChamber.tsx",
+      "client/src/visual-golden/components/library/LibraryCatalog.tsx",
+    ],
+    servesContent: [
+      { language: "en", field: "titleEn", at: "client/src/visual-golden/services/catalog-library.ts:18" },
+      { language: "en", field: "authorEn", at: "client/src/visual-golden/services/catalog-library.ts:20" },
+    ],
+    translations: [ARABIC_ORIGINAL],
+  },  {
     path: "/books",
     kind: "knowledge",
     contentLanguages: ["ar", "en"],
@@ -299,6 +324,21 @@ export const ROUTE_CONTENT_DECLARATIONS: readonly RouteContentDeclaration[] = [
       "The English is a chapter title, a summary and an excerpt of the cited evidence written for this platform; the full narrative itself is Arabic only.",
     ),
   {
+    path: "/who-is-muhammad/",
+    pathPrefix: true,
+    kind: "knowledge",
+    contentLanguages: ["ar", "en"],
+    reason:
+      "A chapter deep link renders the same WhoIsMuhammadPage as /who-is-muhammad, so the same English title, summary and evidence excerpts apply. Declaring only the index left every chapter URL making no claim at all.",
+    englishCaveat:
+      "The English is a chapter title, a summary and an excerpt of the cited evidence written for this platform; the full narrative itself is Arabic only.",
+    verifiedIn: ["client/src/App.tsx", "client/src/pages/WhoIsMuhammadPage.tsx"],
+    servesContent: [
+      { language: "en", field: "titleEn", at: "client/src/data/whoIsMuhammadData.ts:36" },
+      { language: "en", field: "summaryEn", at: "client/src/data/whoIsMuhammadData.ts:40" },
+    ],
+    translations: [ARABIC_ORIGINAL],
+  },  {
     path: "/character",
     kind: "knowledge",
     contentLanguages: ["ar", "en"],
@@ -415,7 +455,14 @@ export const CONTENT_LANGUAGE_FACTS = {
 
 export function routeContentDeclaration(pathname: string): RouteContentDeclaration | undefined {
   const normalized = pathname.replace(/\/+$/, "") || "/";
-  return ROUTE_CONTENT_DECLARATIONS.find((declaration) => declaration.path === normalized);
+  const exact = ROUTE_CONTENT_DECLARATIONS.find(
+    (declaration) => !declaration.pathPrefix && declaration.path === normalized,
+  );
+  if (exact) return exact;
+  // Longest prefix wins, so a more specific declaration is never shadowed.
+  return ROUTE_CONTENT_DECLARATIONS.filter(
+    (declaration) => declaration.pathPrefix && normalized.startsWith(declaration.path),
+  ).sort((left, right) => right.path.length - left.path.length)[0];
 }
 
 /**

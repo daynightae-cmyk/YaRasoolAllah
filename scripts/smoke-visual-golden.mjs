@@ -50,6 +50,7 @@ const cases = [
   { name: "basirah-1440-rtl", path: "/basirah", width: 1440, height: 1000 },
   { name: "basirah-390-rtl", path: "/basirah", width: 390, height: 844 },
   { name: "library-1440-rtl", path: "/library", width: 1440, height: 1000 },
+  { name: "library-reader-1440-ltr", path: "/library", width: 1440, height: 1000, lang: "en", openReader: true },
   { name: "sources-1440-rtl", path: "/sources", width: 1440, height: 1000 },
   { name: "sources-360-rtl", path: "/sources", width: 360, height: 844 },
 ];
@@ -288,7 +289,52 @@ try {
       }
       diagnostics.geometry = geometry;
     }
-    if (item.path === "/quran") {
+    if (item.openReader) {
+      // The reading chamber is the Library surface, and it used to render raw
+      // registry enums (CLEARED_WITH_ATTRIBUTION, TXT_MARKDOWN) straight into
+      // the metadata. Opening it and reading what is actually on screen is the
+      // only way that claim can be checked.
+      // The hall lists domains first; spines only exist once a hall is entered.
+      // The domains list comes first; the hall bar and its spines only exist
+      // after a hall is entered.
+      await waitFor(
+        session,
+        `(() => {
+          const enter = [...document.querySelectorAll("button")].find((button) =>
+            /ادخل القاعة|Enter hall/.test(button.textContent || ""));
+          if (enter) enter.click();
+          return Boolean(enter);
+        })()`,
+        `${item.name} library domain`,
+        500,
+      );
+
+      await waitFor(session, 'document.querySelectorAll("[data-book-spine]").length > 0', `${item.name} library spines`, 400);
+      await evaluate(session, 'document.querySelector("[data-book-spine]").click()');
+      const readerGate = await dispatchUntil(
+        session,
+        `document.querySelector('[role="dialog"]')?.querySelector("button")?.click();`,
+        `const dialog = document.querySelector('[role="dialog"]');
+         if (!dialog) return null;
+         const text = dialog.textContent || "";
+         const raw = /CLEARED_WITH_ATTRIBUTION|TXT_MARKDOWN|CAN_IMPORT_TEXT|DOWNLOAD_ALLOWED/.test(text);
+         const unlabelled = [...dialog.querySelectorAll("input")].some((input) => !input.getAttribute("aria-label") && !input.getAttribute("aria-labelledby"));
+         if (raw || unlabelled) return { raw, unlabelled, text: text.slice(0, 400) };
+         return { ok: true, raw, unlabelled, hasRights: /Cleared with attribution/.test(text), hasFormat: /Structured digital text/.test(text) };`,
+        `${item.name} reading chamber`,
+        120,
+      );
+      if (!readerGate.ok) {
+        throw new Error(`${item.name} reading chamber rendered raw enums or an unnamed input: ${JSON.stringify(readerGate)}`);
+      }
+      if (!readerGate.hasRights) {
+        throw new Error(`${item.name} reading chamber does not state rights in a readable form: ${JSON.stringify(readerGate)}`);
+      }
+      if (!readerGate.hasFormat) {
+        throw new Error(`${item.name} reading chamber does not state the format in a readable form: ${JSON.stringify(readerGate)}`);
+      }
+      diagnostics.readingChamber = readerGate;
+    }    if (item.path === "/quran") {
       await waitFor(session, 'document.querySelectorAll(\'[id^="quran-ayah-1-"]\').length === 7', `${item.name} verified verses`);
       const quranGeometry = await evaluate(session, `(() => {
         const reader = document.querySelector('section[aria-label="مصحف القراءة"]');
