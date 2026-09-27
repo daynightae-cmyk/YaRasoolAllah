@@ -42,6 +42,7 @@ const cases = [
   { name: "who-1440-rtl", path: "/who-is-muhammad", width: 1440, height: 1000 },
   { name: "who-390-rtl", path: "/who-is-muhammad", width: 390, height: 844 },
   { name: "kids-360-rtl", path: "/kids", width: 360, height: 844 },
+  { name: "kids-transport-1440-rtl", path: "/kids", width: 1440, height: 1000, assertTransportLocked: true },
   { name: "hadith-1440-rtl", path: "/hadith", width: 1440, height: 1000 },
   { name: "hadith-390-rtl", path: "/hadith", width: 390, height: 844 },
   { name: "daily-1440-rtl", path: "/daily", width: 1440, height: 1000 },
@@ -173,6 +174,11 @@ const playLabelExpression = `([...document.querySelectorAll("button")].find((but
   return label.includes("تشغيل التلاوة") || label.includes("إيقاف التلاوة");
 })?.getAttribute("aria-label")) || ""`;
 
+// The player mounts only after the recitation catalog resolves, which on a cold
+// dev server takes far longer than the default budget. This waits longer; it
+// does not assert less. The alert must still appear or the gate still fails.
+const AUDIO_GATE_ATTEMPTS = 320;
+
 async function verifyAudioFailureState(session, label) {
   // The player mounts only after the MP3Quran catalog resolves, so the <audio>
   // element is frequently absent on the first attempt. The poke must therefore
@@ -186,6 +192,7 @@ async function verifyAudioFailureState(session, label) {
      const alert = ${audioAlertExpression};
      return alert ? { alert: alert.textContent || "", playLabel: ${playLabelExpression} } : null;`,
     `${label} stream error`,
+    AUDIO_GATE_ATTEMPTS,
   );
   if (!failed.alert || !failed.playLabel.includes("تشغيل التلاوة")) {
     throw new Error(`${label} stream error state failed: ${JSON.stringify(failed)}`);
@@ -195,6 +202,7 @@ async function verifyAudioFailureState(session, label) {
     `document.querySelector("audio")?.dispatchEvent(new Event("play"));`,
     `return ${audioAlertExpression} ? null : ${playLabelExpression};`,
     `${label} stream recovery`,
+    AUDIO_GATE_ATTEMPTS,
   );
   await dispatchUntil(
     session,
@@ -202,6 +210,7 @@ async function verifyAudioFailureState(session, label) {
     `const current = ${playLabelExpression};
      return current.includes("تشغيل التلاوة") ? current : null;`,
     `${label} stream pause`,
+    AUDIO_GATE_ATTEMPTS,
   );
   return failed;
 }
@@ -334,7 +343,57 @@ try {
         throw new Error(`${item.name} reading chamber does not state the format in a readable form: ${JSON.stringify(readerGate)}`);
       }
       diagnostics.readingChamber = readerGate;
-    }    if (item.path === "/quran") {
+    }    if (item.assertTransportLocked) {
+      // No episode is cleared for playback, so every control that can only act
+      // on a video must be disabled and must say why. An enabled "play" on an
+      // empty shelf is a promise the product cannot keep.
+      const transport = await waitFor(
+        session,
+        `(() => {
+          const remote = document.querySelector('[aria-label="ريموت مسرح النور"]');
+          return remote ? remote.querySelectorAll("button").length : 0;
+        })()`,
+        `${item.name} theatre remote`,
+        200,
+      );
+      const remoteState = await evaluate(session, `(() => {
+        const remote = document.querySelector('[aria-label="ريموت مسرح النور"]');
+        if (!remote) return { error: "no remote" };
+        const buttons = [...remote.querySelectorAll("button")].map((b) => ({
+          label: (b.getAttribute("aria-label") || "").replace(/\s+/g, " ").trim(),
+          disabled: b.disabled,
+        }));
+        const navigation = new Set(["رجوع", "الرئيسية"]);
+        const mustLock = buttons.filter((b) => !navigation.has(b.label));
+        return {
+          total: buttons.length,
+          stillEnabled: mustLock.filter((b) => !b.disabled).map((b) => b.label),
+          navigationLocked: buttons.filter((b) => navigation.has(b.label) && b.disabled).map((b) => b.label),
+          reasonShown: mustLock.filter((b) => b.disabled).every((b) => b.label.includes("لا توجد حلقة معتمدة")),
+        };
+      })()`);
+      if (remoteState.error) {
+        throw new Error(`${item.name} theatre remote missing: ${JSON.stringify(remoteState)}`);
+      }
+      if (remoteState.total < 10) {
+        throw new Error(`${item.name} theatre remote looks incomplete: ${JSON.stringify(remoteState)}`);
+      }
+      if (remoteState.stillEnabled.length) {
+        throw new Error(
+          `${item.name} offers playback with nothing playable: ${JSON.stringify(remoteState.stillEnabled)}`,
+        );
+      }
+      if (remoteState.navigationLocked.length) {
+        throw new Error(
+          `${item.name} traps the reader: navigation must stay enabled: ${JSON.stringify(remoteState.navigationLocked)}`,
+        );
+      }
+      if (!remoteState.reasonShown) {
+        throw new Error(`${item.name} disabled controls do not state the reason: ${JSON.stringify(remoteState)}`);
+      }
+      diagnostics.theatreTransport = remoteState;
+    }
+    if (item.path === "/quran") {
       await waitFor(session, 'document.querySelectorAll(\'[id^="quran-ayah-1-"]\').length === 7', `${item.name} verified verses`);
       const quranGeometry = await evaluate(session, `(() => {
         const reader = document.querySelector('section[aria-label="مصحف القراءة"]');
