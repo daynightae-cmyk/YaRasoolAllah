@@ -67,6 +67,10 @@ interface Props {
 
 const PAGE_SIZE = 80;
 
+// Catalog rows carry a real ISO language code; rows with none are grouped under
+// this sentinel so the filter can offer them without inventing a language.
+const UNKNOWN_LANGUAGE = "غير محدد";
+
 const copy = {
   ar: {
     record: "سجل فهرسي",
@@ -104,6 +108,9 @@ const copy = {
     search: "العنوان أو المؤلف",
     searchPlaceholder: "ابحث في العناوين وأسماء المؤلفين…",
     allCategories: "كل الأقسام",
+    subcategory: "القسم الفرعي",
+    allSubcategories: "كل الأقسام الفرعية",
+    allLanguages: "كل اللغات",
     availability: "الإتاحة",
     allAvailability: "كل حالات الإتاحة",
     results: (count: string) => `${count} نتيجة`,
@@ -151,6 +158,9 @@ const copy = {
     search: "Title or author",
     searchPlaceholder: "Search titles and author names…",
     allCategories: "All subjects",
+    subcategory: "Subcategory",
+    allSubcategories: "All subcategories",
+    allLanguages: "All languages",
     availability: "Availability",
     allAvailability: "All availability states",
     results: (count: string) => `${count} results`,
@@ -177,6 +187,27 @@ function languageLabel(language: string | null, lang: LibraryUiLanguage): string
   if (language === "ara") return lang === "ar" ? "العربية" : "Arabic";
   if (language === "per") return lang === "ar" ? "الفارسية" : "Persian";
   return copy[lang].unknown;
+}
+
+// The catalog carries the source ISO value verbatim, and the source mixed two
+// spellings of the same language ("ara" on 8,755 rows, "Arabic" on 23). Left
+// alone the filter would offer Arabic twice and hide those 23 records behind a
+// second English-only label, so the facet is built over canonical codes and the
+// filter compares the same canonical value.
+const LANGUAGE_ALIASES: Record<string, string> = {
+  ara: "ara",
+  arabic: "ara",
+  ar: "ara",
+  per: "per",
+  fa: "per",
+  fas: "per",
+  persian: "per",
+};
+
+function canonicalLanguage(language: string | null | undefined): string {
+  const key = (language ?? "").trim().toLowerCase();
+  if (!key) return UNKNOWN_LANGUAGE;
+  return LANGUAGE_ALIASES[key] ?? key;
 }
 
 function WorkDetail({
@@ -211,7 +242,7 @@ function WorkDetail({
 
       <dl className={styles.facts}>
         <div><dt>{c.category}</dt><dd>{categoryLabel(work.category, lang)}</dd></div>
-        <div><dt>{c.language}</dt><dd>{languageLabel(work.language, lang)}</dd></div>
+        <div><dt>{c.language}</dt><dd>{languageLabel(canonicalLanguage(work.language) === UNKNOWN_LANGUAGE ? null : canonicalLanguage(work.language), lang)}</dd></div>
         <div><dt>{c.death}</dt><dd>{work.deathHijri ? `${work.deathHijri} ${lang === "ar" ? "هـ" : "AH"}` : c.unknown}</dd></div>
         <div><dt>{c.editions}</dt><dd>{work.editionCount.toLocaleString(lang)}</dd></div>
         <div><dt>{c.versions}</dt><dd>{work.versionCount.toLocaleString(lang)}</dd></div>
@@ -289,6 +320,8 @@ export function LibraryCatalog({
   const setQuery = onQueryChange ?? setOwnQuery;
   const [category, setCategory] = useState(initialCategory ?? "all");
   const [availability, setAvailability] = useState<"all" | AvailabilityState>("all");
+  const [language, setLanguage] = useState("all");
+  const [subcategory, setSubcategory] = useState("all");
   const [page, setPage] = useState(1);
 
   useEffect(() => {
@@ -313,11 +346,23 @@ export function LibraryCatalog({
     [data],
   );
 
+  const languages = useMemo(
+    () => [...new Set((data?.works ?? []).map((work) => canonicalLanguage(work.language)))].sort(),
+    [data],
+  );
+
+  const subcategories = useMemo(
+    () => [...new Set((data?.works ?? []).map((work) => work.subcategory).filter(Boolean) as string[])].sort(),
+    [data],
+  );
+
   const filtered = useMemo(() => {
     const needle = normalize(query.trim());
     return (data?.works ?? []).filter((work) => {
       const rawCategory = work.category || "UNCLASSIFIED_OPENITI";
       if (category !== "all" && rawCategory !== category) return false;
+      if (language !== "all" && canonicalLanguage(work.language) !== language) return false;
+      if (subcategory !== "all" && work.subcategory !== subcategory) return false;
       if (availability !== "all" && availabilityState(work.digital, work.versionCount) !== availability) return false;
       if (!needle) return true;
       return normalize([
@@ -328,9 +373,9 @@ export function LibraryCatalog({
         categoryLabel(work.category, lang),
       ].filter(Boolean).join(" ")).includes(needle);
     });
-  }, [availability, category, data, lang, query]);
+  }, [availability, category, data, lang, language, query, subcategory]);
 
-  useEffect(() => setPage(1), [availability, category, query]);
+  useEffect(() => setPage(1), [availability, category, language, query, subcategory]);
 
   useEffect(() => {
     setCategory(initialCategory ?? "all");
@@ -385,6 +430,8 @@ export function LibraryCatalog({
           <span className={styles.searchBox}><Search size={16} aria-hidden="true" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={c.searchPlaceholder} aria-label={lang === "ar" ? "بحث في فهرس المكتبة" : "Search the Library catalog"} /></span>
         </label>
         <label><span>{c.category}</span><select value={category} onChange={(event) => setCategory(event.target.value)}><option value="all">{c.allCategories}</option>{categories.map((item) => <option key={item} value={item}>{categoryLabel(item, lang)}</option>)}</select></label>
+        <label><span>{c.subcategory}</span><select value={subcategory} onChange={(event) => setSubcategory(event.target.value)}><option value="all">{c.allSubcategories}</option>{subcategories.map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+        <label><span>{c.language}</span><select value={language} onChange={(event) => setLanguage(event.target.value)}><option value="all">{c.allLanguages}</option>{languages.map((item) => { const known = languageLabel(item === UNKNOWN_LANGUAGE ? null : item, lang); return <option key={item} value={item}>{known === c.unknown ? item : known}</option>; })}</select></label>
         <label><span>{c.availability}</span><select value={availability} onChange={(event) => setAvailability(event.target.value as "all" | AvailabilityState)}><option value="all">{c.allAvailability}</option>{availabilityOptions.map((item) => <option key={item} value={item}>{availabilityLabel(item, lang)}</option>)}</select></label>
       </div>
 
