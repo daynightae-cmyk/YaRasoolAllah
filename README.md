@@ -328,6 +328,26 @@ flowchart TD
 
 ---
 
+<div align="center">
+
+## KNOUX — Official Corporate Identity & Contact
+
+<img src="https://i.postimg.cc/Kv9g6Kpt/cropped-circle-image-%281%29.png" width="112" alt="Official KNOUX corporate logo" />
+
+**KNOUX** · Founded by **Eng. Sadek Elgazar (م. صادق الجزار)**
+
+**[Official Website](https://knoux.store/)** · **[Corporate Email](mailto:admin@knoux.store)** · **[Call +971 50 328 1920](tel:+971503281920)** · **[WhatsApp](https://wa.me/971503281920)**
+
+**[KNOUX Facebook](https://www.facebook.com/knouxStore/)** · **[Founder Facebook](https://www.facebook.com/CopSadek)**
+
+**[Engineering GitHub](https://github.com/daynightae-cmyk)** · **[KNOUX GitHub](https://github.com/knoux-io)** · **[TikTok](https://www.tiktok.com/@knoux_7)**
+
+*KNOUX develops this project with its own distinct educational and religious identity. Religious content, references, and source-integrity policies remain independent of corporate communications.*
+
+</div>
+
+---
+
 <div dir="rtl">
 
 ## 🤝 المساهمة
