@@ -87,6 +87,26 @@ Earlier in this session `/api/content/quran/surahs` was treated as a broken API.
 
 So production **public content** is live; production **auth/health/persistence** is blocked by missing owner environment. Deployment SHA remains unverified (asset hashes differ from local build).
 
+## Slice 3 — main API fail-safe 503 (TASK 016)
+
+### Change
+- Added `server/vercel-main-api.ts` (lazy app resolution, cached startup failure, secret-free 503).
+- Rewrote `api/[...path].ts` to use it with a lazy `import("../server/create-app")`.
+- Added `server/vercel-main-api.test.ts` (3 tests).
+- Added `server/vercel-main-api.test.ts` to `test:p0` (210 total).
+- Updated `PRODUCTION_RUNTIME_EVIDENCE.md` and the ledger.
+
+### Evidence
+| Gate | Command | Result |
+|---|---|---|
+| Lint | `npm run lint` | exit 0, 0 problems |
+| TypeScript | `npm run check` | exit 0 |
+| P0 tests | `npm run test:p0` | 210/210 pass, 27 suites, 0 fail |
+| Build | `npm run build` | exit 0 |
+| Real missing-env smoke | `npx tsx .tmp-prod-handler-check.ts` (removed after) | `STATUS 503`, `BODY {"status":"unavailable","code":"RUNTIME_CONFIG_MISSING",...}`; startup reason logged without secrets |
+
+PR #114 merged to `main` at `c030b22c`. Main CI: Quality Gates success (41377425210), Visual Golden Verify success (41377425197), Provider Verification pass (41377220313).
+
 ## Unverified / open
 
 - No production deployment was performed. `main` is `MERGED_NOT_DEPLOYED`.
