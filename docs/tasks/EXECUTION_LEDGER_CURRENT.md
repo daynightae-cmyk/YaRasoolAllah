@@ -7,7 +7,7 @@ Updated: 2026-11-02 01:30Z. Remote `origin/main` = `6c7a7af405ac2f2c9c92a2c10449
 | TASK 000 | Verified baseline + forensic snapshot | `main` | `946daa83` | `655f5bc4` | tsc PASS, test:p0 207/207, build PASS, smokes PASS at `946daa83`; tsc/test/build PASS at `655f5bc4` | #112 | PASS (quality + visual) | merged to `main` | prod stale | VERIFIED (local + CI) |
 | TASK 010 | Bundle/chunk optimization | `main` | `946daa83` | `655f5bc4` | manualChunks split: main 484.35→346.71 KB (gzip 160.05→113.51); vendor-react/query/motion split; `quranCorpus` already lazy via `quranService.ts:47` | #112 | PASS | merged | n/a | PARTIAL (route-level split inherent; corpus is data lazy; no further low-risk split identified) |
 | TASK 011 | Incremental lint + CI gate | `chore/audit-evidence-incremental-lint-20261102` → `main` | `655f5bc4` | `47dadff7` + fix `6c7a7af4` | `npm run lint` 0 problems; check 0; test 207/207; build 0; visual smoke 40 captures; provider verification main run success | #112 | PASS: Quality Gates, Visual Golden Verify, Provider Verification (run 41372265714) | merged to `main` | n/a | VERIFIED |
-| TASK 016 | Main API fail-safe 503 (missing runtime config) | pending branch | `e3d401c8` | local | `server/vercel-main-api.ts`, `api/[...path].ts`, 3 unit tests; tsc 0; lint 0; test 210/210; build 0; real missing-env smoke returns 503 JSON | pending | pending | local | n/a | IMPLEMENTED_NOT_VERIFIED |
+| TASK 016 | Main API fail-safe 503 (missing runtime config) | `feat/api-runtime-config-fail-safe` → `main` | `e3d401c8` | `ec172c3d` | `server/vercel-main-api.ts`, `api/[...path].ts`, 3 unit tests; tsc 0; lint 0; test 210/210; build 0; real missing-env smoke returns 503 JSON | #114 | PASS: Quality Gates, Visual Golden Verify, Provider Verification | merged to `main` | n/a | VERIFIED |
 | TASK 001 | Production persistence | — | — | — | `/api/health` 500 in prod; `DATABASE_URL` absent | — | — | — | BLOCKED | BLOCKED_EXTERNAL / BLOCKED_OWNER |
 | TASK 002 | Production deploy verification | — | — | — | prod HTML 200 but API 500/404; deployed SHA unverified | — | — | — | BLOCKED | BLOCKED_OWNER |
 | TASK 003 | Credential-gated providers (5) | — | — | — | verify:providers credential-blocked | — | — | — | — | BLOCKED_EXTERNAL |
@@ -24,7 +24,10 @@ Updated: 2026-11-02 01:30Z. Remote `origin/main` = `6c7a7af405ac2f2c9c92a2c10449
 
 ## Next safe executable action
 
-Production env remains the top blocker (`DATABASE_URL`, `JWT_SECRET`). A safe, unblocked code slice remains available: harden the production `/api/health` failure mode so the main API app returns a structured 503 JSON diagnosis instead of an opaque `FUNCTION_INVOCATION_FAILED`, with a test that proves no secret value is leaked. This does not require credentials and improves operator evidence.
+Production env remains the top blocker (`DATABASE_URL`, `JWT_SECRET`). Two safe, unblocked slices remain:
+
+1. Extend deterministic P0 tests for API error/cache/source-display behavior and the new 503 fail-safe (no credentials needed).
+2. Evaluate non-breaking dependency updates for the pre-existing audit findings (express/proxy-addr/body-parser/vite/zod) on an isolated branch, with full gate verification before any merge.
 
 ## Process note
 
