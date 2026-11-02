@@ -1,5 +1,5 @@
 import { mkdirSync, writeFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
 
 type VerificationStatus =
   | "PASS"
@@ -253,6 +253,7 @@ async function verifyPublicProviders(): Promise<VerificationResult[]> {
       provider: "BnF Gallica",
       category: "public",
       url: "https://gallica.bnf.fr/iiif/ark:/12148/btv1b550076223/manifest.json",
+      blockedHttpStatuses: [403],
       validate(payload) {
         const value = objectValue(payload);
         return Boolean(value?.["@context"]) && (Array.isArray(value?.sequences) || Array.isArray(value?.items));
@@ -285,6 +286,7 @@ async function verifyPublicProviders(): Promise<VerificationResult[]> {
       url:
         "https://dorar.net/dorar_api.json?skey=" +
         encodeURIComponent("إنما الأعمال بالنيات"),
+      blockedHttpStatuses: [403],
       validate(payload) {
         const value = objectValue(payload);
         const ahadith = value?.ahadith;

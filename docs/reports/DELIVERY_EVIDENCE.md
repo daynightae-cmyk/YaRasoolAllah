@@ -36,9 +36,22 @@ Deliverables written:
 - Added flat `eslint.config.js` scoped to `client/src`, `server`, `api`, `shared`, `scripts`.
 - Added `"lint"` script to `package.json` and a CI step in `.github/workflows/quality.yml`.
 - Fixed the template-literal escape bug (`/\\s+/g` in source → `/\s+/g` in the page script).
-- Removed unused `root`/imports.
+- Removed unused `root` and the then-unused `fileURLToPath` import.
 - Changed `let filtered` → `const filtered`.
 - Client `no-unused-vars` warnings (342 at introduction) are intentionally deferred; `tsc` remains the type authority. Server/api/shared/scripts enforce the rule as warning.
+
+### CI findings on PR #112
+
+First CI run:
+
+| Check | Result |
+|---|---|
+| Quality Gates (`quality`) | PASS — includes the new lint step |
+| Visual Golden Verify (`verify`) | PASS |
+| Provider Verification (`verify-public-contracts`) | **FAIL** — `ReferenceError: dirname is not defined` at output writing |
+| Vercel preview | PASS |
+
+The failure was a regression from removing `dirname` while removing the unused `root`. CI caught it before merge; the import was restored. BnF Gallica and Dorar `403` responses were also reclassified from `FAIL` to `BLOCKED_PROVIDER` (matching the existing QDL behaviour), because the verifier's own semantics distinguish provider blocks from contract failures. Local verifier run after the fix: 4 PASS, 3 BLOCKED_PROVIDER, 5 BLOCKED_CREDENTIAL, exit 0.
 
 ### Evidence
 
