@@ -1,0 +1,106 @@
+{
+  "createdAt": "2026-09-24",
+  "repositoryMainAtResearch": "f55fe8475e882eebe1ddec1e6c7c2cb9aa7aa68c",
+  "files": [
+    {
+      "path": "research/00-executive-map.md",
+      "sha256": "85cd98254c594378d2428335e81288d293b560b591781cdd8e6bd19db01d328c",
+      "bytes": 3603
+    },
+    {
+      "path": "research/01-quran.md",
+      "sha256": "f6c0e4b0217925ed4916bb35b78a9fe9093de3f73fd4a29cd6f97fba4e7261f7",
+      "bytes": 1949
+    },
+    {
+      "path": "research/02-tafsir.md",
+      "sha256": "1439351936a3c675c307f4e78428e7328d96098c0995cb01c5b96ef41ba1b0b1",
+      "bytes": 1928
+    },
+    {
+      "path": "research/03-hadith.md",
+      "sha256": "c55980184e8cc1e1f3699f1f3ae94f8362b707a46424ae1748eb2c0bf0dec4b5",
+      "bytes": 2223
+    },
+    {
+      "path": "research/04-seerah.md",
+      "sha256": "340ed7a0fbc72dee40012524f739b97a72ab1ce0fc51812447b81ef095867eec",
+      "bytes": 1611
+    },
+    {
+      "path": "research/05-library.md",
+      "sha256": "4b58e7423fcd5bebef84d48b0346131882b90e5fd40b3954a8c18464ed6c8946",
+      "bytes": 2170
+    },
+    {
+      "path": "research/06-media-images-video.md",
+      "sha256": "39ba0a9e613c9b39be03cf7e5e8f8a30b37acfb6d9f77e8be818088520d82134",
+      "bytes": 2137
+    },
+    {
+      "path": "research/07-quran-audio.md",
+      "sha256": "dc064c3d63f6026fa467b305a805bdb75d963ee31470a55cae0e08c8ed3f9523",
+      "bytes": 1692
+    },
+    {
+      "path": "research/08-kids-family.md",
+      "sha256": "7bdecc3966e9e5c72c86f09fc5d1115e73b6b3debcbb17faaf4263003e520b81",
+      "bytes": 1169
+    },
+    {
+      "path": "research/09-prayer-qibla-calendar.md",
+      "sha256": "5b721668fb384a93934a1fb8dde8c88f9f365aa3c3634f47af008158240ad5f5",
+      "bytes": 2112
+    },
+    {
+      "path": "research/10-atlas-geodata.md",
+      "sha256": "e91381f0325c6ca4e86f40b2c3d197a5ddf150fe5c37ba73fecd63331de64388",
+      "bytes": 1646
+    },
+    {
+      "path": "research/11-basirah-search-rag.md",
+      "sha256": "415523ed36a999b0a8c1a4f30f155dcf0fbe87a08b8317b452a9a5c007194bbb",
+      "bytes": 1772
+    },
+    {
+      "path": "research/12-database-schema.sql",
+      "sha256": "52d2a37955201270ef15757e6811588eef3b86dfba1808aca36ccb1b6a664a35",
+      "bytes": 5574
+    },
+    {
+      "path": "research/13-ingestion-pipelines.md",
+      "sha256": "929c01ac50cc4c38f24020e904b6e3f98e716d5c62faa35e3b966b6c8c815775",
+      "bytes": 2774
+    },
+    {
+      "path": "research/14-api-endpoints.json",
+      "sha256": "86ff5029199aed41bde27a7de2b13796ad28a4993f6669ea947853e264f4395a",
+      "bytes": 16845
+    },
+    {
+      "path": "research/15-source-registry.json",
+      "sha256": "d175a868ace673bf44ceed63f275474ab79b5e28448d341f0dd149eb3ce2f1c3",
+      "bytes": 19087
+    },
+    {
+      "path": "research/16-integration-matrix.md",
+      "sha256": "ee95ff208065f3cd0b77fe3d9a4859e7c5b8706d940ab0a28f650b344910368f",
+      "bytes": 2697
+    },
+    {
+      "path": "research/17-priority-acquisition-list.md",
+      "sha256": "4a7e56993543df22d62f67b119d6c32f6ac67eebdbe93c705092dd5f704545c0",
+      "bytes": 1962
+    },
+    {
+      "path": "research/18-code-examples.md",
+      "sha256": "94b5a84bbff530eabaeeeb46d569cade48030cb958fb0d718a8f9c66e708be99",
+      "bytes": 7166
+    },
+    {
+      "path": "research/FINAL-INTEGRATION-PROMPT.md",
+      "sha256": "9a221171045ea1ece11514fccd1e81976bedbb96e193c46fabe535c27e1bf401",
+      "bytes": 8862
+    }
+  ]
+}

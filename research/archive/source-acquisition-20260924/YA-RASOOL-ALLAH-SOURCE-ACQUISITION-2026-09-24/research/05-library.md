@@ -1,0 +1,10 @@
+# Library / IIIF
+OpenITI provides machine-readable release metadata and text versions, pinned tag needed. Open Library search `GET https://openlibrary.org/search.json?q=<term>&limit=10&fields=key,title,author_name,edition_key,cover_i` for discovery only; use returned `key` (work vs edition distinct), `cover_i`, `edition_key`. Docs https://openlibrary.org/dev/docs/api/search . Google Books `GET https://www.googleapis.com/books/v1/volumes?q=<term>&maxResults=10` metadata, `volumeInfo`, `accessInfo.embeddable`, `accessInfo.webReaderLink`; do not equate preview with full text. https://developers.google.com/books/docs/v1/reference/volumes/list .
+
+LOC `GET https://www.loc.gov/search/?fo=json&q=<term>` returns paginated `results`, `pagination`; use each item's canonical `id` and rights statement. https://www.loc.gov/apis/json-and-yaml/requests/endpoints/ . Internet Archive `GET https://archive.org/metadata/{identifier}` and `advancedsearch.php?q=...&fl[]=identifier&rows=...&page=...&output=json` (documented API; live probe outstanding). https://archive.org/developers/ .
+
+QDL official IIIF mechanism: archive `https://www.qdl.qa/en/archive/81055/vdc_100023807156.0x000001` -> `https://www.qdl.qa/en/iiif/81055/vdc_100023807156.0x000001/manifest`; QDL's own image API page says max returned size 1200 pixels and requires request for larger images. https://www.qdl.qa/en/image-options . Inspect specific manifest's v2/v3 shape; never assume all hosts expose Presentation 3.
+
+**LIVE-JSON** official IIIF sample book `https://iiif.io/api/cookbook/recipe/0009-book-1/manifest.json` has `type: Manifest`, `behavior:['paged']`, ordered `items[]` Canvas; `canvas.items[].items[].body.id` image URL, optional `body.service[].id` for deep zoom. React example in `18-code-examples.md`. General spec https://iiif.io/api/presentation/3.0/ .
+
+Current `services/library.ts` forces catalog-only and `ReadingChamber.tsx` is catalog desk. Metadata and external readers can be exposed by version; in-app page reader only if item rights and `evaluateResourceUsage` allow it. HathiTrust, Gallica, British Library, NYPL are **discovery candidates**, no verified item/manifests here.
