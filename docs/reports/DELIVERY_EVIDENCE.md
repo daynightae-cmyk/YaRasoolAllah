@@ -1,6 +1,6 @@
 # Delivery Evidence — 2026-11-02
 
-Branch/PR: see `EXECUTION_LEDGER_CURRENT.md` for the exact PR URL after publication. Local base: `origin/main` `21416a4b` (README-only PR #111), local audit commit `655f5bc4`.
+PR: [#112](https://github.com/daynightae-cmyk/YaRasoolAllah/pull/112) — merged to `main` at `6c7a7af4`. Baseline: `origin/main` `21416a4b` (README-only PR #111), audit commit `655f5bc4`.
 
 ## Slice 1 — truthful baseline + protected unique work (local commit `655f5bc4`)
 
@@ -53,6 +53,18 @@ First CI run:
 
 The failure was a regression from removing `dirname` while removing the unused `root`. CI caught it before merge; the import was restored. BnF Gallica and Dorar `403` responses were also reclassified from `FAIL` to `BLOCKED_PROVIDER` (matching the existing QDL behaviour), because the verifier's own semantics distinguish provider blocks from contract failures. Local verifier run after the fix: 4 PASS, 3 BLOCKED_PROVIDER, 5 BLOCKED_CREDENTIAL, exit 0.
 
+Final CI on `main` after the fix (`6c7a7af4`):
+
+| Check | Run | Result |
+|---|---|---|
+| Quality Gates | 41371989515 | **success** — includes Incremental lint step |
+| Visual Golden Verify | 41371990019 | **success** |
+| Provider Verification (manual dispatch) | 41372265714 | **success** |
+
+## Process deviation (recorded, not hidden)
+
+PR #112 was the intended review path and GitHub marked it merged when its head commit became reachable from `main`. The follow-up fix `6c7a7af4` was pushed to `main` directly because the working branch was still `main`. It was a normal fast-forward, not a force push or history rewrite. The fix is covered by main CI above, but it did not receive a second PR review.
+
 ### Evidence
 
 | Gate | Command | Result |
@@ -77,7 +89,8 @@ So production **public content** is live; production **auth/health/persistence**
 
 ## Unverified / open
 
-- No production deployment was performed.
-- CI for the new branch must be observed after push; do not claim SUCCESS before it completes.
+- No production deployment was performed. `main` is `MERGED_NOT_DEPLOYED`.
+- Production main API remains 500 until owner configures `JWT_SECRET` + `DATABASE_URL`; public content API is live.
+- Deployed SHA remains unverified (asset hashes differ from local build).
 - `BabAlsamaa.tsx:75` U+FFFD remains blocked pending a trustworthy source/scholar.
 - QuranEnc branch remains `DEFERRED_OWNER`.

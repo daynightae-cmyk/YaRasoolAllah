@@ -2,6 +2,8 @@
 
 Machine: `DESKTOP-VQKU9P8` (Windows), repo `K:\Knoux Projects\YaRasoolAllah\Base`.
 
+> Update 2026-11-02 01:30Z: the evidence/lint slice was merged. `main` is now `6c7a7af405ac2f2c9c92a2c10449a8b533d5e7f6` (PR #112 plus the CI-caught provider fix). Baseline measurements below remain valid; the local HEAD reference `655f5bc4` is the pre-slice audit commit.
+
 ## Git authority (independently verified)
 
 | Item | Value |

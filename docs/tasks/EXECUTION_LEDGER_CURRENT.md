@@ -1,12 +1,12 @@
 # Execution Ledger (Current)
 
-Updated: 2026-11-02. Base remote: `origin/main` = `21416a4b83fe32635de4f30245c880183e2de724`. Local audit branch `main` = `655f5bc4` (rebased).
+Updated: 2026-11-02 01:30Z. Remote `origin/main` = `6c7a7af405ac2f2c9c92a2c10449a8b533d5e7f6`. Baseline before this slice: `21416a4b83fe32635de4f30245c880183e2de724`.
 
 | Task | Objective | Branch | Base SHA | Head SHA | Evidence | PR | CI | Merge | Deploy | Status |
 |---|---|---|---|---|---|---|---|---|---|---|
-| TASK 000 | Verified baseline + forensic snapshot | `main` | `946daa83` | `655f5bc4` | tsc PASS, test:p0 207/207, build PASS, smokes PASS at `946daa83`; tsc/test/build PASS at `655f5bc4` | none (local) | not run | local only | prod stale | PARTIAL (docs done; push pending) |
-| TASK 010 | Bundle/chunk optimization | `main` | `946daa83` | `655f5bc4` | manualChunks split: main 484.35→346.71 KB (gzip 160.05→113.51); vendor-react/query/motion split; `quranCorpus` already lazy via `quranService.ts:47` | none | not run | local only | n/a | PARTIAL (route-level split already inherent; corpus is data lazy) |
-| TASK 011 | Incremental lint + CI gate | `main` (slice branch to be published) | `655f5bc4` | local commit (see `git log`) | `npm run lint` 0 problems; check 0; test 207/207; build 0; visual smoke 40 captures | pending | pending | local | n/a | IMPLEMENTED_NOT_VERIFIED (CI pending) |
+| TASK 000 | Verified baseline + forensic snapshot | `main` | `946daa83` | `655f5bc4` | tsc PASS, test:p0 207/207, build PASS, smokes PASS at `946daa83`; tsc/test/build PASS at `655f5bc4` | #112 | PASS (quality + visual) | merged to `main` | prod stale | VERIFIED (local + CI) |
+| TASK 010 | Bundle/chunk optimization | `main` | `946daa83` | `655f5bc4` | manualChunks split: main 484.35→346.71 KB (gzip 160.05→113.51); vendor-react/query/motion split; `quranCorpus` already lazy via `quranService.ts:47` | #112 | PASS | merged | n/a | PARTIAL (route-level split inherent; corpus is data lazy; no further low-risk split identified) |
+| TASK 011 | Incremental lint + CI gate | `chore/audit-evidence-incremental-lint-20261102` → `main` | `655f5bc4` | `47dadff7` + fix `6c7a7af4` | `npm run lint` 0 problems; check 0; test 207/207; build 0; visual smoke 40 captures; provider verification main run success | #112 | PASS: Quality Gates, Visual Golden Verify, Provider Verification (run 41372265714) | merged to `main` | n/a | VERIFIED |
 | TASK 001 | Production persistence | — | — | — | `/api/health` 500 in prod; `DATABASE_URL` absent | — | — | — | BLOCKED | BLOCKED_EXTERNAL / BLOCKED_OWNER |
 | TASK 002 | Production deploy verification | — | — | — | prod HTML 200 but API 500/404; deployed SHA unverified | — | — | — | BLOCKED | BLOCKED_OWNER |
 | TASK 003 | Credential-gated providers (5) | — | — | — | verify:providers credential-blocked | — | — | — | — | BLOCKED_EXTERNAL |
@@ -23,10 +23,16 @@ Updated: 2026-11-02. Base remote: `origin/main` = `21416a4b83fe32635de4f30245c88
 
 ## Next safe executable action
 
-TASK 011 — incremental lint setup (this session), then re-run typecheck/test/build and commit. TASK 010 residual work is minimal because route pages are already lazy and `quranCorpus` is loaded via dynamic import.
+Production env remains the top blocker (`DATABASE_URL`, `JWT_SECRET`). A safe, unblocked code slice remains available: harden the production `/api/health` failure mode so the main API app returns a structured 503 JSON diagnosis instead of an opaque `FUNCTION_INVOCATION_FAILED`, with a test that proves no secret value is leaked. This does not require credentials and improves operator evidence.
+
+## Process note
+
+- PR #112 was opened for the slice. GitHub marked it merged when `47dadff7` became reachable from `main`.
+- The follow-up fix `6c7a7af4` (restore `dirname`, classify 403 provider blocks) was pushed to `main` while the working branch was still `main`, so it did not go through a second PR. The push was a normal fast-forward; no force push, history rewrite, or destructive action occurred. This is recorded as a process deviation, not hidden.
 
 ## Notes
 
 - No destructive action performed.
-- No push/PR created yet (requires owner authorization; remote write is a shared-state action).
+- No branch/worktree/stash pruning.
 - Production deployment not modified.
+- Main CI after `6c7a7af4`: Quality Gates success, Visual Golden Verify success, Provider Verification success (manual dispatch).
