@@ -223,7 +223,7 @@ export default function SurahList({
 
   // Filter and sort surahs
   const filteredAndSortedSurahs = useMemo(() => {
-    let filtered = surahs.filter((surah) => {
+    const filtered = surahs.filter((surah) => {
       const matchesSearch =
         surah.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         surah.englishName.toLowerCase().includes(searchQuery.toLowerCase()) ||

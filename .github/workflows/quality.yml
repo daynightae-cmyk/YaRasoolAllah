@@ -36,6 +36,9 @@ jobs:
       - name: TypeScript check
         run: npm run check
 
+      - name: Incremental lint
+        run: npm run lint
+
       - name: Source governance
         run: npm run validate:sources
 

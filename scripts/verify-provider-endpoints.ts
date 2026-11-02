@@ -1,6 +1,5 @@
 import { mkdirSync, writeFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
 
 type VerificationStatus =
   | "PASS"
@@ -40,7 +39,6 @@ type ProbeOptions = {
   validate: (payload: unknown) => boolean;
 };
 
-const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const args = process.argv.slice(2);
 const outputArgIndex = args.indexOf("--output");
 const outputPath =

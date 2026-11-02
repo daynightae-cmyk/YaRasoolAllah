@@ -347,7 +347,7 @@ try {
       // No episode is cleared for playback, so every control that can only act
       // on a video must be disabled and must say why. An enabled "play" on an
       // empty shelf is a promise the product cannot keep.
-      const transport = await waitFor(
+      await waitFor(
         session,
         `(() => {
           const remote = document.querySelector('[aria-label="ريموت مسرح النور"]');
@@ -360,7 +360,7 @@ try {
         const remote = document.querySelector('[aria-label="ريموت مسرح النور"]');
         if (!remote) return { error: "no remote" };
         const buttons = [...remote.querySelectorAll("button")].map((b) => ({
-          label: (b.getAttribute("aria-label") || "").replace(/\s+/g, " ").trim(),
+          label: (b.getAttribute("aria-label") || "").replace(/\\s+/g, " ").trim(),
           disabled: b.disabled,
         }));
         const navigation = new Set(["رجوع", "الرئيسية"]);
