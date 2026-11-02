@@ -26,6 +26,10 @@ Production HTML references `/assets/index-dSGN6-CL.js` and `/assets/index-BYRmzw
 | `/api/nonexistent` | **500** | `FUNCTION_INVOCATION_FAILED` instead of JSON 404 |
 | `/api/auth/me` | 404 | Vercel platform page, not the main API JSON handler |
 
+## Fail-safe update (local slice, not yet deployed)
+
+After this slice, the main API entry (`api/[...path].ts`) no longer crashes at module load when `JWT_SECRET` / `DATABASE_URL` are absent. It now answers with a structured, secret-free `503` (`code: RUNTIME_CONFIG_MISSING`) and logs the startup reason for the operator. The public content app is unaffected. Production will still return `503` until the owner configures the environment; the improvement is that the failure is explicit and machine-readable instead of an opaque `FUNCTION_INVOCATION_FAILED`.
+
 ## Evidence-based architecture finding
 
 There are two Vercel serverless apps:
