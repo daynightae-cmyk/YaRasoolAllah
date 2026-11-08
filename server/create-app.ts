@@ -5,6 +5,7 @@ import { registerQuranTafsirRoutes } from "./quran-tafsir";
 import { registerHadithStatusRoutes } from "./hadith";
 import { registerOpenItiReaderRoutes } from "./openiti-reader";
 import { registerOpenLibraryRoutes } from "./open-library";
+import { registerQuranEncTranslationRoutes } from "./quranenc-translations";
 import { registerApiNotFound } from "./api-not-found";
 import { assertRuntimeConfig } from "./env";
 import { errorHandler, requestLogging } from "./logging";
@@ -35,6 +36,7 @@ export function createApiApp(): Express {
   registerOpenLibraryRoutes(app);
   registerMp3QuranCatalogRoutes(app);
   registerQuranTranslationRoutes(app);
+  registerQuranEncTranslationRoutes(app);
   registerQuranTafsirRoutes(app);
   registerHadithStatusRoutes(app);
   registerOpenItiReaderRoutes(app);

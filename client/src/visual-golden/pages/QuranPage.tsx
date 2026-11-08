@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   Search,
   Volume2,
+  Languages,
 } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
@@ -28,7 +29,7 @@ import {
 import { getGovernanceRecord } from "@shared/source-registry";
 import { searchVerifiedQuran, type QuranSearchHit } from "@/visual-golden/services/quran-search";
 import {
-  getQuranTranslation,
+  getQuranTranslation as getAlquranTranslation,
   type QuranTranslationLanguage,
   type QuranTranslationResponse,
 } from "@/visual-golden/services/quran-translations";
@@ -44,6 +45,12 @@ import {
   type QuranTafsirResponse,
 } from "@/visual-golden/services/quran-tafsir";
 import { isPlaybackAbortError } from "@/visual-golden/services/audio";
+import {
+  QURANENC_TRANSLATION_EDITIONS,
+  getQuranEncTranslation,
+  type QuranEncTranslationKey,
+  type QuranEncTranslationPayload,
+} from "@/visual-golden/services/quranenc-translations";
 import styles from "./QuranPage.module.css";
 
 type SidebarTab = "surah" | "marks";
@@ -60,6 +67,10 @@ type TafsirState =
   | { state: "idle" | "loading" }
   | { state: "error"; message: string }
   | { state: "ready"; payload: QuranTafsirResponse };
+type QuranEncTranslationState =
+  | { state: "idle" | "loading" }
+  | { state: "error"; message: string }
+  | { state: "ready"; payload: QuranEncTranslationPayload };
 
 const BOOKMARK_KEY = "quran-bookmarks";
 const NOTE_KEY = "quran-notes-v1";
@@ -143,6 +154,8 @@ export function QuranPage() {
   const [audioStreamError, setAudioStreamError] = useState<string | null>(null);
   const [audioVolume, setAudioVolume] = useState(0.78);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [translationKey, setTranslationKey] = useState<QuranEncTranslationKey>("english_rwwad");
+  const [quranEncState, setQuranEncState] = useState<QuranEncTranslationState>({ state: "idle" });
   const [fontScale, setFontScale] = useState(() => safeReadReadingSettings().fontScale);
   const [lineHeight, setLineHeight] = useState(() => safeReadReadingSettings().lineHeight);
 
@@ -232,7 +245,7 @@ export function QuranPage() {
 
     const controller = new AbortController();
     setTranslationState({ state: "loading" });
-    getQuranTranslation(active, translationLanguage, controller.signal)
+    getAlquranTranslation(active, translationLanguage, controller.signal)
       .then((payload) => {
         if (!controller.signal.aborted) setTranslationState({ state: "ready", payload });
       })
@@ -296,6 +309,31 @@ export function QuranPage() {
     if (audioRef.current) audioRef.current.volume = audioVolume;
   }, [audioVolume]);
 
+  useEffect(() => {
+    if (readingMode !== "study") {
+      setQuranEncState({ state: "idle" });
+      return;
+    }
+
+    let cancelled = false;
+    setQuranEncState({ state: "loading" });
+    getQuranEncTranslation(active, translationKey)
+      .then((payload) => {
+        if (!cancelled) setQuranEncState({ state: "ready", payload });
+      })
+      .catch((error: unknown) => {
+        if (!cancelled) {
+          setQuranEncState({
+            state: "error",
+            message: error instanceof Error ? error.message : "تعذر تحميل ترجمة QuranEnc.",
+          });
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [active, readingMode, translationKey]);
+
   useEffect(() => () => { searchRequest.current += 1; }, []);
 
   const currentChapter =
@@ -355,6 +393,14 @@ export function QuranPage() {
       handleAudioStreamError();
     }
   };
+
+  const selectedEncEdition =
+    QURANENC_TRANSLATION_EDITIONS.find((edition) => edition.key === translationKey) ??
+    QURANENC_TRANSLATION_EDITIONS[0];
+  const selectedEncVerse =
+    quranEncState.state === "ready"
+      ? quranEncState.payload.verses.find((item) => item.aya === ayah) ?? null
+      : null;
 
   const filteredChapters = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -649,6 +695,7 @@ export function QuranPage() {
             <button type="button" role="tab" aria-selected={readingMode === "study"} className={readingMode === "study" ? styles.modeOn : ""} onClick={() => setReadingMode("study")}>دراسة</button>
           </div>
           {readingMode === "study" ? (
+            <>
             <label className={styles.translationPicker}>
               <span>ترجمة المعنى</span>
               <select
@@ -672,6 +719,22 @@ export function QuranPage() {
                       : "اختر وضع الدراسة لتحميل الترجمة."}
               </small>
             </label>
+            <label className={styles.translationSelect}>
+              <Languages size={14} aria-hidden="true" />
+              <span>ترجمة QuranEnc</span>
+              <select
+                value={translationKey}
+                onChange={(event) => setTranslationKey(event.target.value as QuranEncTranslationKey)}
+                aria-label="اختيار ترجمة معاني QuranEnc"
+              >
+                {QURANENC_TRANSLATION_EDITIONS.map((edition) => (
+                  <option key={edition.key} value={edition.key}>
+                    {edition.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            </>
           ) : null}
           {readingMode === "study" ? (
             <div className={styles.translationPicker} role="status" aria-live="polite">
@@ -754,6 +817,25 @@ export function QuranPage() {
                 ) : (
                   <p className={styles.pendingStudy}>لا توجد ترجمة متاحة لهذا الموضع من المزوّد الآن.</p>
                 )}
+                {quranEncState.state === "loading" ? (
+                  <p className={styles.pendingStudy}>جارٍ تحميل ترجمة المعاني من QuranEnc داخل الرواق…</p>
+                ) : quranEncState.state === "error" ? (
+                  <p className={styles.pendingStudy}>{quranEncState.message}</p>
+                ) : selectedEncVerse ? (
+                  <div
+                    className={styles.translationText}
+                    dir={selectedEncEdition.direction}
+                    lang={selectedEncEdition.language}
+                  >
+                    <b>{selectedEncEdition.label}</b>
+                    <p>{selectedEncVerse.translation}</p>
+                    <small>
+                      QuranEnc.com · الإصدار {selectedEncEdition.version} · النص معروض دون تعديل.
+                    </small>
+                  </div>
+                ) : (
+                  <p className={styles.pendingStudy}>لا توجد ترجمة QuranEnc لهذه الآية في استجابة المصدر الحالية.</p>
+                )}
                 {tafsirState.state === "loading" ? (
                   <p className={styles.pendingStudy}>جارٍ تحميل التفسير الميسر…</p>
                 ) : tafsirState.state === "error" ? (
@@ -767,7 +849,7 @@ export function QuranPage() {
                   <p className={styles.pendingStudy}>لا يوجد تفسير متاح لهذا الموضع من المصدر الآن.</p>
                 )}
                 <small>
-                  النص العربي المحلي مستقل عن الترجمة والتفسير. الترجمة تأتي عبر AlQuran Cloud،
+                  النص العربي المحلي مستقل عن الترجمة والتفسير. ترجمة AlQuran Cloud تُجلب عبر خادم المنصة مع الحفاظ على هوية الإصدار والمترجم، وترجمة QuranEnc طبقة مستقلة بشروط إعادة النشر الخاصة بها،
                   والتفسير الميسر يأتي حيًا من QuranEnc.com دون تعديل مع رقم الإصدار وآخر تحديث.
                 </small>
               </div>
@@ -940,6 +1022,15 @@ export function QuranPage() {
               {translationState.state === "ready" ? (
                 <small>{translationState.payload.attribution} · {translationState.payload.edition}</small>
               ) : null}
+              {selectedEncVerse ? (
+                <div dir={selectedEncEdition.direction} lang={selectedEncEdition.language}>
+                  <strong>{selectedEncEdition.label}</strong>
+                  <p>{selectedEncVerse.translation}</p>
+                  <small>QuranEnc.com · V{selectedEncEdition.version}</small>
+                </div>
+              ) : (
+                <p>{quranEncState.state === "loading" ? "جارٍ تحميل ترجمة المعاني…" : "لا تتوفر ترجمة QuranEnc لهذه الآية الآن."}</p>
+              )}
               {tafsirState.state === "loading" ? (
                 <p>جارٍ تحميل التفسير الميسر…</p>
               ) : tafsirState.state === "error" ? (
@@ -981,7 +1072,8 @@ export function QuranPage() {
               </span>
               <small>
                 النص العربي يُعرض كما هو من Tanzil دون تعديل. ترجمة وضع الدراسة مستقلة
-                وتأتي عبر AlQuran Cloud، والتفسير الميسر مستقل ويأتي من QuranEnc.com دون
+                وتأتي عبر AlQuran Cloud، وترجمة QuranEnc طبقة مستقلة بشروط إعادة النشر الخاصة بها؛
+                لا تُدمج الترجمة في النص القرآني ولا تُعامل كتفسير. التفسير الميسر مستقل ويأتي من QuranEnc.com دون
                 تعديل؛ ولا ينشر المصدر رقم إصدار لطبعة التفسير الميسر.
               </small>
             </div>
