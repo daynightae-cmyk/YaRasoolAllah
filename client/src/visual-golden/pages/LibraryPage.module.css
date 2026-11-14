@@ -359,18 +359,20 @@
 .featCard h3 {
   margin: 0;
   font-size: 1.05rem;
-  color: var(--text-primary);
+  /* The caption sits on its own dark photographic gradient, so it keeps
+     light ink in both themes. */
+  color: var(--ivory-50);
   font-family: var(--font-display);
   letter-spacing: 0.04em;
 }
 .featCard span {
   font-size: 0.68rem;
   font-family: var(--font-latin);
-  color: var(--text-muted);
+  color: var(--ivory-200);
 }
 .featCard p {
   margin: 0.22rem 0 0;
-  color: var(--text-gold);
+  color: var(--gold-300);
   font-size: 0.8rem;
 }
 .featCard:hover {

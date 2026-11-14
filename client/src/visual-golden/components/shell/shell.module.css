@@ -29,7 +29,7 @@
   padding: 0;
   background:
     radial-gradient(ellipse at 80% 0%, rgba(16, 185, 129, 0.08), transparent 50%),
-    var(--navy-950);
+    var(--bg-primary);
 }
 
 .contentLanguage {
@@ -574,14 +574,51 @@
   color: var(--gold-400);
 }
 
-/* The reading wings use dark, illustrated surfaces. Keep their light text
-   palette when the surrounding navigation switches to a bright day surface. */
-.shell[data-theme="light"] .content,
-.shell[data-theme="light"] .drawer {
+/* Immersive wings keep a dark study surface even when the surrounding
+   chrome becomes warm parchment. Restore the complete dark palette inside
+   them so every glass panel, input and button stays legible. */
+.shell[data-theme="light"][data-wing="audio"] .content,
+.shell[data-theme="light"][data-wing="atlas"] .content,
+.shell[data-theme="light"][data-wing="daily"] .content,
+.shell[data-theme="light"][data-wing="tafsir"] .content,
+.shell[data-theme="light"][data-wing="basirah"] .content {
+  --bg-primary: #020617;
+  --bg-secondary: #0a1628;
+  --bg-tertiary: #0f1f33;
+  --bg-panel: rgba(6, 78, 59, 0.38);
+  --bg-card: rgba(4, 47, 46, 0.62);
+  --bg-elevated: rgba(2, 10, 12, 0.82);
+  --bg-glass: rgba(255, 255, 255, 0.04);
+  --bg-glass-strong: rgba(255, 255, 255, 0.09);
+
   --text-primary: #fefdf8;
   --text-secondary: #f5edd8;
   --text-muted: #b6b0a4;
   --text-gold: #e8c547;
+  --text-emerald: #6ee7b7;
+
+  --accent-gold: #d4a017;
+  --accent-gold-soft: #f0d78c;
+  --accent-emerald: #10b981;
+  --accent-emerald-soft: #6ee7b7;
+  --border-gold: rgba(212, 160, 23, 0.42);
+  --border-emerald: rgba(16, 185, 129, 0.32);
+  --border-panel: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+  --shadow-panel: 0 20px 60px -20px rgba(0, 0, 0, 0.55);
+  --shadow-gold: 0 0 30px rgba(212, 160, 23, 0.14);
+  --shadow-emerald: 0 0 30px rgba(16, 185, 129, 0.10);
+  --shadow-card: 0 12px 40px -12px rgba(0, 0, 0, 0.45);
+}
+
+/* The library and hadith wings are built from token-based glass surfaces,
+   so in light mode they become genuine parchment reading rooms instead of
+   dark ink on a dark background. */
+.shell[data-theme="light"][data-wing="library"] .content,
+.shell[data-theme="light"][data-wing="hadith"] .content {
+  background:
+    radial-gradient(ellipse at 70% 0%, rgba(180, 83, 9, 0.07), transparent 46%),
+    #f7f1e3;
 }
 
 .shell[data-theme="light"] .sidebar {
