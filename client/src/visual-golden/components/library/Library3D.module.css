@@ -1,0 +1,794 @@
+/* ==========================================================================
+   YA RASOOL ALLAH ﷺ — WALKABLE LIBRARY / المَكْتَبَة المَشْيَة
+   A single continuous architectural hall: real catalog books, real shelves,
+   a DOM rail mirror for keyboards, touch, and screen readers.
+   ========================================================================== */
+
+.scene {
+  --rail-inset: clamp(0.65rem, 1.6vw, 1.1rem);
+  --hall-gold: #e8c547;
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-rows: auto auto minmax(240px, 1fr) auto;
+  height: clamp(620px, 82vh, 900px);
+  min-height: 560px;
+  margin: 1rem clamp(0.55rem, 2vw, 1rem) 2rem;
+  overflow: hidden;
+  border: 1px solid rgba(212, 160, 23, 0.34);
+  border-radius: 26px;
+  color: #f5edd8;
+  background:
+    radial-gradient(circle at 50% 8%, rgba(232, 197, 71, 0.12), transparent 34%),
+    radial-gradient(circle at 50% 100%, rgba(13, 58, 49, 0.42), transparent 58%),
+    #070b08;
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 0 0 6px rgba(0, 0, 0, 0.22),
+    0 30px 80px -34px rgba(0, 0, 0, 0.72);
+}
+
+.scene::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  pointer-events: none;
+}
+
+/* --- Canvas ------------------------------------------------------------- */
+.canvasHost {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: inherit;
+}
+.canvasHost canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  outline: none;
+}
+
+.sceneVignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(3, 8, 6, 0.86) 0%, rgba(3, 8, 6, 0.18) 22%, transparent 38%),
+    linear-gradient(0deg, rgba(3, 8, 6, 0.94) 0%, rgba(3, 8, 6, 0.34) 26%, transparent 46%),
+    radial-gradient(120% 80% at 50% 50%, transparent 54%, rgba(2, 6, 4, 0.52) 100%);
+}
+
+/* --- Identity / top bar ------------------------------------------------- */
+.topOverlay {
+  position: relative;
+  z-index: 4;
+  grid-row: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: clamp(0.85rem, 2vw, 1.25rem) clamp(0.9rem, 2.2vw, 1.5rem) 0;
+  pointer-events: none;
+}
+.topOverlay > * {
+  pointer-events: auto;
+}
+
+.sceneIdentity {
+  min-width: 0;
+  display: grid;
+  gap: 0.12rem;
+  padding: 0.62rem 0.9rem 0.7rem;
+  border: 1px solid rgba(232, 197, 71, 0.28);
+  border-radius: 16px;
+  background: linear-gradient(150deg, rgba(6, 20, 17, 0.86), rgba(3, 10, 8, 0.7));
+  box-shadow: 0 12px 34px -18px rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+}
+
+.sceneEyebrow {
+  color: var(--hall-gold);
+  font-family: var(--font-latin);
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+.sceneTitle {
+  color: #fefdf8;
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 2.2vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6);
+}
+
+.sceneSubtitle {
+  color: rgba(232, 197, 71, 0.82);
+  font-family: var(--font-display);
+  font-size: clamp(0.7rem, 1.2vw, 0.84rem);
+  line-height: 1.5;
+}
+
+.sceneActions {
+  display: flex;
+  gap: 0.45rem;
+  flex: 0 0 auto;
+}
+
+.roundButton {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(232, 197, 71, 0.32);
+  border-radius: 999px;
+  color: #f3df9a;
+  background: rgba(5, 16, 13, 0.72);
+  box-shadow: 0 10px 26px -14px rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition:
+    transform 220ms var(--ease-smooth),
+    border-color 220ms var(--ease-smooth),
+    background 220ms var(--ease-smooth),
+    color 220ms var(--ease-smooth);
+}
+.roundButton:hover {
+  transform: translateY(-2px);
+  border-color: rgba(232, 197, 71, 0.7);
+  background: rgba(212, 160, 23, 0.18);
+  color: #fff4cd;
+}
+.roundButton:focus-visible {
+  outline: 3px solid rgba(232, 197, 71, 0.85);
+  outline-offset: 3px;
+}
+
+/* --- Hall rail ---------------------------------------------------------- */
+.hallRail {
+  position: relative;
+  z-index: 4;
+  grid-row: 2;
+  display: flex;
+  gap: 0.45rem;
+  margin-top: 0.7rem;
+  padding: 0 clamp(0.9rem, 2.2vw, 1.5rem);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 2%, #000 98%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 2%, #000 98%, transparent);
+}
+.hallRail::-webkit-scrollbar {
+  display: none;
+}
+
+.hallChip {
+  --hall-accent: #8fd6be;
+  position: relative;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.42rem;
+  padding: 0.5rem 0.78rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  color: rgba(245, 237, 216, 0.74);
+  background: rgba(4, 14, 11, 0.62);
+  font-family: var(--font-ui);
+  font-size: 0.76rem;
+  line-height: 1.2;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition:
+    border-color 220ms var(--ease-smooth),
+    color 220ms var(--ease-smooth),
+    background 220ms var(--ease-smooth);
+}
+.hallChip::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 3px;
+  background: var(--hall-accent);
+  opacity: 0.55;
+  transition: opacity 220ms var(--ease-smooth);
+}
+.hallChip span {
+  white-space: nowrap;
+}
+.hallChip small {
+  color: var(--hall-accent);
+  font-family: var(--font-latin);
+  font-size: 0.64rem;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+}
+.hallChip:hover {
+  border-color: color-mix(in srgb, var(--hall-accent) 62%, transparent);
+  color: #fdf8ea;
+  background: rgba(9, 25, 20, 0.82);
+}
+.hallChip:focus-visible {
+  outline: 3px solid var(--hall-accent);
+  outline-offset: 2px;
+}
+.hallChipOn {
+  border-color: color-mix(in srgb, var(--hall-accent) 74%, transparent);
+  color: #fff8e2;
+  background: color-mix(in srgb, var(--hall-accent) 16%, rgba(4, 14, 11, 0.86));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--hall-accent) 28%, transparent),
+    0 8px 24px -12px rgba(0, 0, 0, 0.8);
+}
+.hallChipOn::after {
+  opacity: 1;
+}
+
+/* --- Hint / status ------------------------------------------------------ */
+.sceneHint {
+  position: relative;
+  z-index: 3;
+  grid-row: 3;
+  align-self: end;
+  justify-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 1rem 0.9rem;
+  padding: 0.36rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 999px;
+  color: rgba(245, 237, 216, 0.66);
+  background: rgba(3, 10, 8, 0.52);
+  font-size: 0.68rem;
+  line-height: 1.4;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  pointer-events: none;
+}
+
+/* --- Loading / fallback ------------------------------------------------- */
+.loading {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.9rem;
+  color: rgba(245, 237, 216, 0.82);
+  background:
+    radial-gradient(circle at 50% 45%, rgba(13, 58, 49, 0.62), transparent 45%),
+    rgba(3, 8, 6, 0.7);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.loadingMark {
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  border: 2px solid rgba(232, 197, 71, 0.24);
+  border-top-color: #e8c547;
+  box-shadow: 0 0 26px rgba(232, 197, 71, 0.22);
+  animation: library3dSpin 900ms linear infinite;
+}
+
+@keyframes library3dSpin {
+  to { transform: rotate(360deg); }
+}
+
+.fallbackPanel {
+  position: absolute;
+  z-index: 6;
+  inset-inline: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  width: min(430px, calc(100% - 2rem));
+  display: grid;
+  justify-items: center;
+  gap: 0.6rem;
+  padding: 1.15rem 1.25rem;
+  border: 1px solid rgba(232, 197, 71, 0.3);
+  border-radius: 18px;
+  color: rgba(245, 237, 216, 0.88);
+  background: rgba(4, 13, 10, 0.88);
+  box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.8);
+  text-align: center;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.fallbackPanel svg { color: #e8c547; }
+.fallbackPanel p {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.7;
+}
+
+/* --- Hover tooltip ------------------------------------------------------ */
+.hoverTip {
+  position: absolute;
+  z-index: 8;
+  max-width: min(280px, 60%);
+  display: grid;
+  gap: 0.08rem;
+  padding: 0.5rem 0.65rem;
+  transform: translate(14px, -50%);
+  border: 1px solid rgba(232, 197, 71, 0.36);
+  border-radius: 10px;
+  color: #f8f1dc;
+  background: rgba(4, 12, 9, 0.9);
+  box-shadow: 0 16px 34px -16px rgba(0, 0, 0, 0.82);
+  pointer-events: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+:global([dir="rtl"]) .hoverTip {
+  transform: translate(-14px, -50%) translateX(-100%);
+}
+.hoverTip strong {
+  overflow: hidden;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  line-height: 1.45;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hoverTip span {
+  overflow: hidden;
+  color: rgba(232, 197, 71, 0.8);
+  font-size: 0.66rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* --- Selected-book panel ------------------------------------------------ */
+.detailPanel {
+  position: relative;
+  z-index: 6;
+  grid-row: 3;
+  align-self: end;
+  justify-self: end;
+  width: min(390px, calc(100% - 2rem));
+  margin: 0 clamp(0.9rem, 2.2vw, 1.5rem) 0.85rem;
+  display: grid;
+  gap: 0.28rem;
+  padding: 1rem 1.05rem 1.05rem;
+  border: 1px solid rgba(232, 197, 71, 0.38);
+  border-radius: 18px;
+  color: #f5edd8;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(212, 160, 23, 0.14), transparent 42%),
+    linear-gradient(160deg, rgba(8, 27, 22, 0.96), rgba(3, 12, 9, 0.94));
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.06),
+    0 26px 60px -24px rgba(0, 0, 0, 0.86);
+  backdrop-filter: blur(18px) saturate(1.15);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  animation: library3dPanelIn 280ms var(--ease-deep) both;
+}
+
+@keyframes library3dPanelIn {
+  from { opacity: 0; transform: translateY(10px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.detailClose {
+  position: absolute;
+  top: 0.62rem;
+  inset-inline-end: 0.62rem;
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  color: rgba(245, 237, 216, 0.78);
+  background: rgba(0, 0, 0, 0.24);
+  transition: color 200ms var(--ease-smooth), border-color 200ms var(--ease-smooth), background 200ms var(--ease-smooth);
+}
+.detailClose:hover {
+  border-color: rgba(232, 197, 71, 0.5);
+  color: #fff8e2;
+  background: rgba(212, 160, 23, 0.16);
+}
+.detailClose:focus-visible {
+  outline: 3px solid rgba(232, 197, 71, 0.85);
+  outline-offset: 2px;
+}
+
+.detailEyebrow {
+  max-width: calc(100% - 2.4rem);
+  color: var(--hall-gold);
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.detailPanel h3 {
+  margin: 0.08rem 0 0;
+  padding-inline-end: 1.8rem;
+  color: #fefdf8;
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.6vw, 1.22rem);
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+}
+
+.detailAuthor {
+  margin: 0;
+  color: rgba(245, 237, 216, 0.7);
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+.detailAvailability {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.3rem 0 0.15rem;
+  color: #8fd6be;
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+.detailAvailability svg { flex: 0 0 auto; }
+
+.detailActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.primaryAction,
+.secondaryAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.56rem 0.85rem;
+  border-radius: 10px;
+  font-family: var(--font-ui);
+  font-size: 0.76rem;
+  font-weight: 600;
+  line-height: 1.3;
+  transition:
+    transform 200ms var(--ease-smooth),
+    border-color 200ms var(--ease-smooth),
+    background 200ms var(--ease-smooth),
+    color 200ms var(--ease-smooth);
+}
+.primaryAction {
+  border: 1px solid rgba(232, 197, 71, 0.55);
+  color: #171003;
+  background: linear-gradient(140deg, #f3dc8b, #d4a017);
+  box-shadow: 0 10px 24px -12px rgba(212, 160, 23, 0.62);
+}
+.primaryAction:hover {
+  transform: translateY(-1px);
+  background: linear-gradient(140deg, #ffe9a3, #e5b62a);
+}
+.secondaryAction {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(245, 237, 216, 0.86);
+  background: rgba(255, 255, 255, 0.05);
+}
+.secondaryAction:hover {
+  transform: translateY(-1px);
+  border-color: rgba(232, 197, 71, 0.44);
+  color: #fff8e2;
+  background: rgba(212, 160, 23, 0.12);
+}
+.primaryAction:focus-visible,
+.secondaryAction:focus-visible {
+  outline: 3px solid rgba(232, 197, 71, 0.9);
+  outline-offset: 2px;
+}
+
+/* --- Book rail (keyboard + touch mirror) -------------------------------- */
+.bookRail {
+  position: relative;
+  z-index: 5;
+  grid-row: 4;
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.7rem clamp(0.65rem, 1.8vw, 1.1rem) 0.8rem;
+  border-top: 1px solid rgba(232, 197, 71, 0.26);
+  background:
+    linear-gradient(180deg, rgba(3, 9, 7, 0.32), rgba(3, 9, 7, 0.88) 38%),
+    rgba(3, 9, 7, 0.72);
+  backdrop-filter: blur(16px) saturate(1.1);
+  -webkit-backdrop-filter: blur(16px) saturate(1.1);
+}
+
+.railHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 34px;
+}
+.railHeader > div {
+  min-width: 0;
+  display: grid;
+  gap: 0.06rem;
+}
+.railEyebrow {
+  color: var(--hall-gold);
+  font-family: var(--font-latin);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+.railHeader strong {
+  overflow: hidden;
+  color: rgba(245, 237, 216, 0.9);
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.railToggle {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.38rem 0.62rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  color: rgba(245, 237, 216, 0.78);
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 0.68rem;
+  line-height: 1.3;
+  transition: border-color 200ms var(--ease-smooth), color 200ms var(--ease-smooth), background 200ms var(--ease-smooth);
+}
+.railToggle:hover {
+  border-color: rgba(232, 197, 71, 0.45);
+  color: #fff6d8;
+  background: rgba(212, 160, 23, 0.12);
+}
+.railToggle:focus-visible {
+  outline: 3px solid rgba(232, 197, 71, 0.85);
+  outline-offset: 2px;
+}
+
+.railTrack {
+  display: flex;
+  gap: 0.48rem;
+  padding: 0.1rem 0.1rem 0.35rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(232, 197, 71, 0.3) transparent;
+}
+.railTrack::-webkit-scrollbar { height: 6px; }
+.railTrack::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(232, 197, 71, 0.28);
+}
+
+.bookCard {
+  position: relative;
+  flex: 0 0 auto;
+  width: 216px;
+  min-height: 62px;
+  display: flex;
+  align-items: stretch;
+  gap: 0.55rem;
+  padding: 0.5rem 0.65rem 0.5rem 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 10px;
+  color: rgba(245, 237, 216, 0.88);
+  background: linear-gradient(150deg, rgba(12, 30, 24, 0.86), rgba(4, 12, 9, 0.86));
+  text-align: start;
+  transition:
+    transform 220ms var(--ease-smooth),
+    border-color 220ms var(--ease-smooth),
+    background 220ms var(--ease-smooth),
+    box-shadow 220ms var(--ease-smooth);
+}
+.bookCard:hover {
+  transform: translateY(-2px);
+  border-color: rgba(232, 197, 71, 0.44);
+  background: linear-gradient(150deg, rgba(18, 43, 34, 0.92), rgba(6, 17, 13, 0.9));
+  box-shadow: 0 14px 30px -18px rgba(0, 0, 0, 0.9);
+}
+.bookCard:focus-visible {
+  outline: 3px solid rgba(232, 197, 71, 0.88);
+  outline-offset: 2px;
+}
+.bookCardOn {
+  border-color: rgba(232, 197, 71, 0.66);
+  background: linear-gradient(150deg, rgba(36, 55, 42, 0.92), rgba(9, 24, 18, 0.92));
+  box-shadow:
+    inset 0 0 0 1px rgba(232, 197, 71, 0.22),
+    0 14px 30px -16px rgba(0, 0, 0, 0.85);
+}
+
+.spine {
+  flex: 0 0 7px;
+  align-self: stretch;
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--spine, #382410), rgba(0, 0, 0, 0.54));
+  box-shadow:
+    inset 1px 0 rgba(255, 255, 255, 0.16),
+    inset -1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.bookMeta {
+  min-width: 0;
+  display: grid;
+  align-content: center;
+  gap: 0.12rem;
+}
+.bookMeta strong {
+  display: -webkit-box;
+  overflow: hidden;
+  color: #f7efda;
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.5;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.bookMeta small {
+  overflow: hidden;
+  color: rgba(245, 237, 216, 0.56);
+  font-size: 0.64rem;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.emptyRail {
+  margin: 0.3rem 0.2rem;
+  color: rgba(245, 237, 216, 0.62);
+  font-size: 0.76rem;
+  line-height: 1.6;
+}
+
+.bookRailClosed {
+  padding-bottom: 0.55rem;
+}
+
+/* --- Responsive --------------------------------------------------------- */
+@media (max-width: 900px) {
+  .scene {
+    height: clamp(600px, 84vh, 820px);
+    grid-template-rows: auto auto minmax(180px, 1fr) auto;
+    border-radius: 20px;
+  }
+  .sceneHint {
+    display: none;
+  }
+  .detailPanel {
+    justify-self: stretch;
+    width: auto;
+    margin-inline: 0.75rem;
+  }
+  .bookCard {
+    width: 190px;
+  }
+}
+
+@media (max-width: 600px) {
+  .scene {
+    height: 78vh;
+    min-height: 540px;
+    margin-inline: 0.5rem;
+    border-radius: 16px;
+  }
+  .topOverlay {
+    padding: 0.7rem 0.7rem 0;
+  }
+  .sceneIdentity {
+    padding: 0.5rem 0.68rem 0.55rem;
+    border-radius: 12px;
+  }
+  .sceneTitle {
+    font-size: 1rem;
+  }
+  .sceneSubtitle {
+    font-size: 0.68rem;
+  }
+  .roundButton {
+    width: 38px;
+    height: 38px;
+  }
+  .hallRail {
+    padding-inline: 0.7rem;
+  }
+  .hallChip {
+    padding: 0.44rem 0.66rem;
+    font-size: 0.7rem;
+  }
+  .bookRail {
+    padding: 0.6rem 0.6rem 0.65rem;
+  }
+  .railHeader strong {
+    font-size: 0.74rem;
+  }
+  .bookCard {
+    width: 176px;
+    min-height: 58px;
+  }
+  .detailPanel {
+    margin-inline: 0.6rem;
+    padding: 0.85rem 0.9rem 0.9rem;
+  }
+  .detailPanel h3 {
+    font-size: 0.98rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .hallChip span {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bookCard {
+    width: 164px;
+  }
+}
+
+/* --- Reduced motion ----------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .loadingMark {
+    animation: none;
+    border-top-color: rgba(232, 197, 71, 0.34);
+    border-inline-start-color: #e8c547;
+  }
+  .detailPanel {
+    animation: none;
+  }
+  .roundButton:hover,
+  .bookCard:hover,
+  .primaryAction:hover,
+  .secondaryAction:hover {
+    transform: none;
+  }
+}
+
+/* --- Forced colors ------------------------------------------------------ */
+@media (forced-colors: active) {
+  .scene,
+  .sceneIdentity,
+  .detailPanel,
+  .bookRail,
+  .bookCard,
+  .hallChip {
+    border: 1px solid CanvasText;
+  }
+  .primaryAction {
+    border: 1px solid ButtonText;
+  }
+}

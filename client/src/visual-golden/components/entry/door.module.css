@@ -1,0 +1,238 @@
+/* ==========================================================================
+   YA RASOOL ALLAH — DOOR ENTRY SIMULATION (CSS Phase 1 → Three.js Phase 2)
+   -------------------------------------------
+   كل قسم له باب واقعي يظهر عند الدخول.
+  순서: نور يظهر أولاً → الباب يفتح → يدخل الزائر المكان الحقيقي.
+   ========================================================================== */
+
+.entryOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #020617;
+  color: #fefdf8;
+  font-family: var(--font-ui);
+  transition: opacity 400ms var(--ease-smooth), visibility 400ms var(--ease-smooth);
+}
+
+.entryOverlay.exiting {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* --- Light that appears first (نور दिखाई أولاً) --- */
+.entryLight {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255, 243, 205, 0.15) 0%, transparent 60%),
+    radial-gradient(circle at 50% 50%, rgba(255, 230, 150, 0.35) 0%, transparent 40%);
+  animation: lightPulse 1600ms ease-in-out infinite;
+  pointer-events: none;
+}
+
+.entrySiteName {
+  position: relative;
+  z-index: 10;
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 6vw, 3.6rem);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-align: center;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 30px rgba(212, 160, 23, 0.5), 0 0 60px rgba(212, 160, 23, 0.25);
+  animation: siteNameFade 1200ms ease-out 400ms both;
+}
+
+.entrySiteNameAr {
+  color: #e8c547;
+}
+
+.entrySiteNameEn {
+  color: #d4a017;
+  font-size: clamp(1rem, 3vw, 1.4rem);
+  margin-top: 0.4rem;
+  display: block;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+/* --- The Door (الباب الواقعي) --- */
+.entryDoorWrap {
+  position: relative;
+  z-index: 20;
+  perspective: 1200px;
+  margin-top: 1rem;
+}
+
+.entryDoor {
+  position: relative;
+  width: clamp(260px, 55vw, 720px);
+  height: clamp(360px, 70vh, 900px);
+  background: linear-gradient(180deg, #1a140c 0%, #0f0a06 55%, #070503 100%);
+  border: 2px solid rgba(212, 160, 23, 0.35);
+  border-radius: 4px;
+  box-shadow:
+    0 0 0 1px rgba(212, 160, 23, 0.15),
+    0 25px 80px -20px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+  transform-origin: left center;
+  transform: rotateY(0deg);
+  transition: transform 900ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.entryDoor.closed {
+  transform: rotateY(0deg);
+}
+
+.entryDoor.opening {
+  transform: rotateY(-105deg);
+}
+
+.entryDoorFrame {
+  position: absolute;
+  inset: -8px;
+  background: linear-gradient(180deg, #2d2214 0%, #1a140c 60%, #0f0a06 100%);
+  border: 1px solid rgba(212, 160, 23, 0.25);
+  pointer-events: none;
+}
+
+.entryDoorGoldStripe {
+  position: absolute;
+  top: 50%;
+  left: 12%;
+  width: 76%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #d4a017, transparent);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.entryDoorKnob {
+  position: absolute;
+  top: 50%;
+  right: 10%;
+  width: 22px;
+  height: 22px;
+  background: radial-gradient(circle, #d4a017 40%, #a16207 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 15px rgba(212, 160, 23, 0.6);
+  transform: translate(50%, -50%);
+  pointer-events: none;
+}
+
+.entryDoorGlow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, transparent 0%, rgba(212, 160, 23, 0.12) 45%, transparent 100%);
+  opacity: 0;
+  transition: opacity 700ms ease;
+}
+
+.entryDoor.opening .entryDoorGlow {
+  opacity: 1;
+}
+
+.entryDoorInner {
+  position: absolute;
+  inset: 20%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, transparent 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  pointer-events: none;
+}
+
+.entryDoorText {
+  position: absolute;
+  bottom: 12%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: #d4a017;
+  text-shadow: 0 0 20px rgba(212, 160, 23, 0.5);
+  letter-spacing: 0.16em;
+  opacity: 0.9;
+}
+
+/* --- CTA to open door --- */
+.entryOpenBtn {
+  position: relative;
+  z-index: 30;
+  margin-top: 1.5rem;
+  padding: 0.9rem 2.2rem;
+  background: transparent;
+  border: 2px solid #d4a017;
+  color: #d4a017;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  box-shadow: 0 0 0 0 rgba(212, 160, 23, 0);
+  transition: all 300ms var(--ease-smooth);
+  animation: btnPulse 2200ms ease-in-out infinite;
+}
+
+.entryOpenBtn:hover,
+.entryOpenBtn:focus-visible {
+  background: #d4a017;
+  color: #020617;
+  box-shadow: 0 0 30px rgba(212, 160, 23, 0.45);
+}
+
+/* --- Entered state (after door opens) --- */
+.entryEntered {
+  position: fixed;
+  inset: 0;
+  z-index: 99998;
+  display: none; /* only shown during brief transition */
+  align-items: center;
+  justify-content: center;
+  background: #020617;
+}
+
+/* Animations */
+@keyframes lightPulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.05); }
+}
+
+@keyframes siteNameFade {
+  0% { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes btnPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212, 160, 23, 0.4); transform: scale(1); }
+  50% { box-shadow: 0 0 20px rgba(212, 160, 23, 0.55); transform: scale(1.03); }
+}
+
+@keyframes doorSqueak {
+  0% { transform: rotateY(0deg); }
+  20% { transform: rotateY(-5deg); }
+  40% { transform: rotateY(2deg); }
+  100% { transform: rotateY(0deg); }
+}
+
+/* RTL support */
+[dir="rtl"] .entryDoorText {
+  /* centered, no change needed */
+}
+
+[dir="rtl"] .entrySiteNameEn {
+  /* letter-spacing handles it */
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .entryLight { animation: none; opacity: 0.7; }
+  .entryDoor { transition: none; }
+  .entryOpenBtn { animation: none; }
+  .entrySiteName { animation: none; }
+}
