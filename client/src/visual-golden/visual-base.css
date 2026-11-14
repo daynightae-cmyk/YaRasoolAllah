@@ -1,5 +1,326 @@
-/* Ya Rasool Allah — Visual Golden Master base tokens, ported from the approved Grok visual workspace. */
-.vg-shell{--emerald-950:#022c22;--emerald-900:#064e3b;--emerald-800:#065f46;--emerald-700:#047857;--emerald-500:#10b981;--gold-700:#a16207;--gold-500:#d4a017;--gold-400:#e8c547;--gold-300:#f0d78c;--gold-200:#f5e6b8;--navy-950:#020617;--navy-900:#0a1628;--navy-800:#0f1f33;--ivory-50:#fefdf8;--ivory-100:#faf6eb;--ivory-200:#f5edd8;--parchment:#f4e9d0;--stone-400:#a8a29e;--bg-primary:var(--navy-950);--bg-secondary:var(--navy-900);--bg-panel:rgba(6,78,59,.35);--bg-card:rgba(6,78,59,.45);--bg-elevated:rgba(4,47,46,.7);--border-gold:rgba(212,160,23,.45);--border-emerald:rgba(16,185,129,.3);--text-primary:var(--ivory-50);--text-secondary:var(--ivory-200);--text-muted:var(--stone-400);--text-gold:var(--gold-400);--accent-gold:var(--gold-500);--accent-emerald:var(--emerald-500);--font-display:"Amiri","Traditional Arabic",serif;--font-ui:"Cairo","Tajawal","Segoe UI",sans-serif;--font-latin:"Inter",system-ui,sans-serif;--sidebar-width:260px;--header-height:64px;--radius-sm:6px;--radius-md:10px;--radius-lg:16px;--radius-xl:24px;--radius-full:9999px;--shadow-gold:0 0 20px rgba(212,160,23,.15);--shadow-panel:0 8px 32px rgba(0,0,0,.4);font-family:var(--font-ui);background:var(--bg-primary);color:var(--text-primary);min-height:100vh;line-height:1.6;}
-.vg-shell[data-theme="light"]{--bg-primary:#f8f5eb;--bg-secondary:#f0e9d8;--bg-panel:rgba(255,255,255,.85);--bg-card:#fff;--bg-elevated:#fffef9;--border-gold:rgba(161,98,7,.35);--border-emerald:rgba(4,120,87,.25);--text-primary:#0f1f33;--text-secondary:#1a2d4a;--text-muted:#78716c;--text-gold:#a16207;--accent-gold:#b45309;--accent-emerald:#047857;}
-.vg-page-loading{display:grid;place-items:center;min-height:50vh;color:var(--text-secondary);font-family:var(--font-ui);}
-.vg-shell *{box-sizing:border-box}.vg-shell h1,.vg-shell h2,.vg-shell h3,.vg-shell h4,.vg-shell .display{font-family:var(--font-display);font-weight:700}.vg-shell a{color:inherit;text-decoration:none}.vg-shell button:not(:disabled),.vg-shell [role="button"]:not(:disabled){cursor:pointer}.vg-shell .gold-text{color:var(--text-gold)}.vg-shell .muted{color:var(--text-muted)}.vg-shell .panel{background:var(--bg-panel);border:1px solid var(--border-gold);border-radius:var(--radius-lg);backdrop-filter:blur(12px)}.vg-shell .card{background:var(--bg-card);border:1px solid var(--border-emerald);border-radius:var(--radius-md)}.vg-shell .btn-gold{background:linear-gradient(135deg,var(--gold-500),var(--gold-700));color:var(--navy-950);font-weight:700;padding:.5rem 1.25rem;border-radius:var(--radius-md);border:0}.vg-shell .btn-outline{border:1px solid var(--border-gold);color:var(--text-gold);padding:.45rem 1rem;border-radius:var(--radius-md);background:transparent}.vg-page-enter{animation:vg-enter .42s cubic-bezier(.22,1,.36,1) both}@keyframes vg-enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}@media(prefers-reduced-motion:reduce){.vg-shell *{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+/* ==========================================================================
+   YA RASOOL ALLAH ﷺ — INSTITUTIONAL DESIGN SYSTEM v2
+   Deep Scholarly Obsidian • Antique Manuscript Gold • Noble Cypress • Warm Parchment
+   Geometric Islamic Illumination • Glass Stratification • Calligraphic Typography
+   ========================================================================== */
+
+/* --- Core Palette (Dark / Noble Obsidian) --- */
+:root {
+  /* Structural Surfaces */
+  --bg-primary: #020617;
+  --bg-secondary: #0a1628;
+  --bg-tertiary: #0f1f33;
+  --bg-panel: rgba(6, 78, 59, 0.38);
+  --bg-card: rgba(4, 47, 46, 0.62);
+  --bg-elevated: rgba(2, 10, 12, 0.82);
+  --bg-glass: rgba(255, 255, 255, 0.04);
+  --bg-glass-strong: rgba(255, 255, 255, 0.09);
+
+  /* Ink & Text */
+  --text-primary: #fefdf8;
+  --text-secondary: #f5edd8;
+  --text-muted: #a8a29e;
+  --text-gold: #e8c547;
+  --text-emerald: #6ee7b7;
+  --text-ink-dark: #0f1c24;
+
+  /* Accents */
+  --accent-gold: #d4a017;
+  --accent-gold-soft: #f0d78c;
+  --accent-emerald: #10b981;
+  --accent-emerald-soft: #6ee7b7;
+  --accent-lapis: #3b82f6;
+  --accent-lapis-soft: #93c5fd;
+
+  /* Borders & Edges */
+  --border-gold: rgba(212, 160, 23, 0.42);
+  --border-emerald: rgba(16, 185, 129, 0.32);
+  --border-panel: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.04);
+
+  /* Shadows & Elevation */
+  --shadow-panel: 0 20px 60px -20px rgba(0, 0, 0, 0.55);
+  --shadow-gold: 0 0 30px rgba(212, 160, 23, 0.14);
+  --shadow-emerald: 0 0 30px rgba(16, 185, 129, 0.10);
+  --shadow-card: 0 12px 40px -12px rgba(0, 0, 0, 0.45);
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Layout */
+  --sidebar-width: 280px;
+  --header-height: 68px;
+  --section-gap: 4rem;
+
+  /* Transitions */
+  --ease-smooth: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-deep: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 200ms;
+  --duration-base: 450ms;
+  --duration-slow: 700ms;
+
+  /* Fonts */
+  --font-display: "Amiri", "Traditional Arabic", "Noto Naskh Arabic", serif;
+  --font-ui: "Cairo", "Tajawal", "Segoe UI", system-ui, sans-serif;
+  --font-latin: "Inter", system-ui, sans-serif;
+}
+
+/* --- Light Theme / Warm Parchment --- */
+.vg-shell[data-theme="light"] {
+  --bg-primary: #faf6eb;
+  --bg-secondary: #f0e9d8;
+  --bg-tertiary: #e8dfc9;
+  --bg-panel: rgba(255, 255, 255, 0.82);
+  --bg-card: #ffffff;
+  --bg-elevated: #fffef9;
+  --bg-glass: rgba(0, 0, 0, 0.03);
+  --bg-glass-strong: rgba(0, 0, 0, 0.06);
+
+  --text-primary: #0f1c24;
+  --text-secondary: #1a2d4a;
+  --text-muted: #78716c;
+  --text-gold: #a16207;
+  --text-emerald: #047857;
+
+  --accent-gold: #b45309;
+  --accent-gold-soft: #d97706;
+  --accent-emerald: #047857;
+  --accent-emerald-soft: #059669;
+  --accent-lapis: #1d4ed8;
+  --accent-lapis-soft: #2563eb;
+
+  --border-gold: rgba(161, 98, 7, 0.32);
+  --border-emerald: rgba(4, 120, 87, 0.22);
+  --border-panel: rgba(0, 0, 0, 0.08);
+  --border-subtle: rgba(0, 0, 0, 0.04);
+
+  --shadow-panel: 0 20px 60px -20px rgba(0, 0, 0, 0.10);
+  --shadow-gold: 0 0 30px rgba(161, 98, 7, 0.10);
+  --shadow-emerald: 0 0 30px rgba(4, 120, 87, 0.08);
+  --shadow-card: 0 12px 40px -12px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Base Shell --- */
+.vg-shell {
+  box-sizing: border-box;
+  font-family: var(--font-ui);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+.vg-shell * { box-sizing: border-box; }
+
+.vg-shell h1, .vg-shell h2, .vg-shell h3, .vg-shell h4,
+.vg-shell h5, .vg-shell .display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--text-primary);
+}
+.vg-shell a { color: inherit; text-decoration: none; }
+.vg-shell button:not(:disabled), .vg-shell [role="button"]:not(:disabled) { cursor: pointer; }
+
+/* --- Typography: Calligraphic Display --- */
+.calligraphy {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.invocation {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: clamp(1.1rem, 2.2vw, 1.7rem);
+}
+.eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-family: var(--font-latin);
+}
+
+/* --- Geometric Islamic Illumination (8-point star rosette) --- */
+.islamic-ornament {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.35;
+  z-index: 0;
+  mask-image: radial-gradient(circle, black 60%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle, black 60%, transparent 100%);
+}
+.islamic-ornament::before,
+.islamic-ornament::after {
+  content: "";
+  position: absolute;
+  inset: -25%;
+  background-image:
+    repeating-conic-gradient(from 0deg, var(--pattern-color, var(--accent-gold)) 0 1deg, transparent 1deg 90deg),
+    repeating-conic-gradient(from 45deg, var(--pattern-color, var(--accent-gold)) 0 1deg, transparent 1deg 90deg);
+  animation: rosette-turn var(--pattern-duration, 24s) linear infinite;
+}
+.islamic-ornament::after {
+  animation-direction: reverse;
+  filter: blur(1px);
+}
+
+/* --- Glass Stratification --- */
+.panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  box-shadow: var(--shadow-panel);
+}
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-emerald);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+}
+.glass {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.glass-strong {
+  background: var(--bg-glass-strong);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(14px) saturate(1.15);
+  -webkit-backdrop-filter: blur(14px) saturate(1.15);
+}
+
+/* --- Illumination & Glow --- */
+.glow-gold {
+  box-shadow: var(--shadow-gold);
+  position: relative;
+}
+.glow-gold::after {
+  content: "";
+  position: absolute;
+  inset: -10%;
+  border-radius: inherit;
+  background: radial-gradient(circle at 30% 30%, rgba(212, 160, 23, 0.25), transparent 60%);
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-smooth);
+  pointer-events: none;
+  z-index: -1;
+}
+.glow-gold:hover::after { opacity: 1; }
+
+.illumination-band {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(212, 160, 23, 0.18) 35%,
+    rgba(212, 160, 23, 0.06) 50%,
+    rgba(212, 160, 23, 0.18) 65%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity var(--duration-slow) var(--ease-smooth);
+  pointer-events: none;
+  z-index: 0;
+}
+.glow-gold:hover .illumination-band { opacity: 1; }
+
+/* --- Depth / 3D Cards --- */
+.depth-card {
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background: var(--bg-card);
+  border: 1px solid var(--border-emerald);
+  box-shadow: var(--shadow-card);
+  transform-style: preserve-3d;
+  perspective: 1200px;
+}
+.depth-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+  z-index: 1;
+}
+.depth-card .depth-face {
+  position: relative;
+  z-index: 2;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+/* --- Entrance & Motion --- */
+.vg-page-enter {
+  animation: vg-enter var(--duration-base) var(--ease-deep) both;
+}
+@keyframes vg-enter {
+  from { opacity: 0; transform: translateY(12px) scale(0.995); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.rosette-turn {
+  animation: rosette-turn 20s linear infinite;
+}
+@keyframes rosette-turn {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.ken-burns {
+  animation: kenBurns var(--duration-slow, 24s) ease-in-out infinite alternate;
+}
+@keyframes kenBurns {
+  from { transform: scale(1) translate(0, 0); }
+  to { transform: scale(1.12) translate(12px, -12px); }
+}
+
+/* --- Reduced Motion --- */
+@media (prefers-reduced-motion: reduce) {
+  .vg-shell *, .islamic-ornament::before, .islamic-ornament::after,
+  .ken-burns, .vg-page-enter, .rosette-turn {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --- Legacy Compatibility (existing tokens preserved) --- */
+.vg-shell .gold-text { color: var(--text-gold); }
+.vg-shell .muted { color: var(--text-muted); }
+.vg-shell .btn-gold {
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-soft));
+  color: var(--text-ink-dark);
+  font-weight: 700;
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-md);
+  border: 0;
+}
+.vg-shell .btn-outline {
+  border: 1px solid var(--border-gold);
+  color: var(--text-gold);
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-md);
+  background: transparent;
+}
+
+/* --- Layout Utilities --- */
+.section-pad { padding: calc(var(--section-gap) * 0.6) 1.4rem 1rem; }
+.content-max { max-width: 72rem; margin-inline: auto; }
+.reading-max { max-width: 48rem; }
+
+/* --- Direction-aware helpers --- */
+[dir="rtl"] .rtl-flip { transform: scaleX(-1); }

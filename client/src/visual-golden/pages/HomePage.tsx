@@ -9,6 +9,12 @@ import {
   FileText,
   Bookmark,
   Search,
+  Compass,
+  Feather,
+  Library,
+  Users,
+  Sun,
+  ShieldCheck,
 } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
@@ -29,94 +35,94 @@ const gateways = [
     to: "/seerah" as const,
     title: "السيرة النبوية",
     en: "Prophetic Biography",
-    desc: "رحلة سردية موثقة في حياة النبي ﷺ",
+    desc: "رحلة سردية موثقة في حياة النبي ﷺ من مولده إلى وفاته",
     enDesc: "A sourced narrative journey through the Prophet's life ﷺ",
     img: art.domeCard,
+    icon: Compass,
+    color: "amber",
   },
   {
     to: "/quran" as const,
     title: "القرآن الكريم",
     en: "The Qur'an",
-    desc: "المصحف العربي والقراءة والبحث",
-    enDesc: "Arabic text, reading and search",
+    desc: "المصحف العربي، القراءة، البحث، والتفسير بالسياق النبوي",
+    enDesc: "Arabic text, reading, search and prophetic-context tafsir",
     img: art.mushafOpen,
+    icon: BookMarked,
+    color: "teal",
   },
   {
     to: "/hadith" as const,
     title: "السنة والحديث",
     en: "Sunnah & Hadith",
-    desc: "فهرس المصادر وسجلات محلية قيد المراجعة",
+    desc: "فهرس المصادر وسجلات محلية قيد المراجعة والتوثيق",
     enDesc: "Source catalog and local records under review",
     img: art.books,
+    icon: Feather,
+    color: "cyan",
   },
   {
     to: "/library" as const,
-    title: "المكتبة الكبرى",
-    en: "The Great Library",
-    desc: "رفوف الأعمال ونسخها وحقوق الوصول",
-    enDesc: "Works, editions and access rights",
+    title: "مكتبة الرفوف",
+    en: "Library on Shelves",
+    desc: "أرفف تفاعلية للكتب والمصادر التراثية والمعاصرة",
+    enDesc: "Interactive shelves of classical and modern Islamic texts",
     img: art.library,
+    icon: Library,
+    color: "violet",
   },
   {
     to: "/atlas" as const,
     title: "الأطلس التاريخي",
     en: "Historical Atlas",
-    desc: "مواضع ومسارات تخطيطية للسيرة",
+    desc: "مواضع ومسارات تخطيطية للسيرة النبوية",
     enDesc: "Schematic places and routes through the Seerah",
     img: art.desert,
+    icon: Sun,
+    color: "rose",
   },
   {
     to: "/kids" as const,
     title: "الأسرة والطفل",
     en: "Family & Children",
-    desc: "قصص تعليمية بمحتوى خاضع للمراجعة",
-    enDesc: "Educational stories with governed content",
+    desc: "مساحة آمنة تربوية بلا تجسيد تحبب الأجيال في رسول الله ﷺ",
+    enDesc: "A secure, ad-free world nurturing the love of the Prophet ﷺ",
     img: art.kidsRead,
+    icon: Users,
+    color: "rose",
   },
   {
     to: "/daily" as const,
     title: "محراب اليوم",
     en: "Daily Sanctuary",
-    desc: "مواقيت الصلاة والذكر حسب المكان",
-    enDesc: "Prayer times and remembrance by location",
+    desc: "مواقيت الصلاة والذكر والتقويم الهجري حسب المكان",
+    enDesc: "Prayer times, adhkar and Hijri calendar by location",
     img: art.lantern,
+    icon: Moon,
+    color: "emerald",
   },
   {
     to: "/sources" as const,
     title: "خزانة المصادر",
     en: "Sources Vault",
-    desc: "الأصول والحقوق والمزوّدون",
-    enDesc: "Origins, rights and providers",
+    desc: "الأصول، الحقوق، المزودون، وضمانات النزاهة العلمية",
+    enDesc: "Origins, rights, providers and editorial integrity",
     img: art.arches,
+    icon: ShieldCheck,
+    color: "slate",
   },
 ];
 
 const quick = [
-  { to: "/quran" as const, label: "القرآن الكريم", icon: BookMarked },
-  { to: "/daily" as const, label: "مرصد الصلاة", icon: Moon },
-  { to: "/daily" as const, label: "الأدعية", icon: Sparkles },
-  { to: "/daily" as const, label: "التقويم الهجري", icon: Calendar },
-  { to: "/audio" as const, label: "المواد الصوتية", icon: Headphones },
-  { to: "/basirah" as const, label: "بصيرة", icon: Search },
-  { to: "/library" as const, label: "المقالات", icon: FileText },
-  { to: "/hadith" as const, label: "الحديث", icon: BookMarked },
+  { to: "/quran" as const, label: "القرآن الكريم", en: "The Qur'an", icon: BookMarked },
+  { to: "/daily" as const, label: "مرصد الصلاة", en: "Prayer Times", icon: Moon },
+  { to: "/daily" as const, label: "الأدعية", en: "Adhkar", icon: Sparkles },
+  { to: "/daily" as const, label: "التقويم الهجري", en: "Hijri Calendar", icon: Calendar },
+  { to: "/audio" as const, label: "التلاوات الصوتية", en: "Qur'an Audio", icon: Headphones },
+  { to: "/basirah" as const, label: "بصيرة", en: "Basirah Research", icon: Search },
+  { to: "/library" as const, label: "المقالات", en: "Library", icon: FileText },
+  { to: "/hadith" as const, label: "الحديث", en: "Hadith", icon: BookMarked },
 ];
-
-function GateBody({ g, lang, preview }: { g: (typeof gateways)[number]; lang: "ar" | "en"; preview?: string }) {
-  return (
-    <>
-      <img src={g.img} alt="" />
-      <div className={styles.gateBody}>
-        <span className={styles.gateIndex}>{String(gateways.indexOf(g) + 1).padStart(2, "0")} / 08</span>
-        <h3>{lang === "ar" ? g.title : g.en}</h3>
-        <span className={styles.gateSecondary}>{lang === "ar" ? g.en : g.title}</span>
-        <p>{lang === "ar" ? g.desc : g.enDesc}</p>
-        {preview ? <small className={styles.gatePreview}>{preview}</small> : null}
-        <i className={styles.gateGo} aria-hidden="true">←</i>
-      </div>
-    </>
-  );
-}
 
 function readJson<T>(key: string, fallback: T): T {
   try {
@@ -134,9 +140,9 @@ export function HomePage() {
   const [chapters, setChapters] = useState<QuranChapter[]>([]);
   const [daily, setDaily] = useState<DailyVerse | null>(null);
   const lang = useInstitution((s) => s.lang);
-  const visits = useInstitution((s) => s.visits);
   const favorites = useInstitution((s) => s.favorites);
   const notes = useInstitution((s) => s.notes);
+  const visits = useInstitution((s) => s.visits);
   const toggleFavorite = useInstitution((s) => s.toggleFavorite);
 
   const [continueSignals] = useState(() => ({
@@ -170,27 +176,42 @@ export function HomePage() {
   const facts = discoveryFacts(chapters);
   const recentFavorites = favorites.slice(0, 3);
   const previewFor = (path: (typeof gateways)[number]["to"]) => {
-    if (path === "/quran" && facts.surahs) return lang === "ar" ? `${facts.surahs} سورة في النص المحلي` : `${facts.surahs} chapters in the local text`;
-    if (path === "/seerah" && facts.seerahChapters) return lang === "ar" ? `${facts.seerahChapters} فصلًا سرديًا` : `${facts.seerahChapters} narrative chapters`;
-    if (path === "/library" && facts.works) return lang === "ar" ? `${facts.works} عملًا مسجلًا · ${facts.versions} نسخة مفهرسة` : `${facts.works} registered works · ${facts.versions} cataloged editions`;
-    if (path === "/hadith" && facts.hadithSamples) return lang === "ar" ? `${facts.hadithSamples} عينات محلية قيد المراجعة` : `${facts.hadithSamples} local samples under review`;
-    if (path === "/daily" && daily) return lang === "ar" ? `آية اليوم: ${daily.surahName} · ${daily.ayah}` : `Today's verse: ${daily.surahName} · ${daily.ayah}`;
+    if (path === "/quran" && facts.surahs)
+      return lang === "ar" ? `${facts.surahs} سورة في النص المحلي` : `${facts.surahs} chapters in the local text`;
+    if (path === "/seerah" && facts.seerahChapters)
+      return lang === "ar" ? `${facts.seerahChapters} فصلًا سرديًا` : `${facts.seerahChapters} narrative chapters`;
+    if (path === "/library" && facts.works)
+      return lang === "ar" ? `${facts.works} عملًا مسجلًا · ${facts.versions} نسخة مفهرسة` : `${facts.works} registered works · ${facts.versions} cataloged editions`;
+    if (path === "/hadith" && facts.hadithSamples)
+      return lang === "ar" ? `${facts.hadithSamples} عينات محلية قيد المراجعة` : `${facts.hadithSamples} local samples under review`;
+    if (path === "/daily" && daily)
+      return lang === "ar" ? `آية اليوم: ${daily.surahName} · ${daily.ayah}` : `Today's verse: ${daily.surahName} · ${daily.ayah}`;
     return undefined;
   };
 
   return (
     <div className={styles.page}>
       <section className={styles.hero}>
-        <img className={styles.heroImg} src={art.mosque} alt="" />
-        <div className={styles.heroFrame} />
-        <div className={`${styles.mash} ${styles.mashL}`} />
-        <div className={`${styles.mash} ${styles.mashR}`} />
+        <img className={styles.heroBg} src={art.mosque} alt="" />
+        <div className={styles.heroOrnament} />
+        <div className={styles.heroVeil} />
+        <div className={styles.heroIllumination} />
         <div className={styles.heroCopy}>
-          <p className={styles.invoke}>{lang === "ar" ? "يا رسول الله" : "YA RASOOL ALLAH"}</p>
-          <h1 className="gold-shimmer">{lang === "ar" ? "بوابة النور" : "Gateway of Light"}</h1>
-          <p className={styles.heroSub}>{lang === "ar" ? "رحلة معرفية إلى سيرة خير البشر ﷺ" : "A journey through the life and legacy of the Prophet ﷺ"}</p>
+          <p className={styles.invoke} lang="ar">
+            يا رسول الله
+          </p>
+          <h1 className="calligraphy">
+            {lang === "ar" ? "بوابة النور" : "Gateway of Light"}
+          </h1>
+          <p className={styles.heroSub}>
+            {lang === "ar"
+              ? "رحلة معرفية إلى سيرة خير البشر ﷺ، القرآن الكريم، والسنة المطهرة — من مصادرها، وبإذن الله."
+              : "A journey through the life, message and legacy of the Prophet ﷺ — from the Qur'an, Seerah, Sunnah and their verified sources."}
+          </p>
           <p className={styles.heroDesc}>
-            {lang === "ar" ? "من هنا نبدأ رحلتنا في طلب العلم، على هدي النبي محمد ﷺ. نكتشف سيرته، وأخلاقه، وهديه، وننهل من نوره الذي أضاء للعالمين." : "Explore the Qur'an, Seerah, Sunnah and the source library through their own spaces and verified records."}
+            {lang === "ar"
+              ? "من هنا نبدأ طلب العلم على هدي النبي محمد ﷺ. نكتشف سيرته وأخلاقه وهديه، وننهل من نوره الذي أضاء للعالمين، كل ذلك موثقٌ بالمراجع وال sumber."
+              : "Explore the Qur'an, Seerah, Sunnah and the source library through their own spaces and verified records."}
           </p>
         </div>
         <form
@@ -200,14 +221,15 @@ export function HomePage() {
             navigate(heroQ.trim() ? `/basirah?q=${encodeURIComponent(heroQ.trim())}` : "/basirah");
           }}
         >
-          <Search size={16} />
+          <Search size={15} className="sr-only" />
+          <span className="sr-only">بحث</span>
           <input
             value={heroQ}
             onChange={(e) => setHeroQ(e.target.value)}
             placeholder={lang === "ar" ? "ماذا تريد أن تتعلم اليوم؟" : "What would you like to explore?"}
             aria-label={lang === "ar" ? "البحث في بصيرة" : "Search Basirah"}
           />
-          <button className="btn-gold" type="submit">
+          <button type="submit">
             {lang === "ar" ? "بحث" : "Search"}
           </button>
         </form>
@@ -216,17 +238,35 @@ export function HomePage() {
       <section className={styles.section}>
         <div className={styles.headRow}>
           <div>
-            <p className={styles.wingEyebrow}>{lang === "ar" ? "خريطة المؤسسة" : "INSTITUTION MAP"}</p>
-            <SectionHead title={lang === "ar" ? "أجنحة المعرفة" : "Knowledge Wings"} en="Eight distinct ways to explore" />
+            <p className={styles.wingEyebrow}>
+              {lang === "ar" ? "خريطة المؤسسة" : "INSTITUTION MAP"}
+            </p>
+            <SectionHead
+              title={lang === "ar" ? "أجنحة المعرفة" : "Knowledge Wings"}
+              en="Eight distinct ways to explore the message"
+            />
           </div>
           <ViewSwitcher value={mode} onChange={setMode} lang={lang} />
         </div>
 
         {mode === "cards" ? (
           <nav className={styles.gateGrid} aria-label={lang === "ar" ? "أجنحة المعرفة" : "Knowledge wings"}>
-            {gateways.map((g) => (
-              <Link key={g.to} href={g.to} className={`${styles.gateCard} ${styles.mashOpen}`}>
-                <GateBody g={g} lang={lang} preview={previewFor(g.to)} />
+            {gateways.map((g, i) => (
+              <Link key={g.to} href={g.to} className={styles.gateCard}>
+                <div className={styles.gateBody}>
+                  <span className={styles.gateIndex}>{String(i + 1).padStart(2, "0")} / 08</span>
+                  <h3>{lang === "ar" ? g.title : g.en}</h3>
+                  <span className={styles.gateSecondary}>
+                    {lang === "ar" ? g.en : g.title}
+                  </span>
+                  <p>{lang === "ar" ? g.desc : g.enDesc}</p>
+                  {previewFor(g.to) ? (
+                    <small className={styles.gatePreview}>{previewFor(g.to)}</small>
+                  ) : null}
+                </div>
+                <i className={styles.gateGo} aria-hidden="true">
+                  ←
+                </i>
               </Link>
             ))}
           </nav>
@@ -234,9 +274,22 @@ export function HomePage() {
 
         {mode === "panorama" ? (
           <div className={p.panorama}>
-            {gateways.map((g) => (
-              <Link key={g.title} href={g.to} className={`${styles.gateCard} ${styles.mashOpen}`}>
-                <GateBody g={g} lang={lang} preview={previewFor(g.to)} />
+            {gateways.map((g, i) => (
+              <Link key={g.title} href={g.to} className={styles.gateCard}>
+                <div className={styles.gateBody}>
+                  <span className={styles.gateIndex}>{String(i + 1).padStart(2, "0")} / 08</span>
+                  <h3>{lang === "ar" ? g.title : g.en}</h3>
+                  <span className={styles.gateSecondary}>
+                    {lang === "ar" ? g.en : g.title}
+                  </span>
+                  <p>{lang === "ar" ? g.desc : g.enDesc}</p>
+                  {previewFor(g.to) ? (
+                    <small className={styles.gatePreview}>{previewFor(g.to)}</small>
+                  ) : null}
+                </div>
+                <i className={styles.gateGo} aria-hidden="true">
+                  ←
+                </i>
               </Link>
             ))}
           </div>
@@ -300,15 +353,19 @@ export function HomePage() {
               <p>السيرة: {continueSignals.seerahRead} فصول مقروءة</p>
               <p>القرآن: {continueSignals.quranMarks} علامات · الحديث: {continueSignals.hadithMarks} محفوظات</p>
               <p className="muted">الأطفال: {continueSignals.kidsSeen} قصص فُتحت</p>
+              <div className={styles.progressBar}>
+                <div />
+              </div>
+              <span className={styles.pct}>تواصل من حيث انتهيت</span>
             </div>
           </div>
           {recentFavorites.length > 0 ? (
-            <ul style={{ listStyle: "none", margin: "0.6rem 0 0", padding: 0, display: "flex", flexDirection: "column", gap: "0.3rem" }}>
+            <ul style={{ listStyle: "none", margin: "0.7rem 0 0", padding: 0, display: "flex", flexDirection: "column", gap: "0.35rem" }}>
               {recentFavorites.map((fav) => (
                 <li key={fav.id} style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.8rem" }}>
                   <button
                     type="button"
-                    aria-label="إزالة"
+                    aria-label="إزالة من المفضلة"
                     onClick={() => toggleFavorite({ id: fav.id, title: fav.title, path: fav.path })}
                   >
                     <Bookmark size={14} fill="currentColor" />
@@ -352,8 +409,8 @@ export function HomePage() {
           <div className={`${styles.quickGrid} stagger`}>
             {quick.map((q) => (
               <Link key={q.label} href={q.to}>
-                <q.icon size={18} />
-                {q.label}
+                <q.icon size={17} />
+                {lang === "ar" ? q.label : q.en}
               </Link>
             ))}
           </div>
