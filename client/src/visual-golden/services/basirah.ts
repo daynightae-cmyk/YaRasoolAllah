@@ -3,9 +3,11 @@ import { seerahChapters } from "@/data/seerahData";
 import type { QuranChapter } from "@/services/quranService";
 import { digitalVersionRegistry, workRegistry } from "@shared/knowledge-registry";
 import { sourceRegistry } from "@shared/source-registry";
+import { SEERAH_GRAPH } from "@/visual-golden/services/seerah-graph";
 
 export type BasirahScope = "all" | "quran" | "hadith" | "seerah" | "library" | "sources";
 export type BasirahMode = "sourced" | "simple" | "compare" | "evidence" | "explore";
+export type BasirahCertainty = "verified" | "approximate" | "schematic";
 
 export interface BasirahRecord {
   id: string;
@@ -18,6 +20,13 @@ export interface BasirahRecord {
   hintAr: string;
   hintEn: string;
   availabilityAr: string;
+  /** Declared review/evidence level. Never inferred from copy. */
+  certainty: BasirahCertainty;
+  certaintyReasonAr: string;
+  /** Stable source registry identifiers that back this record. */
+  sourceIds: string[];
+  /** Explicit collection identity for hadith samples. */
+  collectionId?: string;
 }
 
 export const BASIRAH_SCOPES: { id: BasirahScope; ar: string; en: string }[] = [
@@ -57,6 +66,9 @@ export function buildLocalIndex(): BasirahRecord[] {
       hintAr: chapter.description.slice(0, 90),
       hintEn: `${chapter.timelineEvents?.length ?? 0} recorded events`,
       availabilityAr: "متن الفصل معروض من المصدر المعتمد",
+      certainty: "schematic",
+      certaintyReasonAr: "بنية سردية محلية؛ لم يُربط الفصل بعد بمعرّف مصدر فصل صريح.",
+      sourceIds: [],
     });
   }
 
@@ -72,6 +84,10 @@ export function buildLocalIndex(): BasirahRecord[] {
       hintAr: `${sample.bookNameAr} · ${sample.chapterNameAr}`,
       hintEn: `Narrator: ${sample.narratorEn ?? sample.narratorAr}`,
       availabilityAr: "عينة تطوير قيد المراجعة التحريرية",
+      certainty: "approximate",
+      certaintyReasonAr: "عينة تطوير مصرّح بها؛ المراجعة التحريرية ما زالت معلّقة.",
+      sourceIds: [],
+      collectionId: sample.collectionId,
     });
   }
 
@@ -88,6 +104,12 @@ export function buildLocalIndex(): BasirahRecord[] {
       hintAr: `${work.authorAr} · ${versions} نسخة فهرسية`,
       hintEn: work.openitiWorkUri ?? "no OpenITI version pinned",
       availabilityAr: "سجل فهرسي فقط — النص الكامل غير متاح",
+      certainty: work.bibliographicStatus === "verified_bibliographic" ? "verified" : "approximate",
+      certaintyReasonAr:
+        work.bibliographicStatus === "verified_bibliographic"
+          ? "بيانات ببليوغرافية متحقق منها؛ المراجعة العلمية للنص ما زالت معلّقة."
+          : "بيانات العمل لم تُصنّف بعد كبيانات ببليوغرافية متحقق منها.",
+      sourceIds: work.sourceIds,
     });
   }
 
@@ -104,6 +126,12 @@ export function buildLocalIndex(): BasirahRecord[] {
       hintEn: source.editorialStatus,
       availabilityAr:
         source.editorialStatus === "verified" ? "موثق" : "قيد المراجعة",
+      certainty: source.editorialStatus === "verified" ? "verified" : "approximate",
+      certaintyReasonAr:
+        source.editorialStatus === "verified"
+          ? "سجل مصدر بحالة تحريرية موثقة."
+          : `سجل مصدر بحالة تحريرية: ${source.editorialStatus}.`,
+      sourceIds: [source.sourceId],
     });
   }
 
@@ -122,6 +150,9 @@ export function surahRecords(chapters: QuranChapter[]): BasirahRecord[] {
     hintAr: `${chapter.ayahCount} آية · ${chapter.revelationType === "meccan" ? "مكية" : "مدنية"}`,
     hintEn: `${chapter.ayahCount} verses`,
     availabilityAr: "النص العربي من Tanzil Uthmani-min 1.1",
+    certainty: "verified",
+    certaintyReasonAr: "النص العربي محفوظ حرفيًا من نسخة Tanzil Uthmani-min 1.1؛ حالة الحقوق مسجلة في خزانة المصادر.",
+    sourceIds: ["src-tanzil-uthmani-1-1-candidate"],
   }));
 }
 
@@ -149,26 +180,13 @@ export const BASIRAH_COUNTS = {
    ============================================================================ */
 
 export type KnowledgeRelationType =
-  | "event-place"
-  | "event-person"
-  | "event-quran"
-  | "event-hadith"
-  | "person-place"
-  | "person-event"
-  | "place-event"
-  | "quran-event"
-  | "hadith-event"
+  | "chapter-sequence"
+  | "chapter-relation"
+  | "hadith-collection"
+  | "work-source"
   | "source-evidence";
 
-export interface KnowledgeGraphNode {
-  id: string;
-  scope: BasirahScope;
-  titleAr: string;
-  titleEn: string;
-  kindAr: string;
-  kindEn: string;
-  path: string;
-  certainty: "verified" | "approximate" | "schematic";
+export interface KnowledgeGraphNode extends BasirahRecord {
   tags: string[];
 }
 
@@ -178,7 +196,11 @@ export interface KnowledgeGraphEdge {
   type: KnowledgeRelationType;
   labelAr: string;
   labelEn: string;
-  certainty: "verified" | "approximate" | "schematic";
+  certainty: BasirahCertainty;
+  /** The recorded field/structure the relation comes from. */
+  basis: string;
+  /** Stable record, source, or registry identifier used as evidence. */
+  evidenceRef: string;
 }
 
 export interface KnowledgeGraph {
@@ -186,80 +208,126 @@ export interface KnowledgeGraph {
   edges: KnowledgeGraphEdge[];
 }
 
+const RELATION_LABELS: Record<KnowledgeRelationType, { ar: string; en: string }> = {
+  "chapter-sequence": { ar: "تسلسل سردي حسب ترتيب الفصول المسجل", en: "Recorded chapter sequence" },
+  "chapter-relation": { ar: "علاقة فصل مسجلة", en: "Recorded chapter relation" },
+  "hadith-collection": { ar: "انتماء إلى المصنف", en: "Collection membership" },
+  "work-source": { ar: "إسناد العمل إلى مصدره", en: "Work source evidence" },
+  "source-evidence": { ar: "إسناد نصي إلى مصدر", en: "Text source evidence" },
+};
+
 /**
- * Build a knowledge graph from the local Basirah index. Relations are inferred
- * from declared data (chapter order, events, sources) and tagged with certainty.
- * Nothing is invented; missing links are simply absent.
+ * Build a knowledge graph from explicit identifiers only:
+ * - seerah chapter order/relations admitted by the audited SEERAH_GRAPH;
+ * - hadith sample.collectionId -> collection registry node;
+ * - work.sourceIds -> source registry nodes;
+ * - surah.sourceIds -> source registry nodes.
+ * No relation is inferred from title similarity, alphabetical order, or copy.
+ * Missing evidence means a missing edge, never a guessed one.
  */
 export function buildKnowledgeGraph(records: BasirahRecord[]): KnowledgeGraph {
-  const nodes: KnowledgeGraphNode[] = [];
+  const nodes: KnowledgeGraphNode[] = records.map((record) => ({
+    ...record,
+    tags: [record.scope, record.kindAr],
+  }));
+  const nodeById = new Map(nodes.map((node) => [node.id, node]));
   const edges: KnowledgeGraphEdge[] = [];
-  const seen = new Set<string>();
 
-  const addNode = (r: BasirahRecord) => {
-    if (seen.has(r.id)) return;
-    seen.add(r.id);
-    nodes.push({
-      id: r.id,
-      scope: r.scope,
-      titleAr: r.titleAr,
-      titleEn: r.titleEn,
-      kindAr: r.kindAr,
-      kindEn: r.kindEn,
-      path: r.path,
-      certainty: r.availabilityAr.includes("موثق") || r.availabilityAr.includes("verified")
-        ? "verified"
-        : r.availabilityAr.includes("تطوير") || r.availabilityAr.includes("development")
-          ? "approximate"
-          : "schematic",
-      tags: [r.scope, r.kindAr],
-    });
+  const addEdge = (edge: KnowledgeGraphEdge) => {
+    if (!nodeById.has(edge.from) || !nodeById.has(edge.to)) return;
+    const duplicate = edges.some(
+      (existing) =>
+        existing.from === edge.from &&
+        existing.to === edge.to &&
+        existing.type === edge.type &&
+        existing.evidenceRef === edge.evidenceRef,
+    );
+    if (!duplicate) edges.push(edge);
   };
 
-  records.forEach(addNode);
-
-  // Link seerah chapters chronologically (narrative order).
-  const seerah = records.filter((r) => r.scope === "seerah").sort((a, b) => a.titleAr.localeCompare(b.titleAr));
-  for (let i = 0; i < Math.max(0, seerah.length - 1); i++) {
-    edges.push({
-      from: seerah[i].id,
-      to: seerah[i + 1].id,
-      type: "event-event",
-      labelAr: "تسلسل سردي",
-      labelEn: "Narrative sequence",
-      certainty: "schematic",
+  // 1. Seerah: only chapter-level edges already admitted by the audited graph.
+  for (const edge of SEERAH_GRAPH.edges) {
+    if (edge.kind !== "chapter-sequence" && edge.kind !== "chapter-relation") continue;
+    const from = `seerah-${edge.from.replace(/^chapter:/, "")}`;
+    const to = `seerah-${edge.to.replace(/^chapter:/, "")}`;
+    addEdge({
+      from,
+      to,
+      type: edge.kind,
+      labelAr: RELATION_LABELS[edge.kind].ar,
+      labelEn: RELATION_LABELS[edge.kind].en,
+      certainty: edge.kind === "chapter-relation" ? "approximate" : "schematic",
+      basis: edge.basis,
+      evidenceRef: `SEERAH_GRAPH:${edge.kind}`,
     });
   }
 
-  // Link each seerah chapter to its source records.
-  seerah.forEach((chapter) => {
-    const sources = records.filter((r) => r.scope === "sources" && r.hintAr.includes(chapter.titleAr.slice(0, 6)));
-    sources.forEach((s) => {
-      edges.push({
-        from: chapter.id,
-        to: s.id,
-        type: "source-evidence",
-        labelAr: "مصدر الفصل",
-        labelEn: "Chapter source",
+  // 2. Hadith collections are explicit registry identities, not title matches.
+  const collectionIds = new Set(
+    records
+      .filter((record) => record.scope === "hadith" && record.collectionId)
+      .map((record) => record.collectionId!),
+  );
+  for (const collectionId of collectionIds) {
+    const collection = HADITH_COLLECTIONS.find((item) => item.id === collectionId);
+    if (!collection) continue;
+    const nodeId = `hadith-collection-${collection.id}`;
+    if (!nodeById.has(nodeId)) {
+      const node: KnowledgeGraphNode = {
+        id: nodeId,
+        scope: "hadith",
+        titleAr: collection.nameAr,
+        titleEn: collection.nameEn,
+        kindAr: "مصنف حديث",
+        kindEn: "hadith collection",
+        path: `/hadith?collection=${encodeURIComponent(collection.id)}`,
+        hintAr: `${collection.totalHadithCount} حديث في المصنف · ${collection.compiler}`,
+        hintEn: `${collection.totalHadithCount} recorded hadiths · compiler d. ${collection.deathHijri} AH`,
+        availabilityAr: collection.isAvailable
+          ? "فهرس المصنف والنص المتاح"
+          : "فهرس المصنف فقط — النص الكامل غير متاح",
         certainty: "approximate",
+        certaintyReasonAr: "بيانات فهرسة المصنف محلية؛ النص الكامل غير متاح والحالة التحريرية معلّقة.",
+        sourceIds: [],
+        tags: ["hadith", "collection"],
+      };
+      nodes.push(node);
+      nodeById.set(nodeId, node);
+    }
+    for (const sample of records) {
+      if (sample.scope !== "hadith" || sample.collectionId !== collectionId) continue;
+      addEdge({
+        from: sample.id,
+        to: nodeId,
+        type: "hadith-collection",
+        labelAr: RELATION_LABELS["hadith-collection"].ar,
+        labelEn: RELATION_LABELS["hadith-collection"].en,
+        certainty: "approximate",
+        basis: "HADITH_DEVELOPMENT_SAMPLES[].collectionId",
+        evidenceRef: `HADITH_COLLECTIONS:${collection.id}`,
       });
-    });
-  });
+    }
+  }
 
-  // Link hadith samples to their collections.
-  records.filter((r) => r.scope === "hadith").forEach((h) => {
-    const coll = records.filter((r) => r.scope === "library" && r.titleAr.includes(h.titleAr.split(" · ")[0] ?? ""));
-    coll.forEach((c) => {
-      edges.push({
-        from: h.id,
-        to: c.id,
-        type: "hadith-event",
-        labelAr: "مجموعة الحديث",
-        labelEn: "Hadith collection",
-        certainty: "approximate",
+  // 3. Works and surahs point at their declared source registry records only.
+  for (const record of records) {
+    if (record.scope !== "library" && record.scope !== "quran") continue;
+    for (const sourceId of record.sourceIds) {
+      addEdge({
+        from: record.id,
+        to: `source-${sourceId}`,
+        type: "source-evidence",
+        labelAr: RELATION_LABELS["source-evidence"].ar,
+        labelEn: RELATION_LABELS["source-evidence"].en,
+        certainty: record.scope === "library" ? "verified" : "approximate",
+        basis:
+          record.scope === "library"
+            ? "workRegistry[].sourceIds[]"
+            : "surahRecords[].sourceIds[]",
+        evidenceRef: sourceId,
       });
-    });
-  });
+    }
+  }
 
   return { nodes, edges };
 }
@@ -271,7 +339,7 @@ export function findRelatedRecords(
   graph: KnowledgeGraph,
   recordId: string,
   maxDepth = 2,
-): BasirahRecord[] {
+): KnowledgeGraphNode[] {
   const related = new Set<string>();
   let frontier = [recordId];
   for (let depth = 0; depth < maxDepth && frontier.length > 0; depth++) {
@@ -290,8 +358,10 @@ export function findRelatedRecords(
     }
     frontier = next;
   }
-  const byId = new Map(graph.nodes.map((n) => [n.id, n]));
-  return [...related].map((id) => byId.get(id)!).filter(Boolean);
+  const byId = new Map(graph.nodes.map((node) => [node.id, node]));
+  return [...related]
+    .map((id) => byId.get(id))
+    .filter((node): node is KnowledgeGraphNode => Boolean(node));
 }
 
 /**

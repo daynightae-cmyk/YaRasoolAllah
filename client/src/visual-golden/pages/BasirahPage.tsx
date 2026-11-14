@@ -50,6 +50,7 @@ export function BasirahPage() {
     }
   });
   const [surahs, setSurahs] = useState<BasirahRecord[]>([]);
+  const [catalogState, setCatalogState] = useState<"loading" | "ready" | "error">("loading");
   const [quranHits, setQuranHits] = useState<QuranSearchHit[]>([]);
   const [quranSearchState, setQuranSearchState] = useState<"idle" | "loading" | "ready">("idle");
   const [selectedRecord, setSelectedRecord] = useState<BasirahRecord | null>(null);
@@ -70,6 +71,9 @@ export function BasirahPage() {
         hintAr: hit.arabic,
         hintEn: `Tanzil Uthmani-min 1.1 · ${hit.surah}:${hit.ayah}`,
         availabilityAr: "النص العربي المحلي متاح · لا ترجمة أو تفسير مضمّن في نتيجة البحث",
+        certainty: "verified",
+        certaintyReasonAr: "نص آية من النسخة القرآنية المحلية الموثقة حرفيًا (Tanzil Uthmani-min 1.1).",
+        sourceIds: ["src-tanzil-uthmani-1-1-candidate"],
       })),
     [quranHits],
   );
@@ -82,10 +86,14 @@ export function BasirahPage() {
     let cancelled = false;
     getQuranChapters()
       .then((chapters) => {
-        if (!cancelled) setSurahs(surahRecords(chapters));
+        if (cancelled) return;
+        setSurahs(surahRecords(chapters));
+        setCatalogState("ready");
       })
       .catch(() => {
-        if (!cancelled) setSurahs([]);
+        if (cancelled) return;
+        setSurahs([]);
+        setCatalogState("error");
       });
     return () => {
       cancelled = true;
@@ -93,12 +101,8 @@ export function BasirahPage() {
   }, []);
 
   useEffect(() => {
-    const graph = buildKnowledgeGraph(index);
-    setKnowledgeGraph(graph);
-    if (selectedRecord) {
-      setRelatedRecords(findRelatedRecords(graph, selectedRecord.id));
-    }
-  }, [index, selectedRecord]);
+    setKnowledgeGraph(buildKnowledgeGraph(index));
+  }, [index]);
 
   useEffect(() => {
     if (!knowledgeGraph || !selectedRecord) {
@@ -147,7 +151,7 @@ export function BasirahPage() {
   const modeLabel = (lang === "ar" ? BASIRAH_MODES.find((m) => m.id === mode)?.ar : BASIRAH_MODES.find((m) => m.id === mode)?.en) ?? mode;
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page} data-visual="basirah-desk" data-basirah-state={catalogState}>
       <header className={styles.hero}>
         <img className={styles.heroArt} src={art.library} alt="" />
         <p className="muted">{t(lang, "basirahSub")}</p>
@@ -240,8 +244,11 @@ export function BasirahPage() {
                     type="button"
                     className={styles.relatedItem}
                     onClick={() => setSelectedRecord(record)}
+                    title={record.certaintyReasonAr}
                   >
-                    <span className={styles.relatedKind}>{record.kindAr}</span>
+                    <span className={styles.relatedKind}>
+                      {record.kindAr} · {record.certainty}
+                    </span>
                     <strong className={styles.relatedTitle}>{record.titleAr}</strong>
                     <span className={styles.relatedScope}>{record.scope}</span>
                   </button>
