@@ -3,11 +3,16 @@ import { Copy, Bookmark, StickyNote } from "lucide-react";
 import {
   BASIRAH_MODES,
   buildLocalIndex,
+  buildKnowledgeGraph,
+  findRelatedRecords,
+  getKnowledgePath,
   searchBasirah,
   surahRecords,
   type BasirahMode,
   type BasirahRecord,
   type BasirahScope,
+  type KnowledgeGraph,
+  type KnowledgeGraphNode,
 } from "@/visual-golden/services/basirah";
 import { getQuranChapters } from "@/services/quranService";
 import {
@@ -47,6 +52,9 @@ export function BasirahPage() {
   const [surahs, setSurahs] = useState<BasirahRecord[]>([]);
   const [quranHits, setQuranHits] = useState<QuranSearchHit[]>([]);
   const [quranSearchState, setQuranSearchState] = useState<"idle" | "loading" | "ready">("idle");
+  const [selectedRecord, setSelectedRecord] = useState<BasirahRecord | null>(null);
+  const [knowledgeGraph, setKnowledgeGraph] = useState<KnowledgeGraph | null>(null);
+  const [relatedRecords, setRelatedRecords] = useState<BasirahRecord[]>([]);
 
   const localIndex = useMemo(() => buildLocalIndex(), []);
   const quranRecords = useMemo<BasirahRecord[]>(
@@ -83,6 +91,22 @@ export function BasirahPage() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    const graph = buildKnowledgeGraph(index);
+    setKnowledgeGraph(graph);
+    if (selectedRecord) {
+      setRelatedRecords(findRelatedRecords(graph, selectedRecord.id));
+    }
+  }, [index, selectedRecord]);
+
+  useEffect(() => {
+    if (!knowledgeGraph || !selectedRecord) {
+      setRelatedRecords([]);
+      return;
+    }
+    setRelatedRecords(findRelatedRecords(knowledgeGraph, selectedRecord.id));
+  }, [knowledgeGraph, selectedRecord]);
 
   useEffect(() => {
     let cancelled = false;
@@ -163,6 +187,74 @@ export function BasirahPage() {
             </p>
           ) : null}
           <BasirahRelatedPath records={hits} lang={lang} />
+
+          {/* Knowledge-graph result cards */}
+          {hits.length > 0 ? (
+            <section className={styles.resultGrid} aria-label={lang === "ar" ? "نتائج البحث المعرفي" : "Knowledge results"}>
+              <h3 className={styles.resultHead}>
+                {lang === "ar" ? "سجلات مرتبطة بالاستعلام" : "Knowledge-linked records"}
+              </h3>
+              <div className={styles.resultList}>
+                {hits.map((record) => (
+                  <button
+                    key={record.id}
+                    type="button"
+                    className={`${styles.resultCard} ${selectedRecord?.id === record.id ? styles.resultOn : ""}`}
+                    onClick={() => setSelectedRecord(record)}
+                    aria-pressed={selectedRecord?.id === record.id}
+                  >
+                    <div className={styles.resultMeta}>
+                      <span className={styles.resultKind}>{record.kindAr}</span>
+                      <span className={styles.resultScope}>{record.scope}</span>
+                    </div>
+                    <strong className={styles.resultTitle}>{record.titleAr}</strong>
+                    <span className={styles.resultHint}>{record.hintAr}</span>
+                    <span className={styles.resultAvailability}>{record.availabilityAr}</span>
+                  </button>
+                ))}
+              </div>
+            </section>
+          ) : null}
+
+          {/* Related records via Knowledge Graph */}
+          {selectedRecord && relatedRecords.length > 0 ? (
+            <section className={styles.relatedPanel} aria-label={lang === "ar" ? "سجلات مرتبطة بالرسم البياني المعرفي" : "Related knowledge records"}>
+              <div className={styles.relatedHead}>
+                <h3>
+                  {lang === "ar" ? "مرتبطة بـ" : "Knowledge-linked to"}:{" "}
+                  <strong>{selectedRecord.titleAr}</strong>
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setSelectedRecord(null)}
+                  className={styles.relatedClose}
+                  aria-label={lang === "ar" ? "إغلاق العرض المرتبط" : "Close related view"}
+                >
+                  ✕
+                </button>
+              </div>
+              <div className={styles.relatedList}>
+                {relatedRecords.map((record) => (
+                  <button
+                    key={record.id}
+                    type="button"
+                    className={styles.relatedItem}
+                    onClick={() => setSelectedRecord(record)}
+                  >
+                    <span className={styles.relatedKind}>{record.kindAr}</span>
+                    <strong className={styles.relatedTitle}>{record.titleAr}</strong>
+                    <span className={styles.relatedScope}>{record.scope}</span>
+                  </button>
+                ))}
+              </div>
+              <p className={styles.relatedNote}>
+                {lang === "ar"
+                  ? "الروابط مبنية على بيانات السجل فقط — لا استنتاج ولا اختراع."
+                  : "Links are built from declared records only — no inference, no invention."}
+              </p>
+            </section>
+          ) : null}
+
           <BasirahAnswer lang={lang} ran={ran} hitCount={hits.length} modeLabel={modeLabel} />
 
           <div className={styles.actions}>
