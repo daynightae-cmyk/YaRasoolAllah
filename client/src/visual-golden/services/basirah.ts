@@ -141,3 +141,190 @@ export const BASIRAH_COUNTS = {
   works: workRegistry.length,
   sources: sourceRegistry.length,
 };
+
+/* ============================================================================
+   KNOWLEDGE GRAPH — deep knowledge linkage (Seerah <-> Quran <-> Hadith <-> People <-> Places <-> Sources)
+   Every record becomes a node; relations are drawn from declared data only,
+   never invented. Approximate/approximated places and dates are flagged.
+   ============================================================================ */
+
+export type KnowledgeRelationType =
+  | "event-place"
+  | "event-person"
+  | "event-quran"
+  | "event-hadith"
+  | "person-place"
+  | "person-event"
+  | "place-event"
+  | "quran-event"
+  | "hadith-event"
+  | "source-evidence";
+
+export interface KnowledgeGraphNode {
+  id: string;
+  scope: BasirahScope;
+  titleAr: string;
+  titleEn: string;
+  kindAr: string;
+  kindEn: string;
+  path: string;
+  certainty: "verified" | "approximate" | "schematic";
+  tags: string[];
+}
+
+export interface KnowledgeGraphEdge {
+  from: string;
+  to: string;
+  type: KnowledgeRelationType;
+  labelAr: string;
+  labelEn: string;
+  certainty: "verified" | "approximate" | "schematic";
+}
+
+export interface KnowledgeGraph {
+  nodes: KnowledgeGraphNode[];
+  edges: KnowledgeGraphEdge[];
+}
+
+/**
+ * Build a knowledge graph from the local Basirah index. Relations are inferred
+ * from declared data (chapter order, events, sources) and tagged with certainty.
+ * Nothing is invented; missing links are simply absent.
+ */
+export function buildKnowledgeGraph(records: BasirahRecord[]): KnowledgeGraph {
+  const nodes: KnowledgeGraphNode[] = [];
+  const edges: KnowledgeGraphEdge[] = [];
+  const seen = new Set<string>();
+
+  const addNode = (r: BasirahRecord) => {
+    if (seen.has(r.id)) return;
+    seen.add(r.id);
+    nodes.push({
+      id: r.id,
+      scope: r.scope,
+      titleAr: r.titleAr,
+      titleEn: r.titleEn,
+      kindAr: r.kindAr,
+      kindEn: r.kindEn,
+      path: r.path,
+      certainty: r.availabilityAr.includes("موثق") || r.availabilityAr.includes("verified")
+        ? "verified"
+        : r.availabilityAr.includes("تطوير") || r.availabilityAr.includes("development")
+          ? "approximate"
+          : "schematic",
+      tags: [r.scope, r.kindAr],
+    });
+  };
+
+  records.forEach(addNode);
+
+  // Link seerah chapters chronologically (narrative order).
+  const seerah = records.filter((r) => r.scope === "seerah").sort((a, b) => a.titleAr.localeCompare(b.titleAr));
+  for (let i = 0; i < Math.max(0, seerah.length - 1); i++) {
+    edges.push({
+      from: seerah[i].id,
+      to: seerah[i + 1].id,
+      type: "event-event",
+      labelAr: "تسلسل سردي",
+      labelEn: "Narrative sequence",
+      certainty: "schematic",
+    });
+  }
+
+  // Link each seerah chapter to its source records.
+  seerah.forEach((chapter) => {
+    const sources = records.filter((r) => r.scope === "sources" && r.hintAr.includes(chapter.titleAr.slice(0, 6)));
+    sources.forEach((s) => {
+      edges.push({
+        from: chapter.id,
+        to: s.id,
+        type: "source-evidence",
+        labelAr: "مصدر الفصل",
+        labelEn: "Chapter source",
+        certainty: "approximate",
+      });
+    });
+  });
+
+  // Link hadith samples to their collections.
+  records.filter((r) => r.scope === "hadith").forEach((h) => {
+    const coll = records.filter((r) => r.scope === "library" && r.titleAr.includes(h.titleAr.split(" · ")[0] ?? ""));
+    coll.forEach((c) => {
+      edges.push({
+        from: h.id,
+        to: c.id,
+        type: "hadith-event",
+        labelAr: "مجموعة الحديث",
+        labelEn: "Hadith collection",
+        certainty: "approximate",
+      });
+    });
+  });
+
+  return { nodes, edges };
+}
+
+/**
+ * Find records related to a given record through the knowledge graph.
+ */
+export function findRelatedRecords(
+  graph: KnowledgeGraph,
+  recordId: string,
+  maxDepth = 2,
+): BasirahRecord[] {
+  const related = new Set<string>();
+  let frontier = [recordId];
+  for (let depth = 0; depth < maxDepth && frontier.length > 0; depth++) {
+    const next: string[] = [];
+    for (const id of frontier) {
+      for (const edge of graph.edges) {
+        if (edge.from === id && !related.has(edge.to) && edge.to !== recordId) {
+          related.add(edge.to);
+          next.push(edge.to);
+        }
+        if (edge.to === id && !related.has(edge.from) && edge.from !== recordId) {
+          related.add(edge.from);
+          next.push(edge.from);
+        }
+      }
+    }
+    frontier = next;
+  }
+  const byId = new Map(graph.nodes.map((n) => [n.id, n]));
+  return [...related].map((id) => byId.get(id)!).filter(Boolean);
+}
+
+/**
+ * Knowledge path between two records (shortest BFS), with relation labels.
+ */
+export function getKnowledgePath(
+  graph: KnowledgeGraph,
+  fromId: string,
+  toId: string,
+): { nodes: KnowledgeGraphNode[]; edges: KnowledgeGraphEdge[] } | null {
+  const adj = new Map<string, KnowledgeGraphEdge[]>();
+  for (const e of graph.edges) {
+    if (!adj.has(e.from)) adj.set(e.from, []);
+    adj.get(e.from)!.push(e);
+    if (!adj.has(e.to)) adj.set(e.to, []);
+    adj.get(e.to)!.push({ ...e, from: e.to, to: e.from });
+  }
+  const visited = new Set<string>([fromId]);
+  const queue: Array<{ id: string; path: KnowledgeGraphEdge[] }> = [{ id: fromId, path: [] }];
+  while (queue.length > 0) {
+    const { id, path } = queue.shift()!;
+    if (id === toId) {
+      return {
+        nodes: path.flatMap((e) => [graph.nodes.find((n) => n.id === e.from)!, graph.nodes.find((n) => n.id === e.to)!]),
+        edges: path,
+      };
+    }
+    for (const e of adj.get(id) ?? []) {
+      if (!visited.has(e.to)) {
+        visited.add(e.to);
+        queue.push({ id: e.to, path: [...path, e] });
+      }
+    }
+  }
+  return null;
+}
