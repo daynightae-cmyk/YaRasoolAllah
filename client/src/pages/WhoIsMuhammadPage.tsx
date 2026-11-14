@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Link, useRoute } from "wouter";
 import SourceDrawer, { SourceProvenanceItem } from "@/components/common/SourceDrawer";
 import LearningDepthSelector, { useLearningDepth } from "@/components/Institution/LearningDepthSelector";
 import { WHO_IS_MUHAMMAD_CHAPTERS, HumanityChapter } from "@/data/whoIsMuhammadData";
+import { searchBasirah, buildLocalIndex, type BasirahRecord } from "@/visual-golden/services/basirah";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -37,6 +38,12 @@ export default function WhoIsMuhammadPage({ defaultChapterId }: { defaultChapter
     activeChapterIndex !== -1
       ? WHO_IS_MUHAMMAD_CHAPTERS[activeChapterIndex]
       : WHO_IS_MUHAMMAD_CHAPTERS[0];
+
+  const localIndex = useMemo(() => buildLocalIndex(), []);
+  const relatedKnowledge = useMemo(() => {
+    const key = activeChapter.titleAr.split(" ")[0];
+    return searchBasirah(localIndex, key, "all").slice(0, 6);
+  }, [activeChapter.titleAr, localIndex]);
 
   const prevChapter =
     activeChapterIndex > 0 ? WHO_IS_MUHAMMAD_CHAPTERS[activeChapterIndex - 1] : null;
@@ -300,6 +307,34 @@ export default function WhoIsMuhammadPage({ defaultChapterId }: { defaultChapter
           </div>
         </div>
       </div>
+
+      {/* Knowledge-linked "See also" from the local index */}
+      {relatedKnowledge.length > 0 ? (
+        <section className="mt-10 rounded-3xl p-8 bg-gradient-to-l from-emerald-950/80 via-slate-900 to-slate-950 border border-amber-500/20 text-white shadow-xl space-y-4">
+          <div className="flex items-center gap-2">
+            <Compass size={18} className="text-amber-400" />
+            <h3 className="font-amiri font-bold text-xl text-white">انظر أيضاً — معرفة مرتبطة</h3>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {relatedKnowledge.map((record) => (
+              <Link
+                key={record.id}
+                href={record.path}
+                className="p-4 rounded-2xl border border-emerald-500/30 bg-emerald-950/20 hover:border-emerald-400/60 hover:bg-emerald-950/40 transition-all text-right group"
+              >
+                <span className="text-[10px] font-mono text-amber-300/70">{record.scope}</span>
+                <h4 className="font-cairo font-bold text-sm text-white mt-1">{record.titleAr}</h4>
+                <p className="text-[11px] text-amber-200/80 font-tajawal mt-1 line-clamp-2">
+                  {record.hintAr}
+                </p>
+              </Link>
+            ))}
+          </div>
+          <p className="text-[11px] text-amber-200/60 font-tajawal italic">
+            الروابط مبنية على الفهرس المحلي للمصادر — لا استنتاج ولا اختراع.
+          </p>
+        </section>
+      ) : null}
 
       {/* Source & Provenance Drawer */}
       <SourceDrawer
