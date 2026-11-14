@@ -46,18 +46,18 @@
 .chips button {
   padding: 0.32rem 0.8rem;
   border-radius: var(--radius-full);
-  border: 1px solid var(--border-panel);
-  background: var(--bg-glass);
-  color: var(--text-secondary);
+  border: 1px solid rgba(232, 197, 71, 0.34);
+  background: rgba(4, 22, 18, 0.5);
+  color: rgba(250, 246, 235, 0.86);
   font-size: 0.76rem;
   cursor: pointer;
   transition: border-color 220ms var(--ease-smooth), background 220ms var(--ease-smooth), color 220ms var(--ease-smooth);
 }
 .chips button:hover,
 .chips button:focus-visible {
-  border-color: var(--border-gold);
-  background: rgba(212, 160, 23, 0.10);
-  color: var(--text-primary);
+  border-color: rgba(232, 197, 71, 0.7);
+  background: rgba(212, 160, 23, 0.18);
+  color: #fff8e9;
 }
 
 /* --- Pad / collections grid --- */
@@ -111,17 +111,18 @@
 .card h3 {
   margin: 0;
   font-size: 1.05rem;
-  color: var(--text-primary);
+  /* Caption sits on the card's dark photographic gradient in both themes. */
+  color: var(--ivory-50);
   font-family: var(--font-display);
   letter-spacing: 0.04em;
 }
 .card p {
   margin: 0.16rem 0;
   font-size: 0.76rem;
-  color: var(--text-secondary);
+  color: var(--ivory-100);
 }
 .card span {
-  color: var(--text-gold);
+  color: var(--gold-300);
   font-size: 0.78rem;
 }
 .card:hover {
@@ -211,8 +212,9 @@
 }
 .sourceLink:focus-visible { outline: 3px solid var(--border-gold); outline-offset: 3px; }
 .on {
-  border-color: var(--border-gold) !important;
-  color: var(--text-gold) !important;
+  border-color: rgba(232, 197, 71, 0.85) !important;
+  background: rgba(212, 160, 23, 0.22) !important;
+  color: #ffe9a8 !important;
 }
 
 /* --- Records list --- */

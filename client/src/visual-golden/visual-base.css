@@ -24,6 +24,19 @@
   --text-emerald: #6ee7b7;
   --text-ink-dark: #0f1c24;
 
+  /* Named palette used by the immersive wings. These are raw pigment values,
+     not semantic theme tokens, so they stay stable across dark and light. */
+  --navy-950: #020617;
+  --ivory-50: #fefdf8;
+  --ivory-100: #f5edd8;
+  --ivory-200: #e8dfc9;
+  --gold-200: #f5e6b8;
+  --gold-300: #e8c547;
+  --gold-400: #d4a017;
+  --gold-500: #b8860b;
+  --gold-700: #7c5a0a;
+  --emerald-300: #6ee7b7;
+
   /* Accents */
   --accent-gold: #d4a017;
   --accent-gold-soft: #f0d78c;
@@ -123,6 +136,12 @@
   line-height: 1.35;
   color: var(--text-primary);
 }
+/* Legacy pages mounted inside the shell use Tailwind's text-white on headings
+   that sit over dark photographic panels. The tokenized heading rule above is
+   more specific than a single utility class, so restore the author's explicit
+   intent without weakening the theme-aware heading colours elsewhere. */
+.vg-shell .text-white { color: #ffffff; }
+.vg-shell .text-black { color: #000000; }
 .vg-shell a { color: inherit; text-decoration: none; }
 .vg-shell button:not(:disabled), .vg-shell [role="button"]:not(:disabled) { cursor: pointer; }
 
