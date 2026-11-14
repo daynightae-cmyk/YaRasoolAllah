@@ -171,10 +171,29 @@
   padding: 1rem 1.3rem 1.2rem;
 }
 .panel {
-  background: rgba(5, 42, 36, 0.72);
-  border: 1px solid rgba(212, 160, 23, 0.28);
-  border-radius: 16px;
-  padding: 0.95rem;
+  position: relative;
+  background: var(--bg-glass-strong);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-xl);
+  padding: 1.05rem;
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transform-style: preserve-3d;
+  transition: border-color 300ms var(--ease-smooth), box-shadow 300ms var(--ease-smooth);
+}
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+  z-index: 1;
+}
+.panel:hover {
+  border-color: var(--border-gold);
+  box-shadow: 0 20px 48px -16px rgba(0, 0, 0, 0.4), 0 0 24px rgba(212, 160, 23, 0.12);
 }
 .actGrid,
 .badges,
@@ -186,44 +205,69 @@
 .actGrid button,
 .badges div,
 .parentGrid button {
-  background: rgba(0, 0, 0, 0.16);
-  border: 1px solid rgba(212, 160, 23, 0.2);
-  border-radius: 12px;
-  padding: 0.75rem 0.5rem;
-  color: var(--ivory-100);
+  position: relative;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 0.6rem;
+  color: var(--text-secondary);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.3rem;
   text-align: center;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: border-color 250ms var(--ease-smooth), background 250ms var(--ease-smooth), color 250ms var(--ease-smooth), transform 250ms var(--ease-smooth);
+}
+.actGrid button:hover,
+.parentGrid button:hover {
+  border-color: var(--border-gold);
+  background: rgba(212, 160, 23, 0.10);
+  color: var(--text-primary);
+  transform: translateY(-2px);
+}
+.actGrid button:disabled,
+.parentGrid button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 .actGrid strong,
 .badges strong,
 .parentGrid strong {
-  font-size: 0.82rem;
+  font-size: 0.85rem;
+  color: var(--text-primary);
 }
 .actGrid span,
 .badges span,
 .parentGrid span {
-  font-size: 0.64rem;
+  font-size: 0.66rem;
   font-family: var(--font-latin);
   color: var(--text-muted);
 }
 .badges div {
-  color: var(--gold-300);
+  color: var(--text-gold);
+  border-color: var(--border-panel);
+}
+.badges div[style*="gold-400"] {
+  border-color: var(--border-gold);
+  color: var(--text-gold);
 }
 .stats {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.2rem;
-  padding: 0.8rem 1.3rem;
-  background: rgba(4, 28, 24, 0.92);
+  gap: 1.4rem;
+  padding: 0.95rem 1.4rem;
+  background: var(--bg-elevated);
   border-top: 1px solid var(--border-gold);
-  font-size: 0.82rem;
+  font-size: 0.84rem;
+  box-shadow: var(--shadow-panel);
 }
 .stats b {
-  color: var(--gold-400);
-  margin-left: 0.3rem;
+  color: var(--text-gold);
+  margin-left: 0.35rem;
+  font-family: var(--font-display);
 }
 
 @media (max-width: 1100px) {
