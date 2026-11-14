@@ -167,7 +167,11 @@ export function TafsirPage() {
   };
 
   return (
-    <div className={`${styles.page} ${focus ? styles.focus : ""}`}>
+    <div
+      className={`${styles.page} ${focus ? styles.focus : ""}`}
+      data-visual="tafsir-study"
+      data-tafsir-state={loading ? "loading" : loadError ? "error" : selectedVerse ? "ready" : "empty"}
+    >
       {focus ? null : (
         <PageHero
           title="التفسير والتدبر"

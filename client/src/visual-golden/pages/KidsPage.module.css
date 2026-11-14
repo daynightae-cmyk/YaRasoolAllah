@@ -169,6 +169,11 @@
   grid-template-columns: 1.1fr 1.1fr 0.9fr;
   gap: 0.9rem;
   padding: 1rem 1.3rem 1.2rem;
+  /* The activity row sits below the light garden on the dark hall floor. */
+  --text-primary: #fefdf8;
+  --text-secondary: #f5edd8;
+  --text-muted: #b6b0a4;
+  --text-gold: #e8c547;
 }
 .panel {
   position: relative;
@@ -259,10 +264,14 @@
   flex-wrap: wrap;
   gap: 1.4rem;
   padding: 0.95rem 1.4rem;
-  background: var(--bg-elevated);
+  background: rgba(2, 10, 12, 0.82);
   border-top: 1px solid var(--border-gold);
   font-size: 0.84rem;
   box-shadow: var(--shadow-panel);
+  --text-primary: #fefdf8;
+  --text-secondary: #f5edd8;
+  --text-muted: #b6b0a4;
+  --text-gold: #e8c547;
 }
 .stats b {
   color: var(--text-gold);

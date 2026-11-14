@@ -133,7 +133,11 @@ export function PrayerObservatory() {
   }
 
   return (
-    <section aria-label={t(lang, "observatory")}>
+    <section
+      aria-label={t(lang, "observatory")}
+      data-visual="prayer-observatory"
+      data-prayer-state={data ? "loaded" : status}
+    >
       <div className={styles.observatory}>
         <div className={styles.clockWrap}>
           {data ? (

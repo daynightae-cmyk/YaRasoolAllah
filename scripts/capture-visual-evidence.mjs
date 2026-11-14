@@ -16,13 +16,13 @@ export const cases = [
   { name: "gate-768-dark-rtl", path: "/home", width: 768, height: 1024, theme: "dark", language: "ur" },
   { name: "library-1440-dark-rtl", path: "/library", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-visual="library-domains"]' },
   { name: "library-360-light-ltr", path: "/library", width: 360, height: 900, theme: "light", language: "en", readySelector: '[data-visual="library-domains"]' },
-  { name: "quran-1440-light-rtl", path: "/quran", width: 1440, height: 1000, theme: "light", language: "ar" },
-  { name: "quran-360-dark-ltr", path: "/quran", width: 360, height: 900, theme: "dark", language: "en" },
+  { name: "quran-1440-light-rtl", path: "/quran", width: 1440, height: 1000, theme: "light", language: "ar", readySelector: '[data-visual="quran-sheet"][data-quran-state="ready"]' },
+  { name: "quran-360-dark-ltr", path: "/quran", width: 360, height: 900, theme: "dark", language: "en", readySelector: '[data-visual="quran-sheet"][data-quran-state="ready"]' },
   { name: "audio-1440-dark-rtl", path: "/audio", width: 1440, height: 1000, theme: "dark", language: "ar" },
   { name: "audio-360-light-ltr", path: "/audio", width: 360, height: 900, theme: "light", language: "en" },
   { name: "seerah-1440-dark-rtl", path: "/seerah", width: 1440, height: 1000, theme: "dark", language: "ar" },
-  { name: "seerah-graph-768-dark-rtl", path: "/seerah", width: 768, height: 1024, theme: "dark", language: "ar", scrollSelector: '[data-visual="seerah-event-graph"]', scrollOffset: -80 },
-  { name: "atlas-1440-dark-rtl", path: "/atlas", width: 1440, height: 1000, theme: "dark", language: "ar", clickText: "مسرح الغزوات", scrollSelector: '[data-visual="atlas-theatre-evidence"]', scrollOffset: -80 },
+  { name: "seerah-graph-768-dark-rtl", path: "/seerah", width: 768, height: 1024, theme: "dark", language: "ar", readySelector: '[data-visual="seerah-event-graph"]', scrollSelector: '[data-visual="seerah-event-graph"]', scrollOffset: -80 },
+  { name: "atlas-1440-dark-rtl", path: "/atlas", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[role="tablist"]', clickText: "مسرح الغزوات", scrollSelector: '[data-visual="atlas-theatre-evidence"]', scrollOffset: -80 },
   { name: "seerah-768-light-ltr", path: "/seerah", width: 768, height: 1024, theme: "light", language: "en", scrollSelector: '[data-visual="content-language-notice"]', scrollOffset: -80 },
   { name: "children-360-light-rtl", path: "/kids", width: 360, height: 900, theme: "light", language: "ar" },
   { name: "children-1440-dark-ltr", path: "/children-tv", width: 1440, height: 1000, theme: "dark", language: "en" },
@@ -32,11 +32,18 @@ export const cases = [
   { name: "hadith-archive-360-light-ltr", path: "/hadith", width: 360, height: 900, theme: "light", language: "en", scrollSelector: '[data-visual="hadith-corpus-scope"]', scrollOffset: -80 },
   { name: "sources-1440-light-ltr", path: "/sources", width: 1440, height: 1000, theme: "light", language: "en" },
   { name: "sources-360-dark-rtl", path: "/sources", width: 360, height: 900, theme: "dark", language: "ar" },
-  { name: "daily-768-light-rtl", path: "/daily", width: 768, height: 1024, theme: "light", language: "ar" },
-  { name: "daily-360-dark-ltr", path: "/daily", width: 360, height: 900, theme: "dark", language: "en" },
+  { name: "daily-768-light-rtl", path: "/daily", width: 768, height: 1024, theme: "light", language: "ar", readySelector: '[data-visual="prayer-observatory"]:not([data-prayer-state="loading"])' },
+  { name: "daily-360-dark-ltr", path: "/daily", width: 360, height: 900, theme: "dark", language: "en", readySelector: '[data-visual="prayer-observatory"]:not([data-prayer-state="loading"])' },
   { name: "daily-verse-honesty-1440-dark-rtl", path: "/daily-verse", width: 1440, height: 1000, theme: "dark", language: "ar", scrollSelector: '[data-honesty="no-reward-claim"]', scrollOffset: -140 },
   { name: "prophetic-day-360-light-rtl", path: "/prophetic-day", width: 360, height: 900, theme: "light", language: "ar" },
   { name: "prophetic-day-status-360-dark-rtl", path: "/prophetic-day", width: 360, height: 900, theme: "dark", language: "ar", scrollSelector: ".reflection-nook__summary", scrollOffset: -120 },
+  { name: "basirah-1440-dark-rtl", path: "/basirah", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-visual="basirah-desk"]:not([data-basirah-state="loading"])' },
+  { name: "basirah-360-light-ltr", path: "/basirah", width: 360, height: 900, theme: "light", language: "en", readySelector: '[data-visual="basirah-desk"]:not([data-basirah-state="loading"])' },
+  { name: "who-is-muhammad-1440-light-rtl", path: "/who-is-muhammad", width: 1440, height: 1000, theme: "light", language: "ar" },
+  { name: "who-is-muhammad-360-dark-ltr", path: "/who-is-muhammad", width: 360, height: 900, theme: "dark", language: "en" },
+  { name: "tafsir-1440-light-rtl", path: "/tafsir", width: 1440, height: 1000, theme: "light", language: "ar", readySelector: '[data-visual="tafsir-study"][data-tafsir-state="ready"]' },
+  { name: "library-1440-light-rtl", path: "/library", width: 1440, height: 1000, theme: "light", language: "ar", readySelector: '[data-visual="library-domains"]' },
+  { name: "hadith-1440-light-rtl", path: "/hadith", width: 1440, height: 1000, theme: "light", language: "ar", readySelector: '[data-visual="hadith-corpus-scope"]' },
 ];
 
 async function main() {
@@ -136,6 +143,24 @@ async function waitForDocument(session, expectedPath = null) {
   await delay(500);
 }
 
+async function waitForMainContent(session, minimumCharacters = 120) {
+  for (let attempt = 0; attempt < 120; attempt += 1) {
+    const probe = await session.send("Runtime.evaluate", {
+      expression: `(() => {
+        const main = document.querySelector("main");
+        return {
+          readyState: document.readyState,
+          textLength: main?.textContent?.trim().length ?? 0,
+        };
+      })()`,
+      returnByValue: true,
+    });
+    if (probe.result?.value?.textLength >= minimumCharacters) return;
+    await delay(250);
+  }
+  throw new Error("The application main region never received real content");
+}
+
 const report = [];
 let session;
 
@@ -180,6 +205,7 @@ try {
     });
     await session.send("Page.navigate", { url: `${origin}${testCase.path}` });
     await waitForDocument(session, testCase.path === "/home" ? "/" : testCase.path);
+    await waitForMainContent(session);
 
     if (testCase.readySelector) {
       // A 10.7 MB catalog cannot be assumed to be on screen when

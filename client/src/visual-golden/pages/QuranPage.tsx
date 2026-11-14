@@ -759,6 +759,8 @@ export function QuranPage() {
             className={`${styles.sheet} ${lamp ? styles.lampOn : ""}`}
             dir="rtl"
             lang="ar"
+            data-visual="quran-sheet"
+            data-quran-state={loading ? "loading" : loadError ? "error" : verses.length > 0 ? "ready" : "empty"}
           >
             <button
               className={styles.sheetNav}

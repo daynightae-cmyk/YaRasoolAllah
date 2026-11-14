@@ -210,7 +210,7 @@ export function HomePage() {
           </p>
           <p className={styles.heroDesc}>
             {lang === "ar"
-              ? "من هنا نبدأ طلب العلم على هدي النبي محمد ﷺ. نكتشف سيرته وأخلاقه وهديه، وننهل من نوره الذي أضاء للعالمين، كل ذلك موثقٌ بالمراجع وال sumber."
+              ? "من هنا نبدأ طلب العلم على هدي النبي محمد ﷺ. نكتشف سيرته وأخلاقه وهديه، وننهل من نوره الذي أضاء للعالمين، كل ذلك موثقٌ بالمراجع والمصادر."
               : "Explore the Qur'an, Seerah, Sunnah and the source library through their own spaces and verified records."}
           </p>
         </div>
@@ -253,6 +253,7 @@ export function HomePage() {
           <nav className={styles.gateGrid} aria-label={lang === "ar" ? "أجنحة المعرفة" : "Knowledge wings"}>
             {gateways.map((g, i) => (
               <Link key={g.to} href={g.to} className={styles.gateCard}>
+                <img src={g.img} alt="" />
                 <div className={styles.gateBody}>
                   <span className={styles.gateIndex}>{String(i + 1).padStart(2, "0")} / 08</span>
                   <h3>{lang === "ar" ? g.title : g.en}</h3>
@@ -276,6 +277,7 @@ export function HomePage() {
           <div className={p.panorama}>
             {gateways.map((g, i) => (
               <Link key={g.title} href={g.to} className={styles.gateCard}>
+                <img src={g.img} alt="" />
                 <div className={styles.gateBody}>
                   <span className={styles.gateIndex}>{String(i + 1).padStart(2, "0")} / 08</span>
                   <h3>{lang === "ar" ? g.title : g.en}</h3>

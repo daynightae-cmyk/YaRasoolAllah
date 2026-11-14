@@ -9,6 +9,10 @@
     linear-gradient(180deg, #06101d 0%, #0a1625 54%, #07101a 100%);
   color: #fff8e9;
   border-block: 1px solid rgba(219, 183, 89, 0.22);
+  --text-primary: #fefdf8;
+  --text-secondary: #f5edd8;
+  --text-muted: #c3bbae;
+  --text-gold: #e8c547;
 }
 
 .ambient {
