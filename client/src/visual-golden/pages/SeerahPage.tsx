@@ -1,6 +1,14 @@
 import { useMemo, useState } from "react";
 import { Link } from "wouter";
-import { ChevronLeft, ChevronRight, BookOpenCheck, Map } from "lucide-react";
+import {
+  ChevronRight,
+  ChevronLeft,
+  BookOpenCheck,
+  Map,
+  BookOpen,
+  Feather,
+  Compass,
+} from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
@@ -100,7 +108,7 @@ export function SeerahPage() {
     <div className={styles.page}>
       <PageHero
         title="درب السيرة"
-        subtitle={`رحلة سردية · ${SEERAH_COUNTS.chapters} فصول · ${SEERAH_COUNTS.categories} مراحل`}
+        subtitle={`رحلة سردية · ${SEERAH_COUNTS.chapters} فصول · ${SEERAH_COUNTS.categories} مرحلة`}
         desc="فصول السيرة بترتيبها السردي من البيانات المسجلة — المراحل والتسلسل سرديان لا تقويمًا تاريخيًا دقيقًا"
         image={art.desert}
         tall
@@ -122,24 +130,20 @@ export function SeerahPage() {
 
       <section className={styles.timelineWrap} id="seerah-journey" aria-label="فصول السيرة بالترتيب السردي">
         <button type="button" className={styles.arrow} onClick={() => step(-1)} aria-label="الفصل السابق">
-          <ChevronRight size={18} />
+          <ChevronRight size={17} />
         </button>
-        <div className={p.film}>
+        <div className={styles.timeline}>
           {CHAPTERS.map((c, i) => (
             <button
               key={c.id}
               type="button"
-              className={`${p.filmItem} ${i === index ? p.filmOn : ""}`}
+              className={`${styles.stage} ${i === index ? styles.stageOn : ""}`}
               onClick={() => setSelection({ chapterId: c.id, eventId: "" })}
               aria-current={i === index ? "true" : undefined}
             >
               <img src={STAGE_ART[i % STAGE_ART.length]} alt="" />
-              {i === index ? <span className={u.lantern} aria-hidden /> : null}
-              <span>
-                <b>{c.title}</b>
-                <br />
-                مرحلة {c.order} · ترتيب سردي
-              </span>
+              <b>{c.title}</b>
+              <span>مرحلة {c.order} · ترتيب سردي</span>
             </button>
           ))}
         </div>
@@ -149,7 +153,7 @@ export function SeerahPage() {
           onClick={() => step(1)}
           aria-label="الفصل التالي"
         >
-          <ChevronLeft size={18} />
+          <ChevronLeft size={17} />
         </button>
       </section>
 
@@ -184,8 +188,8 @@ export function SeerahPage() {
 
         <section className={styles.mapCard}>
           <SectionHead title={chapter.title} en={`فصل ${chapter.order} من ${CHAPTERS.length} · سياق سردي`} />
-          <p style={{ lineHeight: 2, fontSize: "0.92rem" }}>{chapter.description}</p>
-          <p className="muted" style={{ lineHeight: 2, fontSize: "0.84rem", whiteSpace: "pre-line" }}>
+          <p style={{ lineHeight: 2, fontSize: "0.95rem" }}>{chapter.description}</p>
+          <p className="muted" style={{ lineHeight: 2, fontSize: "0.86rem", whiteSpace: "pre-line" }}>
             {chapter.details.split("\n\n")[0]}
           </p>
           {selectedEvent ? (
@@ -194,13 +198,22 @@ export function SeerahPage() {
               <h3>{selectedEvent.title}</h3>
               <p>{selectedEvent.description}</p>
               <dl>
-                <div><dt>التاريخ الوارد</dt><dd>{selectedEvent.date}</dd></div>
-                <div><dt>دقة التاريخ</dt><dd>غير موثقة في بيانات المحطة</dd></div>
-                <div><dt>الموضع المذكور</dt><dd>{selectedEvent.location || "غير مسجل"}</dd></div>
+                <div>
+                  <dt>التاريخ الوارد</dt>
+                  <dd>{selectedEvent.date}</dd>
+                </div>
+                <div>
+                  <dt>دقة التاريخ</dt>
+                  <dd>غير موثقة في بيانات المحطة</dd>
+                </div>
+                <div>
+                  <dt>الموضع المذكور</dt>
+                  <dd>{selectedEvent.location || "غير مسجل"}</dd>
+                </div>
               </dl>
               {place ? (
                 <Link href={`/atlas?place=${encodeURIComponent(place.nodeId)}`} className={styles.eventLink}>
-                  <Map size={14} /> شاهد {place.name} في الأطلس التخطيطي
+                  <Map size={13} /> شاهد {place.name} في الأطلس التخطيطي
                 </Link>
               ) : (
                 <p className={styles.eventCaveat}>
@@ -247,12 +260,12 @@ export function SeerahPage() {
                   <div className={styles.graphNav}>
                     {previousEvent ? (
                       <button type="button" className={styles.graphButton} onClick={() => selectEvent(previousEvent)}>
-                        <ChevronRight size={14} /> {previousEvent.title}
+                        <ChevronRight size={13} /> {previousEvent.title}
                       </button>
                     ) : null}
                     {nextEvent ? (
                       <button type="button" className={styles.graphButton} onClick={() => selectEvent(nextEvent)}>
-                        {nextEvent.title} <ChevronLeft size={14} />
+                        {nextEvent.title} <ChevronLeft size={13} />
                       </button>
                     ) : null}
                     {continuedEvent ? (
@@ -261,7 +274,7 @@ export function SeerahPage() {
                         className={styles.graphButton}
                         onClick={() => selectEvent(continuedEvent)}
                       >
-                        <ChevronLeft size={14} /> تكملة السرد: {continuedEvent.title}
+                        <ChevronLeft size={13} /> تكملة السرد: {continuedEvent.title}
                       </button>
                     ) : null}
                   </div>
@@ -300,6 +313,7 @@ export function SeerahPage() {
                   border: "1px solid rgba(212,160,23,0.35)",
                   borderRadius: 999,
                   padding: "0.15rem 0.55rem",
+                  color: "var(--text-secondary)",
                 }}
               >
                 {keyword}
@@ -308,14 +322,14 @@ export function SeerahPage() {
           </div>
           <div style={{ display: "flex", gap: "0.4rem", marginTop: "0.8rem", flexWrap: "wrap" }}>
             <button type="button" className="btn-outline" onClick={() => step(-1)} disabled={index <= 0}>
-              <ChevronRight size={14} /> الفصل السابق
+              <ChevronRight size={13} /> الفصل السابق
             </button>
             <button
               type="button"
               className="btn-gold"
               onClick={toggleRead}
             >
-              <BookOpenCheck size={14} /> {read.includes(chapter.id) ? "تمت القراءة محليًا ✓" : "تعليم كمقروء محليًا"}
+              <BookOpenCheck size={13} /> {read.includes(chapter.id) ? "تمت القراءة محليًا ✓" : "تعليم كمقروء محليًا"}
             </button>
             <button
               type="button"
@@ -323,7 +337,7 @@ export function SeerahPage() {
               onClick={() => step(1)}
               disabled={index >= CHAPTERS.length - 1}
             >
-              الفصل التالي <ChevronLeft size={14} />
+              الفصل التالي <ChevronLeft size={13} />
             </button>
           </div>
         </section>
@@ -359,15 +373,6 @@ export function SeerahPage() {
                   key={r.id}
                   type="button"
                   onClick={() => setSelection({ chapterId: r.id, eventId: "" })}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.35rem",
-                    background: "rgba(0,0,0,0.16)",
-                    borderRadius: 999,
-                    padding: "0.25rem 0.55rem",
-                    fontSize: "0.75rem",
-                  }}
                 >
                   فصل {r.order} · {r.title}
                 </button>
@@ -385,9 +390,7 @@ export function SeerahPage() {
         </section>
         <section className={styles.panel}>
           <SectionHead title="رحلتك في تعلم السيرة" en="Local progress only" />
-          <p>
-            {readCount} من {CHAPTERS.length} فصول مقروءة محليًا
-          </p>
+          <p>{readCount} من {CHAPTERS.length} فصول مقروءة محليًا</p>
           <div className={styles.bar}>
             <i style={{ width: `${percent}%` }} />
           </div>
