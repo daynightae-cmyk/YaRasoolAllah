@@ -152,7 +152,7 @@ export function surahRecords(chapters: QuranChapter[]): BasirahRecord[] {
     availabilityAr: "النص العربي من Tanzil Uthmani-min 1.1",
     certainty: "verified",
     certaintyReasonAr: "النص العربي محفوظ حرفيًا من نسخة Tanzil Uthmani-min 1.1؛ حالة الحقوق مسجلة في خزانة المصادر.",
-    sourceIds: ["src-tanzil-uthmani-1-1-candidate"],
+    sourceIds: ["src-tanzil-uthmani-min-1-1-acquired"],
   }));
 }
 

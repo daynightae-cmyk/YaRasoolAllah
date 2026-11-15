@@ -73,7 +73,7 @@ export function BasirahPage() {
         availabilityAr: "النص العربي المحلي متاح · لا ترجمة أو تفسير مضمّن في نتيجة البحث",
         certainty: "verified",
         certaintyReasonAr: "نص آية من النسخة القرآنية المحلية الموثقة حرفيًا (Tanzil Uthmani-min 1.1).",
-        sourceIds: ["src-tanzil-uthmani-1-1-candidate"],
+        sourceIds: ["src-tanzil-uthmani-min-1-1-acquired"],
       })),
     [quranHits],
   );
