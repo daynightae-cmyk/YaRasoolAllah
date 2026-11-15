@@ -1,0 +1,46 @@
+export type MediaDiscoveryRecord = {
+  id: string;
+  provider: string;
+  video_id: string | null;
+  official_url: string | null;
+  title_original: string | null;
+  title_ar: string | null;
+  description_ar: string | null;
+  language: string | null;
+  duration_seconds: number | null;
+  published_at: string | null;
+  channel_id: string | null;
+  channel_name: string | null;
+  channel_url: string | null;
+  publisher_status: string | null;
+  series_name: string | null;
+  playlist_id: string | null;
+  episode_number: number | null;
+  category: string | null;
+  subcategory: string | null;
+  age_band: string | null;
+  speaker: string | null;
+  content_type: string | null;
+  rights_holder: string | null;
+  rights_notice: string | null;
+  rights_status: string | null;
+  license_type: string | null;
+  license_evidence_url: string | null;
+  attribution_text: string | null;
+  embedding_status: string | null;
+  embed_url: string | null;
+  editorial_status: string | null;
+  publication_status: string | null;
+  religious_review_status: string | null;
+  depiction_review_status: string | null;
+  thumbnail_url: string | null;
+  thumbnail_rights_status: string | null;
+  source_checked_at: string | null;
+  verification_method: string | null;
+  verification_evidence_urls: string[] | null;
+  notes: string | null;
+};
+
+export type MediaReviewGate = "discovery" | "publisher" | "rights" | "embed" | "editorial" | "religious_review" | "depiction_review" | "publication";
+
+export type MediaReviewStatus = "pending" | "approved" | "rejected" | "stale";

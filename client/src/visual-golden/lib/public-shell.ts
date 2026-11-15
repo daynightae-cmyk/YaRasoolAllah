@@ -34,6 +34,7 @@ export const CANONICAL_VISUAL_PATHS = [
   "/prayer-guide",
   "/islamic-knowledge",
   "/five-pillars",
+  "/media-review",
   "/women-in-islam",
   "/calendar",
   "/digital-tasbih",

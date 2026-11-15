@@ -43,6 +43,7 @@ const VisualKidsPage = lazy(() => import("@/visual-golden/pages/KidsPage").then(
 const VisualDailyPage = lazy(() => import("@/visual-golden/pages/DailyPage").then((m) => ({ default: m.DailyPage })));
 const VisualAudioPage = lazy(() => import("@/visual-golden/pages/AudioPage").then((m) => ({ default: m.AudioPage })));
 const VisualBasirahPage = lazy(() => import("@/visual-golden/pages/BasirahPage").then((m) => ({ default: m.BasirahPage })));
+const VisualMediaReviewPage = lazy(() => import("@/visual-golden/pages/MediaReviewPage").then((m) => ({ default: m.MediaReviewPage })));
 
 function LibraryWorkRoute({ params }: { params: { workId: string } }) {
   return <VisualRoute><VisualLibraryPage initialWorkId={decodeURIComponent(params.workId)} /></VisualRoute>;
@@ -187,6 +188,9 @@ function AppContent() {
         </Route>
         <Route path="/children-tv">
           {() => <VisualRoute><VisualKidsPage /></VisualRoute>}
+        </Route>
+        <Route path="/media-review">
+          {() => <VisualRoute><VisualMediaReviewPage /></VisualRoute>}
         </Route>
         <Route path="/ai-assistant">
           {() => <Redirect to="/basirah" />}

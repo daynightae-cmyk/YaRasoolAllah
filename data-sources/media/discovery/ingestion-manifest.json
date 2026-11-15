@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-15T00:51:38.087Z",
+  "sourcePack": "YA_RASOOL_ALLAH_VERIFIED_MEDIA_ACQUISITION_PACK",
+  "sourceFiles": [
+    "kids-media-catalog.csv",
+    "seerah-media-catalog.csv"
+  ],
+  "totalUniqueRecords": 95,
+  "duplicatesSkipped": 0,
+  "byCategory": {
+    "kids": 46,
+    "القرآن الكريم للأطفال": 17,
+    "السيرة النبوية": 9,
+    "seerah": 14,
+    "السيرة النبوية الكاملة": 9
+  },
+  "byPublicationStatus": {
+    "DRAFT": 91,
+    "PENDING_REVIEW": 4
+  },
+  "byRightsStatus": {
+    "UNKNOWN": 95
+  },
+  "approvedForPublicDisplay": 0,
+  "blockedPendingReview": 95,
+  "policy": "Discovery-only ingestion. No record is promoted to APPROVED. embed_url remains UNTESTED candidate until runtime verification."
+}

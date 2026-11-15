@@ -264,6 +264,7 @@ describe("the notice tells the truth in all three cases, not one", () => {
       "/daily": "arabic_only",
       "/kids": "arabic_only",
       "/children-tv": "arabic_only",
+      "/media-review": "arabic_only",
       "/prayer-guide": "arabic_only",
       "/islamic-knowledge": "arabic_only",
       "/five-pillars": "arabic_only",

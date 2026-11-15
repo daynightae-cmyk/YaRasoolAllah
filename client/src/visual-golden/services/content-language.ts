@@ -228,6 +228,11 @@ export const ROUTE_CONTENT_DECLARATIONS: readonly RouteContentDeclaration[] = [
     "App.tsx routes /children-tv to the same KidsPage, so the same Arabic-only adaptations apply.",
     ["client/src/App.tsx", "client/src/visual-golden/pages/KidsPage.tsx"],
   ),
+  arabicOnly(
+    "/media-review",
+    "The media review queue shows imported discovery records in Arabic; status tokens such as DRAFT and PENDING_REVIEW are system UI chrome, not recorded knowledge.",
+    ["client/src/visual-golden/pages/MediaReviewPage.tsx", "client/src/visual-golden/data/media-discovery.generated.ts"],
+  ),
   {
     path: "/library",
     kind: "knowledge",

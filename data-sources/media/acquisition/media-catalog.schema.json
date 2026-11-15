@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "YA RASOOL ALLAH media record",
+  "type": "object",
+  "required": [
+    "id",
+    "provider",
+    "video_id",
+    "official_url",
+    "title_original",
+    "title_ar",
+    "description_ar",
+    "language",
+    "duration_seconds",
+    "published_at",
+    "channel_id",
+    "channel_name",
+    "channel_url",
+    "publisher_status",
+    "series_name",
+    "playlist_id",
+    "episode_number",
+    "category",
+    "subcategory",
+    "age_band",
+    "speaker",
+    "content_type",
+    "rights_holder",
+    "rights_notice",
+    "rights_status",
+    "license_type",
+    "license_evidence_url",
+    "attribution_text",
+    "embedding_status",
+    "embed_url",
+    "editorial_status",
+    "publication_status",
+    "religious_review_status",
+    "depiction_review_status",
+    "thumbnail_url",
+    "thumbnail_rights_status",
+    "source_checked_at",
+    "verification_method",
+    "verification_evidence_urls",
+    "notes"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "provider": {
+      "const": "youtube"
+    },
+    "video_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "official_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uri"
+    },
+    "title_original": {},
+    "title_ar": {},
+    "description_ar": {},
+    "language": {},
+    "duration_seconds": {},
+    "published_at": {},
+    "channel_id": {},
+    "channel_name": {},
+    "channel_url": {},
+    "publisher_status": {
+      "type": "string"
+    },
+    "series_name": {},
+    "playlist_id": {},
+    "episode_number": {},
+    "category": {},
+    "subcategory": {},
+    "age_band": {},
+    "speaker": {},
+    "content_type": {},
+    "rights_holder": {},
+    "rights_notice": {},
+    "rights_status": {
+      "type": "string"
+    },
+    "license_type": {
+      "type": "string"
+    },
+    "license_evidence_url": {},
+    "attribution_text": {},
+    "embedding_status": {
+      "type": "string"
+    },
+    "embed_url": {},
+    "editorial_status": {
+      "type": "string"
+    },
+    "publication_status": {
+      "type": "string"
+    },
+    "religious_review_status": {},
+    "depiction_review_status": {},
+    "thumbnail_url": {},
+    "thumbnail_rights_status": {},
+    "source_checked_at": {},
+    "verification_method": {},
+    "verification_evidence_urls": {},
+    "notes": {}
+  }
+}

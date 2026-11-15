@@ -14,6 +14,7 @@
     "capture:visual": "node scripts/capture-visual-evidence.mjs",
     "build:library-catalog": "python3 scripts/research/build_runtime_library_catalog.py",
     "ingest:quran": "tsx scripts/ingest-tanzil-quran.ts",
+    "ingest:media": "tsx scripts/acquire/ingest-media-catalog.ts",
     "db:push": "drizzle-kit push",
     "validate:kids-youtube": "tsx scripts/acquire/youtube-kids-sync.ts --validate-registry",
     "sync:kids-youtube": "tsx scripts/acquire/youtube-kids-sync.ts",

@@ -1,0 +1,44 @@
+{
+  "pack_name": "YA_RASOOL_ALLAH_VERIFIED_MEDIA_ACQUISITION_PACK",
+  "generated_at": "2026-11-15",
+  "source_job": "9e80bb2aa838",
+  "api_credentials_available": false,
+  "counts": {
+    "total": 95,
+    "kids": 63,
+    "seerah": 32,
+    "official_publishers": 2,
+    "complete_series": 25,
+    "playlist_episodes": 41,
+    "metadata_checked": 95,
+    "embedding_api_checked": 0,
+    "runtime_tested": 0,
+    "permission_required_or_unknown": 95,
+    "pending_editorial": 95,
+    "rejected": 0,
+    "duplicates_removed": 0,
+    "approved": 0
+  },
+  "files": [
+    "kids-media-catalog-README.md",
+    "kids-media-catalog.csv",
+    "kids-media-catalog.json",
+    "media-agent-handoff.md",
+    "media-catalog.schema.json",
+    "media-publishers-registry.json",
+    "media-rejected-and-pending.csv",
+    "media-rights-ledger.csv",
+    "media-sources-registry.json",
+    "media-validation.py",
+    "media-verification-report.md",
+    "seerah-media-catalog-README.md",
+    "seerah-media-catalog.csv",
+    "seerah-media-catalog.json"
+  ],
+  "limitations": [
+    "No YouTube Data API verification",
+    "No runtime embed testing on project domain",
+    "No editorial or religious approval",
+    "Rights are not inferred from attribution or platform availability"
+  ]
+}
