@@ -4,6 +4,7 @@ import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import { ColoringStudio } from "@/visual-golden/components/unique/ColoringStudio";
 import { StoryTheatre } from "@/visual-golden/components/present/StoryTheatre";
 import { KidsTVRoom } from "@/visual-golden/components/kids-tv/KidsTVRoom";
+import { MediaLibrarySection } from "@/visual-golden/components/media/MediaLibrarySection";
 import {
   KIDS_COUNTS,
   KIDS_STORIES,
@@ -133,6 +134,12 @@ export function KidsPage() {
         }}
       />
       )}
+
+      <MediaLibrarySection
+        kind="kids"
+        title="مكتبة نور للأطفال"
+        subtitle="فيديوهات وقنوات أطفال من الكتالوج المرفق، مع تشغيل رسمي بالنقر ومصدر واضح أسفل كل مادة."
+      />
 
       <div className={styles.row}>
         <section className={styles.panel}>

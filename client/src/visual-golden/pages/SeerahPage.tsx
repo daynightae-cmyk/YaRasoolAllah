@@ -29,6 +29,7 @@ import {
   type SeerahGraphEventNode,
 } from "@/visual-golden/services/seerah-graph";
 import styles from "./SeerahPage.module.css";
+import { MediaLibrarySection } from "@/visual-golden/components/media/MediaLibrarySection";
 
 const READ_KEY = "seerah-read-chapters-v1";
 
@@ -360,6 +361,12 @@ export function SeerahPage() {
           </div>
         </aside>
       </div>
+
+      <MediaLibrarySection
+        kind="seerah"
+        title="مسرح السيرة والميديا"
+        subtitle="سلاسل سيرة ومحاضرات وخطب من صفحات الفيديو العامة، مع اسم القناة والناشر ورابط المصدر تحت كل بطاقة."
+      />
 
       <div className={styles.lower}>
         <section className={styles.panel}>
