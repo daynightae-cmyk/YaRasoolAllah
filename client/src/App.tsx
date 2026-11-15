@@ -10,6 +10,7 @@ import { ProgressProvider } from "./contexts/ProgressContext";
 import { BabAlsamaaProvider, useBabAlsamaa } from "./hooks/useBabAlsamaa";
 import { DepthProvider } from "./components/Institution/LearningDepthSelector";
 import { InstitutionShell as VisualInstitutionShell } from "@/visual-golden/components/shell/InstitutionShell";
+import { ImmersiveGateway } from "@/visual-golden/components/immersive/ImmersiveGateway";
 import { isCanonicalVisualPath } from "@/visual-golden/lib/public-shell";
 import "@/visual-golden/visual-base.css";
 
@@ -49,10 +50,34 @@ function LibraryWorkRoute({ params }: { params: { workId: string } }) {
 }
 
 function VisualRoute({ children }: { children: ReactNode }) {
+  const [location] = useLocation();
+  const directGate = location === "/library" || location === "/digital-library" || location === "/books" || location.startsWith("/library/work/") || location === "/kids" || location === "/children-tv";
+  const sectionNames: Record<string, [string, string]> = {
+    "/quran": ["رواق القرآن", "آيات وتلاوات وعلوم الوحي"],
+    "/tafsir": ["قاعة التفسير", "مفاتيح التدبر وشروح العلماء"],
+    "/seerah": ["درب السيرة", "محطات السيرة والقصص والدروس"],
+    "/atlas": ["قاعة الأطلس", "المواضع والطرق في محاكاة بصرية"],
+    "/hadith": ["دار الحديث", "المجاميع والأبواب وشروح السنة"],
+    "/sunnah": ["دار الحديث", "المجاميع والأبواب وشروح السنة"],
+    "/audio": ["رواق التلاوات", "أصوات القراء ومجالس الاستماع"],
+    "/quran-audio": ["رواق التلاوات", "أصوات القراء ومجالس الاستماع"],
+    "/basirah": ["مختبر بصيرة", "مسارات السؤال والمصادر والأدلة"],
+    "/daily": ["مرصد اليوم", "ورد اليوم والتنبيهات ومسارات العمل"],
+  };
+  const section = sectionNames[location];
   return (
     <VisualInstitutionShell>
       <Suspense fallback={<div className="vg-page-loading" role="status">جاري فتح الباب…</div>}>
-        {children}
+        {directGate || !section ? children : (
+          <ImmersiveGateway
+            title={`باب ${section[0]}`}
+            subtitle={section[1]}
+            description="افتح الباب لتدخل القاعة، ثم اقترب من الرف أو المسار الذي تريد استكشافه."
+            eyebrow="بوابة النور"
+          >
+            {children}
+          </ImmersiveGateway>
+        )}
       </Suspense>
     </VisualInstitutionShell>
   );

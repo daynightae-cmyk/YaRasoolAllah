@@ -12,19 +12,25 @@ const statusLabel = (record: MediaLibraryRecord) =>
 export function MediaLibrarySection({ kind, title, subtitle }: Props) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("all");
+  const [channel, setChannel] = useState("all");
+  const [speaker, setSpeaker] = useState("all");
   const [selected, setSelected] = useState<MediaLibraryRecord | null>(null);
   const [visibleCount, setVisibleCount] = useState(12);
   const records = useMemo(() => MEDIA_LIBRARY.filter((item) => item.kind === kind), [kind]);
   const categories = useMemo(() => ["all", ...new Set(records.map((item) => item.category))], [records]);
+  const channels = useMemo(() => ["all", ...new Set(records.map((item) => item.channel))], [records]);
+  const speakers = useMemo(() => ["all", ...new Set(records.map((item) => item.speaker).filter((item): item is string => Boolean(item)))], [records]);
   const filtered = useMemo(() => {
     const normalized = query.trim().toLocaleLowerCase("ar");
     return records.filter((item) => {
       if (category !== "all" && item.category !== category) return false;
+      if (channel !== "all" && item.channel !== channel) return false;
+      if (speaker !== "all" && item.speaker !== speaker) return false;
       if (!normalized) return true;
       return [item.title, item.originalTitle, item.channel, item.category, item.series ?? "", item.speaker ?? ""]
         .join(" ").toLocaleLowerCase("ar").includes(normalized);
     });
-  }, [category, query, records]);
+  }, [category, channel, query, records, speaker]);
   const visible = filtered.slice(0, visibleCount);
 
   return (
@@ -50,6 +56,16 @@ export function MediaLibrarySection({ kind, title, subtitle }: Props) {
         <div className={styles.chips} aria-label="تصنيف الفيديوهات">
           {categories.map((item) => <button key={item} type="button" data-active={category === item} onClick={() => { setCategory(item); setVisibleCount(12); }}>{item === "all" ? "الكل" : item}</button>)}
         </div>
+        {kind === "seerah" ? <>
+          <div className={styles.filterLabel}>حسب القناة</div>
+          <div className={styles.chips} aria-label="تصفية حسب القناة">
+            {channels.map((item) => <button key={item} type="button" data-active={channel === item} onClick={() => { setChannel(item); setVisibleCount(12); }}>{item === "all" ? "كل القنوات" : item}</button>)}
+          </div>
+          <div className={styles.filterLabel}>حسب الشيخ</div>
+          <div className={styles.chips} aria-label="تصفية حسب الشيخ">
+            {speakers.map((item) => <button key={item} type="button" data-active={speaker === item} onClick={() => { setSpeaker(item); setVisibleCount(12); }}>{item === "all" ? "كل الشيوخ" : item}</button>)}
+          </div>
+        </> : null}
       </div>
       <div className={styles.grid}>
         {visible.map((item) => (
