@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { ExternalLink, Play, Search, ShieldAlert, X } from "lucide-react";
 import { MEDIA_LIBRARY, type MediaLibraryKind, type MediaLibraryRecord } from "@/data/mediaLibrary";
+import { ImmersiveGateway } from "@/visual-golden/components/immersive/ImmersiveGateway";
 import styles from "./MediaLibrarySection.module.css";
 
 type Props = { kind: MediaLibraryKind; title: string; subtitle: string };
@@ -27,6 +28,13 @@ export function MediaLibrarySection({ kind, title, subtitle }: Props) {
   const visible = filtered.slice(0, visibleCount);
 
   return (
+    <ImmersiveGateway
+      title={kind === "kids" ? "باب مسرح الأطفال" : "باب استوديو الدعاة"}
+      subtitle={kind === "kids" ? "رسوم وقصص صوتية ومحتوى تربوي للصغار" : "قراء ودعاة وخطب وسلاسل في السيرة"}
+      description={kind === "kids" ? "ادخل إلى رفوف الحلقات واختَر المادة التي تريد تشغيلها." : "ادخل إلى الاستوديو، اقترب من رف الدعاة، ثم شغّل الخطب والسلاسل من صفحاتها الأصلية."}
+      eyebrow={kind === "kids" ? "ممر الأطفال" : "ممر الميديا"}
+      Icon={Play}
+    >
     <section className={styles.section} aria-labelledby={`${kind}-media-title`}>
       <div className={styles.heading}>
         <div>
@@ -58,5 +66,6 @@ export function MediaLibrarySection({ kind, title, subtitle }: Props) {
       {visible.length < filtered.length && <button className={styles.more} type="button" onClick={() => setVisibleCount((count) => count + 12)}>عرض المزيد من المواد ({filtered.length - visible.length} متبقية)</button>}
       {selected ? <div className={styles.modalBackdrop} role="presentation" onClick={() => setSelected(null)}><div className={styles.modal} role="dialog" aria-modal="true" aria-labelledby="media-dialog-title" onClick={(event) => event.stopPropagation()}><button className={styles.close} type="button" onClick={() => setSelected(null)} aria-label="إغلاق"><X size={20} /></button><div className={styles.player}><iframe src={`https://www.youtube-nocookie.com/embed/${selected.videoId}?rel=0&modestbranding=1`} title={selected.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen /></div><h3 id="media-dialog-title">{selected.title}</h3><p className={styles.modalMeta}>{selected.channel} · {selected.category}</p><div className={styles.modalSource}><strong>المصدر والناشر</strong><span>المصدر: <a href={selected.sourceUrl} target="_blank" rel="noopener noreferrer">صفحة الفيديو الأصلية</a></span><span>القناة/الناشر: <a href={selected.channelUrl ?? selected.sourceUrl} target="_blank" rel="noopener noreferrer">{selected.channel}</a></span><span>حالة الحقوق: {selected.rightsStatus} · حالة التضمين: {selected.embeddingStatus}</span><small>{selected.notes}</small></div></div></div> : null}
     </section>
+    </ImmersiveGateway>
   );
 }

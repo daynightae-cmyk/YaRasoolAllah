@@ -1,10 +1,11 @@
 import { useMemo, useState } from "react";
-import { Puzzle, Palette, Lightbulb, Star, BookOpen, Users, FileText, ExternalLink, Film, Heart, Leaf } from "lucide-react";
+import { Puzzle, Palette, Lightbulb, Star, BookOpen, Users, FileText, ExternalLink, Film, Heart, Leaf, Sparkles } from "lucide-react";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import { ColoringStudio } from "@/visual-golden/components/unique/ColoringStudio";
 import { StoryTheatre } from "@/visual-golden/components/present/StoryTheatre";
 import { KidsTVRoom } from "@/visual-golden/components/kids-tv/KidsTVRoom";
 import { MediaLibrarySection } from "@/visual-golden/components/media/MediaLibrarySection";
+import { ImmersiveGateway } from "@/visual-golden/components/immersive/ImmersiveGateway";
 import {
   KIDS_COUNTS,
   KIDS_STORIES,
@@ -81,6 +82,13 @@ export function KidsPage() {
   }
 
   return (
+    <ImmersiveGateway
+      title="باب واحة الأطفال"
+      subtitle="خلف الباب مسرح النور، القصص، والرسوم المتحركة"
+      description="افتح الباب لتدخل عالمًا آمنًا بصريًا؛ اختر الرف الذي يناسب طفلك وشغّل الحلقة بنقرة واحدة."
+      eyebrow="مدخل عالم الصغار"
+      Icon={Sparkles}
+    >
     <div className={styles.page}>
       <section className={styles.garden} aria-label="مسارات واحة الأطفال">
         <div className={styles.gardenIntro}>
@@ -241,5 +249,6 @@ export function KidsPage() {
       ) : null}
       {coloring ? <ColoringStudio onClose={() => setColoring(false)} /> : null}
     </div>
+    </ImmersiveGateway>
   );
 }

@@ -7,6 +7,7 @@ import { PageHero } from "@/visual-golden/components/shared/PageHero";
 import { CatalogShelfHall } from "@/visual-golden/components/library/CatalogShelfHall";
 import { LibraryCatalog } from "@/visual-golden/components/library/LibraryCatalog";
 import { CatalogReadingChamber } from "@/visual-golden/components/library/CatalogReadingChamber";
+import { ImmersiveGateway } from "@/visual-golden/components/immersive/ImmersiveGateway";
 import type { CatalogWork } from "@/visual-golden/services/catalog-library";
 import styles from "./LibraryPage.module.css";
 
@@ -95,6 +96,14 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
   };
 
   return (
+    <ImmersiveGateway
+      title={lang === "ar" ? "باب المكتبة الكبرى" : "The Grand Library Gate"}
+      subtitle={lang === "ar" ? "خلف الباب قاعات ورفوف وكتب تنتظر اختيارك" : "Beyond the door: halls, shelves, and books waiting for you"}
+      description={lang === "ar" ? "افتح الباب لتدخل محاكاة المكتبة؛ اقترب من بوابة العلم ثم اختر القاعة والرف والكتاب." : "Open the door to enter the Library simulation, then choose a domain, shelf, and book."}
+      eyebrow={lang === "ar" ? "مدخل المكتبة" : "Library entrance"}
+      Icon={LibraryBig}
+      autoEnter={Boolean(initialWorkId)}
+    >
     <div className={styles.page}>
       <PageHero
         title={labels.title}
@@ -192,5 +201,6 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
         />
       ) : null}
     </div>
+    </ImmersiveGateway>
   );
 }
