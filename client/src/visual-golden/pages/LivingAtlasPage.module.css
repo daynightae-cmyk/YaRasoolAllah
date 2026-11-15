@@ -206,10 +206,21 @@
   display: flex;
   align-items: center;
   gap: 0.45rem;
-  padding: 0.22rem 0;
+  min-height: 44px;
+  padding: 0.3rem 0;
   font-size: 0.8rem;
   color: var(--text-secondary);
   cursor: pointer;
+}
+/* The label is the real 44px target; keep the checkbox itself visually
+   compact instead of stretching a native control to fill the row. */
+.layers label input[type="checkbox"] {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  min-block-size: 18px;
+  margin: 0;
+  accent-color: var(--gold-400);
 }
 .layers p {
   margin: 0.5rem 0 0;
@@ -263,6 +274,7 @@
 .seerahLink {
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   gap: 0.35rem;
   margin-top: 0.55rem;
   text-decoration: none;

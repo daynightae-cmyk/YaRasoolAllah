@@ -1,3 +1,10 @@
+import {
+  getPinnedOpenItiRawUrl,
+  isDirectReaderWithinBudget,
+  resolveEligibleDirectOpenItiVersions,
+} from "@/visual-golden/services/direct-book-reader";
+import type { DigitalVersionRecord } from "@shared/knowledge-registry";
+
 export interface CatalogDigitalVersion {
   id: string;
   provider: string;
@@ -68,12 +75,52 @@ export function isOpenRights(work: CatalogWork): boolean {
   return Boolean(work.digital && OPEN_RIGHTS.has(work.digital.rights));
 }
 
+function catalogVersionUri(
+  work: Pick<CatalogWork, "digital">,
+): string | null {
+  const id = work.digital?.id;
+  if (!id) return null;
+  const prefix = "openiti_dv_";
+  return id.startsWith(prefix) ? id.slice(prefix.length) : null;
+}
+
+/**
+ * Bridge a catalog row to the governed reader registry.
+ *
+ * The catalog's own `CAN_IMPORT_TEXT` flag is research metadata, not reading
+ * clearance. The version returned here has independently passed provider,
+ * content-availability, rights, immutable-release, and bounded-size checks.
+ * When the catalog names an exact OpenITI version, that exact version is
+ * preferred if it fits the reader.
+ */
+export function getGovernedReaderVersion(
+  work: Pick<CatalogWork, "id" | "openitiUri" | "digital">,
+): DigitalVersionRecord | null {
+  const versionUri = catalogVersionUri(work);
+  if (versionUri) {
+    const exact = resolveEligibleDirectOpenItiVersions({ openitiUri: versionUri });
+    if (exact[0] && isDirectReaderWithinBudget(exact[0])) return exact[0];
+  }
+
+  const byWork = resolveEligibleDirectOpenItiVersions({
+    workId: work.id,
+    openitiUri: work.openitiUri,
+  });
+  return byWork.find(isDirectReaderWithinBudget) ?? null;
+}
+
+/**
+ * In-app text is available only when both sides agree: the catalog row has an
+ * open text record, and that row resolves to a governed eligible registry
+ * version. Either side alone is insufficient.
+ */
 export function canReadTextInside(work: CatalogWork): boolean {
   const digital = work.digital;
   if (!digital?.fileUrl || !isOpenRights(work)) return false;
-  return digital.format === "TXT_MARKDOWN"
-    || digital.reading === "CAN_IMPORT_TEXT"
-    || (digital.searchableText && !digital.format.includes("OCR"));
+  if (digital.format !== "TXT_MARKDOWN") return false;
+  if (digital.reading !== "CAN_IMPORT_TEXT" && !digital.searchableText) return false;
+  const version = getGovernedReaderVersion(work);
+  return Boolean(version && getPinnedOpenItiRawUrl(version));
 }
 
 export function canReadPdfInside(work: CatalogWork): boolean {
@@ -111,6 +158,7 @@ export function buildPresentationEmbedUrl(work: CatalogWork): string | null {
 export function canDownloadInside(work: CatalogWork): boolean {
   const digital = work.digital;
   if (!digital?.fileUrl || !isOpenRights(work)) return false;
+  if (!getGovernedReaderVersion(work)) return false;
   const state = digital.download.toUpperCase();
   return !state.includes("BLOCK")
     && !state.includes("RESTRICT")
@@ -119,12 +167,12 @@ export function canDownloadInside(work: CatalogWork): boolean {
     && state !== "NO";
 }
 
-export function displayTitle(work: CatalogWork, lang: "ar" | "en") {
+export function displayTitle(work: CatalogWork, lang: "ar" | "en" | "fr" | "ur") {
   return (lang === "ar" ? work.titleAr || work.titleEn : work.titleEn || work.titleAr)
     || (lang === "ar" ? "عمل بلا عنوان مثبت" : "Untitled catalog work");
 }
 
-export function displayAuthor(work: CatalogWork, lang: "ar" | "en") {
+export function displayAuthor(work: CatalogWork, lang: "ar" | "en" | "fr" | "ur") {
   return (lang === "ar" ? work.authorAr || work.authorEn : work.authorEn || work.authorAr)
     || (lang === "ar" ? "المؤلف غير مثبت" : "Author not established");
 }
@@ -140,21 +188,19 @@ export function hashWorkId(id: string): number {
 
 /**
  * What the Library can *actually* open, derived from the loaded catalog by
- * applying the same gate functions the reader uses.
+ * applying the same governed gate functions the reader uses.
  *
- * This exists because the numbers the interface announced were typed into a
- * string by hand. The catalog's own `counts.digitalVersions` is the raw
- * research-pipeline row count: 13,679, while only 9,106 works carry an openable
- * file URL, because the pipeline keeps rows marked `DO_NOT_INGEST` and the app
- * attaches at most one digital record per work. Announcing 13,679 overstated
- * what a reader could open by 47%. Every user-facing count is now read from
- * here, so it cannot drift from the data, and
- * `scripts/library-reader-truth.test.ts` asserts the two agree.
+ * The catalog's own `counts.digitalVersions` is the raw research-pipeline row
+ * count, not an in-app reading entitlement. Most attached catalog rows have a
+ * text URL and a research `CAN_IMPORT_TEXT` flag but do not resolve to the
+ * governed OpenITI version registry. They are counted separately as catalog
+ * text pending review; only `readableText` may be described as readable now.
  */
 export interface CatalogCapabilityReport {
   works: number;
   withDigitalRecord: number;
   readableText: number;
+  catalogTextOnly: number;
   readablePdf: number;
   iiif: number;
   presentation: number;
@@ -169,6 +215,7 @@ export function catalogCapabilityReport(payload: CatalogPayload): CatalogCapabil
     works: payload.works.length,
     withDigitalRecord: 0,
     readableText: 0,
+    catalogTextOnly: 0,
     readablePdf: 0,
     iiif: 0,
     presentation: 0,
@@ -184,7 +231,11 @@ export function catalogCapabilityReport(payload: CatalogPayload): CatalogCapabil
     }
     report.withDigitalRecord += 1;
     formats[work.digital.format] = (formats[work.digital.format] ?? 0) + 1;
-    if (canReadTextInside(work)) report.readableText += 1;
+    if (canReadTextInside(work)) {
+      report.readableText += 1;
+    } else if (work.digital.format === "TXT_MARKDOWN") {
+      report.catalogTextOnly += 1;
+    }
     if (canReadPdfInside(work)) report.readablePdf += 1;
     if (canUseIiifInside(work)) report.iiif += 1;
     if (canViewPresentationInside(work)) report.presentation += 1;

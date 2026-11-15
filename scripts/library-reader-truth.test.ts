@@ -76,13 +76,17 @@ describe("what the Library can actually open, measured from the catalog", () => 
 
   it("accounts for every record exactly once", () => {
     assert.equal(
-      report.readableText + report.metadataOnly,
+      report.readableText + report.catalogTextOnly + report.metadataOnly,
       report.works,
-      "a work must be either openable or explicitly metadata-only",
+      "a work must be governed-readable, catalog-text-only, or explicitly metadata-only",
     );
     assert.equal(
       Object.values(report.formats).reduce((total, count) => total + count, 0),
       report.withDigitalRecord,
+    );
+    assert.ok(
+      report.readableText < report.catalogTextOnly,
+      "the research catalog must not be mistaken for governed in-app reading clearance",
     );
   });
 
@@ -139,7 +143,7 @@ describe("the announced counts cannot overstate what a reader can open", () => {
       "the hall must not announce the pipeline row count either",
     );
     assert.match(hallHall(), /canReadTextInside/);
-    assert.match(hallHall(), /texts readable now/);
+    assert.match(hallHall(), /works cleared for in-app reading/);
   });
 
   it("does not promise listening, because no approved recording exists", () => {
@@ -231,9 +235,13 @@ describe("the reader tells the truth in the reader's own language", () => {
   });
 
   it("throws a translatable code rather than an Arabic sentence", () => {
-    assert.match(chamber, /class ReaderError/);
+    const readerService = read(
+      "client/src/visual-golden/services/direct-book-reader.ts",
+    );
+    assert.match(readerService, /class DirectReaderError/);
+    assert.match(chamber, /DirectReaderError/);
     assert.match(chamber, /READER_ERRORS/);
-    for (const shape of ["too_large", "no_text", "timeout", "failed"]) {
+    for (const shape of ["not_governed", "too_large", "no_text", "timeout", "failed"]) {
       assert.match(chamber, new RegExp(`${shape}:\\s*\\{`), `${shape} needs both languages`);
     }
     assert.doesNotMatch(
@@ -245,6 +253,19 @@ describe("the reader tells the truth in the reader's own language", () => {
       chamber,
       /new Error\(`HTTP \$\{/,
       "a raw HTTP string is not a message a reader can act on",
+    );
+  });
+
+  it("mounts the governed reader and never fetches the catalog file URL", () => {
+    assert.match(libraryPage, /<CatalogReadingChamber/);
+    assert.match(libraryPage, /canOpenReader=\{canReadTextInside\}/);
+    assert.match(chamber, /getGovernedReaderVersion\(work\)/);
+    assert.match(chamber, /getPinnedOpenItiRawUrl/);
+    assert.match(chamber, /loadDirectBookDocument/);
+    assert.doesNotMatch(
+      chamber,
+      /fetch\(work\.digital/,
+      "the mounted reader must not fetch the catalog's floating file URL",
     );
   });
 

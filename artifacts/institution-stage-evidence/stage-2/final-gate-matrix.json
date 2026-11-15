@@ -1,0 +1,129 @@
+{
+  "purpose": "Final Stage 2 gate matrix captured after all implementation and browser verification.",
+  "capturedAt": "2026-11-15T13:42:44.2224419Z",
+  "head": "df4880589016aa4681b6d43233ecc136f4e32238",
+  "branch": "main",
+  "failures": 0,
+  "gates": [
+    {
+      "gate": "TypeScript",
+      "command": "npm run check",
+      "exit": 0,
+      "seconds": 6.0,
+      "tail": [
+        "> ya-rasool-allah-platform@0.1.0 check",
+        "> tsc"
+      ]
+    },
+    {
+      "gate": "ESLint",
+      "command": "npm run lint",
+      "exit": 0,
+      "seconds": 9.6,
+      "tail": [
+        "> ya-rasool-allah-platform@0.1.0 lint",
+        "> eslint \"client/src/**/*.{ts,tsx}\" \"server/**/*.ts\" \"api/**/*.ts\" \"shared/**/*.ts\" \"scripts/**/*.{ts,mjs}\""
+      ]
+    },
+    {
+      "gate": "P0 test suite",
+      "command": "npm run test:p0",
+      "exit": 0,
+      "seconds": 9.0,
+      "tail": [
+        "5:42:25 PM [express] {\"requestId\":\"07ece156-a963-4a39-b5fa-81b2ff94be37\",\"method\":\"GET\",\"route\":\"/api/seerah/topics\",\"status\":410,\"latencyMs\":0}",
+        "5:42:25 PM [express] {\"requestId\":\"fef9beb6-7afc-4fea-835d-4386103d78ff\",\"method\":\"GET\",\"route\":\"/api/prayer-times/Makkah\",\"status\":410,\"latencyMs\":1}",
+        "5:42:25 PM [express] {\"requestId\":\"8bf6ab1a-ce02-4e15-a82a-6dec7acaf2ca\",\"method\":\"GET\",\"route\":\"/api/azkar/morning\",\"status\":410,\"latencyMs\":0}",
+        "5:42:25 PM [express] {\"requestId\":\"c2e64690-7598-4fe0-8372-8ce4c1757a75\",\"method\":\"GET\",\"route\":\"/api/calendar/events\",\"status\":410,\"latencyMs\":1}",
+        "5:42:25 PM [express] {\"requestId\":\"1a796b3e-7ea6-41ed-bef0-9667f0c473e4\",\"method\":\"GET\",\"route\":\"/api/children/stories\",\"status\":410,\"latencyMs\":0}",
+        "5:42:25 PM [express] {\"requestId\":\"59d10f1a-ce29-4cea-a75d-5fc36c2ba2c4\",\"method\":\"POST\",\"route\":\"/api/ai/ask\",\"status\":410,\"latencyMs\":0}",
+        "Γ£ö legacy demo knowledge endpoints are gone (34.2338ms)",
+        "Γ£ö main API handler returns a structured, secret-free 503 when startup config is missing (52.4974ms)",
+        "Γ£ö main API handler catches a lazily imported app that throws at module load (12.0224ms)",
+        "Γ£ö main API handler delegates to a healthy app without changing the response (11.9571ms)",
+        "Γä╣ tests 313",
+        "Γä╣ suites 49",
+        "Γä╣ pass 313",
+        "Γä╣ fail 0",
+        "Γä╣ cancelled 0",
+        "Γä╣ skipped 0",
+        "Γä╣ todo 0",
+        "Γä╣ duration_ms 8186.5684"
+      ]
+    },
+    {
+      "gate": "Source governance",
+      "command": "npm run validate:sources",
+      "exit": 0,
+      "seconds": 1.1,
+      "tail": [
+        "> ya-rasool-allah-platform@0.1.0 validate:sources",
+        "> tsx scripts/validate-source-governance.ts",
+        "Source governance PASS: 21 sources, 13 rights records, 12 provider resources, 17 works, 33 digital versions, 20 provider policies, 0 rights-cleared audiobooks, 5 children adaptations, 4 review-pending hadith samples, 0 cleared media assets."
+      ]
+    },
+    {
+      "gate": "Kids YouTube registry",
+      "command": "npm run validate:kids-youtube",
+      "exit": 0,
+      "seconds": 1.0,
+      "tail": [
+        "> ya-rasool-allah-platform@0.1.0 validate:kids-youtube",
+        "> tsx scripts/acquire/youtube-kids-sync.ts --validate-registry",
+        "youtube-kids-sync registry PASS: 2 publishers"
+      ]
+    },
+    {
+      "gate": "Production build",
+      "command": "npm run build",
+      "exit": 0,
+      "seconds": 15.4,
+      "tail": [
+        "\u001b[2m../dist/public/\u001b[22m\u001b[36massets/Library3D-BYchmSnW.js               \u001b[39m\u001b[1m\u001b[2m 49.75 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m Γöé gzip:  16.17 kB\u001b[22m",
+        "\u001b[2m../dist/public/\u001b[22m\u001b[36massets/LibraryPage-ClfRIjQv.js             \u001b[39m\u001b[1m\u001b[2m 59.90 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m Γöé gzip:  21.04 kB\u001b[22m",
+        "\u001b[2m../dist/public/\u001b[22m\u001b[36massets/WhoIsMuhammadPage-D9kcM3hs.js       \u001b[39m\u001b[1m\u001b[2m 62.48 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m Γöé gzip:  26.86 kB\u001b[22m",
+        "\u001b[2m../dist/public/\u001b[22m\u001b[36massets/DashboardPage-CW0VpyW4.js           \u001b[39m\u001b[1m\u001b[2m 71.28 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m Γöé gzip:  17.44 kB\u001b[22m",
+        "\u001b[2m../dist/public/\u001b[22m\u001b[36massets/vendor-motion-1OCAwc7t.js           \u001b[39m\u001b[1m\u001b[2m113.97 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m Γöé gzip:  37.49 kB\u001b[22m",
+        "\u001b[2m../dist/public/\u001b[22m\u001b[36massets/vendor-react-B8wDAqJ7.js            \u001b[39m\u001b[1m\u001b[2m133.97 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m Γöé gzip:  43.15 kB\u001b[22m",
+        "\u001b[2m../dist/public/\u001b[22m\u001b[36massets/MediaReviewPage-ugJR1eqm.js         \u001b[39m\u001b[1m\u001b[2m205.37 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m Γöé gzip:  24.39 kB\u001b[22m",
+        "\u001b[2m../dist/public/\u001b[22m\u001b[36massets/index-D7TuWFUf.js                   \u001b[39m\u001b[1m\u001b[2m393.56 kB\u001b[22m\u001b[1m\u001b[22m\u001b[2m Γöé gzip: 128.60 kB\u001b[22m",
+        "\u001b[2m../dist/public/\u001b[22m\u001b[36massets/three-runtime-DAS6eYQU.js           \u001b[39m\u001b[1m\u001b[33m578.73 kB\u001b[39m\u001b[22m\u001b[2m Γöé gzip: 146.79 kB\u001b[22m",
+        "\u001b[2m../dist/public/\u001b[22m\u001b[36massets/quranCorpus-7utK-eAh.js             \u001b[39m\u001b[1m\u001b[33m668.14 kB\u001b[39m\u001b[22m\u001b[2m Γöé gzip: 266.63 kB\u001b[22m",
+        "\u001b[33m",
+        "(!) Some chunks are larger than 500 kB after minification. Consider:",
+        "- Using dynamic import() to code-split the application",
+        "- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks",
+        "- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.\u001b[39m",
+        "\u001b[32mΓ£ô built in 13.51s\u001b[39m",
+        "  dist\\index.js  157.0kb",
+        "Done in 13ms"
+      ]
+    },
+    {
+      "gate": "Diff hygiene",
+      "command": "git diff --check",
+      "exit": 0,
+      "seconds": 0,
+      "tail": [
+        "warning: in the working copy of 'client/src/visual-golden/lib/institution/store.ts', LF will be replaced by CRLF the next time Git touches it",
+        "warning: in the working copy of 'client/src/visual-golden/pages/HadithPage.module.css', LF will be replaced by CRLF the next time Git touches it",
+        "warning: in the working copy of 'client/src/visual-golden/pages/HomePage.module.css', LF will be replaced by CRLF the next time Git touches it",
+        "warning: in the working copy of 'client/src/visual-golden/pages/HomePage.tsx', LF will be replaced by CRLF the next time Git touches it",
+        "warning: in the working copy of 'client/src/visual-golden/pages/LibraryPage.module.css', LF will be replaced by CRLF the next time Git touches it",
+        "warning: in the working copy of 'client/src/visual-golden/pages/LibraryPage.tsx', LF will be replaced by CRLF the next time Git touches it",
+        "warning: in the working copy of 'client/src/visual-golden/pages/MediaReviewPage.tsx', LF will be replaced by CRLF the next time Git touches it",
+        "warning: in the working copy of 'client/src/visual-golden/pages/QuranPage.module.css', LF will be replaced by CRLF the next time Git touches it",
+        "warning: in the working copy of 'client/src/visual-golden/pages/SeerahPage.module.css', LF will be replaced by CRLF the next time Git touches it",
+        "warning: in the working copy of 'client/src/visual-golden/pages/SeerahPage.tsx', LF will be replaced by CRLF the next time Git touches it",
+        "warning: in the working copy of 'client/src/visual-golden/services/media/types.ts', LF will be replaced by CRLF the next time Git touches it",
+        "warning: in the working copy of 'client/src/visual-golden/visual-base.css', LF will be replaced by CRLF the next time Git touches it",
+        "warning: in the working copy of 'data-sources/media/discovery/ingestion-manifest.json', LF will be replaced by CRLF the next time Git touches it",
+        "warning: in the working copy of 'data-sources/media/discovery/ingestion-report.md', LF will be replaced by CRLF the next time Git touches it",
+        "warning: in the working copy of 'data-sources/media/discovery/media-discovery-catalog.json', LF will be replaced by CRLF the next time Git touches it",
+        "warning: in the working copy of 'scripts/acquire/generate-discovery-catalog.ts', LF will be replaced by CRLF the next time Git touches it",
+        "warning: in the working copy of 'scripts/acquire/ingest-media-catalog.ts', LF will be replaced by CRLF the next time Git touches it",
+        "warning: in the working copy of 'scripts/library-3d-halls.test.ts', LF will be replaced by CRLF the next time Git touches it"
+      ]
+    }
+  ]
+}

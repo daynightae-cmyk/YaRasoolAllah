@@ -1,13 +1,12 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const IN = resolve(root, "data-sources/media/discovery/media-discovery-catalog.json");
-const OUT = resolve(
-  root,
-  "client/src/visual-golden/data/media-discovery.generated.ts",
-);
+const MANIFEST = resolve(root, "data-sources/media/discovery/ingestion-manifest.json");
+const OUT = resolve(root, "client/src/visual-golden/data/media-discovery.generated.ts");
+const STATUS_OUT = resolve(root, "client/src/visual-golden/data/media-discovery-status.generated.ts");
 
 type DiscoveryRecord = {
   id: string;
@@ -50,76 +49,104 @@ type DiscoveryRecord = {
   verification_method: string | null;
   verification_evidence_urls: string[] | null;
   notes: string | null;
+  rights_action: string | null;
+  review_reason: string | null;
+  review_next_action: string | null;
+  provenance: {
+    sourceFile: string;
+    sourceRow: number;
+    inputSha256: string;
+  };
 };
 
-function jsString(v: string | null): string {
-  return v == null ? "null" : JSON.stringify(v);
-}
+export type DiscoveryCatalogPayload = {
+  schemaVersion: number;
+  generatedAt: string;
+  policy: string;
+  counts: { total: number; approved: number; pending: number };
+  records: DiscoveryRecord[];
+};
 
-function jsArray(v: string[] | null): string {
-  if (!v) return "null";
-  return "[" + v.map((item) => JSON.stringify(item)).join(",") + "]";
-}
-
-function main() {
-  const payload = readFileSync(IN, "utf-8");
-  const data = JSON.parse(payload) as {
-    records: DiscoveryRecord[];
-    counts: { total: number; approved: number; pending: number };
+export type DiscoveryManifest = {
+  schemaVersion: number;
+  generatedAt: string;
+  sourcePack: string;
+  totalUniqueRecords: number;
+  approvedForPublicDisplay: number;
+  blockedPendingReview: number;
+  rightsUnknown: number;
+  outputs?: {
+    catalog?: { path: string; sha256: string; bytes: number };
+    clientCatalog?: { path: string; sha256: string; bytes: number };
   };
+};
 
-  const records = data.records.map((r) => {
+function jsString(value: string | null): string {
+  return value == null ? "null" : JSON.stringify(value);
+}
+
+function jsArray(value: string[] | null): string {
+  if (!value) return "null";
+  return `[${value.map((item) => JSON.stringify(item)).join(",")}]`;
+}
+
+export function buildDiscoveryCatalogModule(data: DiscoveryCatalogPayload): string {
+  const records = data.records.map((record) => {
     const fields = [
-      `id: ${jsString(r.id)}`,
-      `provider: ${jsString(r.provider)}`,
-      `video_id: ${jsString(r.video_id)}`,
-      `official_url: ${jsString(r.official_url)}`,
-      `title_original: ${jsString(r.title_original)}`,
-      `title_ar: ${jsString(r.title_ar)}`,
-      `description_ar: ${jsString(r.description_ar)}`,
-      `language: ${jsString(r.language)}`,
-      `duration_seconds: ${r.duration_seconds ?? "null"}`,
-      `published_at: ${jsString(r.published_at)}`,
-      `channel_id: ${jsString(r.channel_id)}`,
-      `channel_name: ${jsString(r.channel_name)}`,
-      `channel_url: ${jsString(r.channel_url)}`,
-      `publisher_status: ${jsString(r.publisher_status)}`,
-      `series_name: ${jsString(r.series_name)}`,
-      `playlist_id: ${jsString(r.playlist_id)}`,
-      `episode_number: ${r.episode_number ?? "null"}`,
-      `category: ${jsString(r.category)}`,
-      `subcategory: ${jsString(r.subcategory)}`,
-      `age_band: ${jsString(r.age_band)}`,
-      `speaker: ${jsString(r.speaker)}`,
-      `content_type: ${jsString(r.content_type)}`,
-      `rights_holder: ${jsString(r.rights_holder)}`,
-      `rights_notice: ${jsString(r.rights_notice)}`,
-      `rights_status: ${jsString(r.rights_status)}`,
-      `license_type: ${jsString(r.license_type)}`,
-      `license_evidence_url: ${jsString(r.license_evidence_url)}`,
-      `attribution_text: ${jsString(r.attribution_text)}`,
-      `embedding_status: ${jsString(r.embedding_status)}`,
-      `embed_url: ${jsString(r.embed_url)}`,
-      `editorial_status: ${jsString(r.editorial_status)}`,
-      `publication_status: ${jsString(r.publication_status)}`,
-      `religious_review_status: ${jsString(r.religious_review_status)}`,
-      `depiction_review_status: ${jsString(r.depiction_review_status)}`,
-      `thumbnail_url: ${jsString(r.thumbnail_url)}`,
-      `thumbnail_rights_status: ${jsString(r.thumbnail_rights_status)}`,
-      `source_checked_at: ${jsString(r.source_checked_at)}`,
-      `verification_method: ${jsString(r.verification_method)}`,
-      `verification_evidence_urls: ${jsArray(r.verification_evidence_urls)}`,
-      `notes: ${jsString(r.notes)}`,
+      `id: ${jsString(record.id)}`,
+      `provider: ${jsString(record.provider)}`,
+      `video_id: ${jsString(record.video_id)}`,
+      `official_url: ${jsString(record.official_url)}`,
+      `title_original: ${jsString(record.title_original)}`,
+      `title_ar: ${jsString(record.title_ar)}`,
+      `description_ar: ${jsString(record.description_ar)}`,
+      `language: ${jsString(record.language)}`,
+      `duration_seconds: ${record.duration_seconds ?? "null"}`,
+      `published_at: ${jsString(record.published_at)}`,
+      `channel_id: ${jsString(record.channel_id)}`,
+      `channel_name: ${jsString(record.channel_name)}`,
+      `channel_url: ${jsString(record.channel_url)}`,
+      `publisher_status: ${jsString(record.publisher_status)}`,
+      `series_name: ${jsString(record.series_name)}`,
+      `playlist_id: ${jsString(record.playlist_id)}`,
+      `episode_number: ${record.episode_number ?? "null"}`,
+      `category: ${jsString(record.category)}`,
+      `subcategory: ${jsString(record.subcategory)}`,
+      `age_band: ${jsString(record.age_band)}`,
+      `speaker: ${jsString(record.speaker)}`,
+      `content_type: ${jsString(record.content_type)}`,
+      `rights_holder: ${jsString(record.rights_holder)}`,
+      `rights_notice: ${jsString(record.rights_notice)}`,
+      `rights_status: ${jsString(record.rights_status)}`,
+      `license_type: ${jsString(record.license_type)}`,
+      `license_evidence_url: ${jsString(record.license_evidence_url)}`,
+      `attribution_text: ${jsString(record.attribution_text)}`,
+      `embedding_status: ${jsString(record.embedding_status)}`,
+      `embed_url: ${jsString(record.embed_url)}`,
+      `editorial_status: ${jsString(record.editorial_status)}`,
+      `publication_status: ${jsString(record.publication_status)}`,
+      `religious_review_status: ${jsString(record.religious_review_status)}`,
+      `depiction_review_status: ${jsString(record.depiction_review_status)}`,
+      `thumbnail_url: ${jsString(record.thumbnail_url)}`,
+      `thumbnail_rights_status: ${jsString(record.thumbnail_rights_status)}`,
+      `source_checked_at: ${jsString(record.source_checked_at)}`,
+      `verification_method: ${jsString(record.verification_method)}`,
+      `verification_evidence_urls: ${jsArray(record.verification_evidence_urls)}`,
+      `notes: ${jsString(record.notes)}`,
+      `rights_action: ${jsString(record.rights_action)}`,
+      `review_reason: ${jsString(record.review_reason)}`,
+      `review_next_action: ${jsString(record.review_next_action)}`,
+      `provenance: { sourceFile: ${jsString(record.provenance.sourceFile)}, sourceRow: ${record.provenance.sourceRow}, inputSha256: ${jsString(record.provenance.inputSha256)} }`,
     ];
-    return `{\n${fields.map((f) => `  ${f}`).join(",\n")}\n}`;
+    return `{\n${fields.map((field) => `  ${field}`).join(",\n")}\n}`;
   });
 
-  const source = [
-    "/** GENERATED by scripts/acquire/generate-discovery-catalog.ts. Do not hand-edit. */",
+  return [
+    "/** GENERATED by scripts/acquire/ingest-media-catalog.ts. Do not hand-edit. */",
     "import type { MediaDiscoveryRecord } from '@/visual-golden/services/media/types';",
     "",
     "export const DISCOVERED_MEDIA_CATALOG: MediaDiscoveryRecord[] = [",
-    records.map((r) => `  ${r}`).join(",\n"),
+    records.map((record) => `  ${record}`).join(",\n"),
     "];",
     "",
     "export const DISCOVERED_MEDIA_COUNTS = {",
@@ -129,13 +156,39 @@ function main() {
     "} as const;",
     "",
   ].join("\n");
-
-  mkdirSync(dirname(OUT), { recursive: true });
-  writeFileSync(OUT, source, "utf-8");
-
-  console.log(
-    `GENERATE DISCOVERY CATALOG PASS: ${data.counts.total} records -> ${OUT}`,
-  );
 }
 
-main();
+export function buildDiscoveryStatusModule(data: DiscoveryCatalogPayload, manifest: DiscoveryManifest): string {
+  return [
+    "/* Generated by scripts/acquire/ingest-media-catalog.ts. Do not hand-edit. */",
+    "export const MEDIA_DISCOVERY_STATUS = {",
+    `  schemaVersion: ${manifest.schemaVersion},`,
+    `  generatedAt: ${JSON.stringify(manifest.generatedAt)},`,
+    `  sourceCatalogSha256: ${JSON.stringify(manifest.outputs?.catalog?.sha256 ?? "")},`,
+    `  totalDiscoveryRecords: ${data.counts.total},`,
+    `  blockedPendingReview: ${data.counts.pending},`,
+    `  approvedForPublicDisplay: ${data.counts.approved},`,
+    `  rightsUnknown: ${manifest.rightsUnknown},`,
+    "} as const;",
+    "",
+  ].join("\n");
+}
+
+export function writeDiscoveryCatalogModules(data: DiscoveryCatalogPayload, manifest: DiscoveryManifest): { catalogPath: string; catalogSource: string; statusPath: string; statusSource: string } {
+  const catalogSource = buildDiscoveryCatalogModule(data);
+  const statusSource = buildDiscoveryStatusModule(data, manifest);
+  mkdirSync(dirname(OUT), { recursive: true });
+  writeFileSync(OUT, catalogSource, "utf-8");
+  writeFileSync(STATUS_OUT, statusSource, "utf-8");
+  return { catalogPath: OUT, catalogSource, statusPath: STATUS_OUT, statusSource };
+}
+
+function main() {
+  const payload = JSON.parse(readFileSync(IN, "utf-8")) as DiscoveryCatalogPayload;
+  const manifest = JSON.parse(readFileSync(MANIFEST, "utf-8")) as DiscoveryManifest;
+  const result = writeDiscoveryCatalogModules(payload, manifest);
+  console.log(`GENERATE DISCOVERY CATALOG PASS: ${payload.counts.total} records -> ${result.catalogPath}`);
+}
+
+const invokedPath = process.argv[1] ? pathToFileURL(resolve(process.argv[1])).href : "";
+if (invokedPath === import.meta.url) main();

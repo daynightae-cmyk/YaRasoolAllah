@@ -221,6 +221,7 @@
 .links a {
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   gap: .3rem;
   padding: .35rem .55rem;
   border: 1px solid var(--border-gold);
@@ -229,7 +230,14 @@
   font-size: .65rem;
 }
 .details { margin-top: .8rem; }
-.details summary { cursor: pointer; color: var(--text-gold); font-size: .7rem; }
+.details summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: var(--text-gold);
+  font-size: .7rem;
+}
 .versionList {
   display: grid;
   gap: .35rem;
@@ -240,6 +248,8 @@
 .versionList a {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  min-height: 44px;
   gap: .2rem .5rem;
   padding: .55rem 0;
   border-bottom: 1px solid var(--border-emerald);

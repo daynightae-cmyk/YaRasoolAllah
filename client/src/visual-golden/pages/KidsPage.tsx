@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Puzzle, Palette, Lightbulb, Star, BookOpen, Users, FileText, ExternalLink, Film, Heart, Leaf } from "lucide-react";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
+import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { ColoringStudio } from "@/visual-golden/components/unique/ColoringStudio";
 import { StoryTheatre } from "@/visual-golden/components/present/StoryTheatre";
 import { KidsTVRoom } from "@/visual-golden/components/kids-tv/KidsTVRoom";
@@ -8,6 +9,9 @@ import {
   KIDS_COUNTS,
   KIDS_STORIES,
   ageBandLabel,
+  countDistinctSeenKidsAdaptations,
+  hasThreeStoryKidsBadge,
+  isRegisteredKidsAdaptationId,
 } from "@/visual-golden/services/kids";
 import styles from "./KidsPage.module.css";
 import { PARENT_DISCOVERY_SOURCES } from "@shared/kids-media-governance";
@@ -17,7 +21,10 @@ const SEEN_KEY = "kids-seen-adaptations-v1";
 function safeReadSeen(): string[] {
   try {
     const raw = localStorage.getItem(SEEN_KEY);
-    return raw ? (JSON.parse(raw) as string[]) : [];
+    if (!raw) return [];
+    const parsed: unknown = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((value): value is string => typeof value === "string");
   } catch {
     return [];
   }
@@ -29,10 +36,32 @@ export function KidsPage() {
   const [seen, setSeen] = useState<string[]>(() => safeReadSeen());
   const [colorSessions, setColorSessions] = useState(0);
   const [activeRoom, setActiveRoom] = useState<"stories" | "parents">("stories");
+  const [activeAdaptationId, setActiveAdaptationId] = useState("");
+  const recordReadingProgress = useInstitution((state) => state.recordReadingProgress);
 
-  const current = KIDS_STORIES[0];
+  const current = KIDS_STORIES.find((story) => story.adaptationId === activeAdaptationId) ?? null;
+  const seenCount = useMemo(() => countDistinctSeenKidsAdaptations(seen), [seen]);
+  const threeStoryEarned = useMemo(() => hasThreeStoryKidsBadge(seen), [seen]);
+
+  useEffect(() => {
+    if (!current) return;
+    recordReadingProgress({
+      id: "kids",
+      surface: "kids",
+      path: "/kids",
+      titleAr: "الأطفال والعماية",
+      titleEn: "Children and Family",
+      locationAr: current.titleAr,
+      locationEn: current.adaptationLabel,
+      completed: seenCount,
+      total: KIDS_STORIES.length,
+      unitAr: "قصة",
+      unitEn: "stories",
+    });
+  }, [current, recordReadingProgress, seenCount]);
 
   const markSeen = (adaptationId: string) => {
+    if (!isRegisteredKidsAdaptationId(adaptationId)) return;
     setSeen((prev) => {
       if (prev.includes(adaptationId)) return prev;
       const next = [...prev, adaptationId];
@@ -45,12 +74,18 @@ export function KidsPage() {
     });
   };
 
+  const openCurrentStory = () => {
+    if (!current) return;
+    markSeen(current.adaptationId);
+    setTheatre(true);
+  };
+
   const badges = useMemo(
     () => [
       {
         title: "مستكشف القصص",
-        en: seen.length >= 3 ? `فُتحت ${seen.length} قصص محليًا ✓` : `افتح 3 قصص (${seen.length}/3 محليًا)`,
-        earned: seen.length >= 3,
+        en: threeStoryEarned ? `فُتحت ${seenCount} قصص محليًا ✓` : `افتح 3 قصص (${seenCount}/3 محليًا)`,
+        earned: threeStoryEarned,
       },
       {
         title: "صديق التلوين",
@@ -59,8 +94,8 @@ export function KidsPage() {
       },
       {
         title: "قارئ صغير",
-        en: seen.length >= 1 ? `قراءة محلية ✓` : "افتح أول قصة",
-        earned: seen.length >= 1,
+        en: seenCount >= 1 ? `قراءة محلية ✓` : "افتح أول قصة",
+        earned: seenCount >= 1,
       },
       {
         title: "رفيق التعلّم",
@@ -68,16 +103,8 @@ export function KidsPage() {
         earned: false,
       },
     ],
-    [seen.length, colorSessions],
+    [seenCount, threeStoryEarned, colorSessions],
   );
-
-  if (!current) {
-    return (
-      <div className={styles.page}>
-        <p className="muted">لا توجد تكييفات مسجلة في هذا الإصدار.</p>
-      </div>
-    );
-  }
 
   return (
     <div className={styles.page}>
@@ -126,12 +153,60 @@ export function KidsPage() {
           </div>
         </section>
       ) : (
-      <KidsTVRoom
-        onReadStory={() => {
-          markSeen(current.adaptationId);
-          setTheatre(true);
-        }}
-      />
+        <>
+          <section className={styles.panel} aria-label="اختيار التكييف المحلي" style={{ margin: "0 1.3rem 1rem" }}>
+            <SectionHead title="التكييفات المسجلة" en="Registered local adaptations" />
+            <label
+              htmlFor="kids-adaptation-select"
+              style={{ display: "block", marginBottom: "0.45rem", color: "var(--text-secondary)", fontSize: "0.82rem" }}
+            >
+              اختر تكييفًا محليًا لفتحه
+            </label>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem", alignItems: "center" }}>
+              <select
+                id="kids-adaptation-select"
+                value={activeAdaptationId}
+                onChange={(event) => {
+                  const nextId = event.target.value;
+                  if (nextId === "" || isRegisteredKidsAdaptationId(nextId)) {
+                    setActiveAdaptationId(nextId);
+                  }
+                }}
+                aria-describedby="kids-adaptation-help"
+                disabled={KIDS_STORIES.length === 0}
+                style={{
+                  flex: "1 1 16rem",
+                  minHeight: "2.75rem",
+                  padding: "0.55rem 0.7rem",
+                  borderRadius: "0.75rem",
+                  border: "1px solid var(--border-panel)",
+                  background: "var(--bg-glass-strong)",
+                  color: "var(--text-primary)",
+                }}
+              >
+                <option value="">— لم يُختَر تكييف بعد —</option>
+                {KIDS_STORIES.map((story) => (
+                  <option key={story.adaptationId} value={story.adaptationId}>
+                    {story.titleAr} · {ageBandLabel(story.ageBand)}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                className="btn-gold"
+                onClick={openCurrentStory}
+                disabled={!current}
+                aria-label={current ? `فتح ${current.titleAr}` : "اختر تكييفًا أولًا"}
+              >
+                افتح التكييف المختار
+              </button>
+            </div>
+            <p id="kids-adaptation-help" className="muted" style={{ margin: "0.55rem 0 0", fontSize: "0.76rem" }}>
+              لا تُحتسب القصة كمفتوحة إلا عند فتح التكييف المختار فعليًا.
+            </p>
+          </section>
+          <KidsTVRoom onReadStory={current ? openCurrentStory : undefined} />
+        </>
       )}
 
       <div className={styles.row}>
@@ -143,13 +218,7 @@ export function KidsPage() {
               <strong>ألغاز إسلامية</strong>
               <span>قيد الإعداد</span>
             </button>
-            <button
-              type="button"
-              onClick={() => {
-                setColoring(true);
-                setColorSessions((n) => n + 1);
-              }}
-            >
+            <button type="button" onClick={() => setColoring(true)}>
               <Palette size={18} />
               <strong>تلوين</strong>
               <span>استوديو تفاعلي محلي</span>
@@ -212,13 +281,13 @@ export function KidsPage() {
           <b>{KIDS_COUNTS.clearedMedia}</b> وسائط معتمدة (فيديو/صوت)
         </span>
         <span>
-          <b>{seen.length}</b> قصص فُتحت على هذا الجهاز
+          <b>{seenCount}</b> قصص فُتحت على هذا الجهاز
         </span>
         <span>
           <b>{colorSessions}</b> جلسات تلوين محلية
         </span>
       </footer>
-      {theatre ? (
+      {theatre && current ? (
         <StoryTheatre
           title={current.titleAr}
           image={current.img}
@@ -232,7 +301,12 @@ export function KidsPage() {
           onClose={() => setTheatre(false)}
         />
       ) : null}
-      {coloring ? <ColoringStudio onClose={() => setColoring(false)} /> : null}
+      {coloring ? (
+        <ColoringStudio
+          onClose={() => setColoring(false)}
+          onSessionComplete={() => setColorSessions((count) => count + 1)}
+        />
+      ) : null}
     </div>
   );
 }

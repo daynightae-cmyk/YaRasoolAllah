@@ -12,7 +12,7 @@ import {
 
 function work(overrides: Partial<CatalogWork> = {}): CatalogWork {
   return {
-    id: "work-1",
+    id: "work-tabari-tafsir",
     titleAr: "كتاب",
     titleEn: "Book",
     authorAr: "مؤلف",
@@ -24,11 +24,11 @@ function work(overrides: Partial<CatalogWork> = {}): CatalogWork {
     status: "VERIFIED",
     source: "OpenITI",
     sourceUrl: "https://example.test/source",
-    openitiUri: "0001Author.Book",
+    openitiUri: "0310Tabari.JamicBayan",
     editionCount: 1,
     versionCount: 1,
     digital: {
-      id: "dv-1",
+      id: "openiti_dv_0310Tabari.JamicBayan.JK000164-ara1",
       provider: "OpenITI",
       itemUrl: "https://example.test/item",
       fileUrl: "https://example.test/book.txt",

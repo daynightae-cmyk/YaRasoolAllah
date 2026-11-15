@@ -9,7 +9,7 @@ interface Props {
   timings: PrayerTimings;
   next: NextPrayerState | null;
   timezone: string;
-  lang: "ar" | "en";
+  lang: "ar" | "en" | "fr" | "ur";
   onFocus?: (name: PrayerName) => void;
 }
 

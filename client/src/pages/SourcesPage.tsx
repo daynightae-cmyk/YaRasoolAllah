@@ -5,7 +5,9 @@ import {
   ExternalLink,
   FileCheck2,
   KeyRound,
+  LibraryBig,
   Link2,
+  Radio,
   Search,
   ShieldCheck,
 } from "lucide-react";
@@ -16,6 +18,7 @@ import {
 } from "@shared/source-registry";
 import {
   digitalVersionRegistry,
+  getProviderAvailabilityMetrics,
   mediaAssetRegistry,
   providerPolicyRegistry,
   workRegistry,
@@ -136,16 +139,7 @@ export default function SourcesPage() {
     [normalizedQuery],
   );
 
-  const fullTextCount = providerResourceRegistry.filter(
-    (resource) => resource.allowedUsages.includes("full_text") && resource.productionReady,
-  ).length;
-  const credentialCount = providerPolicyRegistry.filter((provider) => provider.credentialsRequired).length;
-  const blockedRightsCount = providerPolicyRegistry.filter((provider) =>
-    ["needs_license_review", "item_by_item_review"].includes(provider.rightsState),
-  ).length;
-  const externalOnlyCount = providerPolicyRegistry.filter(
-    (provider) => provider.contentAvailability !== "full_text_cleared",
-  ).length;
+  const availabilityMetrics = getProviderAvailabilityMetrics();
 
   return (
     <div className={styles.page}>
@@ -194,26 +188,44 @@ export default function SourcesPage() {
       <section className={styles.summary} aria-label="ملخص الإتاحة والحقوق">
         <article className={styles.metric}>
           <FileCheck2 size={20} />
-          <span>نص كامل مسجل للإنتاج</span>
-          <strong>{fullTextCount}</strong>
-          <small>بحسب المورد وسجل الحقوق الحالي</small>
+          <span>نص كامل مسجل</span>
+          <strong>{availabilityMetrics.fullTextCleared}</strong>
+          <small>مزوّدون بحالة إتاحة النص الكامل</small>
+        </article>
+        <article className={styles.metric}>
+          <Radio size={20} />
+          <span>بث مباشر مسجل</span>
+          <strong>{availabilityMetrics.streamingCleared}</strong>
+          <small>حالة بث مستقلة عن النص الكامل</small>
+        </article>
+        <article className={styles.metric}>
+          <LibraryBig size={20} />
+          <span>فهرس فقط</span>
+          <strong>{availabilityMetrics.catalogOnly}</strong>
+          <small>بيانات بلا عرض نصي أو بث</small>
+        </article>
+        <article className={styles.metric}>
+          <ExternalLink size={20} />
+          <span>رابط خارجي فقط</span>
+          <strong>{availabilityMetrics.externalLinkOnly}</strong>
+          <small>اكتشاف وإحالة بلا قراءة داخلية</small>
         </article>
         <article className={styles.metric}>
           <Link2 size={20} />
-          <span>اكتشاف/فهرس خارجي</span>
-          <strong>{externalOnlyCount}</strong>
-          <small>ليس تنزيلًا داخليًا تلقائيًا</small>
+          <span>API فقط</span>
+          <strong>{availabilityMetrics.apiOnly}</strong>
+          <small>تكامل اختياري عبر واجهة المزوّد</small>
         </article>
         <article className={styles.metric}>
           <KeyRound size={20} />
           <span>تحتاج بيانات اعتماد</span>
-          <strong>{credentialCount}</strong>
+          <strong>{availabilityMetrics.credentialsRequired}</strong>
           <small>المفتاح لا يوضع في الواجهة</small>
         </article>
         <article className={styles.metric}>
           <ShieldCheck size={20} />
           <span>تحتاج مراجعة حقوق</span>
-          <strong>{blockedRightsCount}</strong>
+          <strong>{availabilityMetrics.rightsReviewPending}</strong>
           <small>تبقى مغلقة حتى قرار صريح</small>
         </article>
       </section>

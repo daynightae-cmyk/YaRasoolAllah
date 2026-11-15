@@ -1,0 +1,63 @@
+{
+  "purpose": "Recheck the eight protected owner screenshots against the Stage 0 SHA-256 baseline without modifying them.",
+  "capturedAt": "2026-11-15T13:41:39.2945028Z",
+  "allMatch": true,
+  "files": [
+    {
+      "path": "artifacts/visual-evidence/audio-1440-dark-rtl.jpg",
+      "bytes": 182974,
+      "expected": "74FB2A9CD2CB62ADC171285B417A1958A7CD0985137B9FB14A14B6775F401A43",
+      "actual": "74FB2A9CD2CB62ADC171285B417A1958A7CD0985137B9FB14A14B6775F401A43",
+      "match": true
+    },
+    {
+      "path": "artifacts/visual-evidence/children-1440-dark-ltr.jpg",
+      "bytes": 144618,
+      "expected": "AD2FE2BD2F290917DECB47FDED790365BB6BF0818183C208E4CE5AD11280D589",
+      "actual": "AD2FE2BD2F290917DECB47FDED790365BB6BF0818183C208E4CE5AD11280D589",
+      "match": true
+    },
+    {
+      "path": "artifacts/visual-evidence/children-360-light-rtl.jpg",
+      "bytes": 58409,
+      "expected": "6DE0FD643AD4AB959A0F9FA4F34113A5F179BC73FE737A3FB30F5038F97ECA6C",
+      "actual": "6DE0FD643AD4AB959A0F9FA4F34113A5F179BC73FE737A3FB30F5038F97ECA6C",
+      "match": true
+    },
+    {
+      "path": "artifacts/visual-evidence/daily-360-dark-ltr.jpg",
+      "bytes": 59465,
+      "expected": "1A9A0070ECC6DF76438F0C859F046A9D58933B4BEA109CAAF6F9E12466031357",
+      "actual": "1A9A0070ECC6DF76438F0C859F046A9D58933B4BEA109CAAF6F9E12466031357",
+      "match": true
+    },
+    {
+      "path": "artifacts/visual-evidence/daily-768-light-rtl.jpg",
+      "bytes": 103135,
+      "expected": "ABF7543D2FC80A819C124697AA2392448BE532C35412BA7AD339EE95162E363E",
+      "actual": "ABF7543D2FC80A819C124697AA2392448BE532C35412BA7AD339EE95162E363E",
+      "match": true
+    },
+    {
+      "path": "artifacts/visual-evidence/daily-verse-honesty-1440-dark-rtl.jpg",
+      "bytes": 151248,
+      "expected": "A3E8DA7BE6AFBCD58BFA8D29E9DA69B066BCCB4D4FB065A8113922954313BA85",
+      "actual": "A3E8DA7BE6AFBCD58BFA8D29E9DA69B066BCCB4D4FB065A8113922954313BA85",
+      "match": true
+    },
+    {
+      "path": "artifacts/visual-evidence/hadith-1440-light-rtl.jpg",
+      "bytes": 197807,
+      "expected": "724AB8227378A75AE9327C21722EB1E13EC553905086A4C923CF24FE2AE39BEE",
+      "actual": "724AB8227378A75AE9327C21722EB1E13EC553905086A4C923CF24FE2AE39BEE",
+      "match": true
+    },
+    {
+      "path": "artifacts/visual-evidence/seerah-1440-dark-rtl.jpg",
+      "bytes": 212857,
+      "expected": "F264C2F3452F9FE8FF728439846A60E02E636AF6C3B3E98177F47B58842C4D00",
+      "actual": "F264C2F3452F9FE8FF728439846A60E02E636AF6C3B3E98177F47B58842C4D00",
+      "match": true
+    }
+  ]
+}

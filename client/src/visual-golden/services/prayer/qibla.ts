@@ -29,7 +29,7 @@ export function distanceToKaabaKm(lat: number, lng: number): number {
   return 2 * R * Math.asin(Math.min(1, Math.sqrt(a)));
 }
 
-export function compassCardinal(deg: number, lang: "ar" | "en") {
+export function compassCardinal(deg: number, lang: "ar" | "en" | "fr" | "ur") {
   const dirs =
     lang === "ar"
       ? ["شمال", "شمال شرق", "شرق", "جنوب شرق", "جنوب", "جنوب غرب", "غرب", "شمال غرب"]

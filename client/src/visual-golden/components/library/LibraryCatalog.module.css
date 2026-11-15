@@ -234,6 +234,7 @@
   background: rgba(178, 126, 23, 0.15);
 }
 
+.availability_catalog_text,
 .availability_metadata_only,
 .availability_digital_unavailable,
 .availability_external_reader {
@@ -254,7 +255,7 @@
 .back,
 .versionActions a,
 .versionActions button {
-  min-height: 42px;
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;

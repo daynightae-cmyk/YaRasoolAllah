@@ -113,9 +113,9 @@ export function CatalogShelfHall({ query, initialCategory, onOpen }: Props) {
     );
   }, [categoryWorks, lang, subcategory]);
 
-  // payload.counts.digitalVersions is the research pipeline's row count, not
-  // what a reader can open. This figure is derived the same way the reader
-  // decides, so the hall cannot announce more books than exist.
+  // This is the governed reader count, not the research pipeline's row count.
+  // It is derived with the same catalog-to-registry gate the reader uses, so
+  // the hall cannot announce books that have not cleared reading review.
   const readableCount = useMemo(
     () => (payload?.works ?? []).filter((work) => canReadTextInside(work)).length,
     [payload],
@@ -177,7 +177,7 @@ export function CatalogShelfHall({ query, initialCategory, onOpen }: Props) {
         <div className={styles.stats}>
           <strong>{payload.counts.works.toLocaleString(lang)}</strong>
           <span>{labels.books}</span>
-          <small>{readableCount.toLocaleString(lang)} {lang === "ar" ? "نسخة نصية قابلة للقراءة" : "texts readable now"}</small>
+          <small>{readableCount.toLocaleString(lang)} {lang === "ar" ? "عملاً نصياً مؤهلاً للقراءة" : "works cleared for in-app reading"}</small>
         </div>
       </header>
 

@@ -4,7 +4,7 @@ import styles from "./basirah.module.css";
 interface Props {
   scope: BasirahScope;
   mode: BasirahMode;
-  lang: "ar" | "en";
+  lang: "ar" | "en" | "fr" | "ur";
   onScope: (s: BasirahScope) => void;
   onMode: (m: BasirahMode) => void;
 }

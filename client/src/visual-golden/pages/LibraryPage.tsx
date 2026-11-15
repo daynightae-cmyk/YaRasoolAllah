@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import {
   ArrowUpRight,
   BookOpen,
@@ -12,15 +12,28 @@ import { PageHero } from "@/visual-golden/components/shared/PageHero";
 import { CatalogShelfHall } from "@/visual-golden/components/library/CatalogShelfHall";
 import { LibraryCatalog } from "@/visual-golden/components/library/LibraryCatalog";
 import { CatalogReadingChamber } from "@/visual-golden/components/library/CatalogReadingChamber";
-import { Library3D } from "@/visual-golden/components/library/Library3D";
 import { SectionEntry3D } from "@/visual-golden/components/entry/SectionEntry3D";
+import { useEffectiveMotion } from "@/visual-golden/lib/institution/effective-motion";
 import {
+  isLowCapacityDevice,
+  readDeviceCapacitySignals,
+} from "@/visual-golden/lib/institution/device-capacity";
+import {
+  canReadTextInside,
   catalogCapabilityReport,
   loadFullLibraryCatalog,
   type CatalogPayload,
   type CatalogWork,
 } from "@/visual-golden/services/catalog-library";
 import styles from "./LibraryPage.module.css";
+
+// Keep the engine out of the Library route chunk. The deep-reader route and
+// the DOM shelves never request Three.js; only the explicit 3D view does.
+const Library3D = lazy(() =>
+  import("@/visual-golden/components/library/Library3D").then((module) => ({
+    default: module.Library3D,
+  })),
+);
 
 type LibraryView = "library3d" | "shelves" | "catalog";
 
@@ -102,15 +115,30 @@ const DOMAIN_GATEWAYS: DomainGateway[] = [
 
 export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
   const lang = useInstitution((state) => state.lang);
+  const hydrated = useInstitution((state) => state.hydrated);
+  const motion = useEffectiveMotion();
+  const [lowCapacity] = useState(() =>
+    isLowCapacityDevice(readDeviceCapacitySignals()),
+  );
   const [query, setQuery] = useState("");
-  const [view, setView] = useState<LibraryView>(
-    initialWorkId ? "catalog" : "library3d",
+  const [viewChoice, setViewChoice] = useState<LibraryView | "auto">(
+    initialWorkId ? "catalog" : "auto",
   );
   const [shelfDomain, setShelfDomain] = useState<string | undefined>();
   const [catalogCategory, setCatalogCategory] = useState<string | undefined>();
   const [openWork, setOpenWork] = useState<CatalogWork | null>(null);
   const [payload, setPayload] = useState<CatalogPayload | null>(null);
   const [catalogError, setCatalogError] = useState("");
+  const recordReadingProgress = useInstitution((state) => state.recordReadingProgress);
+
+  // The complete DOM shelves are the default whenever the device is weak or
+  // reduced motion is active. The 3D arcade remains available as an explicit
+  // choice, but it is never required to search, browse, or read.
+  const autoView: LibraryView =
+    motion === "reduced" || lowCapacity ? "shelves" : "library3d";
+  const view: LibraryView = viewChoice === "auto" ? autoView : viewChoice;
+  const showAutoViewNote =
+    hydrated && viewChoice === "auto" && autoView === "shelves";
 
   // One shared, memoised fetch feeds the 3D halls, the capability statement,
   // and the domain counts. The shelf and catalog views reuse the same promise,
@@ -157,16 +185,16 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
     ? {
         title: "المكتبة الكبرى",
         subtitle: capability
-          ? `${arNumber.format(capability.readableText)} نسخة نصية قابلة للقراءة الآن من ${arNumber.format(capability.works)} عملاً مصنفًا، و${arNumber.format(capability.metadataOnly)} سجلاً فهرسياً فقط بلا نسخة مرفقة.`
+          ? `${arNumber.format(capability.readableText)} عملاً نصياً مؤهلاً للقراءة داخل المنصة من ${arNumber.format(capability.works)} عملاً مصنفاً؛ و${arNumber.format(capability.catalogTextOnly)} نصاً مسجلاً في الفهرس لم يجتز مراجعة النسخة والحقوق للقراءة الداخلية، و${arNumber.format(capability.metadataOnly)} سجلاً فهرسياً فقط بلا نسخة مرفقة.`
           : "جارٍ قياس ما يمكن فتحه فعليًا من الفهرس…",
         description:
-          "ادخل رواقًا ثلاثي الأبعاد، امشِ بين خزائن الكتب، واختر كتابًا حقيقيًا من الفهرس لتقرأه داخل المؤسسة. لا توجد تسجيلات صوتية معتمدة بعد، والمصادر تبقى موثقة كما هي.",
+          "ادخل رواقًا ثلاثي الأبعاد، امشِ بين خزائن الكتب، واختر عملاً حقيقياً من الفهرس. الأعمال التي لها نسخة OpenITI مؤهلة فقط هي التي تُقرأ داخل المؤسسة. لا توجد تسجيلات صوتية معتمدة بعد، والمصادر تبقى موثقة كما هي.",
         search:
           "ابحث في كل الكتب والرفوف باسم الكتاب أو المؤلف أو القسم…",
         searchLabel: "بحث داخل المكتبة الكاملة",
         searchHint: "يُبحث داخل كل الرفوف",
-        threeD: "المكتبة المفتوحة",
-        threeDHint: "امشِ بين الأروقة واختر كتابًا",
+        threeD: "المكتبة ثلاثية الأبعاد",
+        threeDHint: "تجوال مكاني اختياري؛ الرفوف والبحث يعملان دونه",
         shelves: "المكتبة والرفوف",
         shelvesHint: "كل الأعمال المصنفة موزعة على أبواب وقاعات ورفوف",
         catalog: "الفهرس العلمي",
@@ -184,20 +212,22 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
         error: "تعذر تحميل فهرس المكتبة.",
         retry: "إعادة المحاولة",
         enable3d: "إظهار المكتبة الثلاثية الأبعاد",
+        auto2d:
+          "فُتحت الرفوف الكاملة لأن جهازك أو إعداد تقليل الحركة يفضّل عرضًا أخف. يمكنك اختيار المشهد ثلاثي الأبعاد يدويًا في أي وقت.",
         domainNote: "يعمل الرف والبحث والفهرس في كل الأحوال.",
       }
     : {
         title: "The Grand Library",
         subtitle: capability
-          ? `${enNumber.format(capability.readableText)} texts readable now out of ${enNumber.format(capability.works)} catalogued works; ${enNumber.format(capability.metadataOnly)} records are catalog metadata only with nothing attached.`
+          ? `${enNumber.format(capability.readableText)} catalogued works have text cleared for in-app reading out of ${enNumber.format(capability.works)}; ${enNumber.format(capability.catalogTextOnly)} catalog text records have not cleared version and rights review for in-app reading, and ${enNumber.format(capability.metadataOnly)} records are catalog metadata only with nothing attached.`
           : "Measuring what the catalog can actually open…",
         description:
-          "Enter a three-dimensional arcade, walk between bookcases, and choose a real catalogued work to read inside the institution. No approved audio recording is available yet; provenance stays exactly as recorded.",
+          "Enter a three-dimensional arcade, walk between bookcases, and choose a real catalogued work. Only works with an eligible governed OpenITI version can be read inside the institution. No approved audio recording is available yet; provenance stays exactly as recorded.",
         search: "Search every book and shelf by title, author, or subject…",
         searchLabel: "Search the complete Library",
         searchHint: "Searching every shelf",
-        threeD: "The Open Library",
-        threeDHint: "Walk the arcades and choose a book",
+        threeD: "3D Library",
+        threeDHint: "Optional spatial browsing; shelves and search work without it",
         shelves: "Library & Shelves",
         shelvesHint: "All classified works arranged as domains, halls, and shelves",
         catalog: "Scholarly Catalog",
@@ -215,26 +245,45 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
         error: "The Library catalog could not be loaded.",
         retry: "Try again",
         enable3d: "Show the 3D Library",
+        auto2d:
+          "The complete shelves opened because this device or your reduced-motion setting prefers a lighter view. You can still choose the 3D arcade explicitly at any time.",
         domainNote: "The shelf, search, and catalog remain available regardless.",
       };
 
   const enterDomain = (category: string) => {
     setShelfDomain(category);
     setCatalogCategory(category);
-    setView("shelves");
+    setViewChoice("shelves");
   };
 
   const browseFromScene = (category?: string) => {
     setShelfDomain(category);
     setCatalogCategory(category);
-    setView("shelves");
+    setViewChoice("shelves");
+  };
+
+  const openReader = (work: CatalogWork) => {
+    setOpenWork(work);
+    recordReadingProgress({
+      id: `library:${work.id}`,
+      surface: "library",
+      path: `/library/work/${encodeURIComponent(work.id)}`,
+      titleAr: work.titleAr ?? work.titleEn ?? "عمل بلا عنوان مثبت",
+      titleEn: work.titleEn ?? work.titleAr ?? "Untitled catalog work",
+      locationAr: "قارئ المكتبة الداخلي",
+      locationEn: "Internal Library reader",
+      completed: null,
+      total: null,
+      unitAr: "عملًا",
+      unitEn: "works",
+    });
   };
 
   const onSearchChange = (value: string) => {
     setQuery(value);
     // The 3D arcade is a browsing surface, not a text result list. When a
     // reader starts searching, move them to the shelf results immediately.
-    if (value.trim().length > 1 && view === "library3d") setView("shelves");
+    if (value.trim().length > 1 && view === "library3d") setViewChoice("shelves");
   };
 
   const gateways = (
@@ -303,12 +352,22 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
     }
 
     return (
-      <Library3D
-        works={payload.works}
-        lang={lang}
-        onOpenWork={setOpenWork}
-        onBrowseShelves={browseFromScene}
-      />
+      <Suspense
+        fallback={
+          <section className={styles.catalogState} role="status">
+            <LoaderCircle className={styles.spinner} size={26} aria-hidden="true" />
+            <h2>{labels.loading}</h2>
+            <p>{labels.loadingHint}</p>
+          </section>
+        }
+      >
+        <Library3D
+          works={payload.works}
+          lang={lang}
+          onOpenWork={openReader}
+          onBrowseShelves={browseFromScene}
+        />
+      </Suspense>
     );
   })();
 
@@ -318,8 +377,8 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
       initialCategory={catalogCategory}
       query={query}
       onQueryChange={setQuery}
-      canOpenReader={() => true}
-      onOpenReader={(work) => setOpenWork(work as CatalogWork)}
+      canOpenReader={canReadTextInside}
+      onOpenReader={(work) => openReader(work as CatalogWork)}
     />
   );
 
@@ -353,7 +412,7 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
             <button
               type="button"
               className={view === "library3d" ? styles.modeOn : ""}
-              onClick={() => setView("library3d")}
+              onClick={() => setViewChoice("library3d")}
               aria-pressed={view === "library3d"}
             >
               <span className={styles.modeMark} aria-hidden="true">◈</span>
@@ -365,7 +424,7 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
             <button
               type="button"
               className={view === "shelves" ? styles.modeOn : ""}
-              onClick={() => setView("shelves")}
+              onClick={() => setViewChoice("shelves")}
               aria-pressed={view === "shelves"}
             >
               <LibraryBig size={19} aria-hidden="true" />
@@ -377,7 +436,7 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
             <button
               type="button"
               className={view === "catalog" ? styles.modeOn : ""}
-              onClick={() => setView("catalog")}
+              onClick={() => setViewChoice("catalog")}
               aria-pressed={view === "catalog"}
             >
               <BookOpen size={19} aria-hidden="true" />
@@ -388,6 +447,12 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
             </button>
           </nav>
 
+          {showAutoViewNote ? (
+            <p className={styles.autoViewNote} role="status">
+              {labels.auto2d}
+            </p>
+          ) : null}
+
           {view === "library3d" ? (
             scenePanel
           ) : view === "shelves" ? (
@@ -395,7 +460,7 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
               key={shelfDomain ?? "all"}
               query={query}
               initialCategory={shelfDomain}
-              onOpen={setOpenWork}
+              onOpen={openReader}
             />
           ) : (
             catalogContent
@@ -419,7 +484,7 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
   return (
     <SectionEntry3D
       wing="library"
-      active
+      active={!initialWorkId}
       onEntered={() => {
         // The page is already mounted beneath the threshold; the door simply
         // reveals it once the visitor crosses into the wing.

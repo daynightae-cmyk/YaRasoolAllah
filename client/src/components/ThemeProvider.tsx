@@ -1,10 +1,14 @@
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
-  useState,
-  ReactNode,
+  type ReactNode,
 } from "react";
+import {
+  useInstitution,
+  type ThemeMode as InstitutionThemeMode,
+} from "@/visual-golden/lib/institution/store";
 
 type ThemeMode = "heaven" | "earth";
 
@@ -22,33 +26,46 @@ interface ThemeProviderProps {
   storageKey?: string;
 }
 
+/**
+ * The institutional store is the single persisted theme authority. The
+ * legacy heaven/earth context remains as a compatibility adapter for pages
+ * that still consume it, so the two providers cannot drift apart.
+ */
 export function ThemeProvider({
   children,
-  defaultMode = "earth",
+  defaultMode = "heaven",
   storageKey = "divine-mode",
 }: ThemeProviderProps) {
-  const [mode, setModeState] = useState<ThemeMode>(defaultMode);
+  const institutionTheme = useInstitution((state) => state.theme);
+  const setInstitutionTheme = useInstitution((state) => state.setTheme);
+  const hydrate = useInstitution((state) => state.hydrate);
+  const mode: ThemeMode = institutionTheme === "light" ? "earth" : "heaven";
 
   useEffect(() => {
+    let hasInstitutionTheme = false;
     try {
-      const stored = localStorage.getItem(storageKey) as ThemeMode;
-      if (stored && (stored === "heaven" || stored === "earth")) {
-        setModeState(stored);
+      hasInstitutionTheme = localStorage.getItem("yra-visual-golden-v1") !== null;
+      hydrate();
+      if (!hasInstitutionTheme) {
+        const legacy = localStorage.getItem(storageKey);
+        if (legacy === "heaven" || legacy === "earth") {
+          setInstitutionTheme(legacy === "earth" ? "light" : "dark");
+        } else if (defaultMode === "heaven" || defaultMode === "earth") {
+          setInstitutionTheme(defaultMode === "earth" ? "light" : "dark");
+        }
       }
     } catch (error) {
       console.warn("Failed to load theme from localStorage:", error);
     }
-  }, [storageKey]);
+  }, [defaultMode, hydrate, setInstitutionTheme, storageKey]);
 
   useEffect(() => {
     const root = window.document.documentElement;
     const body = document.body;
 
-    // Remove previous theme classes
     root.classList.remove("theme-heaven", "theme-earth", "dark", "light");
     body.classList.remove("theme-heaven", "theme-earth", "dark", "light");
 
-    // Add current theme class and standard Tailwind dark class
     root.classList.add(`theme-${mode}`);
     body.classList.add(`theme-${mode}`);
     if (mode === "heaven") {
@@ -59,49 +76,49 @@ export function ThemeProvider({
       body.classList.add("light");
     }
 
-    // Clean inline body style override to let institutional CSS tokens govern smoothly
+    root.dataset.theme = institutionTheme;
     body.style.cssText = "";
 
-    // Store in localStorage
     try {
       localStorage.setItem(storageKey, mode);
     } catch (error) {
       console.warn("Failed to save theme to localStorage:", error);
     }
-  }, [mode, storageKey]);
+  }, [institutionTheme, mode, storageKey]);
 
-  const setMode = (newMode: ThemeMode) => {
-    setModeState(newMode);
-  };
+  const setMode = useCallback(
+    (newMode: ThemeMode) => {
+      setInstitutionTheme(newMode === "earth" ? "light" : "dark");
+    },
+    [setInstitutionTheme],
+  );
 
-  const toggleMode = () => {
-    const newMode = mode === "heaven" ? "earth" : "heaven";
-    setModeState(newMode);
+  const toggleMode = useCallback(() => {
+    const newMode: ThemeMode = mode === "heaven" ? "earth" : "heaven";
+    setMode(newMode);
 
-    // Add dramatic transition effect
     document.body.style.transition = "all 1.2s cubic-bezier(0.4, 0, 0.2, 1)";
 
-    // Play sound effect (if available)
     try {
       const audio = new Audio("/sounds/divine-toggle.mp3");
       audio.volume = 0.2;
       audio.play().catch(() => {
-        // Ignore errors if sound file doesn't exist
+        // The visual preference still applies when the optional sound is absent.
       });
-    } catch (error) {
-      // Ignore audio errors
+    } catch {
+      // Audio is optional and must never block the theme change.
     }
 
-    // Trigger custom event for other components
-    const event = new CustomEvent("divine-mode-change", {
-      detail: {
-        oldMode: mode,
-        newMode,
-        timestamp: Date.now(),
-      },
-    });
-    window.dispatchEvent(event);
-  };
+    window.dispatchEvent(
+      new CustomEvent("divine-mode-change", {
+        detail: {
+          oldMode: mode,
+          newMode,
+          timestamp: Date.now(),
+        },
+      }),
+    );
+  }, [mode, setMode]);
 
   const value = {
     mode,
@@ -124,3 +141,5 @@ export const useTheme = () => {
 
   return context;
 };
+
+export type { InstitutionThemeMode };

@@ -69,6 +69,33 @@
   --header-height: 68px;
   --section-gap: 4rem;
 
+  /* Semantic depth surfaces. Components should consume these roles rather
+     than repeating dark/light rgba values for every panel. */
+  --surface-page: var(--bg-primary);
+  --surface-raised: var(--bg-tertiary);
+  --surface-card: var(--bg-card);
+  --surface-glass: var(--bg-glass);
+  --surface-portal: rgba(2, 10, 12, 0.92);
+  --surface-modal: rgba(2, 10, 12, 0.97);
+  --surface-subtle: rgba(255, 255, 255, 0.025);
+
+  /* State colours */
+  --state-available: #34d399;
+  --state-review: #fbbf24;
+  --state-blocked: #fb7185;
+  --state-neutral: #a8a29e;
+  --focus-ring: var(--accent-gold-soft);
+
+  /* Spacing scale */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
   /* Transitions */
   --ease-smooth: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-deep: cubic-bezier(0.16, 1, 0.3, 1);
@@ -80,6 +107,8 @@
   --font-display: "Amiri", "Traditional Arabic", "Noto Naskh Arabic", serif;
   --font-ui: "Cairo", "Tajawal", "Segoe UI", system-ui, sans-serif;
   --font-latin: "Inter", system-ui, sans-serif;
+  --font-reading: "Noto Naskh Arabic", "Amiri", "Traditional Arabic", serif;
+  --line-height-reading: 2.15;
 }
 
 /* --- Light Theme / Warm Parchment --- */
@@ -115,6 +144,66 @@
   --shadow-gold: 0 0 30px rgba(161, 98, 7, 0.10);
   --shadow-emerald: 0 0 30px rgba(4, 120, 87, 0.08);
   --shadow-card: 0 12px 40px -12px rgba(0, 0, 0, 0.08);
+
+  --surface-page: var(--bg-primary);
+  --surface-raised: var(--bg-tertiary);
+  --surface-card: var(--bg-card);
+  --surface-glass: var(--bg-glass);
+  --surface-portal: rgba(255, 255, 255, 0.97);
+  --surface-modal: rgba(255, 255, 255, 0.99);
+  --surface-subtle: rgba(15, 28, 36, 0.025);
+  --state-available: #047857;
+  --state-review: #a16207;
+  --state-blocked: #be123c;
+  --state-neutral: #64748b;
+  --focus-ring: #92400e;
+}
+
+/* --- High Contrast Theme --- */
+.vg-shell[data-theme="contrast"] {
+  --bg-primary: #000000;
+  --bg-secondary: #090909;
+  --bg-tertiary: #121212;
+  --bg-panel: #171717;
+  --bg-card: #1d1d1d;
+  --bg-elevated: #000000;
+  --bg-glass: rgba(255, 255, 255, 0.12);
+  --bg-glass-strong: rgba(255, 255, 255, 0.2);
+
+  --text-primary: #ffffff;
+  --text-secondary: #ffffff;
+  --text-muted: #e5e7eb;
+  --text-gold: #ffd75f;
+  --text-emerald: #6fffc5;
+  --text-ink-dark: #000000;
+
+  --accent-gold: #ffd75f;
+  --accent-gold-soft: #fff0a6;
+  --accent-emerald: #38ffb0;
+  --accent-emerald-soft: #a8ffd9;
+  --accent-lapis: #8ab4ff;
+  --accent-lapis-soft: #c9dcff;
+
+  --border-gold: #ffd75f;
+  --border-emerald: #6fffc5;
+  --border-panel: rgba(255, 255, 255, 0.72);
+  --border-subtle: rgba(255, 255, 255, 0.38);
+  --surface-page: #000000;
+  --surface-raised: #121212;
+  --surface-card: #1d1d1d;
+  --surface-glass: rgba(255, 255, 255, 0.12);
+  --surface-portal: #000000;
+  --surface-modal: #000000;
+  --surface-subtle: rgba(255, 255, 255, 0.08);
+  --state-available: #6fffc5;
+  --state-review: #ffd75f;
+  --state-blocked: #ff8fa3;
+  --state-neutral: #ffffff;
+  --focus-ring: #ffffff;
+  --shadow-panel: 0 0 0 2px #ffffff;
+  --shadow-gold: 0 0 0 2px #ffd75f;
+  --shadow-emerald: 0 0 0 2px #6fffc5;
+  --shadow-card: 0 0 0 1px #ffffff;
 }
 
 /* --- Base Shell --- */
@@ -144,6 +233,28 @@
 .vg-shell .text-black { color: #000000; }
 .vg-shell a { color: inherit; text-decoration: none; }
 .vg-shell button:not(:disabled), .vg-shell [role="button"]:not(:disabled) { cursor: pointer; }
+
+/* Content controls share one practical touch-target floor. The shell already
+   enforces this locally; route content did not, so compact chips, reader
+   tools, and icon actions could be much smaller than 44px on a phone. Keep
+   the rule at the shell boundary so every current and future route inherits
+   it without duplicating route-specific sizing. Precision beads in the
+   tasbih string are the one deliberate exception: they model closely spaced
+   physical beads rather than standalone actions. */
+.vg-shell.vg-shell :where(
+  button,
+  input:not([type="hidden"]),
+  select,
+  textarea,
+  summary,
+  [role="button"],
+  [role="tab"]
+) {
+  min-block-size: 44px;
+}
+.vg-shell.vg-shell :where(button, select, [role="button"], [role="tab"]) {
+  min-inline-size: 44px;
+}
 
 /* --- Typography: Calligraphic Display --- */
 .calligraphy {
@@ -308,9 +419,19 @@
 }
 
 /* --- Reduced Motion --- */
+.vg-shell[data-motion="reduced"] *,
+.vg-shell[data-motion="reduced"] *::before,
+.vg-shell[data-motion="reduced"] *::after {
+  scroll-behavior: auto !important;
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .vg-shell *, .islamic-ornament::before, .islamic-ornament::after,
   .ken-burns, .vg-page-enter, .rosette-turn {
+    scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

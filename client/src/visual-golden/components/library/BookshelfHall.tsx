@@ -36,7 +36,7 @@ function BookCard({
   book: LibraryBook;
   selected: boolean;
   onSelect: (book: LibraryBook) => void;
-  lang: "ar" | "en";
+  lang: "ar" | "en" | "fr" | "ur";
 }) {
   const title = lang === "ar" ? book.title : book.titleEn;
   const author = lang === "ar" ? book.author : book.authorEn;

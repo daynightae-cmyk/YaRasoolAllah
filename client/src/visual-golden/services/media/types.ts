@@ -39,6 +39,14 @@ export type MediaDiscoveryRecord = {
   verification_method: string | null;
   verification_evidence_urls: string[] | null;
   notes: string | null;
+  rights_action: string | null;
+  review_reason: string | null;
+  review_next_action: string | null;
+  provenance: {
+    sourceFile: string;
+    sourceRow: number;
+    inputSha256: string;
+  };
 };
 
 export type MediaReviewGate = "discovery" | "publisher" | "rights" | "embed" | "editorial" | "religious_review" | "depiction_review" | "publication";

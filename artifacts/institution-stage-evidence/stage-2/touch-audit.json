@@ -1,0 +1,377 @@
+{
+  "capturedAt": "2026-11-15T14:23:15.732Z",
+  "base": "http://localhost:3000",
+  "reducedMotion": "reduce",
+  "viewports": [
+    "360x900",
+    "768x1024"
+  ],
+  "routes": [
+    {
+      "name": "home",
+      "route": "/"
+    },
+    {
+      "name": "quran",
+      "route": "/quran"
+    },
+    {
+      "name": "library",
+      "route": "/library"
+    },
+    {
+      "name": "library-work",
+      "route": "/library/work/work-tabari-tafsir"
+    },
+    {
+      "name": "audio",
+      "route": "/audio"
+    },
+    {
+      "name": "tafsir",
+      "route": "/tafsir"
+    },
+    {
+      "name": "seerah",
+      "route": "/seerah"
+    },
+    {
+      "name": "hadith",
+      "route": "/hadith"
+    },
+    {
+      "name": "sources",
+      "route": "/sources"
+    },
+    {
+      "name": "daily",
+      "route": "/daily"
+    },
+    {
+      "name": "basirah",
+      "route": "/basirah"
+    },
+    {
+      "name": "kids",
+      "route": "/kids"
+    },
+    {
+      "name": "atlas",
+      "route": "/atlas"
+    }
+  ],
+  "results": [
+    {
+      "name": "home",
+      "route": "/",
+      "viewport": "360x900",
+      "status": "ok",
+      "url": "http://localhost:3000/?door=0",
+      "viewportWidth": 360,
+      "documentOverflow": false,
+      "scrollWidth": 360,
+      "interactiveCount": 38,
+      "undersized": []
+    },
+    {
+      "name": "quran",
+      "route": "/quran",
+      "viewport": "360x900",
+      "status": "ok",
+      "url": "http://localhost:3000/quran?door=0&surah=1&ayah=1",
+      "viewportWidth": 360,
+      "documentOverflow": false,
+      "scrollWidth": 360,
+      "interactiveCount": 102,
+      "undersized": []
+    },
+    {
+      "name": "library",
+      "route": "/library",
+      "viewport": "360x900",
+      "status": "ok",
+      "url": "http://localhost:3000/library?door=0",
+      "viewportWidth": 360,
+      "documentOverflow": false,
+      "scrollWidth": 360,
+      "interactiveCount": 48,
+      "undersized": []
+    },
+    {
+      "name": "library-work",
+      "route": "/library/work/work-tabari-tafsir",
+      "viewport": "360x900",
+      "status": "ok",
+      "url": "http://localhost:3000/library/work/work-tabari-tafsir?door=0",
+      "viewportWidth": 360,
+      "documentOverflow": false,
+      "scrollWidth": 360,
+      "interactiveCount": 20,
+      "undersized": []
+    },
+    {
+      "name": "audio",
+      "route": "/audio",
+      "viewport": "360x900",
+      "status": "ok",
+      "url": "http://localhost:3000/audio?door=0",
+      "viewportWidth": 360,
+      "documentOverflow": false,
+      "scrollWidth": 360,
+      "interactiveCount": 131,
+      "undersized": []
+    },
+    {
+      "name": "tafsir",
+      "route": "/tafsir",
+      "viewport": "360x900",
+      "status": "ok",
+      "url": "http://localhost:3000/tafsir?door=0",
+      "viewportWidth": 360,
+      "documentOverflow": false,
+      "scrollWidth": 360,
+      "interactiveCount": 41,
+      "undersized": []
+    },
+    {
+      "name": "seerah",
+      "route": "/seerah",
+      "viewport": "360x900",
+      "status": "ok",
+      "url": "http://localhost:3000/seerah?chapter=hijra-to-madinah&event=hijra-start&door=0",
+      "viewportWidth": 360,
+      "documentOverflow": false,
+      "scrollWidth": 360,
+      "interactiveCount": 39,
+      "undersized": []
+    },
+    {
+      "name": "hadith",
+      "route": "/hadith",
+      "viewport": "360x900",
+      "status": "ok",
+      "url": "http://localhost:3000/hadith?door=0&sample=bukhari-1&collection=bukhari",
+      "viewportWidth": 360,
+      "documentOverflow": false,
+      "scrollWidth": 360,
+      "interactiveCount": 35,
+      "undersized": []
+    },
+    {
+      "name": "sources",
+      "route": "/sources",
+      "viewport": "360x900",
+      "status": "ok",
+      "url": "http://localhost:3000/sources?door=0",
+      "viewportWidth": 360,
+      "documentOverflow": false,
+      "scrollWidth": 360,
+      "interactiveCount": 20,
+      "undersized": []
+    },
+    {
+      "name": "daily",
+      "route": "/daily",
+      "viewport": "360x900",
+      "status": "ok",
+      "url": "http://localhost:3000/daily?door=0",
+      "viewportWidth": 360,
+      "documentOverflow": false,
+      "scrollWidth": 360,
+      "interactiveCount": 88,
+      "undersized": []
+    },
+    {
+      "name": "basirah",
+      "route": "/basirah",
+      "viewport": "360x900",
+      "status": "ok",
+      "url": "http://localhost:3000/basirah?door=0",
+      "viewportWidth": 360,
+      "documentOverflow": false,
+      "scrollWidth": 360,
+      "interactiveCount": 56,
+      "undersized": []
+    },
+    {
+      "name": "kids",
+      "route": "/kids",
+      "viewport": "360x900",
+      "status": "ok",
+      "url": "http://localhost:3000/kids?door=0",
+      "viewportWidth": 360,
+      "documentOverflow": false,
+      "scrollWidth": 360,
+      "interactiveCount": 30,
+      "undersized": []
+    },
+    {
+      "name": "atlas",
+      "route": "/atlas",
+      "viewport": "360x900",
+      "status": "ok",
+      "url": "http://localhost:3000/atlas?door=0",
+      "viewportWidth": 360,
+      "documentOverflow": false,
+      "scrollWidth": 360,
+      "interactiveCount": 38,
+      "undersized": []
+    },
+    {
+      "name": "home",
+      "route": "/",
+      "viewport": "768x1024",
+      "status": "ok",
+      "url": "http://localhost:3000/?door=0",
+      "viewportWidth": 768,
+      "documentOverflow": false,
+      "scrollWidth": 768,
+      "interactiveCount": 39,
+      "undersized": []
+    },
+    {
+      "name": "quran",
+      "route": "/quran",
+      "viewport": "768x1024",
+      "status": "ok",
+      "url": "http://localhost:3000/quran?door=0&surah=1&ayah=1",
+      "viewportWidth": 768,
+      "documentOverflow": false,
+      "scrollWidth": 768,
+      "interactiveCount": 108,
+      "undersized": []
+    },
+    {
+      "name": "library",
+      "route": "/library",
+      "viewport": "768x1024",
+      "status": "ok",
+      "url": "http://localhost:3000/library?door=0",
+      "viewportWidth": 768,
+      "documentOverflow": false,
+      "scrollWidth": 768,
+      "interactiveCount": 49,
+      "undersized": []
+    },
+    {
+      "name": "library-work",
+      "route": "/library/work/work-tabari-tafsir",
+      "viewport": "768x1024",
+      "status": "ok",
+      "url": "http://localhost:3000/library/work/work-tabari-tafsir?door=0",
+      "viewportWidth": 768,
+      "documentOverflow": false,
+      "scrollWidth": 768,
+      "interactiveCount": 21,
+      "undersized": []
+    },
+    {
+      "name": "audio",
+      "route": "/audio",
+      "viewport": "768x1024",
+      "status": "ok",
+      "url": "http://localhost:3000/audio?door=0",
+      "viewportWidth": 768,
+      "documentOverflow": false,
+      "scrollWidth": 768,
+      "interactiveCount": 141,
+      "undersized": []
+    },
+    {
+      "name": "tafsir",
+      "route": "/tafsir",
+      "viewport": "768x1024",
+      "status": "ok",
+      "url": "http://localhost:3000/tafsir?door=0",
+      "viewportWidth": 768,
+      "documentOverflow": false,
+      "scrollWidth": 768,
+      "interactiveCount": 42,
+      "undersized": []
+    },
+    {
+      "name": "seerah",
+      "route": "/seerah",
+      "viewport": "768x1024",
+      "status": "ok",
+      "url": "http://localhost:3000/seerah?chapter=hijra-to-madinah&event=hijra-start&door=0",
+      "viewportWidth": 768,
+      "documentOverflow": false,
+      "scrollWidth": 768,
+      "interactiveCount": 40,
+      "undersized": []
+    },
+    {
+      "name": "hadith",
+      "route": "/hadith",
+      "viewport": "768x1024",
+      "status": "ok",
+      "url": "http://localhost:3000/hadith?door=0&sample=bukhari-1&collection=bukhari",
+      "viewportWidth": 768,
+      "documentOverflow": false,
+      "scrollWidth": 768,
+      "interactiveCount": 36,
+      "undersized": []
+    },
+    {
+      "name": "sources",
+      "route": "/sources",
+      "viewport": "768x1024",
+      "status": "ok",
+      "url": "http://localhost:3000/sources?door=0",
+      "viewportWidth": 768,
+      "documentOverflow": false,
+      "scrollWidth": 768,
+      "interactiveCount": 21,
+      "undersized": []
+    },
+    {
+      "name": "daily",
+      "route": "/daily",
+      "viewport": "768x1024",
+      "status": "ok",
+      "url": "http://localhost:3000/daily?door=0",
+      "viewportWidth": 768,
+      "documentOverflow": false,
+      "scrollWidth": 768,
+      "interactiveCount": 89,
+      "undersized": []
+    },
+    {
+      "name": "basirah",
+      "route": "/basirah",
+      "viewport": "768x1024",
+      "status": "ok",
+      "url": "http://localhost:3000/basirah?door=0",
+      "viewportWidth": 768,
+      "documentOverflow": false,
+      "scrollWidth": 768,
+      "interactiveCount": 58,
+      "undersized": []
+    },
+    {
+      "name": "kids",
+      "route": "/kids",
+      "viewport": "768x1024",
+      "status": "ok",
+      "url": "http://localhost:3000/kids?door=0",
+      "viewportWidth": 768,
+      "documentOverflow": false,
+      "scrollWidth": 768,
+      "interactiveCount": 31,
+      "undersized": []
+    },
+    {
+      "name": "atlas",
+      "route": "/atlas",
+      "viewport": "768x1024",
+      "status": "ok",
+      "url": "http://localhost:3000/atlas?door=0",
+      "viewportWidth": 768,
+      "documentOverflow": false,
+      "scrollWidth": 768,
+      "interactiveCount": 39,
+      "undersized": []
+    }
+  ]
+}

@@ -15,6 +15,7 @@ import {
   type WorkRecord,
 } from "@shared/knowledge-registry";
 import { qualifiesForArchitecturalShelf } from "./library-catalog-presentation";
+import { getEligibleDirectOpenItiVersions } from "./direct-book-reader";
 
 export type BookMode = "عرض" | "قراءة" | "Audiobook";
 
@@ -110,9 +111,7 @@ function tagFor(record: WorkRecord): string {
 
 function toLibraryBook(record: WorkRecord): LibraryBook {
   const versions = digitalVersionRegistry.filter((version) => version.workId === record.workId);
-  const readableVersions = versions.filter(
-    (version) => version.contentAvailability === "full_text_cleared",
-  );
+  const readableVersions = getEligibleDirectOpenItiVersions(record.workId);
   const hasReadableText = readableVersions.length > 0;
   const audiobook = getProductionAudiobookForWork(record.workId);
   const modes: BookMode[] = ["عرض"];
@@ -130,9 +129,11 @@ function toLibraryBook(record: WorkRecord): LibraryBook {
     openitiWorkUri: record.openitiWorkUri,
     versionCount: versions.length,
     versions,
-    contentAvailability: hasReadableText ? "full_text_cleared" : "catalog_only",
+    contentAvailability: hasReadableText
+      ? readableVersions[0].contentAvailability
+      : "catalog_only",
     rightsState: hasReadableText
-      ? "cleared_public_domain_openiti_historical_text"
+      ? readableVersions[0].rightsState
       : "catalog_metadata_only_full_text_needs_version_review",
     bibliographicStatus: record.bibliographicStatus,
     scholarlyReviewStatus: record.scholarlyReviewStatus,
@@ -190,8 +191,6 @@ export const LIBRARY_COUNTS = {
   works: catalog.length,
   versions: digitalVersionRegistry.length,
   readableWorks: catalog.filter((book) => book.contentAvailability === "full_text_cleared").length,
-  readableVersions: digitalVersionRegistry.filter(
-    (version) => version.contentAvailability === "full_text_cleared",
-  ).length,
+  readableVersions: getEligibleDirectOpenItiVersions().length,
   audiobookWorks: catalog.filter((book) => Boolean(book.audiobook)).length,
 };

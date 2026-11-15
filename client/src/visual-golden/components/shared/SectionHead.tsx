@@ -2,22 +2,10 @@ import { Link } from "wouter";
 import { ChevronLeft } from "lucide-react";
 import styles from "./shared.module.css";
 
-type AppPath =
-  | "/"
-  | "/library"
-  | "/quran"
-  | "/tafsir"
-  | "/hadith"
-  | "/atlas"
-  | "/kids"
-  | "/daily"
-  | "/audio"
-  | "/seerah";
-
 interface Props {
   title: string;
   en?: string;
-  href?: AppPath;
+  href?: string;
   action?: string;
 }
 

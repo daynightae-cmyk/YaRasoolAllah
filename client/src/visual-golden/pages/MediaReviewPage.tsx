@@ -1,42 +1,22 @@
 import { useState } from "react";
-import { DISCOVERED_MEDIA_CATALOG, DISCOVERED_MEDIA_COUNTS } from "@/visual-golden/data/media-discovery.generated";
-import type { MediaDiscoveryRecord } from "@/visual-golden/services/media/types";
+import { ClipboardCheck } from "lucide-react";
+import { DISCOVERED_MEDIA_CATALOG } from "@/visual-golden/data/media-discovery.generated";
+import { filterMediaDiscoveryRecords, mediaReviewCounts } from "@/visual-golden/services/media/review-gates";
 import { MediaReviewTable } from "@/visual-golden/components/media/MediaReviewTable";
 import styles from "./MediaReviewPage.module.css";
-
-function filterRecords(
-  records: MediaDiscoveryRecord[],
-  query: string,
-  category: string | "all",
-  status: string | "all",
-): MediaDiscoveryRecord[] {
-  const normalized = query.trim().toLocaleLowerCase("ar");
-  return records.filter((record) => {
-    if (category !== "all" && record.category !== category) return false;
-    if (status !== "all" && record.publication_status !== status) return false;
-    if (!normalized) return true;
-    const haystack = [
-      record.title_ar,
-      record.title_original,
-      record.channel_name,
-      record.series_name,
-      record.speaker,
-      record.subcategory,
-    ]
-      .filter(Boolean)
-      .join(" ")
-      .toLocaleLowerCase("ar");
-    return haystack.includes(normalized);
-  });
-}
 
 export function MediaReviewPage() {
   const [query, setQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string | "all">("all");
   const [statusFilter, setStatusFilter] = useState<string | "all">("all");
-  const [isAdmin, setIsAdmin] = useState(
-    () => sessionStorage.getItem("yra-media-admin") === "1",
-  );
+  const [isAdmin, setIsAdmin] = useState(() => {
+    try {
+      return sessionStorage.getItem("yra-media-admin") === "1";
+    } catch {
+      return false;
+    }
+  });
+  const counts = mediaReviewCounts(DISCOVERED_MEDIA_CATALOG);
 
   const categories = [
     ...new Set(
@@ -50,7 +30,7 @@ export function MediaReviewPage() {
     ),
   ].sort();
 
-  const filtered = filterRecords(
+  const filtered = filterMediaDiscoveryRecords(
     DISCOVERED_MEDIA_CATALOG,
     query,
     categoryFilter,
@@ -58,7 +38,7 @@ export function MediaReviewPage() {
   );
 
   const openSource = (url: string) => {
-    window.open(url, "_blank");
+    window.open(url, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -66,7 +46,7 @@ export function MediaReviewPage() {
       <header className={styles.pageHead}>
         <div className={styles.headContent}>
           <span className={styles.pageMark} aria-hidden="true">
-            📋
+            <ClipboardCheck size={22} />
           </span>
           <div>
             <h1>مراجعة الوسائط المستوردة</h1>
@@ -82,10 +62,11 @@ export function MediaReviewPage() {
             onClick={() => {
               const next = !isAdmin;
               setIsAdmin(next);
-              if (next) {
-                sessionStorage.setItem("yra-media-admin", "1");
-              } else {
-                sessionStorage.removeItem("yra-media-admin");
+              try {
+                if (next) sessionStorage.setItem("yra-media-admin", "1");
+                else sessionStorage.removeItem("yra-media-admin");
+              } catch {
+                // The review mode may remain active for this page lifetime.
               }
             }}
           >
@@ -94,13 +75,13 @@ export function MediaReviewPage() {
         </div>
         <div className={styles.counts}>
           <span className={styles.countBadge}>
-            {DISCOVERED_MEDIA_COUNTS.total} سجل مستورد
+            {counts.total} سجل مستورد
           </span>
           <span className={`${styles.countBadge} ${styles.countBadgeBlocked}`}>
-            {DISCOVERED_MEDIA_COUNTS.pending} معلّق للمراجعة
+            {counts.pending} معلّق للمراجعة
           </span>
           <span className={`${styles.countBadge} ${styles.countBadgeOk}`}>
-            {DISCOVERED_MEDIA_COUNTS.approved} معتمد للعرض
+            {counts.approved} معتمد للعرض
           </span>
         </div>
       </header>
@@ -162,33 +143,9 @@ export function MediaReviewPage() {
             محظورًا ولا يظهر للجمهور.
           </p>
           <ul>
-            <li>
-              حقوق غير معروفة:{" "}
-              {
-                DISCOVERED_MEDIA_CATALOG.filter(
-                  (r) => r.rights_status === "UNKNOWN",
-                ).length
-              }{" "}
-              سجل
-            </li>
-            <li>
-              تضمين غير مختبر:{" "}
-              {
-                DISCOVERED_MEDIA_CATALOG.filter(
-                  (r) => r.embedding_status === "UNTESTED",
-                ).length
-              }{" "}
-              سجل
-            </li>
-            <li>
-              مراجعة تحريرية معلّقة:{" "}
-              {
-                DISCOVERED_MEDIA_CATALOG.filter(
-                  (r) => r.editorial_status === "PENDING_REVIEW",
-                ).length
-              }{" "}
-              سجل
-            </li>
+            <li>حقوق غير معروفة: {counts.rightsUnknown} سجل</li>
+            <li>تضمين غير مختبر: {counts.embeddingUntested} سجل</li>
+            <li>مراجعة تحريرية معلّقة: {counts.editorialPending} سجل</li>
           </ul>
           <p className={styles.adminNote}>
             ملاحظة: خط الترقية الحالي (promote-kids-media) يغطي كتالوج الأطفال
@@ -199,6 +156,9 @@ export function MediaReviewPage() {
 
       <MediaReviewTable
         records={filtered}
+        totalCount={counts.total}
+        approvedCount={counts.approved}
+        pendingCount={counts.pending}
         onOpenSource={openSource}
       />
     </div>

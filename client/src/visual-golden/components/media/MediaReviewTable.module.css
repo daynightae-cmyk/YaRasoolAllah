@@ -21,8 +21,18 @@
   color: var(--muted-foreground);
 }
 
+.tableScroller {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
 .table {
   width: 100%;
+  min-width: 62rem;
   border-collapse: collapse;
   font-size: 0.875rem;
 }
@@ -183,6 +193,13 @@
   border-color: var(--border-gold);
 }
 
+.emptyState {
+  padding: 1.5rem !important;
+  text-align: center !important;
+  color: var(--muted-foreground);
+  white-space: normal !important;
+}
+
 .footer {
   margin-top: 1rem;
   padding-top: 1rem;
@@ -250,8 +267,6 @@
 
 @media (max-width: 480px) {
   .table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
+    font-size: 0.78rem;
   }
 }

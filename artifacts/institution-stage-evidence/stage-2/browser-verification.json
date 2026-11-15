@@ -1,0 +1,128 @@
+{
+  "capturedAt": "2026-11-15T13:37:56.587Z",
+  "base": "http://localhost:3000",
+  "checks": [
+    {
+      "check": "reduced motion opens the complete shelves",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "check": "reduced motion explains the lighter default",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "check": "reduced motion does not create a WebGL canvas",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "check": "full motion opens the 3D arcade",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "check": "3D scene reports its catalog data provenance",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "check": "3D scene did not fall back on this browser",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "check": "keyboard Enter changes the active hall",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "check": "hall rail exposes every hall as a button",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "check": "touch/pointer click changes the active hall",
+      "expected": "true",
+      "actual": "true",
+      "pass": true
+    },
+    {
+      "check": "door shows the decorative-threshold notice",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "check": "route content is mounted beneath the door",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "check": "door is not a blocking modal dialog",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "check": "entering the wing removes the decorative overlay",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "check": "reduced motion bypasses a forced door",
+      "expected": 0,
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "check": "reduced motion still renders the wing content",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "check": "Tabari loads inside the governed reader",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "check": "Tabari uses the pinned immutable release",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "check": "Tabari reports cleared availability and rights",
+      "expected": [
+        "full_text_cleared",
+        "cleared_public_domain_openiti_historical_text"
+      ],
+      "actual": [
+        "full_text_cleared",
+        "cleared_public_domain_openiti_historical_text"
+      ],
+      "pass": true
+    },
+    {
+      "check": "Tabari renders readable segments",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    }
+  ],
+  "consoleErrors": [],
+  "failed": 0
+}

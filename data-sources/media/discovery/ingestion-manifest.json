@@ -1,28 +1,99 @@
 {
-  "schemaVersion": 1,
-  "generatedAt": "2026-11-15T00:51:38.087Z",
+  "schemaVersion": 2,
+  "generator": "media-discovery-ingest/2.0.0",
+  "generatedAt": "2026-11-15T00:00:00.000Z",
   "sourcePack": "YA_RASOOL_ALLAH_VERIFIED_MEDIA_ACQUISITION_PACK",
+  "sourceJob": "9e80bb2aa838",
   "sourceFiles": [
     "kids-media-catalog.csv",
     "seerah-media-catalog.csv"
+  ],
+  "inputs": [
+    {
+      "path": "data-sources/media/acquisition/media-acquisition-manifest.json",
+      "sha256": "da48454270324f339f6a8850f522ce980410429fa4afb4e377ccdd9246b0d3fc",
+      "bytes": 1261,
+      "hashMode": "utf8-lf"
+    },
+    {
+      "path": "data-sources/media/acquisition/kids-media-catalog.csv",
+      "sha256": "b5797f46785bbf98f3c6bb18a18f18d37083721e798c27b23dd6eb84874cfc75",
+      "bytes": 69917,
+      "hashMode": "utf8-lf"
+    },
+    {
+      "path": "data-sources/media/acquisition/kids-media-catalog.json",
+      "sha256": "4ec861095869ab9049041c300237e88a8935d67ebf8a1c6e47a53e7101cc10af",
+      "bytes": 139638,
+      "hashMode": "utf8-lf"
+    },
+    {
+      "path": "data-sources/media/acquisition/seerah-media-catalog.csv",
+      "sha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb",
+      "bytes": 44137,
+      "hashMode": "utf8-lf"
+    },
+    {
+      "path": "data-sources/media/acquisition/seerah-media-catalog.json",
+      "sha256": "3394fc7c860d0a2b525115f926d6f13a668b48e947e238c7058137ea3e3a1f0b",
+      "bytes": 79211,
+      "hashMode": "utf8-lf"
+    },
+    {
+      "path": "data-sources/media/acquisition/media-rights-ledger.csv",
+      "sha256": "6732cc175a035ea41fec6584fc601cb6703debfc1edfb009c8de13affdf10738",
+      "bytes": 29919,
+      "hashMode": "utf8-lf"
+    },
+    {
+      "path": "data-sources/media/acquisition/media-rejected-and-pending.csv",
+      "sha256": "eb992d2fcaf8d577c797bcb3c650d5875118c9806028dda3c17fc673fe4c1825",
+      "bytes": 30016,
+      "hashMode": "utf8-lf"
+    }
   ],
   "totalUniqueRecords": 95,
   "duplicatesSkipped": 0,
   "byCategory": {
     "kids": 46,
-    "القرآن الكريم للأطفال": 17,
-    "السيرة النبوية": 9,
     "seerah": 14,
-    "السيرة النبوية الكاملة": 9
+    "السيرة النبوية": 9,
+    "السيرة النبوية الكاملة": 9,
+    "القرآن الكريم للأطفال": 17
   },
   "byPublicationStatus": {
-    "DRAFT": 91,
-    "PENDING_REVIEW": 4
+    "DRAFT": 95
   },
   "byRightsStatus": {
     "UNKNOWN": 95
   },
   "approvedForPublicDisplay": 0,
   "blockedPendingReview": 95,
+  "rightsUnknown": 95,
+  "declaredFilesMissing": [
+    "kids-media-catalog-README.md",
+    "media-agent-handoff.md",
+    "media-publishers-registry.json",
+    "media-sources-registry.json",
+    "media-verification-report.md",
+    "seerah-media-catalog-README.md"
+  ],
+  "outputs": {
+    "catalog": {
+      "path": "data-sources/media/discovery/media-discovery-catalog.json",
+      "sha256": "da9a0ab92dc4c7fa0ad6951f12f43b01ea5facc2e684d18b762b91522993a3ae",
+      "bytes": 273048
+    },
+    "clientCatalog": {
+      "path": "client/src/visual-golden/data/media-discovery.generated.ts",
+      "sha256": "77bdcb140a693cec31f0808f4051f16a4cfb3bd12086f6ccef7ba8fba6d2d83e",
+      "bytes": 240997
+    },
+    "clientStatus": {
+      "path": "client/src/visual-golden/data/media-discovery-status.generated.ts",
+      "sha256": "8d054e29293e3d81e211d7f77d9c09dd198687bb763b0fdd2e7fd21b2b227749",
+      "bytes": 393
+    }
+  },
   "policy": "Discovery-only ingestion. No record is promoted to APPROVED. embed_url remains UNTESTED candidate until runtime verification."
 }

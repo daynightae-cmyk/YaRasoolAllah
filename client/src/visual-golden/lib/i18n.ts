@@ -1,4 +1,4 @@
-export type Lang = "ar" | "en";
+export type Lang = "ar" | "en" | "fr" | "ur";
 
 const dict = {
   ar: {
@@ -93,5 +93,8 @@ const dict = {
 } as const;
 
 export function t(lang: Lang, key: keyof typeof dict.ar) {
-  return dict[lang][key];
+  // French and Urdu remain available globally. The institutional chrome has
+  // no reviewed French/Urdu copy yet, so it falls back to the reviewed
+  // English chrome instead of displaying an untranslated mixed interface.
+  return dict[lang === "ar" ? "ar" : "en"][key];
 }

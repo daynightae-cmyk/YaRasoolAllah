@@ -28,8 +28,13 @@ test("internal category values never become normal user labels", () => {
 });
 
 test("availability labels are derived from version evidence with rights taking precedence", () => {
-  assert.equal(availabilityState(textVersion, 1), "full_text");
-  assert.equal(availabilityLabel("full_text", "ar"), "نص كامل متاح");
+  assert.equal(availabilityState(textVersion, 1, true), "full_text");
+  assert.equal(availabilityLabel("full_text", "ar"), "نص كامل مؤهل للقراءة داخل المنصة");
+  assert.equal(
+    availabilityState(textVersion, 1, false),
+    "catalog_text",
+    "a catalog text flag alone must not become in-app reading clearance",
+  );
   assert.equal(
     availabilityState({ ...textVersion, format: "PDF", rights: "NEEDS_ITEM_LEVEL_REVIEW" }, 1),
     "rights_review",

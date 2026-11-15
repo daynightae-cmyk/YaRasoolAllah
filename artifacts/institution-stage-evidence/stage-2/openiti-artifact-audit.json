@@ -1,0 +1,433 @@
+{
+  "summary": {
+    "purpose": "Verify every pinned OpenITI artifact resolves at the immutable release commit and that its decoded HEAD size matches the registry budget metadata. Accept-Encoding: identity prevents a compressed length from masquerading as the decoded length.",
+    "releaseCommit": "cfc4157a3cf2054c0888f133970a4eaa3e22e58c",
+    "checkedAt": "2026-11-15T13:39:21.904Z",
+    "total": 33,
+    "resolved": 33,
+    "failed": 0,
+    "mismatchedRegistryBytes": 0,
+    "largest": [
+      {
+        "versionId": "version-0310Tabari.JamicBayan.JK000164-ara1",
+        "decodedBytes": 26360746
+      },
+      {
+        "versionId": "version-0671AbuCabdAllahQurtubi.JamicLiAhkamQuran.JK000160-ara1",
+        "decodedBytes": 19352765
+      },
+      {
+        "versionId": "version-0774IbnKathir.Bidaya.JK000158-ara3",
+        "decodedBytes": 18794894
+      },
+      {
+        "versionId": "version-0774IbnKathir.TafsirQuran.JK000161-ara2",
+        "decodedBytes": 13935380
+      },
+      {
+        "versionId": "version-0310Tabari.Tarikh.JK000157-ara2",
+        "decodedBytes": 13019201
+      }
+    ],
+    "failedRows": [],
+    "mismatchedRows": []
+  },
+  "results": [
+    {
+      "versionId": "version-0213IbnHisham.SiraNabawiyya.Masaha003361Vols-ara1",
+      "workId": "work-ibn-hisham-sira",
+      "openitiUri": "0213IbnHisham.SiraNabawiyya.Masaha003361Vols-ara1",
+      "artifactPath": "data/0213IbnHisham/0213IbnHisham.SiraNabawiyya/0213IbnHisham.SiraNabawiyya.Masaha003361Vols-ara1",
+      "status": 200,
+      "decodedBytes": 4198673,
+      "registryBytes": 4198673,
+      "matchesRegistryBytes": true,
+      "contentType": "application/octet-stream",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0213IbnHisham/0213IbnHisham.SiraNabawiyya/0213IbnHisham.SiraNabawiyya.Masaha003361Vols-ara1"
+    },
+    {
+      "versionId": "version-0213IbnHisham.SiraNabawiyya.JK000797-ara1",
+      "workId": "work-ibn-hisham-sira",
+      "openitiUri": "0213IbnHisham.SiraNabawiyya.JK000797-ara1",
+      "artifactPath": "data/0213IbnHisham/0213IbnHisham.SiraNabawiyya/0213IbnHisham.SiraNabawiyya.JK000797-ara1",
+      "status": 200,
+      "decodedBytes": 2534280,
+      "registryBytes": 2534280,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0213IbnHisham/0213IbnHisham.SiraNabawiyya/0213IbnHisham.SiraNabawiyya.JK000797-ara1"
+    },
+    {
+      "versionId": "version-0213IbnHisham.SiraNabawiyya.ShamAY0034440-ara1",
+      "workId": "work-ibn-hisham-sira",
+      "openitiUri": "0213IbnHisham.SiraNabawiyya.ShamAY0034440-ara1",
+      "artifactPath": "data/0213IbnHisham/0213IbnHisham.SiraNabawiyya/0213IbnHisham.SiraNabawiyya.ShamAY0034440-ara1",
+      "status": 200,
+      "decodedBytes": 2565831,
+      "registryBytes": 2565831,
+      "matchesRegistryBytes": true,
+      "contentType": "application/octet-stream",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0213IbnHisham/0213IbnHisham.SiraNabawiyya/0213IbnHisham.SiraNabawiyya.ShamAY0034440-ara1"
+    },
+    {
+      "versionId": "version-0213IbnHisham.SiraNabawiyya.Shamela0007450-ara1",
+      "workId": "work-ibn-hisham-sira",
+      "openitiUri": "0213IbnHisham.SiraNabawiyya.Shamela0007450-ara1",
+      "artifactPath": "data/0213IbnHisham/0213IbnHisham.SiraNabawiyya/0213IbnHisham.SiraNabawiyya.Shamela0007450-ara1",
+      "status": 200,
+      "decodedBytes": 1398814,
+      "registryBytes": 1398814,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0213IbnHisham/0213IbnHisham.SiraNabawiyya/0213IbnHisham.SiraNabawiyya.Shamela0007450-ara1"
+    },
+    {
+      "versionId": "version-0213IbnHisham.SiraNabawiyya.Shamela0023833-ara1",
+      "workId": "work-ibn-hisham-sira",
+      "openitiUri": "0213IbnHisham.SiraNabawiyya.Shamela0023833-ara1",
+      "artifactPath": "data/0213IbnHisham/0213IbnHisham.SiraNabawiyya/0213IbnHisham.SiraNabawiyya.Shamela0023833-ara1.completed",
+      "status": 200,
+      "decodedBytes": 2654027,
+      "registryBytes": 2654027,
+      "matchesRegistryBytes": true,
+      "contentType": "application/octet-stream",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0213IbnHisham/0213IbnHisham.SiraNabawiyya/0213IbnHisham.SiraNabawiyya.Shamela0023833-ara1.completed"
+    },
+    {
+      "versionId": "version-0213IbnHisham.SiraNabawiyya.Shia003667Vols-ara1",
+      "workId": "work-ibn-hisham-sira",
+      "openitiUri": "0213IbnHisham.SiraNabawiyya.Shia003667Vols-ara1",
+      "artifactPath": "data/0213IbnHisham/0213IbnHisham.SiraNabawiyya/0213IbnHisham.SiraNabawiyya.Shia003667Vols-ara1",
+      "status": 200,
+      "decodedBytes": 2569775,
+      "registryBytes": 2569775,
+      "matchesRegistryBytes": true,
+      "contentType": "application/octet-stream",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0213IbnHisham/0213IbnHisham.SiraNabawiyya/0213IbnHisham.SiraNabawiyya.Shia003667Vols-ara1"
+    },
+    {
+      "versionId": "version-0230IbnSacd.TabaqatKubra.JK000744-ara5",
+      "workId": "work-ibn-sad-tabaqat",
+      "openitiUri": "0230IbnSacd.TabaqatKubra.JK000744-ara5",
+      "artifactPath": "data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.JK000744-ara5",
+      "status": 200,
+      "decodedBytes": 349773,
+      "registryBytes": 349773,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.JK000744-ara5"
+    },
+    {
+      "versionId": "version-0230IbnSacd.TabaqatKubra.JK000530-ara2",
+      "workId": "work-ibn-sad-tabaqat",
+      "openitiUri": "0230IbnSacd.TabaqatKubra.JK000530-ara2",
+      "artifactPath": "data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.JK000530-ara2",
+      "status": 200,
+      "decodedBytes": 7837123,
+      "registryBytes": 7837123,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.JK000530-ara2"
+    },
+    {
+      "versionId": "version-0230IbnSacd.TabaqatKubra.Shamela0001686-ara1",
+      "workId": "work-ibn-sad-tabaqat",
+      "openitiUri": "0230IbnSacd.TabaqatKubra.Shamela0001686-ara1",
+      "artifactPath": "data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.Shamela0001686-ara1.mARkdown",
+      "status": 200,
+      "decodedBytes": 8384540,
+      "registryBytes": 8384540,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.Shamela0001686-ara1.mARkdown"
+    },
+    {
+      "versionId": "version-0230IbnSacd.TabaqatKubra.ShamAY0034595-ara1",
+      "workId": "work-ibn-sad-tabaqat",
+      "openitiUri": "0230IbnSacd.TabaqatKubra.ShamAY0034595-ara1",
+      "artifactPath": "data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.ShamAY0034595-ara1",
+      "status": 200,
+      "decodedBytes": 10850846,
+      "registryBytes": 10850846,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.ShamAY0034595-ara1"
+    },
+    {
+      "versionId": "version-0230IbnSacd.TabaqatKubra.Shamela0001689-ara4",
+      "workId": "work-ibn-sad-tabaqat",
+      "openitiUri": "0230IbnSacd.TabaqatKubra.Shamela0001689-ara4",
+      "artifactPath": "data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.Shamela0001689-ara4",
+      "status": 200,
+      "decodedBytes": 613805,
+      "registryBytes": 613805,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.Shamela0001689-ara4"
+    },
+    {
+      "versionId": "version-0230IbnSacd.TabaqatKubra.ShamAY0035884-ara1",
+      "workId": "work-ibn-sad-tabaqat",
+      "openitiUri": "0230IbnSacd.TabaqatKubra.ShamAY0035884-ara1",
+      "artifactPath": "data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.ShamAY0035884-ara1.mARkdown",
+      "status": 200,
+      "decodedBytes": 11007272,
+      "registryBytes": 11007272,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.ShamAY0035884-ara1.mARkdown"
+    },
+    {
+      "versionId": "version-0230IbnSacd.TabaqatKubra.Shamela0007666-ara5",
+      "workId": "work-ibn-sad-tabaqat",
+      "openitiUri": "0230IbnSacd.TabaqatKubra.Shamela0007666-ara5",
+      "artifactPath": "data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.Shamela0007666-ara5",
+      "status": 200,
+      "decodedBytes": 528683,
+      "registryBytes": 528683,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.Shamela0007666-ara5"
+    },
+    {
+      "versionId": "version-0230IbnSacd.TabaqatKubra.Shamela0012416-ara3",
+      "workId": "work-ibn-sad-tabaqat",
+      "openitiUri": "0230IbnSacd.TabaqatKubra.Shamela0012416-ara3",
+      "artifactPath": "data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.Shamela0012416-ara3",
+      "status": 200,
+      "decodedBytes": 668622,
+      "registryBytes": 668622,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.Shamela0012416-ara3"
+    },
+    {
+      "versionId": "version-0230IbnSacd.TabaqatKubra.Shamela0009352-ara5",
+      "workId": "work-ibn-sad-tabaqat",
+      "openitiUri": "0230IbnSacd.TabaqatKubra.Shamela0009352-ara5",
+      "artifactPath": "data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.Shamela0009352-ara5",
+      "status": 200,
+      "decodedBytes": 364287,
+      "registryBytes": 364287,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.Shamela0009352-ara5"
+    },
+    {
+      "versionId": "version-0230IbnSacd.TabaqatKubra.Shia003044Vols-ara2",
+      "workId": "work-ibn-sad-tabaqat",
+      "openitiUri": "0230IbnSacd.TabaqatKubra.Shia003044Vols-ara2",
+      "artifactPath": "data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.Shia003044Vols-ara2",
+      "status": 200,
+      "decodedBytes": 7869497,
+      "registryBytes": 7869497,
+      "matchesRegistryBytes": true,
+      "contentType": "application/octet-stream",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.Shia003044Vols-ara2"
+    },
+    {
+      "versionId": "version-0230IbnSacd.TabaqatKubra.Shamela0009351-ara2",
+      "workId": "work-ibn-sad-tabaqat",
+      "openitiUri": "0230IbnSacd.TabaqatKubra.Shamela0009351-ara2",
+      "artifactPath": "data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.Shamela0009351-ara2",
+      "status": 200,
+      "decodedBytes": 8389713,
+      "registryBytes": 8389713,
+      "matchesRegistryBytes": true,
+      "contentType": "application/octet-stream",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0230IbnSacd/0230IbnSacd.TabaqatKubra/0230IbnSacd.TabaqatKubra.Shamela0009351-ara2"
+    },
+    {
+      "versionId": "version-0207Waqidi.Maghazi.JK009232-ara1",
+      "workId": "work-waqidi-maghazi",
+      "openitiUri": "0207Waqidi.Maghazi.JK009232-ara1",
+      "artifactPath": "data/0207Waqidi/0207Waqidi.Maghazi/0207Waqidi.Maghazi.JK009232-ara1",
+      "status": 200,
+      "decodedBytes": 2458005,
+      "registryBytes": 2458005,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0207Waqidi/0207Waqidi.Maghazi/0207Waqidi.Maghazi.JK009232-ara1"
+    },
+    {
+      "versionId": "version-0207Waqidi.Maghazi.Shamela0023680-ara1",
+      "workId": "work-waqidi-maghazi",
+      "openitiUri": "0207Waqidi.Maghazi.Shamela0023680-ara1",
+      "artifactPath": "data/0207Waqidi/0207Waqidi.Maghazi/0207Waqidi.Maghazi.Shamela0023680-ara1.mARkdown",
+      "status": 200,
+      "decodedBytes": 2409107,
+      "registryBytes": 2409107,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0207Waqidi/0207Waqidi.Maghazi/0207Waqidi.Maghazi.Shamela0023680-ara1.mARkdown"
+    },
+    {
+      "versionId": "version-0207Waqidi.Maghazi.Masaha003023Vols-ara1",
+      "workId": "work-waqidi-maghazi",
+      "openitiUri": "0207Waqidi.Maghazi.Masaha003023Vols-ara1",
+      "artifactPath": "data/0207Waqidi/0207Waqidi.Maghazi/0207Waqidi.Maghazi.Masaha003023Vols-ara1",
+      "status": 200,
+      "decodedBytes": 2867210,
+      "registryBytes": 2867210,
+      "matchesRegistryBytes": true,
+      "contentType": "application/octet-stream",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0207Waqidi/0207Waqidi.Maghazi/0207Waqidi.Maghazi.Masaha003023Vols-ara1"
+    },
+    {
+      "versionId": "version-0458Bayhaqi.DalailNubuwwa.JK006838-ara1",
+      "workId": "work-bayhaqi-dalail",
+      "openitiUri": "0458Bayhaqi.DalailNubuwwa.JK006838-ara1",
+      "artifactPath": "data/0458Bayhaqi/0458Bayhaqi.DalailNubuwwa/0458Bayhaqi.DalailNubuwwa.JK006838-ara1.mARkdown",
+      "status": 200,
+      "decodedBytes": 4825900,
+      "registryBytes": 4825900,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0458Bayhaqi/0458Bayhaqi.DalailNubuwwa/0458Bayhaqi.DalailNubuwwa.JK006838-ara1.mARkdown"
+    },
+    {
+      "versionId": "version-0310Tabari.Tarikh.JK000157-ara2",
+      "workId": "work-tabari-tarikh",
+      "openitiUri": "0310Tabari.Tarikh.JK000157-ara2",
+      "artifactPath": "data/0310Tabari/0310Tabari.Tarikh/0310Tabari.Tarikh.JK000157-ara2",
+      "status": 200,
+      "decodedBytes": 13019201,
+      "registryBytes": 13019201,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0310Tabari/0310Tabari.Tarikh/0310Tabari.Tarikh.JK000157-ara2"
+    },
+    {
+      "versionId": "version-0774IbnKathir.FusulMinSira.JK000796-ara1",
+      "workId": "work-ibn-kathir-fusul-sira",
+      "openitiUri": "0774IbnKathir.FusulMinSira.JK000796-ara1",
+      "artifactPath": "data/0774IbnKathir/0774IbnKathir.FusulMinSira/0774IbnKathir.FusulMinSira.JK000796-ara1",
+      "status": 200,
+      "decodedBytes": 364265,
+      "registryBytes": 364265,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0774IbnKathir/0774IbnKathir.FusulMinSira/0774IbnKathir.FusulMinSira.JK000796-ara1"
+    },
+    {
+      "versionId": "version-0510IbnMascudBaghawi.Tafsir.JK000464-ara1",
+      "workId": "work-baghawi-tafsir",
+      "openitiUri": "0510IbnMascudBaghawi.Tafsir.JK000464-ara1",
+      "artifactPath": "data/0510IbnMascudBaghawi/0510IbnMascudBaghawi.Tafsir/0510IbnMascudBaghawi.Tafsir.JK000464-ara1",
+      "status": 200,
+      "decodedBytes": 7908952,
+      "registryBytes": 7908952,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0510IbnMascudBaghawi/0510IbnMascudBaghawi.Tafsir/0510IbnMascudBaghawi.Tafsir.JK000464-ara1"
+    },
+    {
+      "versionId": "version-0774IbnKathir.Bidaya.JK000158-ara3",
+      "workId": "work-ibn-kathir-bidaya",
+      "openitiUri": "0774IbnKathir.Bidaya.JK000158-ara3",
+      "artifactPath": "data/0774IbnKathir/0774IbnKathir.Bidaya/0774IbnKathir.Bidaya.JK000158-ara3",
+      "status": 200,
+      "decodedBytes": 18794894,
+      "registryBytes": 18794894,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0774IbnKathir/0774IbnKathir.Bidaya/0774IbnKathir.Bidaya.JK000158-ara3"
+    },
+    {
+      "versionId": "version-0774IbnKathir.TafsirQuran.JK000161-ara2",
+      "workId": "work-ibn-kathir-tafsir",
+      "openitiUri": "0774IbnKathir.TafsirQuran.JK000161-ara2",
+      "artifactPath": "data/0774IbnKathir/0774IbnKathir.TafsirQuran/0774IbnKathir.TafsirQuran.JK000161-ara2",
+      "status": 200,
+      "decodedBytes": 13935380,
+      "registryBytes": 13935380,
+      "matchesRegistryBytes": true,
+      "contentType": "application/octet-stream",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0774IbnKathir/0774IbnKathir.TafsirQuran/0774IbnKathir.TafsirQuran.JK000161-ara2"
+    },
+    {
+      "versionId": "version-0310Tabari.JamicBayan.JK000164-ara1",
+      "workId": "work-tabari-tafsir",
+      "openitiUri": "0310Tabari.JamicBayan.JK000164-ara1",
+      "artifactPath": "data/0310Tabari/0310Tabari.JamicBayan/0310Tabari.JamicBayan.JK000164-ara1",
+      "status": 200,
+      "decodedBytes": 26360746,
+      "registryBytes": 26360746,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0310Tabari/0310Tabari.JamicBayan/0310Tabari.JamicBayan.JK000164-ara1"
+    },
+    {
+      "versionId": "version-0256Bukhari.Sahih.JK000110-ara1",
+      "workId": "work-bukhari-sahih",
+      "openitiUri": "0256Bukhari.Sahih.JK000110-ara1",
+      "artifactPath": "data/0256Bukhari/0256Bukhari.Sahih/0256Bukhari.Sahih.JK000110-ara1.completed",
+      "status": 200,
+      "decodedBytes": 5524762,
+      "registryBytes": 5524762,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0256Bukhari/0256Bukhari.Sahih/0256Bukhari.Sahih.JK000110-ara1.completed"
+    },
+    {
+      "versionId": "version-0261Muslim.Sahih.JK000109-ara1",
+      "workId": "work-muslim-sahih",
+      "openitiUri": "0261Muslim.Sahih.JK000109-ara1",
+      "artifactPath": "data/0261Muslim/0261Muslim.Sahih/0261Muslim.Sahih.JK000109-ara1",
+      "status": 200,
+      "decodedBytes": 4560879,
+      "registryBytes": 4560879,
+      "matchesRegistryBytes": true,
+      "contentType": "application/octet-stream",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0261Muslim/0261Muslim.Sahih/0261Muslim.Sahih.JK000109-ara1"
+    },
+    {
+      "versionId": "version-0671AbuCabdAllahQurtubi.JamicLiAhkamQuran.JK000160-ara1",
+      "workId": "work-qurtubi-tafsir",
+      "openitiUri": "0671AbuCabdAllahQurtubi.JamicLiAhkamQuran.JK000160-ara1",
+      "artifactPath": "data/0671AbuCabdAllahQurtubi/0671AbuCabdAllahQurtubi.JamicLiAhkamQuran/0671AbuCabdAllahQurtubi.JamicLiAhkamQuran.JK000160-ara1",
+      "status": 200,
+      "decodedBytes": 19352765,
+      "registryBytes": 19352765,
+      "matchesRegistryBytes": true,
+      "contentType": "application/octet-stream",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0671AbuCabdAllahQurtubi/0671AbuCabdAllahQurtubi.JamicLiAhkamQuran/0671AbuCabdAllahQurtubi.JamicLiAhkamQuran.JK000160-ara1"
+    },
+    {
+      "versionId": "version-0256Bukhari.AdabMufrad.JK000011-ara1",
+      "workId": "work-bukhari-adab",
+      "openitiUri": "0256Bukhari.AdabMufrad.JK000011-ara1",
+      "artifactPath": "data/0256Bukhari/0256Bukhari.AdabMufrad/0256Bukhari.AdabMufrad.JK000011-ara1",
+      "status": 200,
+      "decodedBytes": 704485,
+      "registryBytes": 704485,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0256Bukhari/0256Bukhari.AdabMufrad/0256Bukhari.AdabMufrad.JK000011-ara1"
+    },
+    {
+      "versionId": "version-0279Tirmidhi.ShamailMuhammadiyya.JK000139-ara1",
+      "workId": "work-tirmidhi-shamail",
+      "openitiUri": "0279Tirmidhi.ShamailMuhammadiyya.JK000139-ara1",
+      "artifactPath": "data/0279Tirmidhi/0279Tirmidhi.ShamailMuhammadiyya/0279Tirmidhi.ShamailMuhammadiyya.JK000139-ara1",
+      "status": 200,
+      "decodedBytes": 217722,
+      "registryBytes": 217722,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0279Tirmidhi/0279Tirmidhi.ShamailMuhammadiyya/0279Tirmidhi.ShamailMuhammadiyya.JK000139-ara1"
+    },
+    {
+      "versionId": "version-0676Nawawi.RiyadSalihin.JK000073-ara2",
+      "workId": "work-nawawi-riyad",
+      "openitiUri": "0676Nawawi.RiyadSalihin.JK000073-ara2",
+      "artifactPath": "data/0676Nawawi/0676Nawawi.RiyadSalihin/0676Nawawi.RiyadSalihin.JK000073-ara2",
+      "status": 200,
+      "decodedBytes": 1131289,
+      "registryBytes": 1131289,
+      "matchesRegistryBytes": true,
+      "contentType": "text/plain; charset=utf-8",
+      "finalUrl": "https://raw.githubusercontent.com/OpenITI/RELEASE/cfc4157a3cf2054c0888f133970a4eaa3e22e58c/data/0676Nawawi/0676Nawawi.RiyadSalihin/0676Nawawi.RiyadSalihin.JK000073-ara2"
+    }
+  ]
+}

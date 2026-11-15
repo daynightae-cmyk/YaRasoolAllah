@@ -1,4 +1,4 @@
-export type LibraryUiLanguage = "ar" | "en";
+export type LibraryUiLanguage = "ar" | "en" | "fr" | "ur";
 
 export interface CatalogDigitalEvidence {
   format: string;
@@ -13,6 +13,7 @@ export interface CatalogDigitalEvidence {
 
 export type AvailabilityState =
   | "full_text"
+  | "catalog_text"
   | "pdf"
   | "external_reader"
   | "iiif"
@@ -45,7 +46,11 @@ const CATEGORY_LABELS: Record<string, { ar: string; en: string }> = {
 };
 
 const AVAILABILITY_LABELS: Record<AvailabilityState, { ar: string; en: string }> = {
-  full_text: { ar: "نص كامل متاح", en: "Full text available" },
+  full_text: { ar: "نص كامل مؤهل للقراءة داخل المنصة", en: "Full text cleared for in-app reading" },
+  catalog_text: {
+    ar: "نص مسجل في الفهرس — غير مؤهل للقراءة الداخلية بعد",
+    en: "Catalog text recorded — not yet cleared for in-app reading",
+  },
   pdf: { ar: "PDF متاح", en: "PDF available" },
   external_reader: { ar: "قارئ خارجي", en: "External reader" },
   iiif: { ar: "IIIF متاح", en: "IIIF available" },
@@ -84,36 +89,45 @@ const RIGHTS_PENDING = new Set([
 ]);
 
 export function categoryLabel(category: string | null, lang: LibraryUiLanguage): string {
+  const copy = lang === "ar" ? "ar" : "en";
   if (!category || category.startsWith("UNCLASSIFIED")) {
     return lang === "ar" ? "غير مصنف بعد" : "Not yet classified";
   }
-  return CATEGORY_LABELS[category]?.[lang] ?? (lang === "ar" ? "غير مصنف بعد" : "Not yet classified");
+  return CATEGORY_LABELS[category]?.[copy] ?? (lang === "ar" ? "غير مصنف بعد" : "Not yet classified");
 }
 
 export function availabilityState(
   digital: CatalogDigitalEvidence | null,
   versionCount: number,
+  governedText = false,
 ): AvailabilityState {
   if (!digital) return versionCount > 0 ? "digital_unavailable" : "metadata_only";
   if (RIGHTS_PENDING.has(digital.rights)) return "rights_review";
   if (digital.iiifUrl) return "iiif";
   if (digital.format === "PDF") return "pdf";
   if (digital.format.includes("OCR") || digital.ocrAvailable) return "ocr";
-  if (digital.reading === "CAN_IMPORT_TEXT" || digital.searchableText) return "full_text";
+  if (governedText) return "full_text";
+  if (
+    digital.format === "TXT_MARKDOWN"
+    || digital.reading === "CAN_IMPORT_TEXT"
+    || digital.searchableText
+  ) {
+    return "catalog_text";
+  }
   if (digital.itemUrl && digital.reading === "EXTERNAL_READER_ONLY") return "external_reader";
   return "digital_unavailable";
 }
 
 export function availabilityLabel(state: AvailabilityState, lang: LibraryUiLanguage): string {
-  return AVAILABILITY_LABELS[state][lang];
+  return AVAILABILITY_LABELS[state][lang === "ar" ? "ar" : "en"];
 }
 
 export function rightsLabel(rights: string, lang: LibraryUiLanguage): string {
-  return RIGHTS_LABELS[rights]?.[lang] ?? (lang === "ar" ? "حالة الحقوق موثقة في تفاصيل المصدر" : "See source details for rights status");
+  return RIGHTS_LABELS[rights]?.[lang === "ar" ? "ar" : "en"] ?? (lang === "ar" ? "حالة الحقوق موثقة في تفاصيل المصدر" : "See source details for rights status");
 }
 
 export function formatLabel(format: string, lang: LibraryUiLanguage): string {
-  if (lang === "en") return format === "TXT_MARKDOWN" ? "Structured digital text" : format.replaceAll("_", " ");
+  if (lang !== "ar") return format === "TXT_MARKDOWN" ? "Structured digital text" : format.replaceAll("_", " ");
   return FORMAT_LABELS[format] ?? "صيغة رقمية موثقة";
 }
 

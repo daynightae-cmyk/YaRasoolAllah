@@ -1,10 +1,9 @@
 import {
   createContext,
-  useContext,
-  useState,
-  useEffect,
   useCallback,
-  ReactNode,
+  useContext,
+  useEffect,
+  type ReactNode,
 } from "react";
 
 // Import translation files
@@ -12,8 +11,12 @@ import arTranslations from "@/data/locales/ar.json";
 import enTranslations from "@/data/locales/en.json";
 import frTranslations from "@/data/locales/fr.json";
 import urTranslations from "@/data/locales/ur.json";
+import {
+  useInstitution,
+  type UiLang,
+} from "@/visual-golden/lib/institution/store";
 
-type Language = "ar" | "en" | "fr" | "ur";
+type Language = UiLang;
 
 interface LanguageContextType {
   language: Language;
@@ -44,27 +47,58 @@ interface LanguageProviderProps {
   defaultLanguage?: Language;
 }
 
+function isLanguage(value: unknown): value is Language {
+  return value === "ar" || value === "en" || value === "fr" || value === "ur";
+}
+
+/**
+ * The institutional store is the single persisted UI-language authority. This
+ * adapter keeps the global locale API in sync for legacy pages and preserves
+ * the older preferred-language key as a migration source.
+ */
 export function LanguageProvider({
   children,
   defaultLanguage = "ar",
 }: LanguageProviderProps) {
-  const [language, setLanguageState] = useState<Language>(defaultLanguage);
+  const language = useInstitution((state) => state.lang);
+  const setInstitutionLanguage = useInstitution((state) => state.setLang);
+  const hydrate = useInstitution((state) => state.hydrate);
 
-  // Load language from localStorage on mount
   useEffect(() => {
+    let institutionalLanguage: Language | null = null;
+    let hasInstitutionPreference = false;
     try {
-      const savedLanguage = localStorage.getItem(
-        "preferred-language",
-      ) as Language;
-      if (savedLanguage && translations[savedLanguage]) {
-        setLanguageState(savedLanguage);
+      const raw = localStorage.getItem("yra-visual-golden-v1");
+      if (raw) {
+        const parsed = JSON.parse(raw) as Record<string, unknown>;
+        hasInstitutionPreference = isLanguage(parsed.lang);
+        if (hasInstitutionPreference && isLanguage(parsed.lang)) {
+          institutionalLanguage = parsed.lang;
+        }
       }
+      hydrate();
     } catch (error) {
       console.warn("Failed to load language from localStorage:", error);
     }
-  }, []);
 
-  // Save language to localStorage when changed
+    if (institutionalLanguage) {
+      setInstitutionLanguage(institutionalLanguage);
+      return;
+    }
+
+    try {
+      const legacy = localStorage.getItem("preferred-language");
+      if (isLanguage(legacy)) {
+        setInstitutionLanguage(legacy);
+      } else {
+        setInstitutionLanguage(defaultLanguage);
+      }
+    } catch (error) {
+      console.warn("Failed to migrate language preference:", error);
+      setInstitutionLanguage(defaultLanguage);
+    }
+  }, [defaultLanguage, hydrate, setInstitutionLanguage]);
+
   useEffect(() => {
     try {
       localStorage.setItem("preferred-language", language);
@@ -72,18 +106,20 @@ export function LanguageProvider({
       console.warn("Failed to save language to localStorage:", error);
     }
 
-    // Update document language and direction
     document.documentElement.lang = language;
     document.documentElement.dir = RTL_LANGUAGES.includes(language)
       ? "rtl"
       : "ltr";
   }, [language]);
 
-  const setLanguage = useCallback((lang: Language) => {
-    if (translations[lang]) {
-      setLanguageState(lang);
-    }
-  }, []);
+  const setLanguage = useCallback(
+    (lang: Language) => {
+      if (translations[lang]) {
+        setInstitutionLanguage(lang);
+      }
+    },
+    [setInstitutionLanguage],
+  );
 
   const changeLanguage = useCallback(
     (lang: Language) => {
@@ -103,13 +139,12 @@ export function LanguageProvider({
           if (value && typeof value === "object" && k in value) {
             value = value[k];
           } else {
-            // Fallback to English if key not found in current language
-            value = translations["en"];
-            for (const k of keys) {
-              if (value && typeof value === "object" && k in value) {
-                value = value[k];
+            // Fall back to English if the key is not in the active locale.
+            value = translations.en;
+            for (const fallbackKey of keys) {
+              if (value && typeof value === "object" && fallbackKey in value) {
+                value = value[fallbackKey];
               } else {
-                // If not found in English either, return the key
                 return key;
               }
             }

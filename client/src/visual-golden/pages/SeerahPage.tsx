@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { Link } from "wouter";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useLocation, useSearch } from "wouter";
 import {
   ChevronRight,
   ChevronLeft,
@@ -10,6 +10,7 @@ import {
   Compass,
 } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
+import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import p from "@/visual-golden/components/present/present.module.css";
@@ -17,8 +18,14 @@ import u from "@/visual-golden/components/unique/unique.module.css";
 import {
   CHAPTERS,
   CATEGORIES,
+  SEERAH_CONTENT_STATUS,
   SEERAH_COUNTS,
+  buildSeerahSelectionUrl,
+  chooseSeerahChapter,
+  chooseSeerahEvent,
   getRelatedChapters,
+  resolveSeerahSelection,
+  type SeerahSelection,
 } from "@/visual-golden/services/seerah";
 import {
   SEERAH_GRAPH,
@@ -31,15 +38,6 @@ import {
 import styles from "./SeerahPage.module.css";
 
 const READ_KEY = "seerah-read-chapters-v1";
-
-function initialSelection() {
-  const params = new URLSearchParams(window.location.search);
-  const chapter = CHAPTERS.find((item) => item.id === params.get("chapter"));
-  return {
-    chapterId: chapter?.id ?? CHAPTERS[3]?.id ?? CHAPTERS[0].id,
-    eventId: chapter?.timelineEvents?.find((event) => event.id === params.get("event"))?.id ?? "",
-  };
-}
 
 function safeReadRead(): string[] {
   try {
@@ -66,19 +64,34 @@ const STAGE_ART = [
 ];
 
 export function SeerahPage() {
-  const [selection, setSelection] = useState(initialSelection);
+  const search = useSearch();
+  const [, navigate] = useLocation();
   const [read, setRead] = useState<string[]>(() => safeReadRead());
+  const recordReadingProgress = useInstitution((state) => state.recordReadingProgress);
+  const selection = useMemo(
+    () => resolveSeerahSelection(CHAPTERS, search),
+    [search],
+  );
 
   const index = Math.max(0, CHAPTERS.findIndex((chapter) => chapter.id === selection.chapterId));
   const chapter = CHAPTERS[index] ?? CHAPTERS[0];
   const related = useMemo(() => getRelatedChapters(chapter.id), [chapter.id]);
   const events = chapter.timelineEvents ?? [];
-  const selectedEvent = events.find((event) => event.id === selection.eventId) ?? events[0] ?? null;
+  const selectedEvent = events.find((event) => event.id === selection.eventId) ?? null;
   const eventNode = selectedEvent ? getSeerahEventNode(chapter.id, selectedEvent.id) : undefined;
   const place = eventNode?.place ?? null;
 
-  const selectEvent = (target: SeerahGraphEventNode) =>
-    setSelection({ chapterId: target.chapterId, eventId: target.eventId });
+  const navigateToSelection = (next: SeerahSelection) => {
+    navigate(buildSeerahSelectionUrl(window.location.href, next), { replace: true });
+  };
+
+  const selectChapter = (chapterId: string) => {
+    navigateToSelection(chooseSeerahChapter(CHAPTERS, chapterId));
+  };
+
+  const selectEvent = (target: { chapterId: string; eventId: string }) => {
+    navigateToSelection(chooseSeerahEvent(CHAPTERS, target.chapterId, target.eventId));
+  };
 
   const previousEvent = eventNode?.previousKey ? findEvent(eventNode.previousKey) : null;
   const nextEvent = eventNode?.nextKey ? findEvent(eventNode.nextKey) : null;
@@ -86,6 +99,35 @@ export function SeerahPage() {
 
   const readCount = CHAPTERS.filter((c) => read.includes(c.id)).length;
   const percent = Math.round((readCount / CHAPTERS.length) * 100);
+
+  useEffect(() => {
+    // Avoid overwriting a URL that changed between render and effect execution.
+    const renderedParams = new URLSearchParams(search);
+    const currentParams = new URLSearchParams(window.location.search);
+    if (renderedParams.toString() !== currentParams.toString()) return;
+
+    const canonicalUrl = buildSeerahSelectionUrl(window.location.href, selection);
+    const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    if (canonicalUrl !== currentUrl) {
+      navigate(canonicalUrl, { replace: true });
+    }
+  }, [navigate, search, selection.chapterId, selection.eventId]);
+
+  useEffect(() => {
+    recordReadingProgress({
+      id: "seerah",
+      surface: "seerah",
+      path: `/seerah?chapter=${encodeURIComponent(chapter.id)}`,
+      titleAr: "السيرة النبوية",
+      titleEn: "Prophetic Biography",
+      locationAr: `الفصل ${chapter.order}: ${chapter.title}`,
+      locationEn: `Chapter ${chapter.order}`,
+      completed: readCount,
+      total: CHAPTERS.length,
+      unitAr: "فصلًا",
+      unitEn: "chapters",
+    });
+  }, [chapter.id, chapter.order, chapter.title, readCount, recordReadingProgress]);
 
   const toggleRead = () => {
     const next = read.includes(chapter.id)
@@ -101,7 +143,7 @@ export function SeerahPage() {
 
   const step = (delta: number) => {
     const next = Math.min(CHAPTERS.length - 1, Math.max(0, index + delta));
-    setSelection({ chapterId: CHAPTERS[next].id, eventId: "" });
+    selectChapter(CHAPTERS[next].id);
   };
 
   return (
@@ -109,7 +151,7 @@ export function SeerahPage() {
       <PageHero
         title="درب السيرة"
         subtitle={`رحلة سردية · ${SEERAH_COUNTS.chapters} فصول · ${SEERAH_COUNTS.categories} مرحلة`}
-        desc="فصول السيرة بترتيبها السردي من البيانات المسجلة — المراحل والتسلسل سرديان لا تقويمًا تاريخيًا دقيقًا"
+        desc="بنية تحريرية محلية لفصول السيرة ومحطاتها — المراحل والتسلسل سرديان لا تقويمًا تاريخيًا دقيقًا"
         image={art.desert}
         tall
         wing="seerah"
@@ -138,7 +180,7 @@ export function SeerahPage() {
               key={c.id}
               type="button"
               className={`${styles.stage} ${i === index ? styles.stageOn : ""}`}
-              onClick={() => setSelection({ chapterId: c.id, eventId: "" })}
+              onClick={() => selectChapter(c.id)}
               aria-current={i === index ? "true" : undefined}
             >
               <img src={STAGE_ART[i % STAGE_ART.length]} alt="" />
@@ -159,10 +201,10 @@ export function SeerahPage() {
 
       <div className={styles.main}>
         <aside className={styles.panel}>
-          <SectionHead title="محطات الفصل" en="Chapter events — from source data" />
+          <SectionHead title="محطات الفصل" en="Local editorial chapter events · review pending" />
           {events.length === 0 ? (
             <p className="muted" style={{ fontSize: "0.8rem" }}>
-              لا توجد محطات مسجلة لهذا الفصل في المصدر.
+              لا توجد محطات في البنية التحريرية المحلية لهذا الفصل.
             </p>
           ) : (
             <ol className={styles.events} aria-label="محطات الفصل">
@@ -172,7 +214,7 @@ export function SeerahPage() {
                     type="button"
                     className={`${styles.eventButton} ${selectedEvent?.id === e.id ? styles.evOn : ""}`}
                     aria-pressed={selectedEvent?.id === e.id}
-                    onClick={() => setSelection({ chapterId: chapter.id, eventId: e.id })}
+                    onClick={() => selectEvent({ chapterId: chapter.id, eventId: e.id })}
                   >
                     <img src={STAGE_ART[(e.title.length + index) % STAGE_ART.length]} alt="" />
                     <span className={styles.eventText}>
@@ -187,14 +229,17 @@ export function SeerahPage() {
         </aside>
 
         <section className={styles.mapCard}>
-          <SectionHead title={chapter.title} en={`فصل ${chapter.order} من ${CHAPTERS.length} · سياق سردي`} />
+          <SectionHead title={chapter.title} en={`Local editorial chapter ${chapter.order} · narrative context`} />
+          <p className="muted" style={{ fontSize: "0.78rem", lineHeight: 1.8 }}>
+            {SEERAH_CONTENT_STATUS.noticeAr}
+          </p>
           <p style={{ lineHeight: 2, fontSize: "0.95rem" }}>{chapter.description}</p>
           <p className="muted" style={{ lineHeight: 2, fontSize: "0.86rem", whiteSpace: "pre-line" }}>
             {chapter.details.split("\n\n")[0]}
           </p>
           {selectedEvent ? (
             <article className={styles.eventDetail} aria-live="polite" aria-label="تفاصيل المحطة المختارة">
-              <span className={styles.eventLabel}>المحطة المختارة من بيانات الفصل</span>
+              <span className={styles.eventLabel}>المحطة المختارة من البنية التحريرية المحلية</span>
               <h3>{selectedEvent.title}</h3>
               <p>{selectedEvent.description}</p>
               <dl>
@@ -226,7 +271,7 @@ export function SeerahPage() {
                   data-visual="seerah-event-graph"
                   aria-label="علاقات المحطة المسجلة"
                 >
-                  <h4>علاقات المحطة المسجّلة في البيانات</h4>
+                  <h3>علاقات المحطة في البنية التحريرية المحلية</h3>
                   <ul className={styles.graphList} data-graph-relations>
                     <li>
                       <span>الفصل الحاوي</span>
@@ -283,7 +328,7 @@ export function SeerahPage() {
                     {SEERAH_GRAPH_EDGE_LABELS["chapter-continuity"]} — ترتيب سردي لا تقويم تاريخي.
                   </p>
                   <div className={styles.graphDeferred} data-graph-deferred>
-                    <h5>علاقات غير مسجّلة في البيانات الحالية</h5>
+                    <h4>علاقات غير مسجّلة في البنية الحالية</h4>
                     <ul>
                       {SEERAH_GRAPH_DEFERRED.map((relation) => (
                         <li key={relation.kind}>
@@ -300,7 +345,7 @@ export function SeerahPage() {
                 </section>
               ) : null}
               <p className={styles.eventCaveat}>
-                التواريخ من نصوص بيانات الفصل ولا تُحسَب منها تواريخ مطلقة.
+                التواريخ من نصوص المادة التحريرية المحلية ولا تُحسَب منها تواريخ مطلقة.
               </p>
             </article>
           ) : null}
@@ -372,7 +417,7 @@ export function SeerahPage() {
                 <button
                   key={r.id}
                   type="button"
-                  onClick={() => setSelection({ chapterId: r.id, eventId: "" })}
+                  onClick={() => selectChapter(r.id)}
                 >
                   فصل {r.order} · {r.title}
                 </button>

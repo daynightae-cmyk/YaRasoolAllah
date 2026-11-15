@@ -3,9 +3,10 @@ import styles from "./splash.module.css";
 
 interface Props {
   onDone: () => void;
+  reducedMotion?: boolean;
 }
 
-export function SplashCeremony({ onDone }: Props) {
+export function SplashCeremony({ onDone, reducedMotion = false }: Props) {
   const [phase, setPhase] = useState<"enter" | "hold" | "exit">("enter");
   const [canSkip, setCanSkip] = useState(false);
   const finishTimer = useRef<number | null>(null);
@@ -20,8 +21,8 @@ export function SplashCeremony({ onDone }: Props) {
   };
 
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) {
+    const systemReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reducedMotion || systemReduced) {
       const t = window.setTimeout(onDone, 350);
       return () => window.clearTimeout(t);
     }
@@ -33,7 +34,7 @@ export function SplashCeremony({ onDone }: Props) {
       window.clearTimeout(hold);
       window.clearTimeout(exit);
     };
-  }, [onDone]);
+  }, [onDone, reducedMotion]);
 
   useEffect(() => {
     if (phase !== "exit") return;

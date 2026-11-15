@@ -1,6 +1,13 @@
 import type { Express } from "express";
 import { z } from "zod";
 import { digitalVersionRegistry, workRegistry } from "../shared/knowledge-registry.js";
+import {
+  getPinnedOpenItiArtifactUrl,
+  isOpenItiReaderEligible,
+  isOpenItiReaderWithinBudget,
+  OpenItiReaderBudgetError,
+  readBoundedUtf8,
+} from "../shared/openiti-reader-policy.js";
 import { providerResourceRegistry, rightsLedger } from "../shared/source-registry.js";
 import { evaluateResourceUsage } from "../shared/source-governance.js";
 
@@ -10,9 +17,10 @@ const querySchema = z.object({
   limit: z.coerce.number().int().min(1).max(6).default(2),
 });
 
-const MAX_RAW_BYTES = 12 * 1024 * 1024;
 const CACHE_TTL_MS = 30 * 60_000;
-const CACHE_LIMIT = 12;
+// Parsed OpenITI books can approach the 32 MiB budget each. Keeping only a
+// few in memory bounds the server while still avoiding repeated downloads.
+const CACHE_LIMIT = 3;
 const PAGE_MARKER = /PageV\d{2}P\d{3}[AB]?/g;
 
 type SegmentKind = "heading" | "paragraph";
@@ -125,7 +133,10 @@ async function loadParsedBook(version: (typeof digitalVersionRegistry)[number]):
   const cached = cache.get(version.versionId);
   if (cached && cached.expiresAt > Date.now()) return cached.parsed;
 
-  const rawUrl = `https://raw.githubusercontent.com/OpenITI/RELEASE/${version.releaseCommit}/${version.artifactPath}`;
+  if (!isOpenItiReaderWithinBudget(version)) throw new OpenItiReaderBudgetError();
+  const rawUrl = getPinnedOpenItiArtifactUrl(version);
+  if (!rawUrl) throw new Error("OpenITI version is not pinned to the governed release");
+
   const response = await fetch(rawUrl, {
     signal: AbortSignal.timeout(15_000),
     headers: {
@@ -135,13 +146,9 @@ async function loadParsedBook(version: (typeof digitalVersionRegistry)[number]):
   });
   if (!response.ok) throw new Error(`OpenITI HTTP ${response.status}`);
 
-  const declaredLength = Number(response.headers.get("content-length") || "0");
-  if (declaredLength > MAX_RAW_BYTES) throw new Error("OpenITI artifact exceeds reader size limit");
-
-  const raw = await response.text();
-  if (Buffer.byteLength(raw, "utf8") > MAX_RAW_BYTES) {
-    throw new Error("OpenITI artifact exceeds reader size limit");
-  }
+  // The decoding ceiling is enforced on the stream, not on the compressed
+  // `content-length` header.
+  const raw = await readBoundedUtf8(response);
 
   const parsed = parseOpenIti(raw);
   if (!parsed.segments.length) throw new Error("OpenITI artifact contains no readable segments");
@@ -163,7 +170,10 @@ export function registerOpenItiReaderRoutes(app: Express) {
     if (!work) return res.status(404).json({ message: "سجل الكتاب غير موجود." });
 
     const readableVersions = digitalVersionRegistry.filter(
-      (version) => version.workId === work.workId && version.contentAvailability === "full_text_cleared",
+      (version) =>
+        version.workId === work.workId &&
+        isOpenItiReaderEligible(version) &&
+        isOpenItiReaderWithinBudget(version),
     );
     const version = query.data.versionId
       ? readableVersions.find((item) => item.versionId === query.data.versionId)
@@ -224,7 +234,14 @@ export function registerOpenItiReaderRoutes(app: Express) {
         attribution: "Open Islamicate Texts Initiative (OpenITI) — pinned RELEASE commit",
         rightsUrl: "https://openiti.org/docs/Copyright_Questions.html",
       });
-    } catch {
+    } catch (error) {
+      if (error instanceof OpenItiReaderBudgetError) {
+        return res.status(413).json({
+          message: "حجم النسخة يتجاوز حد القارئ الداخلي المحدود. يبقى سجل الكتاب وروابط المصدر متاحين.",
+          availability: "full_text_cleared",
+          readerState: "exceeds_reader_budget",
+        });
+      }
       return res.status(503).json({
         message: "تعذر تحميل النص المثبت من OpenITI الآن. سجل الكتاب وروابط المصدر ما زالت متاحة.",
       });

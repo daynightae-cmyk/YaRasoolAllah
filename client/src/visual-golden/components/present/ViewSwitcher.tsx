@@ -12,7 +12,7 @@ const modes: { id: ViewMode; label: string; en: string; icon: typeof LayoutGrid 
 interface Props {
   value: ViewMode;
   onChange: (v: ViewMode) => void;
-  lang?: "ar" | "en";
+  lang?: "ar" | "en" | "fr" | "ur";
 }
 
 export function ViewSwitcher({ value, onChange, lang = "ar" }: Props) {

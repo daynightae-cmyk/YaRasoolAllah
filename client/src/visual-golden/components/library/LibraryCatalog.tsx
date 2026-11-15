@@ -3,7 +3,10 @@ import { BookOpen, ExternalLink, Info, Search, ShieldCheck } from "lucide-react"
 import { Link } from "wouter";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { getLibraryBook, getLibraryBookByOpenitiUri } from "@/visual-golden/services/library";
-import { loadFullLibraryCatalog } from "@/visual-golden/services/catalog-library";
+import {
+  canReadTextInside,
+  loadFullLibraryCatalog,
+} from "@/visual-golden/services/catalog-library";
 import {
   availabilityLabel,
   availabilityState,
@@ -96,7 +99,7 @@ const copy = {
     notFoundBody: "لا يوجد عمل بهذا المعرّف في إصدار الفهرس الحالي.",
     backCatalog: "العودة إلى فهرس المكتبة",
     loading: "جاري تحميل الفهرس المؤسسي…",
-    loadError: "تعذر تحميل الفهرس المحلي. تبقى الرفوف المنقحة متاحة.",
+    loadError: "تعذر تحميل الفهرس المحلي. لا يمكن عرض قائمة الأعمال الآن.",
     title: "الفهرس العلمي",
     versionLabel: "إصدار الفهرس",
     dataSource: "مصدر البيانات",
@@ -104,7 +107,7 @@ const copy = {
     reviewState: "حالة المراجعة",
     reviewStateValue: "مراجعة ببليوغرافية مستمرة",
     rightsStateValue: "تختلف بحسب النسخة؛ التفاصيل داخل سجل العمل",
-    counts: (works: string, editions: string, versions: string) => `${works} عملًا · ${editions} سجل طبعة · ${versions} نسخة رقمية`,
+    counts: (works: string, editions: string, versions: string) => `${works} عملًا · ${editions} سجل طبعة · ${versions} سجل رقمي مرفق`,
     search: "العنوان أو المؤلف",
     searchPlaceholder: "ابحث في العناوين وأسماء المؤلفين…",
     allCategories: "كل الأقسام",
@@ -154,7 +157,7 @@ const copy = {
     reviewState: "Review state",
     reviewStateValue: "Bibliographic review in progress",
     rightsStateValue: "Version-specific; see each work record",
-    counts: (works: string, editions: string, versions: string) => `${works} works · ${editions} edition records · ${versions} digital versions`,
+    counts: (works: string, editions: string, versions: string) => `${works} works · ${editions} edition records · ${versions} attached digital records`,
     search: "Title or author",
     searchPlaceholder: "Search titles and author names…",
     allCategories: "All subjects",
@@ -186,7 +189,7 @@ function normalize(value: string): string {
 function languageLabel(language: string | null, lang: LibraryUiLanguage): string {
   if (language === "ara") return lang === "ar" ? "العربية" : "Arabic";
   if (language === "per") return lang === "ar" ? "الفارسية" : "Persian";
-  return copy[lang].unknown;
+  return copy[lang === "ar" ? "ar" : "en"].unknown;
 }
 
 // The catalog carries the source ISO value verbatim, and the source mixed two
@@ -223,11 +226,12 @@ function WorkDetail({
   onOpenReader?: (work: CatalogWork) => void;
   canOpenReader?: (work: CatalogWork) => boolean;
 }) {
-  const c = copy[lang];
-  const title = (lang === "en" ? work.titleEn || work.titleAr : work.titleAr || work.titleEn) || c.unknownTitle;
-  const author = (lang === "en" ? work.authorEn || work.authorAr : work.authorAr || work.authorEn) || c.unknownAuthor;
-  const availability = availabilityState(work.digital, work.versionCount);
-  const readerAvailable = Boolean(onOpenReader && canOpenReader?.(work));
+  const c = copy[lang === "ar" ? "ar" : "en"];
+  const title = (lang !== "ar" ? work.titleEn || work.titleAr : work.titleAr || work.titleEn) || c.unknownTitle;
+  const author = (lang !== "ar" ? work.authorEn || work.authorAr : work.authorAr || work.authorEn) || c.unknownAuthor;
+  const governedText = canReadTextInside(work);
+  const availability = availabilityState(work.digital, work.versionCount, governedText);
+  const readerAvailable = Boolean(governedText && onOpenReader && canOpenReader?.(work));
 
   return (
     <article className={styles.detail} aria-labelledby="catalog-work-title">
@@ -310,7 +314,7 @@ export function LibraryCatalog({
   canOpenReader,
 }: Props) {
   const lang = useInstitution((state) => state.lang);
-  const c = copy[lang];
+  const c = copy[lang === "ar" ? "ar" : "en"];
   const [data, setData] = useState<CatalogPayload | null>(null);
   const [error, setError] = useState("");
   // The route has one search term. This view used to keep a second private box,
@@ -342,7 +346,9 @@ export function LibraryCatalog({
   );
 
   const availabilityOptions = useMemo(
-    () => [...new Set((data?.works ?? []).map((work) => availabilityState(work.digital, work.versionCount)))],
+    () => [...new Set((data?.works ?? []).map((work) =>
+      availabilityState(work.digital, work.versionCount, canReadTextInside(work)),
+    ))],
     [data],
   );
 
@@ -363,7 +369,10 @@ export function LibraryCatalog({
       if (category !== "all" && rawCategory !== category) return false;
       if (language !== "all" && canonicalLanguage(work.language) !== language) return false;
       if (subcategory !== "all" && work.subcategory !== subcategory) return false;
-      if (availability !== "all" && availabilityState(work.digital, work.versionCount) !== availability) return false;
+      if (
+        availability !== "all"
+        && availabilityState(work.digital, work.versionCount, canReadTextInside(work)) !== availability
+      ) return false;
       if (!needle) return true;
       return normalize([
         work.titleAr,
@@ -415,7 +424,11 @@ export function LibraryCatalog({
         <div>
           <span>{c.versionLabel} · 2025.1.9</span>
           <h2 id="serious-catalog-title">{c.title}</h2>
-          <p>{c.counts(data.counts.works.toLocaleString(locale), data.counts.editions.toLocaleString(locale), data.counts.digitalVersions.toLocaleString(locale))}</p>
+          <p>{c.counts(
+            data.counts.works.toLocaleString(locale),
+            data.counts.editions.toLocaleString(locale),
+            data.works.filter((work) => work.digital).length.toLocaleString(locale),
+          )}</p>
         </div>
         <dl className={styles.catalogStatus}>
           <div><dt>{c.dataSource}</dt><dd>{c.dataSourceValue}</dd></div>
@@ -442,7 +455,11 @@ export function LibraryCatalog({
           <tbody>{visible.map((work) => {
             const title = (lang === "en" ? work.titleEn || work.titleAr : work.titleAr || work.titleEn) || c.unknownTitle;
             const author = (lang === "en" ? work.authorEn || work.authorAr : work.authorAr || work.authorEn) || c.unknownAuthor;
-            const state = availabilityState(work.digital, work.versionCount);
+            const state = availabilityState(
+              work.digital,
+              work.versionCount,
+              canReadTextInside(work),
+            );
             return (
               <tr key={work.id}>
                 <td data-label={c.work}><Link href={`/library/work/${encodeURIComponent(work.id)}`}>{title}</Link></td>

@@ -1,5 +1,5 @@
-import { useCallback, useMemo, useState } from "react";
-import { DoorSimulation3D } from "./DoorSimulation3D";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useState, type ComponentType } from "react";
+import { useEffectiveMotion } from "@/visual-golden/lib/institution/effective-motion";
 
 type Wing =
   | "library"
@@ -39,36 +39,61 @@ const WING_LABELS: Record<Wing, { ar: string; en: string }> = {
   quran: { ar: "القرآن الكريم", en: "The Qur'an" },
 };
 
+interface DoorComponentProps {
+  siteNameAr: string;
+  siteNameEn?: string;
+  active: boolean;
+  onEntered: () => void;
+  onCancel?: () => void;
+  openLabelAr?: string;
+  openLabelEn?: string;
+}
+
 const SEEN_PREFIX = "yra-door3d-v2-seen-";
 
-function prefersReducedMotion() {
-  return (
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches
-  );
+function DoorUnavailable({ onEntered }: DoorComponentProps) {
+  useEffect(() => {
+    onEntered();
+  }, [onEntered]);
+  return null;
+}
+
+// The Three.js door is a separate engine chunk. A chunk-load failure must
+// degrade to the route content instead of throwing across the page boundary.
+const DoorSimulation3D = lazy<ComponentType<DoorComponentProps>>(() =>
+  import("./DoorSimulation3D")
+    .then((module) => ({ default: module.DoorSimulation3D as ComponentType<DoorComponentProps> }))
+    .catch(() => ({ default: DoorUnavailable })),
+);
+
+function hasSeenDoor(wing: Wing): boolean {
+  try {
+    return sessionStorage.getItem(`${SEEN_PREFIX}${wing}`) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function forcedDoorPreference(): "0" | "1" | null {
+  if (typeof window === "undefined") return null;
+  const value = new URLSearchParams(window.location.search).get("door");
+  return value === "0" || value === "1" ? value : null;
 }
 
 /**
  * The door is an entrance, not a toll gate.
  *
  * - `?door=1` replays it on demand; `?door=0` skips it.
- * - Reduced-motion users enter directly. The door is decorative, so blocking
- *   them behind an animation would be an accessibility regression.
+ * - Reduced-motion users enter directly, including when `?door=1` is present.
  * - After the first entry in a tab, the session remembers it so navigating
  *   between wings never becomes a sequence of doors.
  */
-function shouldShowDoor(active: boolean, wing: Wing) {
-  if (!active) return false;
-  if (typeof window === "undefined") return false;
-  const params = new URLSearchParams(window.location.search);
-  if (params.get("door") === "0") return false;
-  if (params.get("door") === "1") return true;
-  if (prefersReducedMotion()) return false;
-  try {
-    return sessionStorage.getItem(`${SEEN_PREFIX}${wing}`) !== "1";
-  } catch {
-    return true;
-  }
+function shouldShowDoor(active: boolean, wing: Wing, reducedMotion: boolean): boolean {
+  if (!active || reducedMotion || typeof window === "undefined") return false;
+  const forced = forcedDoorPreference();
+  if (forced === "0") return false;
+  if (forced === "1") return true;
+  return !hasSeenDoor(wing);
 }
 
 export function SectionEntry3D({
@@ -77,14 +102,18 @@ export function SectionEntry3D({
   active = true,
   onEntered,
 }: SectionEntry3DProps) {
-  const [showDoor, setShowDoor] = useState(() => shouldShowDoor(active, wing));
+  const effectiveMotion = useEffectiveMotion();
+  const reducedMotion = effectiveMotion === "reduced";
+  const [showDoor, setShowDoor] = useState(() =>
+    shouldShowDoor(active, wing, reducedMotion),
+  );
   const label = WING_LABELS[wing] ?? WING_LABELS.home;
 
   const rememberEntry = useCallback(() => {
     try {
       sessionStorage.setItem(`${SEEN_PREFIX}${wing}`, "1");
     } catch {
-      // Storage may be unavailable; the door still opens.
+      // Storage may be unavailable; the route remains directly accessible.
     }
   }, [wing]);
 
@@ -99,6 +128,22 @@ export function SectionEntry3D({
     setShowDoor(false);
     onEntered?.();
   }, [onEntered, rememberEntry]);
+
+  useEffect(() => {
+    if (!active) {
+      setShowDoor(false);
+      return;
+    }
+    if (reducedMotion) {
+      setShowDoor(false);
+      return;
+    }
+    // Re-evaluate on mount and when the wing changes. The URL preference must
+    // keep winning here: otherwise an unseen wing would re-show the door even
+    // when the visitor explicitly asked for `?door=0`, covering the content
+    // and swallowing pointer input.
+    setShowDoor(shouldShowDoor(active, wing, reducedMotion));
+  }, [active, reducedMotion, wing]);
 
   const doorLabels = useMemo(
     () => ({
@@ -117,21 +162,24 @@ export function SectionEntry3D({
         width: "100%",
       }}
     >
+      {/* Route content is always mounted and remains a DOM equivalent while
+          the decorative threshold is present or failing. */}
+      <div className="sectionEntry3DContent" style={{ width: "100%" }}>
+        {children}
+      </div>
       {showDoor ? (
-        <DoorSimulation3D
-          siteNameAr={label.ar}
-          siteNameEn={label.en}
-          active
-          onEntered={handleEntered}
-          onCancel={handleCancel}
-          openLabelAr={doorLabels.openLabelAr}
-          openLabelEn={doorLabels.openLabelEn}
-        />
-      ) : (
-        <div className="sectionEntry3DContent" style={{ width: "100%" }}>
-          {children}
-        </div>
-      )}
+        <Suspense fallback={null}>
+          <DoorSimulation3D
+            siteNameAr={label.ar}
+            siteNameEn={label.en}
+            active
+            onEntered={handleEntered}
+            onCancel={handleCancel}
+            openLabelAr={doorLabels.openLabelAr}
+            openLabelEn={doorLabels.openLabelEn}
+          />
+        </Suspense>
+      ) : null}
     </div>
   );
 }

@@ -1,0 +1,81 @@
+{
+  "purpose": "Run the media discovery generator twice, compare the catalog and manifest byte-for-byte, and restore the exact pre-run working-tree bytes.",
+  "capturedAt": "2026-11-15T13:41:27.9203567Z",
+  "run1Exit": 0,
+  "run2Exit": 0,
+  "run1EqualsRun2": true,
+  "beforeEqualsRun1": true,
+  "restoredToPreRunBytes": true,
+  "files": [
+    {
+      "path": "data-sources/media/discovery/ingestion-manifest.json",
+      "before": "429728EF13A3251AB40D55950AFEA213BC42C02C7E518A285FCC2F53CE7B3DEC",
+      "run1": "429728EF13A3251AB40D55950AFEA213BC42C02C7E518A285FCC2F53CE7B3DEC",
+      "run2": "429728EF13A3251AB40D55950AFEA213BC42C02C7E518A285FCC2F53CE7B3DEC",
+      "run1EqualsRun2": true,
+      "beforeEqualsRun1": true
+    },
+    {
+      "path": "data-sources/media/discovery/ingestion-report.md",
+      "before": "9BC8A71A6EA6F99943C39379BBECC5CBAA91971A64F4E19EFDEC50C5C5857249",
+      "run1": "9BC8A71A6EA6F99943C39379BBECC5CBAA91971A64F4E19EFDEC50C5C5857249",
+      "run2": "9BC8A71A6EA6F99943C39379BBECC5CBAA91971A64F4E19EFDEC50C5C5857249",
+      "run1EqualsRun2": true,
+      "beforeEqualsRun1": true
+    },
+    {
+      "path": "data-sources/media/discovery/media-discovery-catalog.json",
+      "before": "DA9A0AB92DC4C7FA0AD6951F12F43B01EA5FACC2E684D18B762B91522993A3AE",
+      "run1": "DA9A0AB92DC4C7FA0AD6951F12F43B01EA5FACC2E684D18B762B91522993A3AE",
+      "run2": "DA9A0AB92DC4C7FA0AD6951F12F43B01EA5FACC2E684D18B762B91522993A3AE",
+      "run1EqualsRun2": true,
+      "beforeEqualsRun1": true
+    },
+    {
+      "path": "client/src/visual-golden/data/media-discovery.generated.ts",
+      "before": "77BDCB140A693CEC31F0808F4051F16A4CFB3BD12086F6CCEF7BA8FBA6D2D83E",
+      "run1": "77BDCB140A693CEC31F0808F4051F16A4CFB3BD12086F6CCEF7BA8FBA6D2D83E",
+      "run2": "77BDCB140A693CEC31F0808F4051F16A4CFB3BD12086F6CCEF7BA8FBA6D2D83E",
+      "run1EqualsRun2": true,
+      "beforeEqualsRun1": true
+    },
+    {
+      "path": "client/src/visual-golden/data/media-discovery-status.generated.ts",
+      "before": "8D054E29293E3D81E211D7F77D9C09DD198687BB763B0FDD2E7FD21B2B227749",
+      "run1": "8D054E29293E3D81E211D7F77D9C09DD198687BB763B0FDD2E7FD21B2B227749",
+      "run2": "8D054E29293E3D81E211D7F77D9C09DD198687BB763B0FDD2E7FD21B2B227749",
+      "run1EqualsRun2": true,
+      "beforeEqualsRun1": true
+    }
+  ],
+  "run1Tail": [
+    "\r",
+    "> ya-rasool-allah-platform@0.1.0 ingest:media\r",
+    "> tsx scripts/acquire/ingest-media-catalog.ts\r",
+    "\r",
+    "INGESTION PASS:\r",
+    " - total unique records: 95\r",
+    " - duplicates skipped: 0\r",
+    " - approved for public display: 0\r",
+    " - blocked pending review: 95\r",
+    " - catalog sha256: da9a0ab92dc4c7fa0ad6951f12f43b01ea5facc2e684d18b762b91522993a3ae\r",
+    " - manifest sha256: 429728ef13a3251ab40d55950afea213bc42c02c7e518a285fcc2f53ce7b3dec\r",
+    " - output: K:\\Knoux Projects\\YaRasoolAllah\\Base\\data-sources\\media\\discovery\\media-discovery-catalog.json\r",
+    ""
+  ],
+  "run2Tail": [
+    "\r",
+    "> ya-rasool-allah-platform@0.1.0 ingest:media\r",
+    "> tsx scripts/acquire/ingest-media-catalog.ts\r",
+    "\r",
+    "INGESTION PASS:\r",
+    " - total unique records: 95\r",
+    " - duplicates skipped: 0\r",
+    " - approved for public display: 0\r",
+    " - blocked pending review: 95\r",
+    " - catalog sha256: da9a0ab92dc4c7fa0ad6951f12f43b01ea5facc2e684d18b762b91522993a3ae\r",
+    " - manifest sha256: 429728ef13a3251ab40d55950afea213bc42c02c7e518a285fcc2f53ce7b3dec\r",
+    " - output: K:\\Knoux Projects\\YaRasoolAllah\\Base\\data-sources\\media\\discovery\\media-discovery-catalog.json\r",
+    ""
+  ]
+}

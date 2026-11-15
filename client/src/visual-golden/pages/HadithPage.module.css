@@ -194,6 +194,7 @@
 .sourceLink {
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   gap: 0.35rem;
   padding: 0.45rem 0.8rem;
   border-radius: var(--radius-md);
@@ -299,6 +300,7 @@
 .providerList a {
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   gap: 0.25rem;
   color: var(--text-gold);
   font-size: 0.74rem;

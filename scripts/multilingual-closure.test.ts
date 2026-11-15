@@ -161,6 +161,26 @@ describe("a declaration cannot claim Arabic-only while the code shows English", 
     }
   });
 
+  it("anchors Basirah English evidence to a populated value, not a type declaration", () => {
+    const basirah = routeContentDeclaration("/basirah");
+    assert.ok(basirah);
+    const titleEvidence = basirah.servesContent.find(
+      (item) => item.field === "titleEn",
+    );
+    assert.ok(titleEvidence, "/basirah must cite populated titleEn evidence");
+    assert.equal(
+      titleEvidence.at,
+      "client/src/visual-golden/services/basirah.ts:62",
+    );
+    const sourceLine = read("client/src/visual-golden/services/basirah.ts")
+      .split(/\r?\n/)[61] ?? "";
+    assert.match(
+      sourceLine,
+      /titleEn:\s*`Seerah chapter \$\{chapter\.order\}`/,
+      "the Basirah titleEn anchor must point at a generated record value",
+    );
+  });
+
   it("regress the exact routes that were declared Arabic-only while rendering English", () => {
     const proven = [
       ["/who-is-muhammad", "titleEn", "client/src/data/whoIsMuhammadData.ts"],

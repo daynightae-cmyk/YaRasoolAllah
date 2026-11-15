@@ -247,8 +247,8 @@ export const ROUTE_CONTENT_DECLARATIONS: readonly RouteContentDeclaration[] = [
       "client/src/visual-golden/services/library-catalog-presentation.ts",
     ],
     servesContent: [
-      { language: "en", field: "titleEn", at: "client/src/visual-golden/services/catalog-library.ts:18" },
-      { language: "en", field: "authorEn", at: "client/src/visual-golden/services/catalog-library.ts:20" },
+      { language: "en", field: "titleEn", at: "client/src/visual-golden/services/catalog-library.ts:25" },
+      { language: "en", field: "authorEn", at: "client/src/visual-golden/services/catalog-library.ts:27" },
     ],
     translations: [ARABIC_ORIGINAL],
   },
@@ -266,8 +266,8 @@ export const ROUTE_CONTENT_DECLARATIONS: readonly RouteContentDeclaration[] = [
       "client/src/visual-golden/components/library/LibraryCatalog.tsx",
     ],
     servesContent: [
-      { language: "en", field: "titleEn", at: "client/src/visual-golden/services/catalog-library.ts:18" },
-      { language: "en", field: "authorEn", at: "client/src/visual-golden/services/catalog-library.ts:20" },
+      { language: "en", field: "titleEn", at: "client/src/visual-golden/services/catalog-library.ts:25" },
+      { language: "en", field: "authorEn", at: "client/src/visual-golden/services/catalog-library.ts:27" },
     ],
     translations: [ARABIC_ORIGINAL],
   },  {
@@ -279,7 +279,7 @@ export const ROUTE_CONTENT_DECLARATIONS: readonly RouteContentDeclaration[] = [
         "The English is a bibliographic title and author for cataloguing, shown where no recorded Arabic title exists rather than as a translation.",
     verifiedIn: ["client/src/App.tsx", "client/src/visual-golden/pages/LibraryPage.tsx"],
     servesContent: [
-      { language: "en", field: "titleEn", at: "client/src/visual-golden/services/catalog-library.ts:18" },
+      { language: "en", field: "titleEn", at: "client/src/visual-golden/services/catalog-library.ts:25" },
     ],
     translations: [ARABIC_ORIGINAL],
   },
@@ -292,7 +292,7 @@ export const ROUTE_CONTENT_DECLARATIONS: readonly RouteContentDeclaration[] = [
         "The English is a bibliographic title and author for cataloguing, shown where no recorded Arabic title exists rather than as a translation.",
     verifiedIn: ["client/src/App.tsx", "client/src/visual-golden/pages/LibraryPage.tsx"],
     servesContent: [
-      { language: "en", field: "titleEn", at: "client/src/visual-golden/services/catalog-library.ts:18" },
+      { language: "en", field: "titleEn", at: "client/src/visual-golden/services/catalog-library.ts:25" },
     ],
     translations: [ARABIC_ORIGINAL],
   },
@@ -301,7 +301,7 @@ export const ROUTE_CONTENT_DECLARATIONS: readonly RouteContentDeclaration[] = [
     "Retrieval results are Arabic, but each result also carries an English title, kind and hint that the evidence cards render.",
     ["client/src/visual-golden/services/basirah.ts", "client/src/visual-golden/pages/BasirahPage.tsx"],
     [
-      { language: "en", field: "titleEn", at: "client/src/visual-golden/services/basirah.ts:16" },
+      { language: "en", field: "titleEn", at: "client/src/visual-golden/services/basirah.ts:62" },
       { language: "en", field: "kindEn", at: "client/src/visual-golden/services/basirah.ts:64" },
         { language: "en", field: "hintEn", at: "client/src/visual-golden/services/basirah.ts:67" },
       ],
@@ -312,8 +312,8 @@ export const ROUTE_CONTENT_DECLARATIONS: readonly RouteContentDeclaration[] = [
     "The governance registries carry English bibliographic titles and authors, and the page renders work.titleEn directly.",
     ["shared/knowledge-registry.ts", "client/src/pages/SourcesPage.tsx"],
     [
-      { language: "en", field: "titleEn", at: "shared/knowledge-registry.ts:93" },
-        { language: "en", field: "authorEn", at: "shared/knowledge-registry.ts:95" },
+      { language: "en", field: "titleEn", at: "shared/knowledge-registry.ts:99" },
+        { language: "en", field: "authorEn", at: "shared/knowledge-registry.ts:101" },
       ],
       "The English is a bibliographic title and author written by this platform, not a translation of the work, whose full text is not available here.",
     ),
@@ -536,7 +536,7 @@ const LANGUAGE_NAMES: Record<ContentLanguage, { ar: string; en: string }> = {
 };
 
 export function languageName(language: ContentLanguage, uiLang: UiLang): string {
-  return LANGUAGE_NAMES[language][uiLang];
+  return LANGUAGE_NAMES[language][uiLang === "ar" ? "ar" : "en"];
 }
 
 /** A governed edition the reader can actually choose, not just be told about. */

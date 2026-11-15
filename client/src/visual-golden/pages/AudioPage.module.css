@@ -294,7 +294,15 @@
   font-weight: 700;
 }
 .reciterDiscovery > button:disabled { opacity: 0.65; cursor: wait; }
-.reciterDiscovery a { display: inline-flex; align-items: center; gap: 0.3rem; color: var(--gold-300); text-decoration: underline; }
+.reciterDiscovery a,
+.providerLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  gap: 0.3rem;
+  color: var(--gold-300);
+  text-decoration: underline;
+}
 .reciterDiscovery a:focus-visible, .reciterDiscovery button:focus-visible { outline: 3px solid var(--gold-400); outline-offset: 3px; }
 .reciterDiscovery small { color: var(--ivory-200); }
 .reciterList { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; }
@@ -312,6 +320,20 @@
   border: 1px solid rgba(212, 160, 23, 0.28);
   border-radius: 16px;
   padding: 0.9rem;
+}
+.textLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: 0.2rem;
+  color: var(--gold-300);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.textLink:focus-visible {
+  outline: 3px solid var(--gold-400);
+  outline-offset: 3px;
 }
 .surahs {
   list-style: none;
@@ -513,6 +535,7 @@
 .rightsLine a {
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   gap: 0.25rem;
   color: var(--text-gold);
   text-decoration: underline;

@@ -143,6 +143,7 @@
 }
 .viewAll {
   margin-right: auto;
+  min-height: 44px;
   font-size: 0.8rem;
   color: var(--text-gold);
   display: inline-flex;

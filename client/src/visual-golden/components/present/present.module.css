@@ -69,12 +69,35 @@
 
 .paletteHead input {
   flex: 1;
+  min-width: 0;
   background: none;
   border: none;
   outline: none;
   color: var(--ivory-50);
   font-family: var(--font-ui);
   font-size: 1.05rem;
+}
+
+.paletteMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.8rem;
+  border-bottom: 1px solid rgba(212, 160, 23, 0.14);
+  color: var(--text-muted);
+  font-size: 0.64rem;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.paletteMeta span {
+  flex: none;
+  padding-inline-end: 0.45rem;
+  border-inline-end: 1px solid rgba(212, 160, 23, 0.18);
+}
+
+.paletteMeta span:last-child {
+  border-inline-end: 0;
 }
 
 .hintK {
@@ -97,9 +120,10 @@
 
 .wing {
   display: grid;
-  grid-template-columns: 42px 1fr auto;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
   gap: 0.75rem;
   align-items: center;
+  min-height: 58px;
   padding: 0.7rem 0.8rem;
   border-radius: 14px;
   text-align: start;

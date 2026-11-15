@@ -22,10 +22,32 @@ export const KIDS_STORIES: KidsStory[] = childrenAdaptationRegistry.map((adaptat
   img: ART_BY_AGE[adaptation.ageBand] ?? ART_FALLBACK[index % ART_FALLBACK.length],
 }));
 
+const REGISTERED_ADAPTATION_IDS = new Set(KIDS_STORIES.map((story) => story.adaptationId));
+
 export const KIDS_COUNTS = {
   adaptations: childrenAdaptationRegistry.length,
   clearedMedia: mediaAssetRegistry.length,
 };
+
+export function isRegisteredKidsAdaptationId(adaptationId: string): boolean {
+  return REGISTERED_ADAPTATION_IDS.has(adaptationId);
+}
+
+export function countDistinctSeenKidsAdaptations(seenAdaptationIds: readonly string[]): number {
+  const distinctRegisteredIds = new Set<string>();
+  for (const adaptationId of seenAdaptationIds) {
+    if (isRegisteredKidsAdaptationId(adaptationId)) distinctRegisteredIds.add(adaptationId);
+  }
+  return distinctRegisteredIds.size;
+}
+
+export function hasThreeStoryKidsBadge(seenAdaptationIds: readonly string[]): boolean {
+  return countDistinctSeenKidsAdaptations(seenAdaptationIds) >= 3;
+}
+
+export function shouldCountColoringSession(hasInteracted: boolean, alreadyCounted: boolean): boolean {
+  return hasInteracted && !alreadyCounted;
+}
 
 export function ageBandLabel(ageBand: ChildrenAdaptationRecord["ageBand"]): string {
   return `${ageBand} سنوات`;

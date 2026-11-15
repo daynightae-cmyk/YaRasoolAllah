@@ -18,6 +18,7 @@ import {
   Languages,
 } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
+import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
 import { FocusBar } from "@/visual-golden/components/present/FocusBar";
 import {
@@ -124,6 +125,15 @@ function initialQuranSelection() {
   }
 }
 
+function initialQuranSearchQuery(): string {
+  try {
+    const query = new URLSearchParams(window.location.search).get("q")?.trim() ?? "";
+    return query.length <= 120 ? query : query.slice(0, 120);
+  } catch {
+    return "";
+  }
+}
+
 export function QuranPage() {
   const initialSelection = useMemo(initialQuranSelection, []);
   const [chapters, setChapters] = useState<QuranChapter[]>([]);
@@ -134,7 +144,7 @@ export function QuranPage() {
   const [focus, setFocus] = useState(false);
   const [lamp, setLamp] = useState(true);
   const [query, setQuery] = useState("");
-  const [verseQuery, setVerseQuery] = useState("");
+  const [verseQuery, setVerseQuery] = useState(initialQuranSearchQuery);
   const [searchState, setSearchState] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [searchResults, setSearchResults] = useState<QuranSearchHit[]>([]);
   const searchRequest = useRef(0);
@@ -158,6 +168,7 @@ export function QuranPage() {
   const [quranEncState, setQuranEncState] = useState<QuranEncTranslationState>({ state: "idle" });
   const [fontScale, setFontScale] = useState(() => safeReadReadingSettings().fontScale);
   const [lineHeight, setLineHeight] = useState(() => safeReadReadingSettings().lineHeight);
+  const recordReadingProgress = useInstitution((state) => state.recordReadingProgress);
 
   const governance = useMemo(
     () => getGovernanceRecord("resource-tanzil-uthmani-min-1-1"),
@@ -179,7 +190,25 @@ export function QuranPage() {
     } catch {
       // URL synchronization is a convenience; Quran reading must still work.
     }
-  }, [active, ayah]);
+
+    const chapter = chapters.find((item) => item.number === active);
+    recordReadingProgress({
+      // The ayah count is the denominator for this surah only. Keeping the
+      // denominator-stable identity prevents one surah's total from leaking
+      // into another surah's progress entry while chapters are loading.
+      id: `quran:${active}`,
+      surface: "quran",
+      path: `/quran?surah=${active}&ayah=${ayah}`,
+      titleAr: "القرآن الكريم",
+      titleEn: "Al-Qur'an",
+      locationAr: `${chapter?.arabicName ?? `سورة ${active}`} · الآية ${ayah}`,
+      locationEn: `${chapter?.englishName ?? `Surah ${active}`} · Ayah ${ayah}`,
+      completed: ayah,
+      total: chapter?.ayahCount ?? null,
+      unitAr: "آية",
+      unitEn: "verses",
+    });
+  }, [active, ayah, chapters, recordReadingProgress]);
 
   useEffect(() => {
     safeWriteJson(READING_SETTINGS_KEY, { fontScale, lineHeight });
@@ -480,6 +509,26 @@ export function QuranPage() {
       if (request === searchRequest.current) setSearchState("error");
     }
   };
+
+  useEffect(() => {
+    const term = initialQuranSearchQuery();
+    if (term.length < 2) return;
+    const request = ++searchRequest.current;
+    let cancelled = false;
+    setSearchState("loading");
+    searchVerifiedQuran(term, 20)
+      .then((hits) => {
+        if (cancelled || request !== searchRequest.current) return;
+        setSearchResults(hits);
+        setSearchState("ready");
+      })
+      .catch(() => {
+        if (!cancelled && request === searchRequest.current) setSearchState("error");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const toggleBookmark = () => {
     if (!selectedKey) return;
@@ -938,7 +987,7 @@ export function QuranPage() {
 
         {focus ? null : (
           <aside className={styles.sidePanel}>
-            <h4>الآية المحددة</h4>
+            <h3>الآية المحددة</h3>
             <div className={styles.selectedVerseMeta}>
               <strong>
                 {currentChapter
@@ -956,7 +1005,7 @@ export function QuranPage() {
               <button type="button" onClick={() => stepAyah(1)} disabled={active === 114 && selectedVerse?.ayah === currentChapter?.ayahCount}>الآية التالية</button>
             </div>
 
-            <h4>أدوات الآية</h4>
+            <h3>أدوات الآية</h3>
             <div className={styles.toolGrid}>
               <button type="button" onClick={copySelectedVerse}>
                 <Copy size={14} /> {copied ? "تم النسخ" : "نسخ الآية"}
@@ -1010,7 +1059,7 @@ export function QuranPage() {
               </div>
             ) : null}
 
-            <h4>التفسير والترجمة</h4>
+            <h3>التفسير والترجمة</h3>
             <div className={styles.tafsirBox}>
               {selectedTranslation && translationState.state === "ready" ? (
                 <p dir={translationState.payload.direction} lang={translationState.payload.language}>
@@ -1049,7 +1098,7 @@ export function QuranPage() {
               <Link href="/tafsir">فتح مساحة التفسير والتدبر</Link>
             </div>
 
-            <h4>حالة المصدر</h4>
+            <h3>حالة المصدر</h3>
             <div className={styles.sourceBox}>
               <div>
                 <ShieldCheck size={16} aria-hidden="true" />

@@ -359,7 +359,7 @@ export function AudioPage() {
                   <ShieldCheck size={12} /> {rightsLabel(provider.rightsState)}
                 </span>
                 <span style={{ fontSize: "0.72rem", opacity: 0.85 }}>{provider.productionUse}</span>
-                <a href={provider.canonicalUrl} target="_blank" rel="noreferrer" style={{ fontSize: "0.72rem", color: "var(--gold-300)", marginTop: 6, display: "inline-flex", gap: 4, alignItems: "center" }}>
+                <a href={provider.canonicalUrl} target="_blank" rel="noreferrer" className={styles.providerLink} style={{ fontSize: "0.72rem", color: "var(--gold-300)", marginTop: 6 }}>
                   التوثيق فقط <ExternalLink size={12} />
                 </a>
               </div>
@@ -379,7 +379,7 @@ export function AudioPage() {
         <section className={styles.box}>
           <SectionHead title="النص العربي الموثق" en="Verified Arabic text" />
           <p className="muted" style={{ fontSize: "0.82rem", lineHeight: 1.9 }}>
-            النص العربي الكامل متاح في <Link href="/quran">رواق القرآن</Link> من أصل Tanzil المثبت،
+            النص العربي الكامل متاح في <Link href="/quran" className={styles.textLink}>رواق القرآن</Link> من أصل Tanzil المثبت،
             والصوت مستقل عنه ولا يغيّر النص القرآني.
           </p>
         </section>

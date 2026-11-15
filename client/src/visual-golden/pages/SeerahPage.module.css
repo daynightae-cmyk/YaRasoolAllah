@@ -286,6 +286,7 @@
 .eventLink {
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   gap: 0.3rem;
   color: var(--text-gold);
   text-decoration: underline;
@@ -306,7 +307,7 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
-.graph h4 {
+.graph h3 {
   margin: 0 0 0.55rem;
   font-size: 0.95rem;
   color: var(--text-primary);
@@ -379,7 +380,7 @@
   padding-top: 0.7rem;
   border-top: 1px dashed var(--border-panel);
 }
-.graphDeferred h5 {
+.graphDeferred h4 {
   margin: 0 0 0.45rem;
   font-size: 0.78rem;
   color: var(--text-gold);

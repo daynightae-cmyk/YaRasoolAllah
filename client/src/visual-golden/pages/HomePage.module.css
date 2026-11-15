@@ -412,7 +412,8 @@
 .progressBar div {
   height: 100%;
   background: linear-gradient(90deg, var(--accent-gold), var(--accent-emerald));
-  width: 42%;
+  width: 0;
+  transition: width var(--duration-base) var(--ease-smooth);
 }
 .pct {
   font-size: 0.72rem;
@@ -420,6 +421,8 @@
 }
 .followBtn {
   display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   margin-top: 0.8rem;
   padding: 0.42rem 1.05rem;
   border-radius: var(--radius-full);

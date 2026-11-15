@@ -1,0 +1,17 @@
+{
+  "purpose": "Verify the server reading desk uses the shared governed policy and fails closed for works without an eligible version.",
+  "capturedAt": "2026-11-15T13:40:05.189Z",
+  "tabari": {
+    "status": 200,
+    "totalSegments": 7053,
+    "returnedSegments": 2,
+    "versionId": "version-0310Tabari.JamicBayan.JK000164-ara1",
+    "releaseCommit": "cfc4157a3cf2054c0888f133970a4eaa3e22e58c",
+    "rightsState": "cleared_public_domain_openiti_historical_text"
+  },
+  "sadi": {
+    "status": 409,
+    "availability": "catalog_only",
+    "message": "لا توجد نسخة نصية مسموح بعرضها داخل المنصة لهذا العمل."
+  }
+}

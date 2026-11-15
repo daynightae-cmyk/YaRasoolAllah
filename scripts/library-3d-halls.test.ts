@@ -68,14 +68,22 @@ describe("the walkable Library only shelves books the reader can open", () => {
     }
   });
 
-  it("shelves a deterministic, non-empty selection in every hall", () => {
+  it("shelves a deterministic selection without inventing books for empty halls", () => {
     const again = buildLibraryHallShelves(catalog.works);
     assert.equal(shelves.length, LIBRARY_HALLS.length);
+    assert.ok(
+      shelves.some((shelf) => shelf.works.length > 0),
+      "the governed registry must contribute at least one shelfable work",
+    );
     for (let index = 0; index < shelves.length; index += 1) {
       const shelf = shelves[index];
-      assert.ok(shelf.works.length > 0, `${shelf.hall.key} has no books`);
       assert.ok(shelf.works.length <= 90, `${shelf.hall.key} exceeds the shelf budget`);
       assert.ok(shelf.total >= shelf.works.length);
+      assert.equal(
+        shelf.works.length === 0,
+        shelf.total === 0,
+        `${shelf.hall.key} must not model a book without a governed total`,
+      );
       assert.deepEqual(
         shelf.works.map((work) => work.id),
         again[index].works.map((work) => work.id),

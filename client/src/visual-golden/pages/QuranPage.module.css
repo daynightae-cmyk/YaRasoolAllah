@@ -468,6 +468,7 @@
 .audioLink {
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   gap: 0.35rem;
   border: 1px solid var(--border-gold);
   border-radius: var(--radius-md);
@@ -526,7 +527,7 @@
 }
 
 /* --- Side panel typography --- */
-.sidePanel h4 {
+.sidePanel h3 {
   margin: 0.25rem 0 0.65rem;
   color: var(--text-gold);
   font-size: 0.95rem;
@@ -619,6 +620,11 @@
   padding: 0.75rem;
   border: 1px solid var(--border-panel);
 }
+.tafsirBox > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
 .translationText {
   margin: 0.6rem 0;
   padding: 0.8rem 0.95rem;
@@ -677,6 +683,8 @@
 .catalogJump {
   display: none;
   width: fit-content;
+  min-height: 44px;
+  align-items: center;
   color: var(--text-gold);
   font-size: 0.8rem;
   text-decoration: underline;

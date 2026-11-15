@@ -155,6 +155,7 @@
 .more {
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   gap: 0.25rem;
   color: var(--gold-300);
   font-size: 0.8rem;

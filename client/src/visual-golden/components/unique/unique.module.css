@@ -43,27 +43,54 @@
 }
 
 .string {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 44px);
   justify-content: center;
-  gap: 6px;
-  max-width: 280px;
+  gap: 0;
+  width: min(100%, 528px);
+  max-width: 528px;
   margin: 0.4rem auto 0.7rem;
 }
 
 .pearl {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  padding: 0;
+  transition: transform 150ms ease;
+}
+
+.pearl::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 18px;
   height: 18px;
+  transform: translate(-50%, -50%);
   border-radius: 50%;
   border: 1px solid rgba(232, 197, 71, 0.45);
   background: radial-gradient(circle at 30% 30%, #355, #0b1c18);
-  padding: 0;
-  transition: transform 150ms ease, background 150ms ease;
+  transition: transform 150ms ease, background 150ms ease, box-shadow 150ms ease;
+}
+
+.pearl:focus-visible {
+  outline: 3px solid var(--gold-300);
+  outline-offset: -4px;
 }
 
 .lit {
+  background: transparent;
+  transform: none;
+  box-shadow: none;
+}
+
+.lit::before {
   background: radial-gradient(circle at 30% 30%, #fde68a, #b45309);
-  transform: scale(1.12);
+  transform: translate(-50%, -50%) scale(1.12);
   box-shadow: 0 0 10px rgba(245, 158, 11, 0.55);
 }
 
@@ -79,10 +106,60 @@
 
 .board {
   width: min(520px, 100%);
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
   background: linear-gradient(180deg, #12352c, #071714);
   border: 1px solid rgba(232, 197, 71, 0.45);
   border-radius: 20px;
   padding: 1rem;
+}
+
+.studioHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.6rem;
+}
+
+.studioHead h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.paintTargets {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin-top: 0.8rem;
+}
+
+.paintTarget {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.35rem;
+  border: 1px solid rgba(232, 197, 71, 0.35);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--ivory-50);
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+
+.paintTarget:hover {
+  border-color: var(--gold-400);
+  background: rgba(232, 197, 71, 0.12);
+}
+
+.paintTargetDot {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 50%;
 }
 
 .palette {
@@ -103,6 +180,18 @@
 .swatchOn {
   border-color: var(--gold-400);
   box-shadow: 0 0 0 3px rgba(232, 197, 71, 0.3);
+}
+
+.paintTarget:focus-visible,
+.swatch:focus-visible {
+  outline: 3px solid var(--gold-300);
+  outline-offset: 2px;
+}
+
+@media (max-width: 520px) {
+  .paintTargets {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }
 
 .bars {

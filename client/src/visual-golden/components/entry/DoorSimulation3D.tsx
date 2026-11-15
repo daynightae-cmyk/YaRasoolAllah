@@ -1,6 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { DoorOpen, SkipForward, Volume2, VolumeX } from "lucide-react";
 import * as THREE from "three";
+import {
+  ThreeRuntime,
+  type ThreeRuntimeContext,
+  type ThreeSceneHandle,
+} from "@/visual-golden/components/three/three-runtime";
+import { useEffectiveMotion } from "@/visual-golden/lib/institution/effective-motion";
 import styles from "./DoorSimulation3D.module.css";
 
 interface DoorSimulation3DProps {
@@ -326,6 +332,8 @@ export function DoorSimulation3D({
   });
   const [webglFailed, setWebglFailed] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const runtimeRef = useRef<ThreeRuntime | null>(null);
+  const effectiveMotion = useEffectiveMotion();
   const primaryButtonRef = useRef<HTMLButtonElement>(null);
   const phaseRef = useRef<DoorPhase>(phase);
   const doorAngleRef = useRef(0);
@@ -392,8 +400,8 @@ export function DoorSimulation3D({
 
   useEffect(() => {
     if (phase !== "door") return;
-    const frame = window.requestAnimationFrame(() => primaryButtonRef.current?.focus());
-    return () => window.cancelAnimationFrame(frame);
+    const timer = window.setTimeout(() => primaryButtonRef.current?.focus(), 0);
+    return () => window.clearTimeout(timer);
   }, [phase]);
 
   useEffect(() => {
@@ -431,49 +439,62 @@ export function DoorSimulation3D({
   /* ---------------------------------------------------------------------- */
   /* Three.js scene                                                          */
   /* ---------------------------------------------------------------------- */
+  const sceneActive = active && phase !== "entered";
   useEffect(() => {
-    if (!active || phaseRef.current === "entered") return undefined;
+    if (!sceneActive) return undefined;
     const host = containerRef.current;
     if (!host) return undefined;
 
-    let renderer: THREE.WebGLRenderer;
-    try {
-      renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        alpha: false,
-        powerPreference: "high-performance",
-      });
-    } catch {
-      setWebglFailed(true);
-      return undefined;
-    }
+    let runtime: ThreeRuntime | null = null;
+    runtime = new ThreeRuntime({
+      host,
+      adapter: {
+        build: (context: ThreeRuntimeContext) => {
+          const { renderer } = context;
+          let reducedMotion = context.motion === "reduced";
+          setWebglFailed(false);
+          const scene = new THREE.Scene();
+          scene.background = new THREE.Color(0x020607);
+          scene.fog = new THREE.FogExp2(0x020607, 0.028);
 
-    setWebglFailed(false);
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x020607);
-    scene.fog = new THREE.FogExp2(0x020607, 0.028);
+          const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 60);
+          camera.position.set(0, 1.68, 4.35);
+          camera.lookAt(0, 1.72, WALL_Z);
 
-    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 60);
-    camera.position.set(0, 1.68, 4.35);
-    camera.lookAt(0, 1.72, WALL_Z);
-
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio ?? 1, 1.75));
-    renderer.setSize(host.clientWidth || 1, host.clientHeight || 1, false);
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.08;
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    host.appendChild(renderer.domElement);
-    renderer.domElement.setAttribute("aria-hidden", "true");
-
-    const reducedMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          renderer.toneMapping = THREE.ACESFilmicToneMapping;
+          renderer.toneMappingExposure = 1.08;
 
     const wood = woodTexture();
+    context.registerDisposable(() => wood.dispose());
     const stone = stoneTexture();
+    context.registerDisposable(() => stone.dispose());
     const carpet = carpetTexture();
+    context.registerDisposable(() => carpet.dispose());
     const plaster = plasterTexture();
+    context.registerDisposable(() => plaster.dispose());
+
+    let disposed = false;
+    const disposeScene = () => {
+      if (disposed) return;
+      disposed = true;
+      const geometries = new Set<THREE.BufferGeometry>();
+      const materials = new Set<THREE.Material>();
+      scene.traverse((object) => {
+        if (
+          object instanceof THREE.Mesh ||
+          object instanceof THREE.Points ||
+          object instanceof THREE.Line
+        ) {
+          geometries.add(object.geometry);
+          const material = object.material;
+          if (Array.isArray(material)) material.forEach((item) => materials.add(item));
+          else materials.add(material);
+        }
+      });
+      geometries.forEach((geometry) => geometry.dispose());
+      materials.forEach((material) => material.dispose());
+    };
+    context.registerDisposable(disposeScene);
 
     const woodMaterial = new THREE.MeshStandardMaterial({
       map: wood,
@@ -712,7 +733,7 @@ export function DoorSimulation3D({
     scene.add(new THREE.AmbientLight(0xfff4dc, 0.3));
     const keyLight = new THREE.DirectionalLight(0xffe3b0, 2.1);
     keyLight.position.set(3.5, 5.4, 4.2);
-    keyLight.castShadow = true;
+    keyLight.castShadow = context.shadowsEnabled;
     keyLight.shadow.mapSize.set(1024, 1024);
     keyLight.shadow.camera.left = -6;
     keyLight.shadow.camera.right = 6;
@@ -725,7 +746,7 @@ export function DoorSimulation3D({
     scene.add(fillLight);
 
     // Dust in the light -----------------------------------------------------
-    const dustCount = 140;
+    const dustCount = context.graphicsTier === "low" ? 48 : context.graphicsTier === "balanced" ? 90 : 140;
     const dustPositions = new Float32Array(dustCount * 3);
     const random = seededRandom(113);
     for (let index = 0; index < dustCount; index += 1) {
@@ -746,30 +767,14 @@ export function DoorSimulation3D({
     const dust = new THREE.Points(dustGeometry, dustMaterial);
     scene.add(dust);
 
-    // Resize ----------------------------------------------------------------
-    const resize = () => {
-      const width = host.clientWidth || 1;
-      const height = host.clientHeight || 1;
-      renderer.setSize(width, height, false);
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
-    };
-    resize();
-    const observer = new ResizeObserver(resize);
-    observer.observe(host);
-
-    // Animation -------------------------------------------------------------
-    const clock = new THREE.Clock();
-    let frame = 0;
-    let time = 0;
-    const animate = () => {
-      frame = window.requestAnimationFrame(animate);
-      const delta = Math.min(clock.getDelta(), 0.05);
-      time += delta;
+    const frame = (delta: number, time: number) => {
       const currentPhase = phaseRef.current;
-
       const targetAngle = currentPhase === "opening" || currentPhase === "exiting" ? 1.92 : 0;
-      doorAngleRef.current += (targetAngle - doorAngleRef.current) * (1 - Math.exp(-delta * 3.2));
+      if (reducedMotion) {
+        doorAngleRef.current = targetAngle;
+      } else {
+        doorAngleRef.current += (targetAngle - doorAngleRef.current) * (1 - Math.exp(-delta * 3.2));
+      }
       hinge.rotation.y = doorAngleRef.current;
 
       const openRatio = THREE.MathUtils.clamp(doorAngleRef.current / 1.92, 0, 1);
@@ -789,43 +794,40 @@ export function DoorSimulation3D({
       camera.lookAt(0, 1.72 + openRatio * 0.12, WALL_Z);
       renderer.render(scene, camera);
     };
-    animate();
 
-    const onVisibility = () => {
-      if (document.hidden) {
-        window.cancelAnimationFrame(frame);
-        frame = 0;
-      } else if (!frame) {
-        animate();
-      }
+    const resize = (width: number, height: number) => {
+      camera.aspect = width / Math.max(1, height);
+      camera.updateProjectionMatrix();
     };
-    document.addEventListener("visibilitychange", onVisibility);
+
+    return {
+      frame,
+      resize,
+      setMotion(motion) {
+        reducedMotion = motion === "reduced";
+        context.invalidate();
+      },
+      dispose: disposeScene,
+    } satisfies ThreeSceneHandle;
+        },
+      },
+      active: sceneActive,
+      motion: effectiveMotion,
+      onStateChange: (state) => {
+        if (state === "running" || state === "paused") setWebglFailed(false);
+        if (state === "context-lost" || state === "fallback") setWebglFailed(true);
+      },
+      onFallback: () => setWebglFailed(true),
+      onContextRestored: () => setWebglFailed(false),
+    });
+    runtimeRef.current = runtime;
+    void runtime.start();
 
     return () => {
-      document.removeEventListener("visibilitychange", onVisibility);
-      window.cancelAnimationFrame(frame);
-      observer.disconnect();
-      scene.traverse((object) => {
-        if (
-          object instanceof THREE.Mesh ||
-          object instanceof THREE.Points ||
-          object instanceof THREE.Line
-        ) {
-          object.geometry.dispose();
-          const materials = Array.isArray(object.material)
-            ? object.material
-            : [object.material];
-          for (const material of materials) material.dispose();
-        }
-      });
-      wood.dispose();
-      stone.dispose();
-      carpet.dispose();
-      plaster.dispose();
-      renderer.dispose();
-      renderer.domElement.remove();
+      runtime?.stop();
+      runtimeRef.current = null;
     };
-  }, [active]);
+  }, [effectiveMotion, sceneActive]);
 
   if (!active || phase === "entered") return null;
 
@@ -848,14 +850,21 @@ export function DoorSimulation3D({
   return (
     <div
       className={`${styles.overlay} ${phaseClass} ${isExiting ? styles.exiting : ""}`}
-      role="dialog"
-      aria-modal="true"
+      role="region"
       aria-label={`${siteNameAr} — ${isDoor ? openLabel : "الدخول إلى الجناح"}`}
       dir={isRtl ? "rtl" : "ltr"}
       data-door-phase={phase}
     >
+      {/* Keep the renderer host mounted through context loss so the shared
+          runtime can restore the same WebGL surface. The DOM illustration is
+          an overlay fallback, never a replacement for the live canvas. */}
+      <div ref={containerRef} className={styles.canvasHost} aria-hidden="true" />
       {webglFailed ? (
-        <div className={styles.fallbackWrap} aria-hidden="true">
+        <div
+          className={styles.fallbackWrap}
+          role="img"
+          aria-label={isRtl ? "رسم بديل لباب المؤسسة" : "Decorative institutional door illustration"}
+        >
           <div className={styles.fallbackFrame}>
             <div
               className={`${styles.fallbackLeaf} ${isOpening || isExiting ? styles.fallbackLeafOpen : ""}`}
@@ -865,9 +874,7 @@ export function DoorSimulation3D({
             <div className={`${styles.fallbackGlow} ${isOpening || isExiting ? styles.fallbackGlowOpen : ""}`} />
           </div>
         </div>
-      ) : (
-        <div ref={containerRef} className={styles.canvasHost} aria-hidden="true" />
-      )}
+      ) : null}
 
       <div className={styles.lightWash} aria-hidden="true" />
       <div className={styles.vignette} aria-hidden="true" />
@@ -940,10 +947,15 @@ export function DoorSimulation3D({
           <i aria-hidden="true" /> {isRtl ? "باب المكتبة" : "Library door"}
           <i aria-hidden="true" /> {isRtl ? "عتبة واحدة لكل جناح" : "one threshold per wing"}
         </span>
+        <p className={styles.decorativeNote}>
+          {isRtl
+            ? "المشهد ثلاثي الأبعاد زخرفي: لا يحمل بيانات ولا يُشترط للوصول إلى محتوى الجناح."
+            : "The 3D threshold is decorative: it carries no data and is not required to reach the wing's content."}
+        </p>
       </div>
 
       {webglFailed ? (
-        <p className={styles.fallbackNote}>
+        <p className={styles.fallbackNote} role="status">
           {isRtl
             ? "تعذّر تشغيل المشهد ثلاثي الأبعاد في هذا المتصفح. الباب ما زال يفتح، ويمكنك متابعة الدخول."
             : "The 3D scene is unavailable in this browser. The door still opens and you can continue."}

@@ -6,6 +6,7 @@ import {
   buildKnowledgeGraph,
   findRelatedRecords,
   getKnowledgePath,
+  quranSearchRecords,
   searchBasirah,
   surahRecords,
   type BasirahMode,
@@ -59,22 +60,7 @@ export function BasirahPage() {
 
   const localIndex = useMemo(() => buildLocalIndex(), []);
   const quranRecords = useMemo<BasirahRecord[]>(
-    () =>
-      quranHits.map((hit) => ({
-        id: `quran-ayah-${hit.surah}-${hit.ayah}`,
-        scope: "quran",
-        titleAr: `سورة ${hit.surahName} · الآية ${hit.ayah}`,
-        titleEn: `Quran ${hit.surah}:${hit.ayah}`,
-        kindAr: "آية من المصحف المحلي الموثق",
-        kindEn: "verified local Quran verse",
-        path: `/quran?surah=${hit.surah}&ayah=${hit.ayah}`,
-        hintAr: hit.arabic,
-        hintEn: `Tanzil Uthmani-min 1.1 · ${hit.surah}:${hit.ayah}`,
-        availabilityAr: "النص العربي المحلي متاح · لا ترجمة أو تفسير مضمّن في نتيجة البحث",
-        certainty: "verified",
-        certaintyReasonAr: "نص آية من النسخة القرآنية المحلية الموثقة حرفيًا (Tanzil Uthmani-min 1.1).",
-        sourceIds: ["src-tanzil-uthmani-1-1-candidate"],
-      })),
+    () => quranSearchRecords(quranHits),
     [quranHits],
   );
   const index = useMemo(

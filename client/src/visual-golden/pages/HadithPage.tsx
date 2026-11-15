@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Search, Bookmark, BookmarkCheck, ExternalLink, ShieldCheck, Database, Copy, Link2, Check } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
+import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import { IsnadChain } from "@/visual-golden/components/unique/IsnadChain";
@@ -50,6 +51,17 @@ async function copyTextToClipboard(text: string): Promise<boolean> {
 }
 
 const BOOKMARK_KEY = "hadith-sample-bookmarks-v1";
+const VISUALLY_HIDDEN_LABEL_STYLE = {
+  position: "absolute",
+  width: "1px",
+  height: "1px",
+  padding: 0,
+  margin: "-1px",
+  overflow: "hidden",
+  clip: "rect(0, 0, 0, 0)",
+  whiteSpace: "nowrap",
+  border: 0,
+} as const;
 
 function safeReadBookmarks(): string[] {
   try {
@@ -97,6 +109,7 @@ export function HadithPage() {
   const [matnCopy, setMatnCopy] = useState<CopyState>("idle");
   const [linkCopy, setLinkCopy] = useState<CopyState>("idle");
   const [corpusState, setCorpusState] = useState<CorpusState>({ state: "loading" });
+  const recordReadingProgress = useInstitution((state) => state.recordReadingProgress);
 
   const results = useMemo(() => searchSamples(q, collectionId), [q, collectionId]);
   const active = results.find((sample) => sample.id === activeId) ?? results[0] ?? null;
@@ -113,7 +126,21 @@ export function HadithPage() {
     } catch {
       // URL synchronization is a convenience; the archive must still work.
     }
-  }, [active]);
+
+    recordReadingProgress({
+      id: `hadith:${active.id}`,
+      surface: "hadith",
+      path: `/hadith?sample=${encodeURIComponent(active.id)}${active.collectionId ? `&collection=${encodeURIComponent(active.collectionId)}` : ""}`,
+      titleAr: "دار الحديث",
+      titleEn: "Hadith Hall",
+      locationAr: `${activeCollection?.nameAr ?? "سجل محلي"} · حديث رقم ${active.hadithNumber}`,
+      locationEn: `${activeCollection?.nameEn ?? "Local record"} · Hadith ${active.hadithNumber}`,
+      completed: null,
+      total: null,
+      unitAr: "سجلًا",
+      unitEn: "records",
+    });
+  }, [active, activeCollection, recordReadingProgress]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -174,13 +201,18 @@ export function HadithPage() {
         wing="hadith"
       >
         <form className={styles.search} onSubmit={(e) => e.preventDefault()}>
-          <Search size={16} />
+          <Search size={16} aria-hidden="true" />
+          <label htmlFor="hadith-local-search" style={VISUALLY_HIDDEN_LABEL_STYLE}>
+            البحث في السجلات المحلية
+          </label>
           <input
+            id="hadith-local-search"
+            aria-label="البحث في السجلات المحلية"
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="ابحث في السجلات المحلية: النص، الراوي، الكتاب، الباب..."
           />
-          <button className="btn-gold" type="submit">
+          <button className="btn-gold" type="submit" aria-label="ابحث في السجلات المحلية">
             بحث
           </button>
         </form>

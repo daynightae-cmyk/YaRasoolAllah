@@ -8,7 +8,7 @@ export function BasirahSourceRail({
   title,
 }: {
   records: BasirahRecord[];
-  lang: "ar" | "en";
+  lang: "ar" | "en" | "fr" | "ur";
   title: string;
 }) {
   return (

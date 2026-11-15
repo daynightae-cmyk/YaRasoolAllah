@@ -39,7 +39,7 @@ export const discoveryWings: {
   { path: "/atlas", ar: "الأطلس التخطيطي", en: "Schematic Atlas", hint: "مواضع تخطيطية — ليست إحداثيات" },
   { path: "/kids", ar: "الأطفال والعائلة", en: "Kids & Family", hint: "تكييفات تعليمية ووضع قراءة" },
   { path: "/daily", ar: "مرصد الصلاة", en: "Prayer Observatory", hint: "مواقيت حية حسب المدينة والقبلة" },
-  { path: "/audio", ar: "التلاوات الصوتية", en: "Qur’an Audio", hint: "سجل المزوّدين — التشغيل غير مُجاز" },
+  { path: "/audio", ar: "التلاوات الصوتية", en: "Qur’an Audio", hint: "سجل المزوّدين — تشغيل مباشر حيث يتاح المزود" },
   { path: "/basirah", ar: "بصيرة", en: "Basirah", hint: "اكتشاف المصادر المحلية" },
   { path: "/sources", ar: "خزانة المصادر", en: "Sources Vault", hint: "المصادر والحقوق والمزوّدون والنسخ" },
 ];

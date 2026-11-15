@@ -42,6 +42,12 @@ export interface DigitalVersionRecord {
   releaseCommit: string;
   artifactPath: string;
   artifactGitSha: string | null;
+  /**
+   * Decoded UTF-8 byte length of the pinned artifact, measured on 2026-11-15
+   * against the immutable RELEASE commit with `Accept-Encoding: identity`.
+   * The reader uses this to fail closed before downloading an oversized file.
+   */
+  artifactBytes: number;
   sourceUrl: string;
   versionMetadataUrl: string;
   editionStatement: string;
@@ -189,7 +195,7 @@ export const workRegistry: WorkRecord[] = [
     sourceIds: ["src-openiti-release-pinned"],
     bibliographicStatus: "verified_bibliographic",
     scholarlyReviewStatus: "scholarly_review_pending",
-    attributionCaveat: "لا يُعرض النص الكامل حتى تُراجع النسخة والحقوق على مستوى المورد.",
+    attributionCaveat: "نسخة رقمية مؤهلة للقراءة داخل المنصة؛ ولا تُعد طبعة نقدية، والمراجعة العلمية ما زالت معلقة.",
   },
   {
     workId: "work-qurtubi-tafsir",
@@ -202,7 +208,7 @@ export const workRegistry: WorkRecord[] = [
     sourceIds: ["src-openiti-release-pinned"],
     bibliographicStatus: "verified_bibliographic",
     scholarlyReviewStatus: "scholarly_review_pending",
-    attributionCaveat: "بيانات الفهرسة لا تمنح حق إعادة نشر النص.",
+    attributionCaveat: "نسخة رقمية مؤهلة للقراءة داخل المنصة؛ لا تمنح الفهرسة وحدها أي حكم على الطبعة.",
   },
   {
     workId: "work-baghawi-tafsir",
@@ -215,7 +221,7 @@ export const workRegistry: WorkRecord[] = [
     sourceIds: ["src-openiti-release-pinned"],
     bibliographicStatus: "verified_bibliographic",
     scholarlyReviewStatus: "scholarly_review_pending",
-    attributionCaveat: "فهرسة فقط إلى أن تُراجع النسخة الرقمية وحقوقها.",
+    attributionCaveat: "نسخة رقمية مؤهلة للقراءة داخل المنصة؛ فهرستها لا تثبت طبعة نقدية.",
   },
   {
     workId: "work-ibn-kathir-tafsir",
@@ -228,7 +234,7 @@ export const workRegistry: WorkRecord[] = [
     sourceIds: ["src-openiti-release-pinned"],
     bibliographicStatus: "verified_bibliographic",
     scholarlyReviewStatus: "scholarly_review_pending",
-    attributionCaveat: "لا تُعرض قراءة داخلية قبل تحقق النسخة والحقوق.",
+    attributionCaveat: "نسخة رقمية مؤهلة للقراءة داخل المنصة؛ والمراجعة العلمية للطبعة ما زالت معلقة.",
   },
   {
     workId: "work-sadi-tafsir",
@@ -267,7 +273,7 @@ export const workRegistry: WorkRecord[] = [
     sourceIds: ["src-openiti-release-pinned", "src-sunnah-api"],
     bibliographicStatus: "verified_bibliographic",
     scholarlyReviewStatus: "scholarly_review_pending",
-    attributionCaveat: "النسخة الرقمية لا تُعتمد نصياً قبل المراجعة المنفصلة.",
+    attributionCaveat: "النسخة الرقمية مؤهلة للعرض داخل المنصة، لكن اعتمادها النصي ينتظر المراجعة العلمية المنفصلة.",
   },
   {
     workId: "work-bukhari-adab",
@@ -310,42 +316,42 @@ export const workRegistry: WorkRecord[] = [
   },
 ];
 
-type VersionRow = readonly [string, string, string | null, string];
+type VersionRow = readonly [string, string, string | null, string, number];
 
 const versionRows: VersionRow[] = [
-  ["work-ibn-hisham-sira", "0213IbnHisham.SiraNabawiyya.JK000797-ara1", "8ef262e181ea86a66fbf199a042bda8ded6e6146", "plain"],
-  ["work-ibn-hisham-sira", "0213IbnHisham.SiraNabawiyya.Masaha003361Vols-ara1", "7c86be5ad1be445cf69076785a8662eaad416a31", "plain"],
-  ["work-ibn-hisham-sira", "0213IbnHisham.SiraNabawiyya.ShamAY0034440-ara1", "23e193ad107593a6ac6217027bde7d831ff425d4", "plain"],
-  ["work-ibn-hisham-sira", "0213IbnHisham.SiraNabawiyya.Shamela0007450-ara1", "b6f801433e9dca1ffd460472a60bf7960e6b4e92", "plain"],
-  ["work-ibn-hisham-sira", "0213IbnHisham.SiraNabawiyya.Shamela0023833-ara1", "dd56bd3ac0fcf69f74bdce8034fb60865698c85d", "completed"],
-  ["work-ibn-hisham-sira", "0213IbnHisham.SiraNabawiyya.Shia003667Vols-ara1", "7dd974a2d885371ba802d01c11feb33505cb8fa6", "plain"],
-  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.JK000530-ara2", "f5fb6fc1313582f4d098f9da23a28a73519286f2", "plain"],
-  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.JK000744-ara5", "7ff53945ae1f6d5bfb9f2b7e288a018cb25ba49f", "plain"],
-  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.ShamAY0034595-ara1", "39dc0f2ded511b5599a47ff85a898fe07f3445c8", "plain"],
-  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.ShamAY0035884-ara1", "6a6a193e01e933b42217565323f491e606e3e7b6", "mARkdown"],
-  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.Shamela0001686-ara1", "d33aaa10fa2bb18e3b24d6eff805218b33843351", "mARkdown"],
-  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.Shamela0001689-ara4", "56e0dce0be9b78c6f6e720c03f14105683d9717d", "plain"],
-  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.Shamela0007666-ara5", "2b5fd1f28bd7b281c832dc644d328c74fdc01c99", "plain"],
-  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.Shamela0009351-ara2", "40bb8cf8f6a388dce3a81b2a9a4f48a3f994271a", "plain"],
-  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.Shamela0009352-ara5", "4d926a5cec6f442790c2fb3b4c402b6a978c0981", "plain"],
-  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.Shamela0012416-ara3", "edfd5d42734f2a3f6d832948544959d0d7999167", "plain"],
-  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.Shia003044Vols-ara2", "4289c8ad52c01e4914259ceaf9b09e15f6fa7309", "plain"],
-  ["work-waqidi-maghazi", "0207Waqidi.Maghazi.JK009232-ara1", "fcbb509b7a43622b718446d94379d7f23e469b40", "plain"],
-  ["work-waqidi-maghazi", "0207Waqidi.Maghazi.Masaha003023Vols-ara1", "f7db519e93c955a480de27cd629f14b2eb67f2be", "plain"],
-  ["work-waqidi-maghazi", "0207Waqidi.Maghazi.Shamela0023680-ara1", "f1407d3a3213d5c0d09f5d02e8c9b3b577a2ef38", "mARkdown"],
-  ["work-tabari-tarikh", "0310Tabari.Tarikh.JK000157-ara2", null, "plain"],
-  ["work-bayhaqi-dalail", "0458Bayhaqi.DalailNubuwwa.JK006838-ara1", null, "plain"],
-  ["work-ibn-kathir-bidaya", "0774IbnKathir.Bidaya.JK000158-ara3", null, "plain"],
-  ["work-ibn-kathir-fusul-sira", "0774IbnKathir.FusulMinSira.JK000796-ara1", null, "plain"],
-  ["work-tabari-tafsir", "0310Tabari.JamicBayan.JK000164-ara1", null, "plain"],
-  ["work-qurtubi-tafsir", "0671AbuCabdAllahQurtubi.JamicLiAhkamQuran.JK000160-ara1", null, "plain"],
-  ["work-baghawi-tafsir", "0510IbnMascudBaghawi.Tafsir.JK000464-ara1", null, "plain"],
-  ["work-ibn-kathir-tafsir", "0774IbnKathir.TafsirQuran.JK000161-ara2", null, "plain"],
-  ["work-bukhari-sahih", "0256Bukhari.Sahih.JK000110-ara1", null, "plain"],
-  ["work-muslim-sahih", "0261Muslim.Sahih.JK000109-ara1", null, "plain"],
-  ["work-bukhari-adab", "0256Bukhari.AdabMufrad.JK000011-ara1", null, "plain"],
-  ["work-tirmidhi-shamail", "0279Tirmidhi.ShamailMuhammadiyya.JK000139-ara1", null, "plain"],
-  ["work-nawawi-riyad", "0676Nawawi.RiyadSalihin.JK000073-ara2", null, "plain"],
+  ["work-ibn-hisham-sira", "0213IbnHisham.SiraNabawiyya.JK000797-ara1", "8ef262e181ea86a66fbf199a042bda8ded6e6146", "plain", 2534280],
+  ["work-ibn-hisham-sira", "0213IbnHisham.SiraNabawiyya.Masaha003361Vols-ara1", "7c86be5ad1be445cf69076785a8662eaad416a31", "plain", 4198673],
+  ["work-ibn-hisham-sira", "0213IbnHisham.SiraNabawiyya.ShamAY0034440-ara1", "23e193ad107593a6ac6217027bde7d831ff425d4", "plain", 2565831],
+  ["work-ibn-hisham-sira", "0213IbnHisham.SiraNabawiyya.Shamela0007450-ara1", "b6f801433e9dca1ffd460472a60bf7960e6b4e92", "plain", 1398814],
+  ["work-ibn-hisham-sira", "0213IbnHisham.SiraNabawiyya.Shamela0023833-ara1", "dd56bd3ac0fcf69f74bdce8034fb60865698c85d", "completed", 2654027],
+  ["work-ibn-hisham-sira", "0213IbnHisham.SiraNabawiyya.Shia003667Vols-ara1", "7dd974a2d885371ba802d01c11feb33505cb8fa6", "plain", 2569775],
+  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.JK000530-ara2", "f5fb6fc1313582f4d098f9da23a28a73519286f2", "plain", 7837123],
+  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.JK000744-ara5", "7ff53945ae1f6d5bfb9f2b7e288a018cb25ba49f", "plain", 349773],
+  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.ShamAY0034595-ara1", "39dc0f2ded511b5599a47ff85a898fe07f3445c8", "plain", 10850846],
+  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.ShamAY0035884-ara1", "6a6a193e01e933b42217565323f491e606e3e7b6", "mARkdown", 11007272],
+  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.Shamela0001686-ara1", "d33aaa10fa2bb18e3b24d6eff805218b33843351", "mARkdown", 8384540],
+  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.Shamela0001689-ara4", "56e0dce0be9b78c6f6e720c03f14105683d9717d", "plain", 613805],
+  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.Shamela0007666-ara5", "2b5fd1f28bd7b281c832dc644d328c74fdc01c99", "plain", 528683],
+  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.Shamela0009351-ara2", "40bb8cf8f6a388dce3a81b2a9a4f48a3f994271a", "plain", 8389713],
+  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.Shamela0009352-ara5", "4d926a5cec6f442790c2fb3b4c402b6a978c0981", "plain", 364287],
+  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.Shamela0012416-ara3", "edfd5d42734f2a3f6d832948544959d0d7999167", "plain", 668622],
+  ["work-ibn-sad-tabaqat", "0230IbnSacd.TabaqatKubra.Shia003044Vols-ara2", "4289c8ad52c01e4914259ceaf9b09e15f6fa7309", "plain", 7869497],
+  ["work-waqidi-maghazi", "0207Waqidi.Maghazi.JK009232-ara1", "fcbb509b7a43622b718446d94379d7f23e469b40", "plain", 2458005],
+  ["work-waqidi-maghazi", "0207Waqidi.Maghazi.Masaha003023Vols-ara1", "f7db519e93c955a480de27cd629f14b2eb67f2be", "plain", 2867210],
+  ["work-waqidi-maghazi", "0207Waqidi.Maghazi.Shamela0023680-ara1", "f1407d3a3213d5c0d09f5d02e8c9b3b577a2ef38", "mARkdown", 2409107],
+  ["work-tabari-tarikh", "0310Tabari.Tarikh.JK000157-ara2", null, "plain", 13019201],
+  ["work-bayhaqi-dalail", "0458Bayhaqi.DalailNubuwwa.JK006838-ara1", null, "mARkdown", 4825900],
+  ["work-ibn-kathir-bidaya", "0774IbnKathir.Bidaya.JK000158-ara3", null, "plain", 18794894],
+  ["work-ibn-kathir-fusul-sira", "0774IbnKathir.FusulMinSira.JK000796-ara1", null, "plain", 364265],
+  ["work-tabari-tafsir", "0310Tabari.JamicBayan.JK000164-ara1", null, "plain", 26360746],
+  ["work-qurtubi-tafsir", "0671AbuCabdAllahQurtubi.JamicLiAhkamQuran.JK000160-ara1", null, "plain", 19352765],
+  ["work-baghawi-tafsir", "0510IbnMascudBaghawi.Tafsir.JK000464-ara1", null, "plain", 7908952],
+  ["work-ibn-kathir-tafsir", "0774IbnKathir.TafsirQuran.JK000161-ara2", null, "plain", 13935380],
+  ["work-bukhari-sahih", "0256Bukhari.Sahih.JK000110-ara1", null, "completed", 5524762],
+  ["work-muslim-sahih", "0261Muslim.Sahih.JK000109-ara1", null, "plain", 4560879],
+  ["work-bukhari-adab", "0256Bukhari.AdabMufrad.JK000011-ara1", null, "plain", 704485],
+  ["work-tirmidhi-shamail", "0279Tirmidhi.ShamailMuhammadiyya.JK000139-ara1", null, "plain", 217722],
+  ["work-nawawi-riyad", "0676Nawawi.RiyadSalihin.JK000073-ara2", null, "plain", 1131289],
 ];
 
 function workDirectory(workId: string) {
@@ -356,7 +362,7 @@ function workDirectory(workId: string) {
 }
 
 export const digitalVersionRegistry: DigitalVersionRecord[] = versionRows.map(
-  ([workId, openitiUri, artifactGitSha, suffix]) => {
+  ([workId, openitiUri, artifactGitSha, suffix, artifactBytes]) => {
     const directory = workDirectory(workId);
     const artifactName = suffix === "mARkdown" ? `${openitiUri}.mARkdown` : suffix === "completed" ? `${openitiUri}.completed` : openitiUri;
     const artifactPath = `${directory}/${artifactName}`;
@@ -368,6 +374,7 @@ export const digitalVersionRegistry: DigitalVersionRecord[] = versionRows.map(
       releaseCommit: OPENITI_RELEASE_COMMIT,
       artifactPath,
       artifactGitSha,
+      artifactBytes,
       sourceUrl: `https://github.com/OpenITI/RELEASE/blob/${OPENITI_RELEASE_COMMIT}/${artifactPath}`,
       versionMetadataUrl: `https://github.com/OpenITI/RELEASE/blob/${OPENITI_RELEASE_COMMIT}/${directory}/${openitiUri}.yml`,
       editionStatement: "نسخة رقمية في OpenITI؛ بيانات الطبعة/المحقق غير مثبتة في سجل المنصة بعد.",
@@ -402,6 +409,69 @@ export const providerPolicyRegistry: ProviderPolicyRecord[] = [
   { providerId: "provider-british-library", provider: "British Library", domain: "media", canonicalUrl: "https://www.bl.uk/", rightsUrl: null, rightsState: "item_by_item_review", contentAvailability: "catalog_only", credentialsRequired: false, productionUse: "Candidate institution only; zero production assets registered.", attribution: null, checkedAt: KNOWLEDGE_CHECKED_AT },
   { providerId: "provider-nypl", provider: "NYPL Digital Collections", domain: "media", canonicalUrl: "https://digitalcollections.nypl.org/", rightsUrl: null, rightsState: "item_by_item_review", contentAvailability: "catalog_only", credentialsRequired: false, productionUse: "Candidate institution only; zero production assets registered.", attribution: null, checkedAt: KNOWLEDGE_CHECKED_AT },
 ];
+
+export interface ProviderAvailabilityMetrics {
+  totalProviders: number;
+  fullTextCleared: number;
+  streamingCleared: number;
+  catalogOnly: number;
+  externalLinkOnly: number;
+  apiOnly: number;
+  credentialsRequired: number;
+  rightsReviewPending: number;
+}
+
+/**
+ * Availability buckets are mutually exclusive: every provider policy is
+ * counted once according to its actual content state. Credential and
+ * rights-review counts are deliberately independent overlays because a
+ * provider can appear in an availability bucket while still needing review.
+ */
+export function getProviderAvailabilityMetrics(
+  providers: readonly ProviderPolicyRecord[] = providerPolicyRegistry,
+): ProviderAvailabilityMetrics {
+  const metrics: ProviderAvailabilityMetrics = {
+    totalProviders: providers.length,
+    fullTextCleared: 0,
+    streamingCleared: 0,
+    catalogOnly: 0,
+    externalLinkOnly: 0,
+    apiOnly: 0,
+    credentialsRequired: 0,
+    rightsReviewPending: 0,
+  };
+
+  for (const provider of providers) {
+    if (provider.rightsState === "api_only") {
+      metrics.apiOnly += 1;
+    } else {
+      switch (provider.contentAvailability) {
+        case "full_text_cleared":
+          metrics.fullTextCleared += 1;
+          break;
+        case "streaming_cleared":
+          metrics.streamingCleared += 1;
+          break;
+        case "catalog_only":
+          metrics.catalogOnly += 1;
+          break;
+        case "external_link_only":
+          metrics.externalLinkOnly += 1;
+          break;
+      }
+    }
+
+    if (provider.credentialsRequired) metrics.credentialsRequired += 1;
+    if (
+      provider.rightsState === "needs_license_review" ||
+      provider.rightsState === "item_by_item_review"
+    ) {
+      metrics.rightsReviewPending += 1;
+    }
+  }
+
+  return metrics;
+}
 
 export const childrenAdaptationRegistry: ChildrenAdaptationRecord[] = [
   { adaptationId: "adaptation-mercy-at-home", titleAr: "الرحمة تبدأ من البيت", summaryAr: "موقف قصير يساعد الطفل على تحويل معنى الرحمة إلى فعل يومي مع الأسرة والحيوان والضعيف.", ageBand: "6-8", sourceIds: ["work-bukhari-adab", "work-nawawi-riyad"], adaptationLabel: "platform_original_not_a_direct_quote", editorialStatus: "editorial_review_pending", reviewStatus: "scholarly_review_pending", depictionPolicy: "no_prophetic_depiction" },

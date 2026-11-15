@@ -2,13 +2,13 @@ import { HADITH_COLLECTIONS, HADITH_DEVELOPMENT_SAMPLES } from "@/data/hadithDat
 import { seerahChapters } from "@/data/seerahData";
 import type { QuranChapter } from "@/services/quranService";
 import { digitalVersionRegistry, workRegistry } from "@shared/knowledge-registry";
-import { sourceRegistry } from "@shared/source-registry";
+import { getGovernanceRecord, providerResourceRegistry, sourceRegistry } from "@shared/source-registry";
 import { SEERAH_GRAPH } from "@/visual-golden/services/seerah-graph";
+import { getEligibleDirectOpenItiVersions } from "@/visual-golden/services/direct-book-reader";
 
 export type BasirahScope = "all" | "quran" | "hadith" | "seerah" | "library" | "sources";
 export type BasirahMode = "sourced" | "simple" | "compare" | "evidence" | "explore";
 export type BasirahCertainty = "verified" | "approximate" | "schematic";
-
 export interface BasirahRecord {
   id: string;
   scope: Exclude<BasirahScope, "all">;
@@ -65,7 +65,7 @@ export function buildLocalIndex(): BasirahRecord[] {
       path: `/seerah?chapter=${encodeURIComponent(chapter.id)}`,
       hintAr: chapter.description.slice(0, 90),
       hintEn: `${chapter.timelineEvents?.length ?? 0} recorded events`,
-      availabilityAr: "متن الفصل معروض من المصدر المعتمد",
+      availabilityAr: "متن الفصل متاح محليًا، ولم يُربط بعد بمعرّف مصدر فصل صريح",
       certainty: "schematic",
       certaintyReasonAr: "بنية سردية محلية؛ لم يُربط الفصل بعد بمعرّف مصدر فصل صريح.",
       sourceIds: [],
@@ -92,7 +92,9 @@ export function buildLocalIndex(): BasirahRecord[] {
   }
 
   for (const work of workRegistry) {
-    const versions = digitalVersionRegistry.filter((v) => v.workId === work.workId).length;
+    const versions = digitalVersionRegistry.filter((v) => v.workId === work.workId);
+    const readableVersions = getEligibleDirectOpenItiVersions(work.workId);
+    const hasReadableText = readableVersions.length > 0;
     records.push({
       id: `work-${work.workId}`,
       scope: "library",
@@ -101,14 +103,18 @@ export function buildLocalIndex(): BasirahRecord[] {
       kindAr: "سجل عمل",
       kindEn: "work record",
       path: `/library/work/${work.workId}`,
-      hintAr: `${work.authorAr} · ${versions} نسخة فهرسية`,
+      hintAr: `${work.authorAr} · ${hasReadableText ? `${readableVersions.length} نسخة نصية مؤهلة للقراءة` : `${versions.length} نسخة مسجلة`}`,
       hintEn: work.openitiWorkUri ?? "no OpenITI version pinned",
-      availabilityAr: "سجل فهرسي فقط — النص الكامل غير متاح",
+      availabilityAr: hasReadableText
+        ? "النص متاح للقراءة من نسخة OpenITI مؤهلة — المراجعة العلمية والطبعة غير مُثبتين"
+        : "سجل فهرسي فقط — لا توجد نسخة مستوفية لشروط القراءة الداخلية",
       certainty: work.bibliographicStatus === "verified_bibliographic" ? "verified" : "approximate",
       certaintyReasonAr:
         work.bibliographicStatus === "verified_bibliographic"
-          ? "بيانات ببليوغرافية متحقق منها؛ المراجعة العلمية للنص ما زالت معلّقة."
-          : "بيانات العمل لم تُصنّف بعد كبيانات ببليوغرافية متحقق منها.",
+          ? hasReadableText
+            ? "بيانات ببليوغرافية متحقق منها، ونسخة OpenITI مؤهلة للقراءة؛ المراجعة العلمية ومراجعة الطبعة ما زالت معلّقتين."
+            : "بيانات ببليوغرافية متحقق منها؛ لا توجد نسخة مستوفية لشروط القراءة الداخلية، والمراجعة العلمية ما زالت معلّقة."
+          : "بيانات العمل لم تُصنّف بعد كبيانات ببليوغرافية متحقق منها، ولا تُعرض نسخة للقراءة قبل استيفاء شروط الإتاحة والحقوق.",
       sourceIds: work.sourceIds,
     });
   }
@@ -138,6 +144,37 @@ export function buildLocalIndex(): BasirahRecord[] {
   return records;
 }
 
+const QURAN_TEXT_RESOURCE_ID = "resource-tanzil-uthmani-min-1-1";
+
+/**
+ * Resolve the Quran source through the governed resource instead of copying a
+ * source ID into UI code. The source is eligible for verified claims only
+ * while the acquired resource, its rights decision, and its editorial record
+ * all remain production-cleared.
+ */
+export const QURAN_TEXT_SOURCE_ID = (() => {
+  const governed = getGovernanceRecord(QURAN_TEXT_RESOURCE_ID);
+  if (
+    !governed ||
+    !governed.resource.productionReady ||
+    governed.resource.acquisitionStatus !== "acquired_immutable" ||
+    !governed.resource.allowedUsages.includes("full_text") ||
+    governed.rights.decision !== "cleared" ||
+    governed.source.editorialStatus !== "verified"
+  ) {
+    throw new Error("The governed Tanzil Quran resource is not production-cleared.");
+  }
+
+  const registeredResource = providerResourceRegistry.find(
+    (resource) => resource.resourceId === QURAN_TEXT_RESOURCE_ID,
+  );
+  if (!registeredResource || registeredResource.sourceId !== governed.source.sourceId) {
+    throw new Error("The governed Tanzil Quran resource is inconsistent with its source.");
+  }
+
+  return governed.source.sourceId;
+})();
+
 export function surahRecords(chapters: QuranChapter[]): BasirahRecord[] {
   return chapters.map((chapter) => ({
     id: `quran-surah-${chapter.number}`,
@@ -152,7 +189,27 @@ export function surahRecords(chapters: QuranChapter[]): BasirahRecord[] {
     availabilityAr: "النص العربي من Tanzil Uthmani-min 1.1",
     certainty: "verified",
     certaintyReasonAr: "النص العربي محفوظ حرفيًا من نسخة Tanzil Uthmani-min 1.1؛ حالة الحقوق مسجلة في خزانة المصادر.",
-    sourceIds: ["src-tanzil-uthmani-1-1-candidate"],
+    sourceIds: [QURAN_TEXT_SOURCE_ID],
+  }));
+}
+
+export function quranSearchRecords(
+  hits: import("@/visual-golden/services/quran-search").QuranSearchHit[],
+): BasirahRecord[] {
+  return hits.map((hit) => ({
+    id: `quran-ayah-${hit.surah}-${hit.ayah}`,
+    scope: "quran" as const,
+    titleAr: `سورة ${hit.surahName} · الآية ${hit.ayah}`,
+    titleEn: `Quran ${hit.surah}:${hit.ayah}`,
+    kindAr: "آية من المصحف المحلي الموثق",
+    kindEn: "verified local Quran verse",
+    path: `/quran?surah=${hit.surah}&ayah=${hit.ayah}`,
+    hintAr: hit.arabic,
+    hintEn: `Tanzil Uthmani-min 1.1 · ${hit.surah}:${hit.ayah}`,
+    availabilityAr: "النص العربي المحلي متاح · لا ترجمة أو تفسير مضمّن في نتيجة البحث",
+    certainty: "verified",
+    certaintyReasonAr: "نص آية من النسخة القرآنية المحلية الموثقة حرفيًا (Tanzil Uthmani-min 1.1).",
+    sourceIds: [QURAN_TEXT_SOURCE_ID],
   }));
 }
 

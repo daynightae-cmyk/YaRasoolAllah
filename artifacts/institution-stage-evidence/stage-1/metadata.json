@@ -1,0 +1,891 @@
+{
+  "capturedAt": "2026-11-15T08:05:33.495Z",
+  "sourceState": {
+    "branch": "main",
+    "head": "df4880589016aa4681b6d43233ecc136f4e32238",
+    "trackedDiffSha256": "d2f4f72f3f3bd34b96b61299c65412c0ea2973ff5e4e05a1f1bbf46eab432767",
+    "untrackedFiles": [
+      {
+        "path": "artifacts/institution-stage-evidence/stage-1/digital-library-alias-1440-light-en.png",
+        "bytes": 900359,
+        "sha256": "b96d0bbae840c433302ce5257f095483ff3ee7b9d4563c29e92e35118ee053de"
+      },
+      {
+        "path": "artifacts/institution-stage-evidence/stage-1/home-360-dark-ar.png",
+        "bytes": 264729,
+        "sha256": "41e241da7992adc91620dfb852cb90cc8e1f06b00f02892288b93eed09af8336"
+      },
+      {
+        "path": "artifacts/institution-stage-evidence/stage-1/library-360-light-en.png",
+        "bytes": 287502,
+        "sha256": "49bc03c9fc659fb5d6245b38fc79ffd491a348f6c9af0d5dede91ca7d29a8aec"
+      },
+      {
+        "path": "artifacts/institution-stage-evidence/stage-1/quran-search-768-dark-ar.png",
+        "bytes": 440757,
+        "sha256": "a4756b50ce2caea13ca9db8972d7322ecf747a4d105ae226576243e2cdcae122"
+      },
+      {
+        "path": "client/public/robots.txt",
+        "bytes": 23,
+        "sha256": "16ceb5ee3e0dc13aa9adf31a3ebbe45a1d965b8c2b9f72eaf84e5911e140ed95"
+      },
+      {
+        "path": "client/src/visual-golden/components/shell/InstitutionActivityRail.tsx",
+        "bytes": 2476,
+        "sha256": "9545aa8a8d7ed852537198fc0bcdcd98f2717152edd963f27dc337f4d4b64d27"
+      },
+      {
+        "path": "client/src/visual-golden/components/shell/InstitutionStatusCenter.tsx",
+        "bytes": 5468,
+        "sha256": "a790180446f5fa62db45aa946209f6ec89b597ab19824f200f73ce92b1c0e200"
+      },
+      {
+        "path": "client/src/visual-golden/components/shell/shell-state.ts",
+        "bytes": 446,
+        "sha256": "dc96c515e86f0904c07c9f7bf77c7b139c8adbd4370d6f4b98cf518c97cbb436"
+      },
+      {
+        "path": "client/src/visual-golden/data/media-discovery-status.generated.ts",
+        "bytes": 393,
+        "sha256": "8d054e29293e3d81e211d7f77d9c09dd198687bb763b0fdd2e7fd21b2b227749"
+      },
+      {
+        "path": "client/src/visual-golden/lib/institution/reading-progress.ts",
+        "bytes": 4884,
+        "sha256": "6fd59107619d518087620d0982c51c97d98ea23ebe94f40d0985e060482be114"
+      },
+      {
+        "path": "client/src/visual-golden/lib/institution/workspace.ts",
+        "bytes": 14217,
+        "sha256": "03eea5129f3f511ffec8b818e9867f0386d5e85b8b21b68b8e3102aad04cba8b"
+      },
+      {
+        "path": "client/src/visual-golden/services/media/review-gates.ts",
+        "bytes": 2915,
+        "sha256": "3c67e80b1e0c6109b927f87a7c420526628a009d69383fd25071cd43b46f2119"
+      },
+      {
+        "path": "docs/audit/FORENSIC_BASELINE_2026-11-15.md",
+        "bytes": 6223,
+        "sha256": "eb4e175b3d061913bb4b70c425f09c8aef86021890b3e1dca68e98481f38299f"
+      },
+      {
+        "path": "docs/audit/STORAGE_CLEANUP_REVIEW_2026-11-15.md",
+        "bytes": 3220,
+        "sha256": "cca63a134dda05863133af803c63d7c0285e9e26aebf436c5f6b26882fd00080"
+      },
+      {
+        "path": "docs/audit/UNIQUE_WORK_REGISTER_2026-11-15.md",
+        "bytes": 3710,
+        "sha256": "ab7bfddc4cf39920de8767bba9bdc450ce9ad26386e6f2cae72c761a3e76570f"
+      },
+      {
+        "path": "docs/prompts/MASTER_AGENT_EXECUTION_PROMPT_AR_2026-11-15.md",
+        "bytes": 39558,
+        "sha256": "834b63741ac1ca7ccad7ad2d667ca8a186ffe5c82aaf95d71b360a0181299670"
+      },
+      {
+        "path": "docs/prompts/SECOND_GENERATION_MASTER_EXECUTION_PROMPT_2026-11-15.md",
+        "bytes": 6742,
+        "sha256": "3b5761959a007ee6a3f9bce6c58a631b8ec6e9d51890536bd5c68584fd97de06"
+      },
+      {
+        "path": "docs/tasks/EXECUTION_LEDGER_2026-11-15.md",
+        "bytes": 2517,
+        "sha256": "c13699ae5f861b5590d6f64f6592042b06c24b803905d8c62c8229854afdb27e"
+      },
+      {
+        "path": "docs/tasks/IMMERSIVE_INSTITUTION_STAGE_0_2026-11-15.md",
+        "bytes": 5069,
+        "sha256": "980b13b886326973ca6f9b784dff44cdc84ca2332365f50bb9f77511f465211f"
+      },
+      {
+        "path": "docs/tasks/TASK_004_MEDIA_REVIEW_INTEGRITY_AGENT_AR_2026-11-15.md",
+        "bytes": 18871,
+        "sha256": "8d8d7639c7a62a7c255754705d5fb0e977df0fbf722ad67bb437f4538d819eba"
+      },
+      {
+        "path": "docs/tasks/TASK_INDEX_2026-11-15.md",
+        "bytes": 3286,
+        "sha256": "73231e689aefe046cc4d46a36513d384172f53265d82f07941752020fccf5f97"
+      },
+      {
+        "path": "scripts/institution-shell-contract.test.ts",
+        "bytes": 8871,
+        "sha256": "0104113153e4feb7769095ef3b454bce2b9d93ca8c6ab714549da8694ea7409e"
+      },
+      {
+        "path": "scripts/media-review-integrity.test.ts",
+        "bytes": 6298,
+        "sha256": "d19e3ed7139a1e8824ac4e0292501f633150ef90820ef777308b2c4aba79753c"
+      }
+    ],
+    "status": [
+      "M artifacts/visual-evidence/audio-1440-dark-rtl.jpg",
+      " M artifacts/visual-evidence/children-1440-dark-ltr.jpg",
+      " M artifacts/visual-evidence/children-360-light-rtl.jpg",
+      " M artifacts/visual-evidence/daily-360-dark-ltr.jpg",
+      " M artifacts/visual-evidence/daily-768-light-rtl.jpg",
+      " M artifacts/visual-evidence/daily-verse-honesty-1440-dark-rtl.jpg",
+      " M artifacts/visual-evidence/hadith-1440-light-rtl.jpg",
+      " M artifacts/visual-evidence/seerah-1440-dark-rtl.jpg",
+      " M client/src/components/ThemeProvider.tsx",
+      " M client/src/contexts/LanguageContext.tsx",
+      " M client/src/visual-golden/components/basirah/BasirahEvidenceCard.tsx",
+      " M client/src/visual-golden/components/basirah/BasirahModeSelector.tsx",
+      " M client/src/visual-golden/components/basirah/BasirahRelatedPath.tsx",
+      " M client/src/visual-golden/components/basirah/BasirahSourceRail.tsx",
+      " M client/src/visual-golden/components/ceremony/SplashCeremony.tsx",
+      " M client/src/visual-golden/components/library/BookshelfHall.tsx",
+      " M client/src/visual-golden/components/library/CatalogReadingChamber.tsx",
+      " M client/src/visual-golden/components/library/Library3D.tsx",
+      " M client/src/visual-golden/components/library/LibraryCatalog.tsx",
+      " M client/src/visual-golden/components/media/MediaReviewTable.module.css",
+      " M client/src/visual-golden/components/media/MediaReviewTable.tsx",
+      " M client/src/visual-golden/components/prayer/PrayerCards.tsx",
+      " M client/src/visual-golden/components/present/DiscoveryPalette.tsx",
+      " M client/src/visual-golden/components/present/ViewSwitcher.tsx",
+      " M client/src/visual-golden/components/present/present.module.css",
+      " M client/src/visual-golden/components/shared/SectionHead.tsx",
+      " M client/src/visual-golden/components/shell/InstitutionHeader.tsx",
+      " M client/src/visual-golden/components/shell/InstitutionShell.tsx",
+      " M client/src/visual-golden/components/shell/InstitutionSidebar.tsx",
+      " M client/src/visual-golden/components/shell/MobileNav.tsx",
+      " M client/src/visual-golden/components/shell/ShellDrawer.tsx",
+      " M client/src/visual-golden/components/shell/shell.module.css",
+      " M client/src/visual-golden/data/media-discovery.generated.ts",
+      " M client/src/visual-golden/lib/i18n.ts",
+      " M client/src/visual-golden/lib/institution/store.ts",
+      " M client/src/visual-golden/pages/HadithPage.tsx",
+      " M client/src/visual-golden/pages/HomePage.module.css",
+      " M client/src/visual-golden/pages/HomePage.tsx",
+      " M client/src/visual-golden/pages/KidsPage.tsx",
+      " M client/src/visual-golden/pages/LibraryPage.tsx",
+      " M client/src/visual-golden/pages/MediaReviewPage.tsx",
+      " M client/src/visual-golden/pages/QuranPage.module.css",
+      " M client/src/visual-golden/pages/QuranPage.tsx",
+      " M client/src/visual-golden/pages/SeerahPage.tsx",
+      " M client/src/visual-golden/services/catalog-library.ts",
+      " M client/src/visual-golden/services/content-language.ts",
+      " M client/src/visual-golden/services/discovery.ts",
+      " M client/src/visual-golden/services/library-catalog-presentation.ts",
+      " M client/src/visual-golden/services/media/types.ts",
+      " M client/src/visual-golden/services/prayer/qibla.ts",
+      " M client/src/visual-golden/visual-base.css",
+      " M data-sources/media/discovery/ingestion-manifest.json",
+      " M data-sources/media/discovery/ingestion-report.md",
+      " M data-sources/media/discovery/media-discovery-catalog.json",
+      " M package.json",
+      " M scripts/acquire/generate-discovery-catalog.ts",
+      " M scripts/acquire/ingest-media-catalog.ts",
+      "?? artifacts/institution-stage-evidence/",
+      "?? client/public/robots.txt",
+      "?? client/src/visual-golden/components/shell/InstitutionActivityRail.tsx",
+      "?? client/src/visual-golden/components/shell/InstitutionStatusCenter.tsx",
+      "?? client/src/visual-golden/components/shell/shell-state.ts",
+      "?? client/src/visual-golden/data/media-discovery-status.generated.ts",
+      "?? client/src/visual-golden/lib/institution/reading-progress.ts",
+      "?? client/src/visual-golden/lib/institution/workspace.ts",
+      "?? client/src/visual-golden/services/media/review-gates.ts",
+      "?? docs/audit/FORENSIC_BASELINE_2026-11-15.md",
+      "?? docs/audit/STORAGE_CLEANUP_REVIEW_2026-11-15.md",
+      "?? docs/audit/UNIQUE_WORK_REGISTER_2026-11-15.md",
+      "?? docs/prompts/MASTER_AGENT_EXECUTION_PROMPT_AR_2026-11-15.md",
+      "?? docs/prompts/SECOND_GENERATION_MASTER_EXECUTION_PROMPT_2026-11-15.md",
+      "?? docs/tasks/EXECUTION_LEDGER_2026-11-15.md",
+      "?? docs/tasks/IMMERSIVE_INSTITUTION_STAGE_0_2026-11-15.md",
+      "?? docs/tasks/TASK_004_MEDIA_REVIEW_INTEGRITY_AGENT_AR_2026-11-15.md",
+      "?? docs/tasks/TASK_INDEX_2026-11-15.md",
+      "?? scripts/institution-shell-contract.test.ts",
+      "?? scripts/media-review-integrity.test.ts"
+    ]
+  },
+  "runtime": {
+    "origin": "http://127.0.0.1:3000",
+    "chromePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "deviceScaleFactor": 1,
+    "reducedMotion": "reduce (Chrome emulation)"
+  },
+  "comparisonResult": "Runtime smoke evidence only; no design approval or visual-match claim.",
+  "cases": [
+    {
+      "name": "home-360-dark-ar",
+      "path": "/",
+      "width": 360,
+      "height": 900,
+      "theme": "dark",
+      "lang": "ar",
+      "metrics": {
+        "href": "http://127.0.0.1:3000/",
+        "viewport": {
+          "width": 360,
+          "height": 900
+        },
+        "documentWidth": 360,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "theme": "dark",
+        "lang": "ar",
+        "direction": "rtl",
+        "mainLength": 1930,
+        "compactControls": [
+          {
+            "tag": "button",
+            "label": "بحث",
+            "width": 58,
+            "height": 36,
+            "className": ""
+          },
+          {
+            "tag": "button",
+            "label": "بطاقات",
+            "width": 78,
+            "height": 31,
+            "className": "_on_jaz3k_377"
+          },
+          {
+            "tag": "button",
+            "label": "بانوراما",
+            "width": 76,
+            "height": 31,
+            "className": ""
+          },
+          {
+            "tag": "button",
+            "label": "مسار",
+            "width": 66,
+            "height": 31,
+            "className": ""
+          }
+        ]
+      },
+      "errors": [],
+      "screenshotPath": "K:/Knoux Projects/YaRasoolAllah/Base/artifacts/institution-stage-evidence/stage-1/home-360-dark-ar.png",
+      "screenshotSha256": "41e241da7992adc91620dfb852cb90cc8e1f06b00f02892288b93eed09af8336",
+      "screenshotBytes": 264729
+    },
+    {
+      "name": "library-360-light-en",
+      "path": "/library",
+      "width": 360,
+      "height": 900,
+      "theme": "light",
+      "lang": "en",
+      "metrics": {
+        "href": "http://127.0.0.1:3000/library",
+        "viewport": {
+          "width": 360,
+          "height": 900
+        },
+        "documentWidth": 360,
+        "horizontalOverflow": false,
+        "overflowElements": [
+          {
+            "tag": "button",
+            "id": "",
+            "className": "_hallChip_cqy0e_178 ",
+            "left": 253,
+            "right": 391,
+            "width": 138
+          },
+          {
+            "tag": "small",
+            "id": "",
+            "className": "",
+            "left": 350,
+            "right": 380,
+            "width": 29
+          },
+          {
+            "tag": "button",
+            "id": "",
+            "className": "_hallChip_cqy0e_178 ",
+            "left": 399,
+            "right": 537,
+            "width": 139
+          },
+          {
+            "tag": "span",
+            "id": "",
+            "className": "",
+            "left": 410,
+            "right": 506,
+            "width": 96
+          },
+          {
+            "tag": "small",
+            "id": "",
+            "className": "",
+            "left": 512,
+            "right": 526,
+            "width": 13
+          },
+          {
+            "tag": "button",
+            "id": "",
+            "className": "_hallChip_cqy0e_178 ",
+            "left": 544,
+            "right": 648,
+            "width": 104
+          },
+          {
+            "tag": "span",
+            "id": "",
+            "className": "",
+            "left": 556,
+            "right": 610,
+            "width": 54
+          },
+          {
+            "tag": "small",
+            "id": "",
+            "className": "",
+            "left": 617,
+            "right": 636,
+            "width": 20
+          },
+          {
+            "tag": "button",
+            "id": "",
+            "className": "_hallChip_cqy0e_178 ",
+            "left": 655,
+            "right": 732,
+            "width": 77
+          },
+          {
+            "tag": "span",
+            "id": "",
+            "className": "",
+            "left": 667,
+            "right": 694,
+            "width": 27
+          },
+          {
+            "tag": "small",
+            "id": "",
+            "className": "",
+            "left": 701,
+            "right": 720,
+            "width": 20
+          },
+          {
+            "tag": "button",
+            "id": "",
+            "className": "_hallChip_cqy0e_178 ",
+            "left": 739,
+            "right": 866,
+            "width": 127
+          }
+        ],
+        "theme": "light",
+        "lang": "en",
+        "direction": "ltr",
+        "mainLength": 1484,
+        "compactControls": [
+          {
+            "tag": "button",
+            "label": "Reset view",
+            "width": 38,
+            "height": 38,
+            "className": "_roundButton_cqy0e_129"
+          },
+          {
+            "tag": "button",
+            "label": "Browse this wing's shelves",
+            "width": 38,
+            "height": 38,
+            "className": "_roundButton_cqy0e_129"
+          },
+          {
+            "tag": "button",
+            "label": "Qur'an & Sciences94",
+            "width": 128,
+            "height": 30,
+            "className": "_hallChip_cqy0e_178 _hallChipOn_cqy0e_230"
+          },
+          {
+            "tag": "button",
+            "label": "Exegesis251",
+            "width": 91,
+            "height": 30,
+            "className": "_hallChip_cqy0e_178 "
+          },
+          {
+            "tag": "button",
+            "label": "Prophetic Hadith1,542",
+            "width": 138,
+            "height": 30,
+            "className": "_hallChip_cqy0e_178 "
+          },
+          {
+            "tag": "button",
+            "label": "Prophetic Biography90",
+            "width": 139,
+            "height": 30,
+            "className": "_hallChip_cqy0e_178 "
+          },
+          {
+            "tag": "button",
+            "label": "Fiqh & Usul647",
+            "width": 104,
+            "height": 30,
+            "className": "_hallChip_cqy0e_178 "
+          },
+          {
+            "tag": "button",
+            "label": "Creed286",
+            "width": 77,
+            "height": 30,
+            "className": "_hallChip_cqy0e_178 "
+          },
+          {
+            "tag": "button",
+            "label": "Arabic Language489",
+            "width": 127,
+            "height": 30,
+            "className": "_hallChip_cqy0e_178 "
+          },
+          {
+            "tag": "button",
+            "label": "History & Atlas428",
+            "width": 121,
+            "height": 30,
+            "className": "_hallChip_cqy0e_178 "
+          },
+          {
+            "tag": "button",
+            "label": "Biographies & Family364",
+            "width": 150,
+            "height": 30,
+            "className": "_hallChip_cqy0e_178 "
+          },
+          {
+            "tag": "button",
+            "label": "Open Corpus4,915",
+            "width": 119,
+            "height": 30,
+            "className": "_hallChip_cqy0e_178 "
+          },
+          {
+            "tag": "button",
+            "label": "Show shelf",
+            "width": 92,
+            "height": 29,
+            "className": "_railToggle_cqy0e_558"
+          }
+        ]
+      },
+      "errors": [],
+      "screenshotPath": "K:/Knoux Projects/YaRasoolAllah/Base/artifacts/institution-stage-evidence/stage-1/library-360-light-en.png",
+      "screenshotSha256": "49bc03c9fc659fb5d6245b38fc79ffd491a348f6c9af0d5dede91ca7d29a8aec",
+      "screenshotBytes": 287502
+    },
+    {
+      "name": "quran-search-768-dark-ar",
+      "path": "/quran?q=%D8%A7%D9%84%D8%B1%D8%AD%D9%85%D9%86",
+      "width": 768,
+      "height": 1024,
+      "theme": "dark",
+      "lang": "ar",
+      "metrics": {
+        "href": "http://127.0.0.1:3000/quran?q=%D8%A7%D9%84%D8%B1%D8%AD%D9%85%D9%86&surah=1&ayah=1",
+        "viewport": {
+          "width": 768,
+          "height": 1024
+        },
+        "documentWidth": 768,
+        "horizontalOverflow": false,
+        "overflowElements": [],
+        "theme": "dark",
+        "lang": "ar",
+        "direction": "rtl",
+        "mainLength": 9131,
+        "compactControls": [
+          {
+            "tag": "button",
+            "label": "إطفاء المصباح",
+            "width": 120,
+            "height": 34,
+            "className": "_on_jaz3k_377"
+          },
+          {
+            "tag": "button",
+            "label": "عرض مركّز",
+            "width": 98,
+            "height": 34,
+            "className": ""
+          },
+          {
+            "tag": "button",
+            "label": "السور",
+            "width": 227,
+            "height": 38,
+            "className": "_tabOn_m69fk_53"
+          },
+          {
+            "tag": "button",
+            "label": "الأجزاء",
+            "width": 227,
+            "height": 38,
+            "className": "_disabledTab_m69fk_49"
+          },
+          {
+            "tag": "button",
+            "label": "العلامات",
+            "width": 227,
+            "height": 38,
+            "className": ""
+          },
+          {
+            "tag": "button",
+            "label": "ابحث في الآيات",
+            "width": 40,
+            "height": 43,
+            "className": ""
+          },
+          {
+            "tag": "button",
+            "label": "مصحف",
+            "width": 68,
+            "height": 34,
+            "className": "_modeOn_m69fk_257"
+          },
+          {
+            "tag": "button",
+            "label": "دراسة",
+            "width": 59,
+            "height": 34,
+            "className": ""
+          },
+          {
+            "tag": "button",
+            "label": "السورة السابقة",
+            "width": 38,
+            "height": 38,
+            "className": "_sheetNav_m69fk_350"
+          },
+          {
+            "tag": "button",
+            "label": "السورة التالية",
+            "width": 38,
+            "height": 38,
+            "className": "_sheetNav_m69fk_350"
+          },
+          {
+            "tag": "button",
+            "label": "تشغيل التلاوة",
+            "width": 38,
+            "height": 38,
+            "className": "_audioPlay_m69fk_498"
+          },
+          {
+            "tag": "button",
+            "label": "الآية السابقة",
+            "width": 343,
+            "height": 38,
+            "className": ""
+          },
+          {
+            "tag": "button",
+            "label": "الآية التالية",
+            "width": 343,
+            "height": 38,
+            "className": ""
+          },
+          {
+            "tag": "button",
+            "label": "نسخ الآية",
+            "width": 343,
+            "height": 39,
+            "className": ""
+          },
+          {
+            "tag": "button",
+            "label": "مشاركة",
+            "width": 343,
+            "height": 39,
+            "className": ""
+          },
+          {
+            "tag": "button",
+            "label": "حفظ",
+            "width": 343,
+            "height": 39,
+            "className": ""
+          },
+          {
+            "tag": "button",
+            "label": "ملاحظة",
+            "width": 343,
+            "height": 39,
+            "className": ""
+          },
+          {
+            "tag": "button",
+            "label": "تصغير خط القرآن",
+            "width": 24,
+            "height": 34,
+            "className": ""
+          },
+          {
+            "tag": "button",
+            "label": "تكبير خط القرآن",
+            "width": 30,
+            "height": 34,
+            "className": ""
+          },
+          {
+            "tag": "button",
+            "label": "تقليل تباعد السطور",
+            "width": 48,
+            "height": 34,
+            "className": ""
+          }
+        ]
+      },
+      "errors": [],
+      "screenshotPath": "K:/Knoux Projects/YaRasoolAllah/Base/artifacts/institution-stage-evidence/stage-1/quran-search-768-dark-ar.png",
+      "screenshotSha256": "a4756b50ce2caea13ca9db8972d7322ecf747a4d105ae226576243e2cdcae122",
+      "screenshotBytes": 440757
+    },
+    {
+      "name": "digital-library-alias-1440-light-en",
+      "path": "/digital-library",
+      "width": 1440,
+      "height": 1000,
+      "theme": "light",
+      "lang": "en",
+      "metrics": {
+        "href": "http://127.0.0.1:3000/digital-library",
+        "viewport": {
+          "width": 1440,
+          "height": 1000
+        },
+        "documentWidth": 1440,
+        "horizontalOverflow": false,
+        "overflowElements": [
+          {
+            "tag": "button",
+            "id": "",
+            "className": "_hallChip_cqy0e_178 ",
+            "left": 1378,
+            "right": 1540,
+            "width": 162
+          },
+          {
+            "tag": "span",
+            "id": "",
+            "className": "",
+            "left": 1392,
+            "right": 1500,
+            "width": 108
+          },
+          {
+            "tag": "small",
+            "id": "",
+            "className": "",
+            "left": 1507,
+            "right": 1527,
+            "width": 20
+          },
+          {
+            "tag": "button",
+            "id": "",
+            "className": "_hallChip_cqy0e_178 ",
+            "left": 1548,
+            "right": 1676,
+            "width": 128
+          },
+          {
+            "tag": "span",
+            "id": "",
+            "className": "",
+            "left": 1561,
+            "right": 1627,
+            "width": 66
+          },
+          {
+            "tag": "small",
+            "id": "",
+            "className": "",
+            "left": 1633,
+            "right": 1663,
+            "width": 29
+          },
+          {
+            "tag": "button",
+            "id": "",
+            "className": "_bookCard_cqy0e_597 ",
+            "left": 1435,
+            "right": 1651,
+            "width": 216
+          },
+          {
+            "tag": "span",
+            "id": "",
+            "className": "_spine_cqy0e_635",
+            "left": 1444,
+            "right": 1451,
+            "width": 7
+          },
+          {
+            "tag": "span",
+            "id": "",
+            "className": "_bookMeta_cqy0e_645",
+            "left": 1459,
+            "right": 1594,
+            "width": 135
+          },
+          {
+            "tag": "strong",
+            "id": "",
+            "className": "",
+            "left": 1459,
+            "right": 1594,
+            "width": 135
+          },
+          {
+            "tag": "small",
+            "id": "",
+            "className": "",
+            "left": 1459,
+            "right": 1594,
+            "width": 135
+          },
+          {
+            "tag": "button",
+            "id": "",
+            "className": "_bookCard_cqy0e_597 ",
+            "left": 1658,
+            "right": 1874,
+            "width": 216
+          }
+        ],
+        "theme": "light",
+        "lang": "en",
+        "direction": "ltr",
+        "mainLength": 4313,
+        "compactControls": [
+          {
+            "tag": "button",
+            "label": "Reset view",
+            "width": 42,
+            "height": 42,
+            "className": "_roundButton_cqy0e_129"
+          },
+          {
+            "tag": "button",
+            "label": "Browse this wing's shelves",
+            "width": 42,
+            "height": 42,
+            "className": "_roundButton_cqy0e_129"
+          },
+          {
+            "tag": "button",
+            "label": "Qur'an & Sciences94",
+            "width": 139,
+            "height": 33,
+            "className": "_hallChip_cqy0e_178 _hallChipOn_cqy0e_230"
+          },
+          {
+            "tag": "button",
+            "label": "Exegesis251",
+            "width": 98,
+            "height": 33,
+            "className": "_hallChip_cqy0e_178 "
+          },
+          {
+            "tag": "button",
+            "label": "Prophetic Hadith1,542",
+            "width": 149,
+            "height": 33,
+            "className": "_hallChip_cqy0e_178 "
+          },
+          {
+            "tag": "button",
+            "label": "Prophetic Biography90",
+            "width": 151,
+            "height": 33,
+            "className": "_hallChip_cqy0e_178 "
+          },
+          {
+            "tag": "button",
+            "label": "Fiqh & Usul647",
+            "width": 112,
+            "height": 33,
+            "className": "_hallChip_cqy0e_178 "
+          },
+          {
+            "tag": "button",
+            "label": "Creed286",
+            "width": 83,
+            "height": 33,
+            "className": "_hallChip_cqy0e_178 "
+          },
+          {
+            "tag": "button",
+            "label": "Arabic Language489",
+            "width": 138,
+            "height": 33,
+            "className": "_hallChip_cqy0e_178 "
+          },
+          {
+            "tag": "button",
+            "label": "History & Atlas428",
+            "width": 131,
+            "height": 33,
+            "className": "_hallChip_cqy0e_178 "
+          },
+          {
+            "tag": "button",
+            "label": "Biographies & Family364",
+            "width": 162,
+            "height": 33,
+            "className": "_hallChip_cqy0e_178 "
+          },
+          {
+            "tag": "button",
+            "label": "Open Corpus4,915",
+            "width": 128,
+            "height": 33,
+            "className": "_hallChip_cqy0e_178 "
+          },
+          {
+            "tag": "button",
+            "label": "Collapse shelf",
+            "width": 105,
+            "height": 29,
+            "className": "_railToggle_cqy0e_558"
+          },
+          {
+            "tag": "button",
+            "label": "View journey",
+            "width": 172,
+            "height": 38,
+            "className": "_railButton_1i7ho_1623"
+          }
+        ]
+      },
+      "errors": [],
+      "screenshotPath": "K:/Knoux Projects/YaRasoolAllah/Base/artifacts/institution-stage-evidence/stage-1/digital-library-alias-1440-light-en.png",
+      "screenshotSha256": "b96d0bbae840c433302ce5257f095483ff3ee7b9d4563c29e92e35118ee053de",
+      "screenshotBytes": 900359
+    }
+  ],
+  "lighthouse": {
+    "route": "/quran?surah=1&ayah=1",
+    "viewport": "1000x700",
+    "language": "en",
+    "direction": "ltr",
+    "theme": "light",
+    "scores": {
+      "accessibility": 1,
+      "bestPractices": 1,
+      "seo": 1
+    },
+    "failedAudits": [],
+    "reportPath": "artifacts/institution-stage-evidence/stage-1/lighthouse-quran-1000x700-light-en.json",
+    "reportSha256": "bc88bb07b044a5b5599608c64addad788fc4fdfdfdd1bea8a876eeb97843b315c"
+  }
+}

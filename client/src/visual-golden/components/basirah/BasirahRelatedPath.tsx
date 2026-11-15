@@ -6,7 +6,7 @@ function shortLabel(value: string, maxLength = 20): string {
   return text.length > maxLength ? `${text.slice(0, maxLength - 1)}…` : text;
 }
 
-export function BasirahRelatedPath({ records, lang }: { records: BasirahRecord[]; lang: "ar" | "en" }) {
+export function BasirahRelatedPath({ records, lang }: { records: BasirahRecord[]; lang: "ar" | "en" | "fr" | "ur" }) {
   const nodes = records.slice(0, 5);
   if (nodes.length < 2) return null;
   return (

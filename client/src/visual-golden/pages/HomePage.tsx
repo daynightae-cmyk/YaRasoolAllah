@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "wouter";
 import {
   BookMarked,
@@ -18,6 +18,10 @@ import {
 } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
+import {
+  readingProgressPercent,
+  readingResumeTarget,
+} from "@/visual-golden/lib/institution/reading-progress";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import { ViewSwitcher, type ViewMode } from "@/visual-golden/components/present/ViewSwitcher";
 import {
@@ -124,15 +128,6 @@ const quick = [
   { to: "/hadith" as const, label: "الحديث", en: "Hadith", icon: BookMarked },
 ];
 
-function readJson<T>(key: string, fallback: T): T {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as T) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
 export function HomePage() {
   const [mode, setMode] = useState<ViewMode>("cards");
   const [, navigate] = useLocation();
@@ -143,14 +138,14 @@ export function HomePage() {
   const favorites = useInstitution((s) => s.favorites);
   const notes = useInstitution((s) => s.notes);
   const visits = useInstitution((s) => s.visits);
+  const readingProgress = useInstitution((s) => s.readingProgress);
   const toggleFavorite = useInstitution((s) => s.toggleFavorite);
-
-  const [continueSignals] = useState(() => ({
-    seerahRead: readJson<string[]>("seerah-read-chapters-v1", []).length,
-    quranMarks: readJson<string[]>("quran-bookmarks", []).length,
-    hadithMarks: readJson<string[]>("hadith-sample-bookmarks-v1", []).length,
-    kidsSeen: readJson<string[]>("kids-seen-adaptations-v1", []).length,
-  }));
+  const resumeTarget = useMemo(() => readingResumeTarget(readingProgress), [readingProgress]);
+  const resumePercent = readingProgressPercent(resumeTarget);
+  const seerahProgress = useMemo(
+    () => readingProgress.find((entry) => entry.surface === "seerah") ?? null,
+    [readingProgress],
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -347,18 +342,54 @@ export function HomePage() {
 
       <section className={styles.bottomGrid}>
         <article className={styles.panel}>
-          <SectionHead title="مواصلة محلية" en="Local continue signals" href="/seerah" />
+          <SectionHead
+            title="مواصلة محلية"
+            en="Local reading progress"
+            href={resumeTarget?.path ?? "/seerah"}
+          />
           <div className={styles.continueRow}>
             <img src={art.bookStack} alt="" />
             <div className={styles.continueMeta}>
-              <strong>نشاطك على هذا الجهاز</strong>
-              <p>السيرة: {continueSignals.seerahRead} فصول مقروءة</p>
-              <p>القرآن: {continueSignals.quranMarks} علامات · الحديث: {continueSignals.hadithMarks} محفوظات</p>
-              <p className="muted">الأطفال: {continueSignals.kidsSeen} قصص فُتحت</p>
-              <div className={styles.progressBar}>
-                <div />
-              </div>
-              <span className={styles.pct}>تواصل من حيث انتهيت</span>
+              <strong>{lang === "ar" ? "نشاط القراءة على هذا الجهاز" : "Reading activity on this device"}</strong>
+              <p>
+                {lang === "ar"
+                  ? seerahProgress?.completed !== null && seerahProgress?.completed !== undefined
+                    ? `السيرة: ${seerahProgress.completed} من ${seerahProgress.total ?? "—"} فصلًا`
+                    : "لا يوجد عدد مقروء مسجل في السيرة"
+                  : seerahProgress?.completed !== null && seerahProgress?.completed !== undefined
+                    ? `Seerah: ${seerahProgress.completed} of ${seerahProgress.total ?? "—"} chapters`
+                    : "No read-chapter count is recorded for Seerah"}
+              </p>
+              <p className="muted">
+                {resumeTarget
+                  ? lang === "ar"
+                    ? `آخر موضع: ${resumeTarget.locationAr || resumeTarget.titleAr}`
+                    : `Last position: ${resumeTarget.locationEn || resumeTarget.titleEn}`
+                  : lang === "ar"
+                    ? "لا يوجد موضع قراءة محفوظ بعد."
+                    : "No saved reading position yet."}
+              </p>
+              {resumePercent !== null ? (
+                <div
+                  className={styles.progressBar}
+                  role="progressbar"
+                  aria-label={lang === "ar" ? "تقدم القراءة المحلي" : "Local reading progress"}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={resumePercent}
+                >
+                  <div style={{ width: `${resumePercent}%` }} />
+                </div>
+              ) : null}
+              <span className={styles.pct}>
+                {resumePercent !== null
+                  ? lang === "ar"
+                    ? `${resumePercent}% من الموضع المسجل`
+                    : `${resumePercent}% of the recorded position`
+                  : lang === "ar"
+                    ? "موضع محفوظ محليًا — لا نسبة تقديرية"
+                    : "Saved local position — no estimated percentage"}
+              </span>
             </div>
           </div>
           {recentFavorites.length > 0 ? (
@@ -381,8 +412,14 @@ export function HomePage() {
               لا محفوظات بعد — احفظ من أي جناح لتظهر هنا.
             </p>
           )}
-          <Link href="/seerah" className={styles.followBtn}>
-            متابعة ←
+          <Link href={resumeTarget?.path ?? "/seerah"} className={styles.followBtn}>
+            {resumeTarget
+              ? lang === "ar"
+                ? "متابعة من الموضع المحفوظ ←"
+                : "Continue from the saved position ←"
+              : lang === "ar"
+                ? "ابدأ رحلة السيرة ←"
+                : "Begin the Seerah journey ←"}
           </Link>
         </article>
 

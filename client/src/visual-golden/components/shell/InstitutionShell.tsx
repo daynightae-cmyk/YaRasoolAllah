@@ -4,34 +4,165 @@ import { InstitutionSidebar } from "./InstitutionSidebar";
 import { InstitutionHeader } from "./InstitutionHeader";
 import { MobileNav } from "./MobileNav";
 import { ShellDrawer } from "./ShellDrawer";
+import { InstitutionActivityRail } from "./InstitutionActivityRail";
 import { DiscoveryPalette } from "@/visual-golden/components/present/DiscoveryPalette";
 import { Spotlight } from "@/visual-golden/components/present/Spotlight";
 import { ContentLanguageNotice } from "./ContentLanguageNotice";
 import { SplashCeremony } from "@/visual-golden/components/ceremony/SplashCeremony";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
+import { useEffectiveMotion } from "@/visual-golden/lib/institution/effective-motion";
+import { workspaceContext } from "@/visual-golden/lib/institution/workspace";
 import styles from "./shell.module.css";
 
-const WING_LABEL: Record<string,string>={"/":"بوابة النور","/library":"المكتبة","/quran":"القرآن","/tafsir":"التفسير","/seerah":"السيرة","/atlas":"الأطلس","/hadith":"الحديث","/sunnah":"الحديث","/kids":"الأطفال","/daily":"مرصد الصلاة","/audio":"التلاوات","/quran-audio":"التلاوات","/basirah":"بصيرة","/sources":"خزانة المصادر","/prophetic-day":"الهدي النبوي","/24-hours":"الهدي النبوي","/daily-verse":"آية اليوم","/prayer-guide":"دليل الصلاة","/islamic-knowledge":"المعرفة الإسلامية","/five-pillars":"أركان الإسلام","/women-in-islam":"المرأة في الإسلام","/calendar":"التقويم","/digital-tasbih":"التسبيح","/qibla-compass":"القبلة","/who-is-muhammad":"من هو محمد ﷺ","/character":"الشمائل"};
-function wingFromPath(pathname:string){ if(pathname==="/")return "home"; const key=pathname.replace(/^\//,"").split("/")[0]; return key==="sunnah"?"hadith":key==="quran-audio"?"audio":key||"home"; }
-function shouldShowSplash(){ if(typeof window==="undefined")return false; const q=new URLSearchParams(window.location.search); if(q.get("ceremony")==="1")return true; return sessionStorage.getItem("yra-splash")!=="1"; }
-export function InstitutionShell({children}:{children:ReactNode}){
- const [sidebarOpen,setSidebarOpen]=useState(false); const [discover,setDiscover]=useState(false); const [splash,setSplash]=useState(false); const [pathname]=useLocation(); const wing=wingFromPath(pathname);
- const contentRef=useRef<HTMLElement>(null);
- const theme=useInstitution(s=>s.theme); const lang=useInstitution(s=>s.lang); const hydrate=useInstitution(s=>s.hydrate); const recordVisit=useInstitution(s=>s.recordVisit);
- const closeSplash=useCallback(()=>{sessionStorage.setItem("yra-splash","1");setSplash(false);},[]);
- useEffect(()=>{hydrate();},[hydrate]); useEffect(()=>{if(shouldShowSplash())setSplash(true);},[]); useEffect(()=>{recordVisit(pathname,WING_LABEL[pathname]??pathname);},[pathname,recordVisit]);
- useEffect(()=>{contentRef.current?.scrollTo({top:0});window.scrollTo({top:0});},[pathname]);
- useEffect(()=>{
-   document.documentElement.dataset.initialTheme=theme;
-   document.querySelector('meta[name="theme-color"]')?.setAttribute("content",theme==="light"?"#fffaf0":"#0b1f1a");
- },[theme]);
- useEffect(()=>{const onKey=(e:KeyboardEvent)=>{if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==="k"){e.preventDefault();setDiscover(v=>!v);}};window.addEventListener("keydown",onKey);return()=>window.removeEventListener("keydown",onKey);},[]);
- useEffect(()=>{if(!sidebarOpen)return;const onKey=(e:KeyboardEvent)=>{if(e.key==="Escape")setSidebarOpen(false);};window.addEventListener("keydown",onKey);return()=>window.removeEventListener("keydown",onKey);},[sidebarOpen]);
- useEffect(()=>{setSidebarOpen(false);},[pathname]);
- return <div className={`${styles.shell} vg-shell`} data-theme={theme} data-wing={wing} data-lang={lang} dir={lang==="ar"?"rtl":"ltr"}>
-   {splash?<SplashCeremony onDone={closeSplash}/>:null}<Spotlight/><div className={styles.ambient} aria-hidden>{Array.from({length:18},(_,i)=><span key={i} style={{"--i":i} as CSSProperties}/>)}</div>
-   <InstitutionSidebar open={sidebarOpen} onClose={()=>setSidebarOpen(false)} onReplaySplash={()=>setSplash(true)}/>
-    <div className={styles.mainArea}><InstitutionHeader onMenuClick={()=>setSidebarOpen(true)} onSearch={()=>setDiscover(true)}/><ContentLanguageNotice pathname={pathname}/><main ref={contentRef} id="main-content" className={styles.content}><div key={pathname} className="vg-page-enter">{children}</div></main></div>
-   <MobileNav/><DiscoveryPalette open={discover} onClose={()=>setDiscover(false)}/><ShellDrawer/>
- </div>;
+function shouldShowSplash(): boolean {
+  if (typeof window === "undefined") return false;
+  const query = new URLSearchParams(window.location.search);
+  if (query.get("ceremony") === "0") return false;
+  if (query.get("ceremony") === "1") return true;
+  try {
+    return sessionStorage.getItem("yra-splash") !== "1";
+  } catch {
+    return true;
+  }
+}
+
+function isEditingTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof HTMLElement)) return false;
+  return (
+    target.isContentEditable ||
+    target.closest(
+      'input:not([type="checkbox"]):not([type="radio"]), textarea, select, [contenteditable="true"], [role="textbox"]',
+    ) !== null
+  );
+}
+
+export function InstitutionShell({ children }: { children: ReactNode }) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [discover, setDiscover] = useState(false);
+  const [splash, setSplash] = useState(false);
+  const [pathname] = useLocation();
+  const contentRef = useRef<HTMLElement>(null);
+  const theme = useInstitution((state) => state.theme);
+  const lang = useInstitution((state) => state.lang);
+  const panel = useInstitution((state) => state.panel);
+  const hydrate = useInstitution((state) => state.hydrate);
+  const recordVisit = useInstitution((state) => state.recordVisit);
+  const setPanel = useInstitution((state) => state.setPanel);
+  const workspace = workspaceContext(pathname);
+  const effectiveMotion = useEffectiveMotion();
+  const reducedMotion = effectiveMotion === "reduced";
+
+  const closeSplash = useCallback(() => {
+    try {
+      sessionStorage.setItem("yra-splash", "1");
+    } catch {
+      // Storage can be unavailable; the ceremony may still close.
+    }
+    setSplash(false);
+  }, []);
+
+  const closeSidebar = useCallback(() => setSidebarOpen(false), []);
+
+  const openMenu = useCallback(() => {
+    if (splash) return;
+    setDiscover(false);
+    setPanel(null);
+    setSidebarOpen(true);
+  }, [setPanel, splash]);
+
+  const openDiscover = useCallback(() => {
+    if (splash) return;
+    setSidebarOpen(false);
+    setPanel(null);
+    setDiscover(true);
+  }, [setPanel, splash]);
+
+  const closeDiscover = useCallback(() => setDiscover(false), []);
+
+  const openSplash = useCallback(() => {
+    setSidebarOpen(false);
+    setDiscover(false);
+    setPanel(null);
+    setSplash(true);
+  }, [setPanel]);
+
+  useEffect(() => {
+    hydrate();
+  }, [hydrate]);
+
+  useEffect(() => {
+    if (shouldShowSplash()) setSplash(true);
+  }, []);
+
+  useEffect(() => {
+    recordVisit(pathname, lang === "ar" ? workspace.titleAr : workspace.titleEn);
+  }, [lang, pathname, recordVisit, workspace.titleAr, workspace.titleEn]);
+
+  useEffect(() => {
+    contentRef.current?.scrollTo({ top: 0 });
+    window.scrollTo({ top: 0 });
+  }, [pathname]);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.dataset.lang = lang;
+    document.documentElement.dataset.motion = reducedMotion ? "reduced" : "full";
+    const themeColor = theme === "light" ? "#fffaf0" : theme === "contrast" ? "#000000" : "#0b1f1a";
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", themeColor);
+  }, [lang, reducedMotion, theme]);
+
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if (splash || isEditingTarget(event.target)) return;
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        if (discover) {
+          closeDiscover();
+        } else {
+          openDiscover();
+        }
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [closeDiscover, discover, openDiscover, splash]);
+
+  useEffect(() => {
+    if (!panel) return;
+    setDiscover(false);
+    setSidebarOpen(false);
+  }, [panel]);
+
+  useEffect(() => {
+    setSidebarOpen(false);
+  }, [pathname]);
+
+  return (
+    <div
+      className={`${styles.shell} vg-shell`}
+      data-theme={theme}
+      data-wing={workspace.wing.id}
+      data-lang={lang}
+      data-motion={reducedMotion ? "reduced" : "full"}
+      dir={lang === "ar" || lang === "ur" ? "rtl" : "ltr"}
+    >
+      {splash ? <SplashCeremony onDone={closeSplash} reducedMotion={reducedMotion} /> : null}
+      <Spotlight />
+      <div className={styles.ambient} aria-hidden>
+        {Array.from({ length: 18 }, (_, index) => <span key={index} style={{ "--i": index } as CSSProperties} />)}
+      </div>
+      <InstitutionSidebar open={sidebarOpen} onClose={closeSidebar} onReplaySplash={openSplash} />
+      <div className={styles.mainArea}>
+        <InstitutionHeader onMenuClick={openMenu} onSearch={openDiscover} />
+        <ContentLanguageNotice pathname={pathname}/>
+        <main ref={contentRef} id="main-content" className={styles.content}>
+          <div key={pathname} className="vg-page-enter">{children}</div>
+        </main>
+      </div>
+      <InstitutionActivityRail />
+      <MobileNav />
+      <DiscoveryPalette open={discover} onClose={() => setDiscover(false)} />
+      <ShellDrawer />
+    </div>
+  );
 }

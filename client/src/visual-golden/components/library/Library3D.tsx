@@ -28,6 +28,12 @@ import {
 } from "@/visual-golden/services/catalog-library";
 import { categoryLabel } from "@/visual-golden/services/library-catalog-presentation";
 import {
+  ThreeRuntime,
+  type ThreeRuntimeContext,
+  type ThreeSceneHandle,
+} from "@/visual-golden/components/three/three-runtime";
+import { useEffectiveMotion } from "@/visual-golden/lib/institution/effective-motion";
+import {
   buildLibraryHallShelves,
   type LibraryHallDefinition,
   type LibraryHallShelf,
@@ -36,7 +42,7 @@ import styles from "./Library3D.module.css";
 
 interface Library3DProps {
   works: CatalogWork[];
-  lang: "ar" | "en";
+  lang: "ar" | "en" | "fr" | "ur";
   paused?: boolean;
   onOpenWork: (work: CatalogWork) => void;
   onBrowseShelves: (category?: string) => void;
@@ -58,9 +64,7 @@ interface HoverState {
   y: number;
 }
 
-interface LibrarySceneController {
-  dispose: () => void;
-  setPaused: (paused: boolean) => void;
+interface LibrarySceneController extends ThreeSceneHandle {
   focusHall: (index: number) => void;
   resetView: () => void;
 }
@@ -238,7 +242,7 @@ function mashrabiyaTexture() {
 function plaqueTexture(
   hall: LibraryHallDefinition,
   total: number,
-  lang: "ar" | "en",
+  lang: "ar" | "en" | "fr" | "ur",
 ) {
   return canvasTexture(1024, 256, (ctx) => {
     ctx.fillStyle = "#06100c";
@@ -289,7 +293,7 @@ function plaqueTexture(
   });
 }
 
-function entrancePlaqueTexture(lang: "ar" | "en") {
+function entrancePlaqueTexture(lang: "ar" | "en" | "fr" | "ur") {
   return canvasTexture(1024, 192, (ctx) => {
     ctx.clearRect(0, 0, 1024, 192);
     ctx.textAlign = "center";
@@ -324,22 +328,13 @@ function archShape(width: number, height: number) {
 /* -------------------------------------------------------------------------- */
 
 function createLibraryScene(
-  host: HTMLDivElement,
+  context: ThreeRuntimeContext,
   shelves: LibraryHallShelf[],
-  lang: "ar" | "en",
-  reducedMotion: boolean,
+  lang: "ar" | "en" | "fr" | "ur",
   callbacks: SceneCallbacks,
-): LibrarySceneController | null {
-  let renderer: THREE.WebGLRenderer;
-  try {
-    renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: false,
-      powerPreference: "high-performance",
-    });
-  } catch {
-    return null;
-  }
+): LibrarySceneController {
+  const { renderer } = context;
+  let reducedMotion = context.motion === "reduced";
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x070b08);
@@ -350,7 +345,7 @@ function createLibraryScene(
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.target.set(0, 1.55, -1.8);
-  controls.enableDamping = true;
+  controls.enableDamping = !reducedMotion;
   controls.dampingFactor = 0.055;
   controls.enablePan = false;
   controls.minDistance = 2.1;
@@ -360,16 +355,39 @@ function createLibraryScene(
   controls.rotateSpeed = -0.42;
   controls.zoomSpeed = 0.7;
 
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio ?? 1, 1.65));
-  renderer.setSize(host.clientWidth || 1, host.clientHeight || 1, false);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.12;
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.domElement.style.touchAction = "none";
-  host.appendChild(renderer.domElement);
 
   const textures: THREE.Texture[] = [];
+  let disposed = false;
+  let detachInteraction = () => undefined;
+  const disposeScene = () => {
+    if (disposed) return;
+    disposed = true;
+    detachInteraction();
+    controls.dispose();
+    const geometries = new Set<THREE.BufferGeometry>();
+    const materials = new Set<THREE.Material>();
+    scene.traverse((object) => {
+      if (
+        object instanceof THREE.Mesh ||
+        object instanceof THREE.LineSegments ||
+        object instanceof THREE.Points
+      ) {
+        geometries.add(object.geometry);
+        const material = object.material;
+        if (Array.isArray(material)) material.forEach((item) => materials.add(item));
+        else materials.add(material);
+      }
+    });
+    geometries.forEach((geometry) => geometry.dispose());
+    materials.forEach((material) => material.dispose());
+    textures.forEach((texture) => texture.dispose());
+  };
+  // If a later geometry allocation throws, the runtime can still release the
+  // partially-built scene through this registration.
+  context.registerDisposable(disposeScene);
+
   const wood = woodTexture();
   const stone = stoneTexture();
   const plaster = plasterTexture();
@@ -737,7 +755,7 @@ function createLibraryScene(
         works.length,
       );
       bookMesh.instanceMatrix.setUsage(THREE.StaticDrawUsage);
-      bookMesh.frustumCulled = false;
+      bookMesh.frustumCulled = true;
       bookMesh.receiveShadow = true;
 
       const bandMesh = new THREE.InstancedMesh(
@@ -746,7 +764,7 @@ function createLibraryScene(
         works.length * 2,
       );
       bandMesh.instanceMatrix.setUsage(THREE.StaticDrawUsage);
-      bandMesh.frustumCulled = false;
+      bandMesh.frustumCulled = true;
 
       const matrix = new THREE.Matrix4();
       const position = new THREE.Vector3();
@@ -809,6 +827,8 @@ function createLibraryScene(
       hitByMesh.set(bookMesh, hits);
     }
   });
+  scene.updateMatrixWorld(true);
+  bookMeshes.forEach((mesh) => mesh.computeBoundingSphere());
 
   // Hover outline ----------------------------------------------------------
   const outline = new THREE.LineSegments(
@@ -820,7 +840,7 @@ function createLibraryScene(
   scene.add(outline);
 
   // Dust -------------------------------------------------------------------
-  const dustCount = 260;
+  const dustCount = context.graphicsTier === "low" ? 80 : context.graphicsTier === "balanced" ? 160 : 260;
   const dustPositions = new Float32Array(dustCount * 3);
   const random = seededRandom(97);
   for (let index = 0; index < dustCount; index += 1) {
@@ -850,7 +870,7 @@ function createLibraryScene(
 
   const key = new THREE.DirectionalLight(0xffe0aa, 2.0);
   key.position.set(4.5, 7, 5);
-  key.castShadow = true;
+  key.castShadow = context.shadowsEnabled;
   key.shadow.mapSize.set(1024, 1024);
   key.shadow.camera.left = -7;
   key.shadow.camera.right = 7;
@@ -966,18 +986,13 @@ function createLibraryScene(
   canvas.addEventListener("pointerdown", onPointerDown);
   canvas.addEventListener("pointerup", onPointerUp);
   canvas.addEventListener("pointercancel", clearHover);
-
-  // Resize -----------------------------------------------------------------
-  const resize = () => {
-    const width = host.clientWidth || 1;
-    const height = host.clientHeight || 1;
-    renderer.setSize(width, height, false);
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
+  detachInteraction = () => {
+    canvas.removeEventListener("pointermove", onPointerMove);
+    canvas.removeEventListener("pointerleave", onPointerLeave);
+    canvas.removeEventListener("pointerdown", onPointerDown);
+    canvas.removeEventListener("pointerup", onPointerUp);
+    canvas.removeEventListener("pointercancel", clearHover);
   };
-  resize();
-  const resizeObserver = new ResizeObserver(resize);
-  resizeObserver.observe(host);
 
   // Camera focus animation ---------------------------------------------------
   const overviewPosition = new THREE.Vector3(0, 1.86, 6.2);
@@ -993,6 +1008,14 @@ function createLibraryScene(
     | null = null;
 
   const animateCamera = (toPosition: THREE.Vector3, toTarget: THREE.Vector3) => {
+    if (reducedMotion) {
+      focusAnimation = null;
+      camera.position.copy(toPosition);
+      controls.target.copy(toTarget);
+      controls.update();
+      context.invalidate();
+      return;
+    }
     focusAnimation = {
       fromPosition: camera.position.clone(),
       toPosition,
@@ -1000,6 +1023,7 @@ function createLibraryScene(
       toTarget,
       startedAt: performance.now(),
     };
+    context.invalidate();
   };
 
   const focusHall = (index: number) => {
@@ -1019,20 +1043,9 @@ function createLibraryScene(
     focusAnimation = null;
   };
   controls.addEventListener("start", cancelFocus);
+  controls.addEventListener("change", context.invalidate);
 
-  // Loop -------------------------------------------------------------------
-  const clock = new THREE.Clock();
-  let frame = 0;
-  let paused = false;
-  let inView = true;
-  let elapsed = 0;
-
-  const animate = () => {
-    frame = window.requestAnimationFrame(animate);
-    const delta = Math.min(clock.getDelta(), 0.05);
-    if (paused || document.hidden || !inView) return;
-    elapsed += delta;
-
+  const frame = (_delta: number, elapsed: number) => {
     if (focusAnimation) {
       const progress = Math.min(1, (performance.now() - focusAnimation.startedAt) / 950);
       const eased = 1 - Math.pow(1 - progress, 3);
@@ -1058,55 +1071,24 @@ function createLibraryScene(
 
     renderer.render(scene, camera);
   };
-  animate();
 
-  const intersectionObserver =
-    typeof IntersectionObserver !== "undefined"
-      ? new IntersectionObserver((entries) => {
-          inView = entries[0]?.isIntersecting ?? true;
-        })
-      : null;
-  intersectionObserver?.observe(host);
-
-  const onVisibility = () => {
-    if (!document.hidden) clock.getDelta();
+  const resize = (width: number, height: number) => {
+    camera.aspect = width / Math.max(1, height);
+    camera.updateProjectionMatrix();
   };
-  document.addEventListener("visibilitychange", onVisibility);
 
   return {
-    setPaused(next) {
-      paused = next;
-    },
+    frame,
+    resize,
     focusHall,
     resetView,
-    dispose() {
-      window.cancelAnimationFrame(frame);
-      intersectionObserver?.disconnect();
-      resizeObserver.disconnect();
-      document.removeEventListener("visibilitychange", onVisibility);
-      canvas.removeEventListener("pointermove", onPointerMove);
-      canvas.removeEventListener("pointerleave", onPointerLeave);
-      canvas.removeEventListener("pointerdown", onPointerDown);
-      canvas.removeEventListener("pointerup", onPointerUp);
-      canvas.removeEventListener("pointercancel", clearHover);
-      controls.removeEventListener("start", cancelFocus);
-      controls.dispose();
-      scene.traverse((object) => {
-        if (
-          object instanceof THREE.Mesh ||
-          object instanceof THREE.LineSegments ||
-          object instanceof THREE.Points
-        ) {
-          object.geometry.dispose();
-          const material = object.material;
-          const materials = Array.isArray(material) ? material : [material];
-          for (const item of materials) item.dispose();
-        }
-      });
-      for (const texture of textures) texture.dispose();
-      renderer.dispose();
-      renderer.domElement.remove();
+    setMotion(motion) {
+      reducedMotion = motion === "reduced";
+      controls.enableDamping = !reducedMotion;
+      if (reducedMotion) focusAnimation = null;
+      context.invalidate();
     },
+    dispose: disposeScene,
   };
 }
 
@@ -1123,6 +1105,8 @@ export function Library3D({
 }: Library3DProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const controllerRef = useRef<LibrarySceneController | null>(null);
+  const runtimeRef = useRef<ThreeRuntime | null>(null);
+  const effectiveMotion = useEffectiveMotion();
   const callbacksRef = useRef<SceneCallbacks>({
     onHover: () => undefined,
     onSelect: () => undefined,
@@ -1160,27 +1144,47 @@ export function Library3D({
       return undefined;
     }
     let disposed = false;
-    let controller: LibrarySceneController | null = null;
+    let runtime: ThreeRuntime | null = null;
 
     const start = () => {
       if (disposed || !hostRef.current) return;
-      try {
-        controller = createLibraryScene(
-          hostRef.current,
-          shelves,
-          lang,
-          window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-          callbacksRef.current,
-        );
-      } catch {
-        // WebGL can fail at any point during scene construction. The DOM
-        // shelf below remains fully usable, so degrade instead of trapping
-        // the visitor behind an unending loading veil.
-        controller = null;
-      }
-      controllerRef.current = controller;
-      setWebglFailed(controller === null);
-      setReady(true);
+      runtime = new ThreeRuntime({
+        host: hostRef.current,
+        adapter: {
+          build: (context) => {
+            const controller = createLibraryScene(context, shelves, lang, callbacksRef.current);
+            controllerRef.current = controller;
+            return controller;
+          },
+        },
+        active: true,
+        paused: false,
+        motion: effectiveMotion,
+        onStateChange: (state) => {
+          if (state === "running" || state === "paused") {
+            setReady(true);
+            setWebglFailed(false);
+          }
+          if (state === "context-lost") {
+            setReady(true);
+            setWebglFailed(true);
+          }
+          if (state === "fallback") {
+            setReady(true);
+            setWebglFailed(true);
+          }
+        },
+        onFallback: () => {
+          setReady(true);
+          setWebglFailed(true);
+        },
+        onContextRestored: () => {
+          setWebglFailed(false);
+          setReady(true);
+        },
+      });
+      runtimeRef.current = runtime;
+      void runtime.start();
     };
 
     if (document.fonts?.status === "loaded") start();
@@ -1188,13 +1192,14 @@ export function Library3D({
 
     return () => {
       disposed = true;
-      controller?.dispose();
+      runtime?.stop();
+      runtimeRef.current = null;
       controllerRef.current = null;
     };
-  }, [lang, shelves, works.length]);
+  }, [effectiveMotion, lang, shelves, works.length]);
 
   useEffect(() => {
-    controllerRef.current?.setPaused(paused || Boolean(selected));
+    runtimeRef.current?.setPaused(paused || Boolean(selected));
   }, [paused, selected]);
 
   // The initial camera is the architectural overview. Hall chips call
@@ -1218,10 +1223,11 @@ export function Library3D({
         subtitle: activeShelf?.hall.eyebrowAr ?? "بوابة المعرفة",
         halls: "أروقة المكتبة",
         hint: "اسحب لتدوير القاعة · مرّر للاقتراب · اضغط كتابًا لاختياره",
+        dataNote: "الكتب والأعداد من الفهرس المحمّل؛ العمارة والمؤثرات زخرفية.",
         reset: "إعادة المشهد",
         shelf: "رف هذا الجناح",
         shelfCount: (visible: number, total: number) =>
-          `${visible.toLocaleString("ar-EG")} كتابًا على الرف · ${total.toLocaleString("ar-EG")} في الفهرس`,
+          `${visible.toLocaleString("ar-EG")} كتابًا على الرف · ${total.toLocaleString("ar-EG")} مؤهلاً للقراءة`,
         collapse: "طيّ الرف",
         expand: "عرض الرف",
         open: "افتح في غرفة القراءة",
@@ -1240,10 +1246,11 @@ export function Library3D({
         subtitle: activeShelf?.hall.eyebrowEn ?? "Gateway of Knowledge",
         halls: "Library halls",
         hint: "Drag to turn the hall · scroll to approach · select a book",
+        dataNote: "Books and counts come from the loaded catalog; the architecture and effects are decorative.",
         reset: "Reset view",
         shelf: "This wing's shelf",
         shelfCount: (visible: number, total: number) =>
-          `${visible.toLocaleString("en-US")} on the shelf · ${total.toLocaleString("en-US")} in the catalog`,
+          `${visible.toLocaleString("en-US")} on the shelf · ${total.toLocaleString("en-US")} cleared for reading`,
         collapse: "Collapse shelf",
         expand: "Show shelf",
         open: "Open in reading chamber",
@@ -1279,6 +1286,7 @@ export function Library3D({
           <span className={styles.sceneEyebrow}>{copy.eyebrow}</span>
           <strong className={styles.sceneTitle}>{copy.title}</strong>
           <span className={styles.sceneSubtitle}>{copy.subtitle}</span>
+          <small className={styles.sceneDataNote}>{copy.dataNote}</small>
         </div>
         <div className={styles.sceneActions}>
           <button
@@ -1437,7 +1445,7 @@ export function Library3D({
                   className={`${styles.bookCard} ${selected?.id === work.id ? styles.bookCardOn : ""}`}
                   onClick={() => {
                     setSelected(work);
-                    controllerRef.current?.setPaused(true);
+                    runtimeRef.current?.setPaused(true);
                   }}
                   style={
                     {

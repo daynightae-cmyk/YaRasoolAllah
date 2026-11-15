@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -14,35 +15,17 @@ import {
   ShieldCheck,
   X,
 } from "lucide-react";
-import { seerahChapters } from "@/data/seerahData";
-import { azkarData } from "@/data/azkarData";
 import {
-  childrenAdaptationRegistry,
-  workRegistry,
-} from "@shared/knowledge-registry";
+  buildGlobalSearchIndex,
+  filterGlobalSearchResults,
+  GLOBAL_SEARCH_CATEGORY_TABS,
+  type SearchResultCategory,
+} from "./global-search-index";
 
-export type SearchResultCategory =
-  | "quran"
-  | "hadith"
-  | "seerah_event"
-  | "person"
-  | "place"
-  | "book"
-  | "kids"
-  | "daily_guidance"
-  | "wing"
-  | "source_record";
-
-export interface UnifiedSearchResult {
-  id: string;
-  category: SearchResultCategory;
-  categoryLabelAr: string;
-  title: string;
-  excerpt: string;
-  path: string;
-  sourceIdentifier?: string;
-  provenance: string;
-}
+export type {
+  SearchResultCategory,
+  UnifiedSearchResult,
+} from "./global-search-index";
 
 interface GlobalSearchDialogProps {
   isOpen: boolean;
@@ -51,7 +34,7 @@ interface GlobalSearchDialogProps {
 
 export default function GlobalSearchDialog({ isOpen, onClose }: GlobalSearchDialogProps) {
   const [query, setQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedCategory, setSelectedCategory] = useState<"all" | SearchResultCategory>("all");
 
   // Explicit Escape-to-close: the acceptance contract requires Escape to
   // close the topmost surface regardless of focus-trap library behavior.
@@ -67,127 +50,14 @@ export default function GlobalSearchDialog({ isOpen, onClose }: GlobalSearchDial
     return () => window.removeEventListener("keydown", onKey);
   }, [isOpen, onClose]);
 
-  // Build searchable index from authentic datasets
-  const allIndexedItems = useMemo<UnifiedSearchResult[]>(() => {
-    const items: UnifiedSearchResult[] = [];
-
-    // 1. Seerah chapters & timeline events
-    seerahChapters.forEach((ch) => {
-      items.push({
-        id: `seerah-${ch.id}`,
-        category: "seerah_event",
-        categoryLabelAr: "حدث في السيرة",
-        title: ch.title,
-        excerpt: ch.description,
-        path: `/seerah`,
-        sourceIdentifier: `فصل ${ch.order}`,
-        provenance: "موسوعة السيرة النبوية المعتمدة",
-      });
-
-      ch.timelineEvents?.forEach((ev) => {
-        items.push({
-          id: `seerah-ev-${ev.id}`,
-          category: "seerah_event",
-          categoryLabelAr: "محطة تاريخية",
-          title: ev.title,
-          excerpt: ev.description,
-          path: `/seerah`,
-          sourceIdentifier: ev.date,
-          provenance: "التسلسل الزمني النبوي الشريف",
-        });
-      });
-    });
-
-    // 2. Bibliographic works from the governed knowledge registry.
-    workRegistry.forEach((work) => {
-      items.push({
-        id: work.workId,
-        category: "book",
-        categoryLabelAr: "سجل ببليوغرافي",
-        title: work.titleAr,
-        excerpt: `${work.authorAr} — ${work.attributionCaveat}`,
-        path: `/library`,
-        sourceIdentifier: work.openitiWorkUri || work.category,
-        provenance: `سجل الأعمال — ${work.bibliographicStatus}`,
-      });
-    });
-
-    // 3. Platform-original educational adaptations. These are deliberately
-    // labelled as adaptations rather than direct Qur'an/Hadith quotations.
-    childrenAdaptationRegistry.forEach((adaptation) => {
-      items.push({
-        id: adaptation.adaptationId,
-        category: "kids",
-        categoryLabelAr: "مادة تعليمية أصلية",
-        title: adaptation.titleAr,
-        excerpt: adaptation.summaryAr,
-        path: `/kids`,
-        sourceIdentifier: `الفئة ${adaptation.ageBand}`,
-        provenance: `تكييف أصلي للمنصة — ${adaptation.editorialStatus}`,
-      });
-    });
-
-    // 4. Azkar and daily supplications
-    azkarData.forEach((az) => {
-      items.push({
-        id: `azkar-${az.id}`,
-        category: "daily_guidance",
-        categoryLabelAr: "هدي وأذكار نبوية",
-        title: az.title || "ذكر ودعاء",
-        excerpt: az.content?.slice(0, 120) || az.description || "",
-        path: `/daily`,
-        sourceIdentifier: az.reference,
-        provenance: az.reference || "الصحاح والسنن المعتمدة",
-      });
-    });
-
-    // 5. Institutional wings: real routes only, honestly described.
-    // (Merged from the retired InstitutionalSearchDialog so no coverage
-    // is lost in the single-owner consolidation.)
-    const wings: Array<[string, string, string, string]> = [
-      ["who-is-muhammad", "من هو محمد ﷺ؟ (مدخل تعريفي)", "التعريف بالنبي ورسالته الإنسانية", "/who-is-muhammad"],
-      ["quran", "رِواق القرآن الكريم", "المصحف وعينة ترجمة إنجليزية؛ التفاسير المحققة قيد الإدخال", "/quran"],
-      ["sunnah", "دار الحديث الشريف", "سجلات محلية بدرجاتها ومصادر أحكامها", "/sunnah"],
-      ["prophetic-day", "الهدي النبوي اليومي", "ترتيب تعليمي للسنن والعادات الواردة", "/prophetic-day"],
-      ["library", "مكتبة الرفوف", "فهرس ببليوغرافي أولي وروابط خارجية", "/library"],
-      ["sources", "خزانة المصادر", "سجل التوثيق والحقوق الحي", "/sources"],
-    ];
-    wings.forEach(([id, title, excerpt, path]) => {
-      items.push({
-        id: `wing-${id}`,
-        category: "wing",
-        categoryLabelAr: "أروقة الصرح",
-        title,
-        excerpt,
-        path,
-        provenance: "التنقل المؤسسي",
-      });
-    });
-
-    return items;
-  }, []);
-
-  const filteredResults = useMemo(() => {
-    if (!query.trim()) return [];
-    const q = query.trim().toLowerCase();
-    return allIndexedItems.filter((item) => {
-      const matchesCategory = selectedCategory === "all" || item.category === selectedCategory;
-      const matchesQuery =
-        item.title.toLowerCase().includes(q) ||
-        item.excerpt.toLowerCase().includes(q) ||
-        (item.sourceIdentifier && item.sourceIdentifier.toLowerCase().includes(q));
-      return matchesCategory && matchesQuery;
-    });
-  }, [allIndexedItems, query, selectedCategory]);
-
-  const CATEGORY_TABS = [
-    { id: "all", label: "الكل" },
-    { id: "seerah_event", label: "السيرة النبوية" },
-    { id: "book", label: "المكتبة والكتب" },
-    { id: "daily_guidance", label: "الأذكار والهدي" },
-    { id: "kids", label: "ركن الطفل" },
-    { id: "wing", label: "الأروقة" },
-  ];
+  // The legacy dialog consumes the canonical institution index through a small
+  // compatibility adapter, so entity identity, paths, availability, and review
+  // state cannot drift between the dialog and Basirah.
+  const allIndexedItems = useMemo(() => buildGlobalSearchIndex(), []);
+  const filteredResults = useMemo(
+    () => filterGlobalSearchResults(allIndexedItems, query, selectedCategory),
+    [allIndexedItems, query, selectedCategory],
+  );
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -195,42 +65,63 @@ export default function GlobalSearchDialog({ isOpen, onClose }: GlobalSearchDial
         <DialogHeader className="text-right">
           <DialogTitle className="text-lg font-cairo font-bold flex items-center justify-between">
             <span className="flex items-center gap-2">
-              <Search className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+              <Search className="w-5 h-5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
               البحث المؤسسي الجامع
             </span>
             <span className="text-xs font-normal text-muted-foreground font-mono">
               يا رسول الله ﷺ
             </span>
           </DialogTitle>
+          <DialogDescription className="sr-only">
+            ابحث في السجلات المؤسسية الموثقة وافتح نتائج القرآن أو بصيرة مع الحفاظ على معرّف المصدر.
+          </DialogDescription>
         </DialogHeader>
 
         {/* Input Bar */}
         <div className="relative mt-3">
-          <Search className="absolute right-3.5 top-3.5 w-4 h-4 text-muted-foreground" />
+          <label htmlFor="global-institutional-search" className="sr-only">
+            نص البحث المؤسسي
+          </label>
+          <Search
+            className="absolute right-3.5 top-3.5 w-4 h-4 text-muted-foreground"
+            aria-hidden="true"
+          />
           <Input
+            id="global-institutional-search"
+            name="global-institutional-search"
+            type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="ابحث في السيرة النبوية، الكتب، الأحاديث، الأذكار، المصادر..."
-            className="pr-10 pl-10 text-base font-cairo h-12 rounded-xl bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700"
+            className="pr-10 pl-12 text-base font-cairo h-12 rounded-xl bg-slate-50 dark:bg-slate-800/80 border-slate-200 dark:border-slate-700"
+            autoComplete="off"
             autoFocus
           />
           {query && (
             <button
+              type="button"
               onClick={() => setQuery("")}
-              className="absolute left-3.5 top-3.5 text-muted-foreground hover:text-foreground"
+              aria-label="مسح نص البحث"
+              className="absolute left-1 top-1 flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
             >
-              <X className="w-4 h-4" />
+              <X className="w-4 h-4" aria-hidden="true" />
             </button>
           )}
         </div>
 
         {/* Category Filters */}
-        <div className="flex items-center gap-1.5 overflow-x-auto py-2 border-b text-xs font-cairo">
-          {CATEGORY_TABS.map((tab) => (
+        <div
+          className="flex items-center gap-1.5 overflow-x-auto py-2 border-b text-xs font-cairo"
+          role="group"
+          aria-label="تصفية نتائج البحث حسب النوع"
+        >
+          {GLOBAL_SEARCH_CATEGORY_TABS.map((tab) => (
             <button
               key={tab.id}
+              type="button"
+              aria-pressed={selectedCategory === tab.id}
               onClick={() => setSelectedCategory(tab.id)}
-              className={`px-3 py-1 rounded-full whitespace-nowrap transition-colors ${
+              className={`min-h-11 px-3 py-1 rounded-full whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 ${
                 selectedCategory === tab.id
                   ? "bg-emerald-700 text-white font-bold"
                   : "bg-muted text-muted-foreground hover:bg-muted/80"
@@ -243,9 +134,14 @@ export default function GlobalSearchDialog({ isOpen, onClose }: GlobalSearchDial
 
         {/* Results List */}
         <div className="max-h-[50vh] overflow-y-auto space-y-2 mt-2 pr-1">
+          {query.trim() ? (
+            <p className="sr-only" role="status" aria-live="polite">
+              {filteredResults.length} نتيجة مطابقة
+            </p>
+          ) : null}
           {query.trim() === "" ? (
             <div className="text-center py-10 text-muted-foreground font-cairo text-sm">
-              <Compass className="w-8 h-8 mx-auto mb-2 text-muted-foreground/40" />
+              <Compass className="w-8 h-8 mx-auto mb-2 text-muted-foreground/40" aria-hidden="true" />
               أدخل كلمة أو عبارة للبحث في كافة السجلات الموثقة
             </div>
           ) : filteredResults.length === 0 ? (
@@ -270,14 +166,14 @@ export default function GlobalSearchDialog({ isOpen, onClose }: GlobalSearchDial
                     </span>
                   )}
                 </div>
-                <h4 className="font-cairo font-bold text-base text-foreground group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
+                <h3 className="font-cairo font-bold text-base text-foreground group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors">
                   {result.title}
-                </h4>
+                </h3>
                 <p className="text-xs text-muted-foreground font-tajawal line-clamp-2 mt-1 leading-relaxed">
                   {result.excerpt}
                 </p>
                 <div className="flex items-center gap-1 mt-2 text-[10px] text-muted-foreground font-mono">
-                  <ShieldCheck className="w-3 h-3 text-emerald-600" />
+                  <ShieldCheck className="w-3 h-3 text-emerald-600" aria-hidden="true" />
                   <span>المصدر: {result.provenance}</span>
                 </div>
               </Link>

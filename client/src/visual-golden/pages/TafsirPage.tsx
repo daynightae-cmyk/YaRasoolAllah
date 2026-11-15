@@ -176,7 +176,7 @@ export function TafsirPage() {
         <PageHero
           title="التفسير والتدبر"
           subtitle={`غرفة الدراسة العلمية · ${TAFSIR_WORKS.length} مصنفات مفسّرة في الفهرس`}
-          desc="الآية من المصحف المحلي الموثق، وقائمة المصنفات التفسيرية فهرسية — النص الكامل غير متاح داخل المنصة حتى مراجعة النسخة والحقوق"
+          desc="الآية من المصحف المحلي الموثق. بعض النسخ التفسيرية التاريخية المؤهلة متاحة للقراءة عبر قارئ المكتبة، بينما تبقى المراجعة العلمية واعتماد الطبعة حالتين منفصلتين لم تُثبتا."
           image={art.mushaf}
           compact
           wing="tafsir"
@@ -317,23 +317,32 @@ export function TafsirPage() {
                 {activeTafsir.work.titleAr} — {activeTafsir.work.authorAr}
               </p>
               <p className={styles.tafsir} style={{ fontSize: "0.8rem", opacity: 0.9 }}>
-                {activeTafsir.work.attributionCaveat}
+                {activeTafsir.isReadable
+                  ? "القراءة الداخلية تخص نسخة OpenITI المؤهلة لهذا العمل فقط؛ لا تُثبت مصدرًا علميًا أو محققًا أو طبعة نقدية."
+                  : activeTafsir.work.attributionCaveat}
               </p>
               <p className={styles.tafsir} style={{ fontSize: "0.82rem" }}>
-                النص الكامل لهذا التفسير غير متاح داخل المنصة حتى مراجعة النسخة والحقوق
-                ({activeTafsir.versionCount} نسخة فهرسية).
+                {activeTafsir.isReadable
+                  ? `النص متاح للقراءة من ${activeTafsir.eligibleVersionCount} نسخة OpenITI مستوفية لشروط الإتاحة والحقوق.`
+                  : `النص الكامل لهذا العمل غير متاح للقراءة الداخلية؛ السجل يضم ${activeTafsir.versionCount} نسخة، ولا توجد نسخة مستوفية لشروط الإتاحة والحقوق.`}
               </p>
               <p className={styles.tafsir} style={{ fontSize: "0.78rem", display: "flex", gap: 4, alignItems: "center" }}>
                 <ShieldCheck size={13} /> الببليوغرافيا:{" "}
                 {activeTafsir.work.bibliographicStatus === "verified_bibliographic" ? "موثقة" : "قيد المراجعة"} ·
-                المراجعة العلمية: معلقة
+                المراجعة العلمية:{" "}
+                {activeTafsir.work.scholarlyReviewStatus === "scholarly_review_pending" ? "معلقة" : activeTafsir.work.scholarlyReviewStatus} ·
+                مراجعة الطبعة: غير مثبتة
               </p>
-              <Link href="/library" className={styles.more}>
-                فتح سجل العمل في المكتبة <ChevronLeft size={14} />
+              <p className={styles.tafsir} style={{ fontSize: "0.76rem" }}>
+                إتاحة النص لا ترفع حالة المراجعة العلمية، ولا تجعل النسخة طبعة نقدية معتمدة.
+              </p>
+              <Link href={activeTafsir.isReadable ? activeTafsir.readerPath : "/library"} className={styles.more}>
+                {activeTafsir.isReadable ? "قراءة النص في قارئ المكتبة" : "فتح سجل العمل في المكتبة"}{" "}
+                <ChevronLeft size={14} />
               </Link>
               {activeTafsir.versions.slice(0, 2).map((version) => (
                 <p key={version.versionId} className={styles.tafsir} style={{ fontSize: "0.75rem" }}>
-                  <a href={version.sourceUrl} target="_blank" rel="noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+                  <a href={version.sourceUrl} target="_blank" rel="noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 4, minHeight: 44 }}>
                     <ExternalLink size={12} /> {version.openitiUri}
                   </a>
                 </p>
