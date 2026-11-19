@@ -5,6 +5,7 @@ import { digitalVersionRegistry, workRegistry } from "@shared/knowledge-registry
 import { getGovernanceRecord, providerResourceRegistry, sourceRegistry } from "@shared/source-registry";
 import { SEERAH_GRAPH } from "@/visual-golden/services/seerah-graph";
 import { getEligibleDirectOpenItiVersions } from "@/visual-golden/services/direct-book-reader";
+import { LIBRARY_COUNTS } from "@/visual-golden/services/library";
 
 export type BasirahScope = "all" | "quran" | "hadith" | "seerah" | "library" | "sources";
 export type BasirahMode = "sourced" | "simple" | "compare" | "evidence" | "explore";
@@ -226,7 +227,9 @@ export function searchBasirah(records: BasirahRecord[], query: string, scope: Ba
 export const BASIRAH_COUNTS = {
   seerah: seerahChapters.length,
   hadithSamples: HADITH_DEVELOPMENT_SAMPLES.length,
-  works: workRegistry.length,
+  indexedWorks: workRegistry.length,
+  catalogWorks: LIBRARY_COUNTS.works,
+  catalogVersions: LIBRARY_COUNTS.versions,
   sources: sourceRegistry.length,
 };
 

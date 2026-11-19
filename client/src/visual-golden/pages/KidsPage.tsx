@@ -5,6 +5,7 @@ import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { ColoringStudio } from "@/visual-golden/components/unique/ColoringStudio";
 import { StoryTheatre } from "@/visual-golden/components/present/StoryTheatre";
 import { KidsTVRoom } from "@/visual-golden/components/kids-tv/KidsTVRoom";
+import { MediaLibrarySection } from "@/visual-golden/components/media/MediaLibrarySection";
 import {
   KIDS_COUNTS,
   KIDS_STORIES,
@@ -208,6 +209,12 @@ export function KidsPage() {
           <KidsTVRoom onReadStory={current ? openCurrentStory : undefined} />
         </>
       )}
+
+      <MediaLibrarySection
+        kind="kids"
+        title="مكتبة نور للأطفال"
+        subtitle="فيديوهات وقنوات أطفال من كتالوج المصادر، مع رابط الصفحة الأصلية وحالة المراجعة أسفل كل مادة."
+      />
 
       <div className={styles.row}>
         <section className={styles.panel}>
