@@ -14,6 +14,7 @@ export const CANONICAL_VISUAL_PATHS = [
   "/quran",
   "/tafsir",
   "/seerah",
+  "/seerah/database",
   "/atlas",
   "/sunnah",
   "/hadith",
