@@ -60,6 +60,13 @@ export const cases = [
   { name: "seerah-media-shelf-768-dark-rtl", path: "/seerah", width: 768, height: 1024, theme: "dark", language: "ar", scrollSelector: '[data-visual="media-library"]', scrollOffset: -80 },
   { name: "prayer-guide-1440-light-rtl", path: "/prayer-guide", width: 1440, height: 1000, theme: "light", language: "ar", scrollSelector: '[data-visual="prayer-guide-review"]', scrollOffset: -80 },
   { name: "islamic-knowledge-1440-dark-rtl", path: "/islamic-knowledge", width: 1440, height: 1000, theme: "dark", language: "ar", scrollSelector: '[data-visual="islamic-knowledge-review"]', scrollOffset: -80 },
+  // Paired before/after review set. The same case names are captured from the
+  // pre-consolidation commit and from `main`, so the two folders can be
+  // compared side by side without scroll or click differences.
+  { name: "compare-kids-1440-dark-rtl", path: "/kids", width: 1440, height: 1000, theme: "dark", language: "ar" },
+  { name: "compare-prayer-guide-1440-light-rtl", path: "/prayer-guide", width: 1440, height: 1000, theme: "light", language: "ar" },
+  { name: "compare-islamic-knowledge-1440-dark-rtl", path: "/islamic-knowledge", width: 1440, height: 1000, theme: "dark", language: "ar" },
+  { name: "compare-seerah-1440-dark-rtl", path: "/seerah", width: 1440, height: 1000, theme: "dark", language: "ar" },
 ];
 
 async function main() {
