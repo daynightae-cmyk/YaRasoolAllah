@@ -294,6 +294,115 @@
   font-size: 1.6rem;
 }
 
+.theatreFooter {
+  position: relative;
+  z-index: 4;
+  width: min(920px, calc(100% - 2rem));
+  margin: 0 auto 1.1rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.sourcePanel {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(232, 197, 71, 0.28);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(6, 26, 24, 0.94), rgba(3, 14, 14, 0.94));
+}
+
+.sourcePanelHead {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #f8efc2;
+  font-size: 0.86rem;
+}
+
+.sourcePanel p {
+  margin: 0;
+  color: rgba(255, 249, 232, 0.68);
+  font-size: 0.76rem;
+  line-height: 1.8;
+}
+
+.sourcePanel ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.sourcePanel li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 10px;
+  background: rgba(232, 197, 71, 0.07);
+  font-size: 0.8rem;
+  color: rgba(255, 249, 232, 0.9);
+}
+
+.sourcePanel li small {
+  font-size: 0.66rem;
+  color: rgba(232, 197, 71, 0.78);
+  letter-spacing: 0.02em;
+}
+
+.sourceLink {
+  justify-self: start;
+  font-size: 0.76rem;
+  color: #e9cb77;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.theatreNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid rgba(232, 197, 71, 0.22);
+  border-radius: 999px;
+  background: rgba(4, 18, 18, 0.9);
+}
+
+.theatreNav span {
+  font-size: 0.78rem;
+  color: rgba(255, 249, 232, 0.78);
+}
+
+.theatreNav button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 34px;
+  padding: 0.3rem 0.85rem;
+  border: 1px solid rgba(232, 197, 71, 0.4);
+  border-radius: 999px;
+  background: rgba(12, 40, 34, 0.9);
+  color: #f8efc2;
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.theatreNav button:hover:not(:disabled) {
+  border-color: rgba(232, 197, 71, 0.85);
+  background: rgba(26, 70, 58, 0.95);
+}
+
+.theatreNav button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .deskScrim {
   position: fixed;
   inset: 0;

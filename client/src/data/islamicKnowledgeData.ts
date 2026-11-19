@@ -8,6 +8,83 @@ export interface KnowledgeItem {
   tags: string[];
   content: string;
   relatedTopics: string[];
+  /**
+   * Legacy drafts arrive without a source id. They are surfaced as pending
+   * review material and never counted as published knowledge.
+   */
+  sourceIds: string[];
+  reviewStatus: "pending_review" | "reviewed";
+  reviewNote: string;
 }
 
+export const ISLAMIC_KNOWLEDGE_PROVENANCE = {
+  origin: "legacy baseline import (UPDATED_FILES/islamicKnowledgeData.ts)",
+  importedAt: "2026-11-19",
+  reviewStatus: "pending_review" as const,
+  note: "مسودات تعليمية موروثة من النسخة الأساسية، بلا مصادر ولا مراجعة تحريرية أو علمية؛ تُعرض كمسودات للمراجعة فقط.",
+} as const;
+
+/** Verified, publishable knowledge. Empty until every item clears review. */
 export const ISLAMIC_KNOWLEDGE_DATA: KnowledgeItem[] = [];
+
+/** Inherited drafts that are kept, labelled, and never presented as published. */
+export const ISLAMIC_KNOWLEDGE_PENDING_REVIEW: KnowledgeItem[] = [
+  {
+    id: "1",
+    title: "أركان الإسلام الخمسة",
+    description: "تعرف على الأركان الخمسة التي يقوم عليها الإسلام",
+    category: "aqeedah",
+    difficulty: "beginner",
+    readTime: 5,
+    tags: ["أركان الإسلام", "عقيدة", "أساسيات"],
+    content: `أركان الإسلام الخمسة هي الأسس التي يقوم عليها دين الإسلام:
+
+1. **الشهادتان**: شهادة أن لا إله إلا الله وأن محمداً رسول الله
+2. **إقام الصلاة**: أداء الصلوات الخمس في أوقاتها
+3. **إيتاء الزكاة**: إخراج الزكاة للمستحقين
+4. **صوم رمضان**: صيام شهر رمضان المبارك
+5. **حج البيت**: الحج إلى بيت الله الحرام لمن استطاع إليه سبيلاً
+
+هذه الأركان تشكل الأساس العملي للحياة الإسلامية وتربط المسلم بربه وبإخوانه في الدين.`,
+    relatedTopics: ["الصلاة", "الزكاة", "الصوم", "الحج"],
+    sourceIds: [],
+    reviewStatus: "pending_review",
+    reviewNote: ISLAMIC_KNOWLEDGE_PROVENANCE.note,
+  },
+  {
+    id: "2",
+    title: "آداب تلاوة القرآن الكريم",
+    description: "تعلم الآداب والسنن المتعلقة بتلاوة القرآن الكريم",
+    category: "fiqh",
+    difficulty: "beginner",
+    readTime: 7,
+    tags: ["قرآن", "تلاوة", "آداب"],
+    content: `آداب تلاوة القرآن الكريم:
+
+**قبل التلاوة:**
+- الوضوء والطهارة
+- استقبال القبلة إذا أمكن
+- الاستعاذة من الشيطان الرجيم
+- البسملة عند بداية السورة
+
+**أثناء التلاوة:**
+- التدبر والخشوع
+- الترتيل والتأني
+- تحسين الصوت دون تكلف
+- السجود عند آيات السجدة
+
+**بعد التلاوة:**
+- الدعاء والذكر
+- التفكر في المعاني
+- العمل بما تم تلاوته`,
+    relatedTopics: ["القرآن الكريم", "الأذكار", "الدعاء"],
+    sourceIds: [],
+    reviewStatus: "pending_review",
+    reviewNote: ISLAMIC_KNOWLEDGE_PROVENANCE.note,
+  },
+];
+
+export const ISLAMIC_KNOWLEDGE_COUNTS = {
+  published: ISLAMIC_KNOWLEDGE_DATA.length,
+  pendingReview: ISLAMIC_KNOWLEDGE_PENDING_REVIEW.length,
+} as const;

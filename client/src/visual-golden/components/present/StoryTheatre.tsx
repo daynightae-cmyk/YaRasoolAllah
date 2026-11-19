@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { X, ShieldCheck } from "lucide-react";
+import { X, ShieldCheck, ArrowLeft, ArrowRight, Link2 } from "lucide-react";
+import type { KidsAdaptationSource } from "@/visual-golden/services/kids";
+import { kidsReviewStatusLabel } from "@/visual-golden/services/kids";
 import styles from "./present.module.css";
 
 interface Props {
@@ -13,6 +15,10 @@ interface Props {
   reviewStatus?: string;
   depictionPolicy?: string;
   sourceCount?: number;
+  sources?: KidsAdaptationSource[];
+  position?: { index: number; total: number };
+  onPrevious?: () => void;
+  onNext?: () => void;
   onClose: () => void;
 }
 
@@ -27,6 +33,10 @@ export function StoryTheatre({
   reviewStatus,
   depictionPolicy,
   sourceCount,
+  sources,
+  position,
+  onPrevious,
+  onNext,
   onClose,
 }: Props) {
   const [open, setOpen] = useState(false);
@@ -70,8 +80,8 @@ export function StoryTheatre({
             {adaptationLabel === "platform_original_not_a_direct_quote"
               ? "تكييف تعليمي أصلي للمنصة — ليس اقتباسًا مباشرًا من نص منقول"
               : "مادة تعليمية"}
-            {editorialStatus ? ` · التحرير: ${editorialStatus === "draft" ? "مسودة" : "قيد المراجعة التحريرية"}` : ""}
-            {reviewStatus ? ` · المراجعة العلمية: معلقة` : ""}
+            {editorialStatus ? ` · التحرير: ${kidsReviewStatusLabel(editorialStatus)}` : ""}
+            {reviewStatus ? ` · المراجعة العلمية: ${kidsReviewStatusLabel(reviewStatus)}` : ""}
           </p>
           {depictionPolicy ? (
             <p className="muted" style={{ fontSize: "0.78rem" }}>
@@ -81,6 +91,44 @@ export function StoryTheatre({
           ) : null}
         </div>
       </div>
+
+      {(sources?.length || (position && position.total > 1)) ? (
+        <div className={styles.theatreFooter}>
+          {sources?.length ? (
+            <div className={styles.sourcePanel}>
+              <div className={styles.sourcePanelHead}>
+                <Link2 size={15} aria-hidden="true" />
+                <strong>للمرافق: الدليل والمصدر</strong>
+              </div>
+              <p>
+                المعرّفات التالية تربط الفكرة بسجل العمل أو المصدر، ولا تعني أن نصًا كاملًا أو اعتمادًا علميًا
+                متاح داخل هذه الصفحة.
+              </p>
+              <ul>
+                {sources.map((source) => (
+                  <li key={source.sourceId}>
+                    <span>{source.titleAr}</span>
+                    <small dir="ltr">{source.sourceId}</small>
+                  </li>
+                ))}
+              </ul>
+              <a className={styles.sourceLink} href="/sources">فتح سجل المصادر والتحقيق</a>
+            </div>
+          ) : null}
+
+          {position && position.total > 1 ? (
+            <div className={styles.theatreNav} aria-label="التنقل بين مواد القراءة">
+              <button type="button" onClick={onPrevious} disabled={!onPrevious} aria-label="المادة السابقة">
+                <ArrowRight size={14} aria-hidden="true" /> السابقة
+              </button>
+              <span>{position.index + 1} / {position.total}</span>
+              <button type="button" onClick={onNext} disabled={!onNext} aria-label="المادة التالية">
+                التالية <ArrowLeft size={14} aria-hidden="true" />
+              </button>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }

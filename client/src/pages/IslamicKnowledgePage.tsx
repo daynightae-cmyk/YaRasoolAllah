@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useProgress } from "../contexts/ProgressContext";
 import { useLanguage } from "../contexts/LanguageContext";
-import { ISLAMIC_KNOWLEDGE_DATA } from "../data/islamicKnowledgeData";
+import { ISLAMIC_KNOWLEDGE_DATA, ISLAMIC_KNOWLEDGE_PENDING_REVIEW, ISLAMIC_KNOWLEDGE_PROVENANCE } from "../data/islamicKnowledgeData";
 
 interface KnowledgeItem {
   id: string;
@@ -18,6 +18,9 @@ interface KnowledgeItem {
   tags: string[];
   content: string;
   relatedTopics: string[];
+  sourceIds: string[];
+  reviewStatus: "pending_review" | "reviewed";
+  reviewNote: string;
 }
 
 export default function IslamicKnowledgePage() {
@@ -41,14 +44,17 @@ export default function IslamicKnowledgePage() {
     { id: "contemporary", name: "القضايا المعاصرة", icon: "public", count: 0 }
   ];
 
+  /** Published items plus the inherited drafts, kept visibly separate. */
+  const knowledgeItems: KnowledgeItem[] = [...ISLAMIC_KNOWLEDGE_DATA, ...ISLAMIC_KNOWLEDGE_PENDING_REVIEW];
+
   // Calculate counts for each category
   categories.forEach(category => {
     if (category.id !== "all") {
-      category.count = ISLAMIC_KNOWLEDGE_DATA.filter(item => item.category === category.id).length;
+      category.count = knowledgeItems.filter(item => item.category === category.id).length;
     }
   });
 
-  const filteredItems = ISLAMIC_KNOWLEDGE_DATA.filter(item => {
+  const filteredItems = knowledgeItems.filter(item => {
     const matchesCategory = selectedCategory === "all" || item.category === selectedCategory;
     const matchesSearch = !searchQuery || 
       item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -60,7 +66,8 @@ export default function IslamicKnowledgePage() {
 
   const handleItemClick = (item: KnowledgeItem) => {
     setSelectedItem(item);
-    completeLesson(`knowledge-${item.id}`);
+    // Only reviewed material counts as a completed lesson.
+    if (item.reviewStatus === "reviewed") completeLesson(`knowledge-${item.id}`);
   };
 
   const getDifficultyColor = (difficulty: string) => {
@@ -95,7 +102,16 @@ export default function IslamicKnowledgePage() {
             المعرفة الإسلامية الشاملة
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 font-inter max-w-2xl mx-auto">
-            استكشف كنوز المعرفة الإسلامية من العقيدة والفقه والتاريخ والأخلاق
+            فهرس المحتوى التعليمي المنقول من النسخة الأساسية. كل مادة هنا مسودة بانتظار التوثيق والمراجعة،
+            ولم يُنشر منها شيء بعد.
+          </p>
+        </div>
+
+        <div className="mb-8 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 text-right">
+          <p className="font-amiri font-bold text-amber-700 dark:text-amber-300 mb-1">حالة المحتوى</p>
+          <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+            مواد منشورة بعد المراجعة: <b>{ISLAMIC_KNOWLEDGE_DATA.length}</b> · مسودات موروثة بانتظار
+            المراجعة: <b>{ISLAMIC_KNOWLEDGE_PENDING_REVIEW.length}</b> · {ISLAMIC_KNOWLEDGE_PROVENANCE.note}
           </p>
         </div>
 
@@ -187,6 +203,11 @@ export default function IslamicKnowledgePage() {
                     <Badge variant="outline" className="text-emerald-600">
                       {item.readTime} دقيقة
                     </Badge>
+                    {item.reviewStatus === "pending_review" ? (
+                      <Badge className="bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/40">
+                        مسودة · بانتظار المراجعة
+                      </Badge>
+                    ) : null}
                   </div>
                   
                   <div className="flex flex-wrap gap-1 mb-4">
@@ -258,6 +279,23 @@ export default function IslamicKnowledgePage() {
               </CardHeader>
               
               <CardContent>
+                {selectedItem.reviewStatus === "pending_review" ? (
+                  <div className="mb-6 rounded-lg border border-amber-500/40 bg-amber-500/10 p-4">
+                    <p className="font-amiri font-bold text-amber-700 dark:text-amber-300 mb-1">
+                      مسودة بانتظار المراجعة — ليست مادة منشورة
+                    </p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                      {selectedItem.reviewNote}
+                    </p>
+                    <p className="text-sm text-gray-700 dark:text-gray-300 mt-2">
+                      المصادر المرتبطة:{" "}
+                      {selectedItem.sourceIds.length
+                        ? selectedItem.sourceIds.join(" · ")
+                        : "لا مصادر مرتبطة حتى الآن."}
+                    </p>
+                  </div>
+                ) : null}
+
                 <div className="prose prose-lg max-w-none dark:prose-invert">
                   <div className="font-amiri text-lg leading-relaxed text-gray-900 dark:text-white whitespace-pre-line">
                     {selectedItem.content}

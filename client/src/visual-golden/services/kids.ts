@@ -2,11 +2,18 @@ import { art } from "@/visual-golden/mock/art";
 import {
   childrenAdaptationRegistry,
   mediaAssetRegistry,
+  workRegistry,
   type ChildrenAdaptationRecord,
 } from "@shared/knowledge-registry";
+import { sourceRegistry } from "@shared/source-registry";
 
 export interface KidsStory extends ChildrenAdaptationRecord {
   img: string;
+}
+
+export interface KidsAdaptationSource {
+  sourceId: string;
+  titleAr: string;
 }
 
 const ART_BY_AGE: Record<ChildrenAdaptationRecord["ageBand"], string> = {
@@ -51,4 +58,41 @@ export function shouldCountColoringSession(hasInteracted: boolean, alreadyCounte
 
 export function ageBandLabel(ageBand: ChildrenAdaptationRecord["ageBand"]): string {
   return `${ageBand} سنوات`;
+}
+
+const KIDS_REVIEW_STATUS_LABELS: Record<string, string> = {
+  draft: "مسودة",
+  editorial_review_pending: "مراجعة تحريرية معلّقة",
+  scholarly_review_pending: "مراجعة علمية معلّقة",
+};
+
+export function kidsReviewStatusLabel(status: string | null | undefined): string {
+  if (!status) return "قيد المراجعة";
+  return KIDS_REVIEW_STATUS_LABELS[status] ?? status;
+}
+
+/**
+ * Resolve every source id of an adaptation to a human-readable title.
+ *
+ * The id itself is always kept visible: a parent-facing panel must never hide
+ * the identifier that makes the claim checkable in the source registry.
+ */
+export function kidsAdaptationSources(
+  adaptation: ChildrenAdaptationRecord,
+): KidsAdaptationSource[] {
+  return adaptation.sourceIds.map((sourceId) => ({
+    sourceId,
+    titleAr:
+      workRegistry.find((work) => work.workId === sourceId)?.titleAr ??
+      sourceRegistry.find((source) => source.sourceId === sourceId)?.title ??
+      sourceId,
+  }));
+}
+
+export function kidsAdaptationPosition(
+  adaptationId: string,
+  adaptations: readonly ChildrenAdaptationRecord[] = childrenAdaptationRegistry,
+): { index: number; total: number } {
+  const index = adaptations.findIndex((item) => item.adaptationId === adaptationId);
+  return { index, total: adaptations.length };
 }

@@ -28,7 +28,6 @@ const sources = collectSources();
 const read = (path: string) => readFileSync(join(repoRoot, path), "utf8");
 const dailyVerse = read("client/src/pages/DailyVersePage.tsx");
 const homePage = read("client/src/pages/HomePage.tsx");
-const alMubeenBot = read("client/src/pages/AlMubeenBotPage.tsx");
 const basirahPage = read("client/src/visual-golden/pages/BasirahPage.tsx");
 
 /**
@@ -62,7 +61,7 @@ describe("no surface brands the assistant as a religious authority", () => {
   });
 
   it("keeps the honest wording consistent with the surfaces that already had it", () => {
-    assert.match(alMubeenBot, /مساعد تعليمي وليس مفتياً/);
+    assert.match(dailyVerse, /ليس مفتياً/);
     const canonicalHonest = EXPLICIT_NEGATION.some((phrase) => basirahPage.includes(phrase));
     assert.equal(canonicalHonest, true, "the canonical Basirah route must keep its non-mufti boundary");
   });

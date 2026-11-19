@@ -123,8 +123,9 @@ describe("data encoding integrity", () => {
     ) as { ai?: { references?: string } };
     assert.equal(arabic.ai?.references, "المراجع");
 
-    const mainStructure = readFileSync(join(repoRoot, "client/src/data/mainStructure.ts"), "utf8");
-    assert.match(mainStructure, /description: "أحكام الصيام والاعتكاف"/);
+    const brand = readFileSync(join(repoRoot, "client/src/config/brand.ts"), "utf8");
+    assert.doesNotMatch(brand, new RegExp(String.fromCharCode(0xfffd)));
+    assert.match(brand, /مؤسسة|دار|أبواب/);
 
     const quranService = readFileSync(join(repoRoot, "client/src/services/quranService.ts"), "utf8");
     assert.match(quranService, /arabicName: "الانشقاق"/);
@@ -136,11 +137,11 @@ describe("data encoding integrity", () => {
     );
     assert.match(babAlsamaa, /عليه السلام/);
 
-    const quranAudioPage = readFileSync(
-      join(repoRoot, "client/src/pages/QuranAudioPage.tsx"),
+    const surahList = readFileSync(
+      join(repoRoot, "client/src/components/SurahList.tsx"),
       "utf8",
     );
-    assert.match(quranAudioPage, /name: "البقرة"/);
+    assert.match(surahList, /name: "البقرة"/);
 
     const seerahData = readFileSync(join(repoRoot, "client/src/data/seerahData.ts"), "utf8");
     assert.match(seerahData, /location: "المدينة المنورة"/);

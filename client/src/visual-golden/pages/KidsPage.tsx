@@ -13,6 +13,8 @@ import {
   countDistinctSeenKidsAdaptations,
   hasThreeStoryKidsBadge,
   isRegisteredKidsAdaptationId,
+  kidsAdaptationPosition,
+  kidsAdaptationSources,
 } from "@/visual-golden/services/kids";
 import styles from "./KidsPage.module.css";
 import { PARENT_DISCOVERY_SOURCES } from "@shared/kids-media-governance";
@@ -41,6 +43,11 @@ export function KidsPage() {
   const recordReadingProgress = useInstitution((state) => state.recordReadingProgress);
 
   const current = KIDS_STORIES.find((story) => story.adaptationId === activeAdaptationId) ?? null;
+  const currentSources = useMemo(() => (current ? kidsAdaptationSources(current) : []), [current]);
+  const currentPosition = useMemo(
+    () => (current ? kidsAdaptationPosition(current.adaptationId) : { index: -1, total: KIDS_STORIES.length }),
+    [current],
+  );
   const seenCount = useMemo(() => countDistinctSeenKidsAdaptations(seen), [seen]);
   const threeStoryEarned = useMemo(() => hasThreeStoryKidsBadge(seen), [seen]);
 
@@ -78,6 +85,18 @@ export function KidsPage() {
   const openCurrentStory = () => {
     if (!current) return;
     markSeen(current.adaptationId);
+    setTheatre(true);
+  };
+
+  /** Move to the previous/next registered adaptation and keep the theatre open. */
+  const openRelativeStory = (offset: number) => {
+    if (!KIDS_STORIES.length) return;
+    const base = currentPosition.index >= 0 ? currentPosition.index : 0;
+    const nextIndex = (base + offset + KIDS_STORIES.length) % KIDS_STORIES.length;
+    const next = KIDS_STORIES[nextIndex];
+    if (!next) return;
+    setActiveAdaptationId(next.adaptationId);
+    markSeen(next.adaptationId);
     setTheatre(true);
   };
 
@@ -305,6 +324,10 @@ export function KidsPage() {
           reviewStatus={current.reviewStatus}
           depictionPolicy={current.depictionPolicy}
           sourceCount={current.sourceIds.length}
+          sources={currentSources}
+          position={currentPosition}
+          onPrevious={() => openRelativeStory(-1)}
+          onNext={() => openRelativeStory(1)}
           onClose={() => setTheatre(false)}
         />
       ) : null}

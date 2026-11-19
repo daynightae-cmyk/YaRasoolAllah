@@ -4,18 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useProgress } from "../contexts/ProgressContext";
 import { useLanguage } from "../contexts/LanguageContext";
-import { PRAYER_GUIDE_STEPS } from "../data/prayerGuideData";
-
-interface PrayerStep {
-  id: string;
-  title: string;
-  description: string;
-  arabicText?: string;
-  transliteration?: string;
-  category: "preparation" | "positions" | "recitations" | "completion";
-  order: number;
-  isRequired: boolean;
-}
+import { PRAYER_GUIDE_PROVENANCE, PRAYER_GUIDE_STEPS, type PrayerStep } from "../data/prayerGuideData";
 
 export default function PrayerGuidePage() {
   const { updateLastVisited, completeLesson } = useProgress();
@@ -36,6 +25,9 @@ export default function PrayerGuidePage() {
   ];
 
   const filteredSteps = PRAYER_GUIDE_STEPS.filter(step => step.category === activeCategory);
+
+  const totalSteps = PRAYER_GUIDE_STEPS.length;
+  const progressPercent = totalSteps ? Math.round((completedSteps.size / totalSteps) * 100) : 0;
 
   const handleStepComplete = (stepId: string) => {
     setCompletedSteps(prev => new Set([...prev, stepId]));
@@ -58,7 +50,16 @@ export default function PrayerGuidePage() {
             دليل الصلاة الشامل
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 font-inter max-w-2xl mx-auto">
-            تعلم كيفية أداء الصلاة خطوة بخطوة مع الأحكام والآداب والأدعية المستحبة
+            خريطة تعلّم مرتبة لخطوات الصلاة: كل خطوة موروثة من النسخة الأساسية للمشروع، ولم تُوثّق بعد
+            بمصدر شرعي ولا تُعدّ حكمًا أو فتوى.
+          </p>
+        </div>
+
+        <div className="mb-8 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 text-right">
+          <p className="font-amiri font-bold text-amber-700 dark:text-amber-300 mb-1">حالة الدليل</p>
+          <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+            {PRAYER_GUIDE_PROVENANCE.note} المصدر: {PRAYER_GUIDE_PROVENANCE.origin} · تاريخ النقل:{" "}
+            {PRAYER_GUIDE_PROVENANCE.importedAt}
           </p>
         </div>
 
@@ -71,13 +72,13 @@ export default function PrayerGuidePage() {
                   تقدمك في تعلم الصلاة
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300 font-inter">
-                  أكملت {completedSteps.size} من {PRAYER_GUIDE_STEPS.length} خطوة
+                  أكملت {completedSteps.size} من {totalSteps} خطوة
                 </p>
               </div>
               <div className="text-right">
                 <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-800 rounded-full flex items-center justify-center mb-2">
                   <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-300">
-                    {Math.round((completedSteps.size / PRAYER_GUIDE_STEPS.length) * 100)}%
+                    {progressPercent}%
                   </span>
                 </div>
                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
@@ -143,7 +144,9 @@ export default function PrayerGuidePage() {
                               {step.order}. {step.title}
                             </h3>
                             {step.isRequired && (
-                              <Badge variant="destructive" className="text-xs">واجب</Badge>
+                              <Badge variant="destructive" className="text-xs" title="تصنيف أساسي موروث من النسخة الأساسية — بانتظار المراجعة">
+                                أساسي
+                              </Badge>
                             )}
                           </div>
                           <p className="text-sm text-gray-500 dark:text-gray-400 font-inter">
@@ -191,7 +194,9 @@ export default function PrayerGuidePage() {
                       
                       <div className="flex items-center justify-center space-x-4 rtl:space-x-reverse mt-4">
                         {selectedStep.isRequired && (
-                          <Badge variant="destructive">واجب</Badge>
+                          <Badge variant="destructive" title="تصنيف أساسي موروث من النسخة الأساسية — بانتظار المراجعة">
+                            خطوة أساسية (تصنيف موروث)
+                          </Badge>
                         )}
                         <Badge variant="outline">
                           {currentCategory?.name}
@@ -230,7 +235,9 @@ export default function PrayerGuidePage() {
                     {/* Detailed Description */}
                     <div className="prose prose-lg max-w-none dark:prose-invert">
                       <div className="font-amiri text-lg leading-relaxed text-gray-900 dark:text-white">
-                        تفاصيل إضافية حول هذه الخطوة ستكون متوفرة قريباً، بما في ذلك الأحكام الفقهية والآداب المستحبة.
+                        لا تعرض هذه الصفحة أدلة أو أحكامًا مصدرية بعد. النص هنا إرشادي موروث من النسخة
+                        الأساسية، وحالته "{selectedStep.reviewStatus === "pending_review" ? "بانتظار المراجعة" : "مراجَع"}"،
+                        والمصدر المرتبط: <span dir="ltr">{selectedStep.sourceId}</span>.
                       </div>
                     </div>
                   </div>
