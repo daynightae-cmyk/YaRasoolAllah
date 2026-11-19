@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { useProgress } from "../contexts/ProgressContext";
 import { useLanguage } from "../contexts/LanguageContext";
 import { PRAYER_GUIDE_PROVENANCE, PRAYER_GUIDE_STEPS, type PrayerStep } from "../data/prayerGuideData";
+import { LegacyIcon } from "@/components/common/LegacyIcon";
 
 export default function PrayerGuidePage() {
   const { updateLastVisited, completeLesson } = useProgress();
@@ -42,7 +43,7 @@ export default function PrayerGuidePage() {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center space-x-2 rtl:space-x-reverse bg-blue-100 dark:bg-blue-900/30 px-4 py-2 rounded-full mb-6">
-            <span className="material-symbols-outlined text-blue-600 dark:text-blue-400">self_improvement</span>
+            <LegacyIcon name="self_improvement" className="text-blue-600 dark:text-blue-400" />
             <span className="text-sm font-medium text-blue-700 dark:text-blue-300">دليل شامل للصلاة</span>
           </div>
           
@@ -55,7 +56,7 @@ export default function PrayerGuidePage() {
           </p>
         </div>
 
-        <div className="mb-8 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 text-right">
+        <div className="mb-8 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 text-right" data-visual="prayer-guide-review">
           <p className="font-amiri font-bold text-amber-700 dark:text-amber-300 mb-1">حالة الدليل</p>
           <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
             {PRAYER_GUIDE_PROVENANCE.note} المصدر: {PRAYER_GUIDE_PROVENANCE.origin} · تاريخ النقل:{" "}
@@ -106,7 +107,7 @@ export default function PrayerGuidePage() {
               }`}
             >
               <div className="text-center">
-                <span className="material-symbols-outlined text-2xl mb-2 block">{category.icon}</span>
+                <LegacyIcon name={category.icon} className="text-2xl mb-2 block" />
                 <span className="font-amiri text-sm">{category.name}</span>
               </div>
             </Button>
@@ -119,9 +120,7 @@ export default function PrayerGuidePage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2 rtl:space-x-reverse font-amiri">
-                  <span className="material-symbols-outlined text-emerald-600">
-                    {currentCategory?.icon}
-                  </span>
+                  <LegacyIcon name={currentCategory?.icon ?? "list"} className="text-emerald-600" />
                   <span>{currentCategory?.name}</span>
                 </CardTitle>
               </CardHeader>
@@ -155,7 +154,7 @@ export default function PrayerGuidePage() {
                         </div>
                         <div className="flex items-center space-x-2 rtl:space-x-reverse">
                           {completedSteps.has(step.id) && (
-                            <span className="material-symbols-outlined text-green-500">check_circle</span>
+                            <LegacyIcon name="check_circle" className="text-green-500" />
                           )}
                           <div className="w-8 h-8 bg-emerald-100 dark:bg-emerald-800 rounded-full flex items-center justify-center">
                             <span className="text-emerald-600 dark:text-emerald-300 font-bold text-sm">
@@ -180,7 +179,7 @@ export default function PrayerGuidePage() {
                     <div className="mb-4">
                       <div className="h-48 bg-gradient-to-br from-blue-100 to-emerald-100 dark:from-blue-900/30 dark:to-emerald-900/30 rounded-lg mb-6 flex items-center justify-center">
                         <div className="text-center text-blue-700 dark:text-blue-400">
-                          <span className="material-symbols-outlined text-6xl mb-2">self_improvement</span>
+                          <LegacyIcon name="self_improvement" className="text-6xl mb-2" />
                           <p className="text-sm font-inter">تمثيل بصري لحركة الصلاة</p>
                         </div>
                       </div>
@@ -249,20 +248,20 @@ export default function PrayerGuidePage() {
                         onClick={() => handleStepComplete(selectedStep.id)}
                         className="bg-green-600 hover:bg-green-700"
                       >
-                        <span className="material-symbols-outlined mr-2 rtl:ml-2">check_circle</span>
+                        <LegacyIcon name="check_circle" className="mr-2 rtl:ml-2" />
                         أتممت هذه الخطوة
                       </Button>
                     )}
                     <Button className="bg-emerald-600 hover:bg-emerald-700">
-                      <span className="material-symbols-outlined mr-2 rtl:ml-2">bookmark_add</span>
+                      <LegacyIcon name="bookmark_add" className="mr-2 rtl:ml-2" />
                       حفظ
                     </Button>
                     <Button variant="outline">
-                      <span className="material-symbols-outlined mr-2 rtl:ml-2">volume_up</span>
+                      <LegacyIcon name="volume_up" className="mr-2 rtl:ml-2" />
                       استماع للنطق
                     </Button>
                     <Button variant="outline">
-                      <span className="material-symbols-outlined mr-2 rtl:ml-2">share</span>
+                      <LegacyIcon name="share" className="mr-2 rtl:ml-2" />
                       مشاركة
                     </Button>
                   </div>
@@ -271,7 +270,7 @@ export default function PrayerGuidePage() {
             ) : (
               <Card className="h-96 flex items-center justify-center">
                 <CardContent className="text-center">
-                  <span className="material-symbols-outlined text-6xl text-gray-400 mb-4">self_improvement</span>
+                  <LegacyIcon name="self_improvement" className="text-6xl text-gray-400 mb-4" />
                   <h3 className="text-xl font-amiri font-bold text-gray-600 dark:text-gray-400 mb-2">
                     اختر خطوة لتتعلمها
                   </h3>

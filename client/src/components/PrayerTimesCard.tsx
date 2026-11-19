@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "../contexts/LanguageContext";
 import { usePrayerTimes } from "../hooks/usePrayerTimes";
+import { LegacyIcon } from "@/components/common/LegacyIcon";
 
 interface TimeRemaining {
   hours: number;
@@ -79,9 +80,7 @@ export default function PrayerTimesCard() {
       <Card className="bg-white/80 dark:bg-emerald-900/80 backdrop-blur-sm border border-red-200 dark:border-red-700">
         <CardContent className="p-6">
           <div className="text-center text-red-600 dark:text-red-400">
-            <span className="material-symbols-outlined text-4xl mb-2">
-              error
-            </span>
+            <LegacyIcon name="error" className="text-4xl mb-2" />
             <p className="font-amiri">تعذر تحميل أوقات الصلاة</p>
           </div>
         </CardContent>
@@ -97,7 +96,7 @@ export default function PrayerTimesCard() {
             أوقات الصلاة
           </h3>
           <div className="flex items-center space-x-2 rtl:space-x-reverse text-emerald-600 dark:text-emerald-400">
-            <span className="material-symbols-outlined">location_on</span>
+            <LegacyIcon name="location_on" />
             <span className="text-sm font-medium">الرياض</span>
           </div>
         </CardTitle>
@@ -163,9 +162,7 @@ export default function PrayerTimesCard() {
           className="w-full mt-4 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 border-0"
           variant="outline"
         >
-          <span className="material-symbols-outlined mr-2 rtl:ml-2">
-            notifications
-          </span>
+          <LegacyIcon name="notifications" className="mr-2 rtl:ml-2" />
           تفعيل التنبيهات
         </Button>
       </CardContent>

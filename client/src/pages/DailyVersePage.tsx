@@ -19,6 +19,7 @@ import { useProgress } from "../contexts/ProgressContext";
 import { useLanguage } from "../contexts/LanguageContext";
 import { getDailyVerse, dailyVerseDayKey } from "@/services/quranService";
 import { cn } from "@/lib/utils";
+import { LegacyIcon } from "@/components/common/LegacyIcon";
 
 interface DailyVerseSettings {
   autoShare: boolean;
@@ -241,9 +242,7 @@ https://yarasoolallah.org
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-4 mb-6">
               <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 via-blue-500 to-purple-600 rounded-full flex items-center justify-center animate-pulse">
-                <span className="material-symbols-outlined text-white text-3xl">
-                  auto_awesome
-                </span>
+                <LegacyIcon name="auto_awesome" className="text-white text-3xl" />
               </div>
               <div>
                 <h1 className="text-4xl md:text-6xl font-amiri font-bold bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -302,19 +301,19 @@ https://yarasoolallah.org
           >
             <TabsList className="grid w-full grid-cols-4 mb-8">
               <TabsTrigger value="today" className="font-amiri">
-                <span className="material-symbols-outlined mr-2">today</span>
+                <LegacyIcon name="today" className="mr-2" />
                 جرعة اليوم
               </TabsTrigger>
               <TabsTrigger value="share" className="font-amiri">
-                <span className="material-symbols-outlined mr-2">share</span>
+                <LegacyIcon name="share" className="mr-2" />
                 المشاركة التلقائية
               </TabsTrigger>
               <TabsTrigger value="widget" className="font-amiri">
-                <span className="material-symbols-outlined mr-2">widgets</span>
+                <LegacyIcon name="widgets" className="mr-2" />
                 Widget العالمي
               </TabsTrigger>
               <TabsTrigger value="settings" className="font-amiri">
-                <span className="material-symbols-outlined mr-2">settings</span>
+                <LegacyIcon name="settings" className="mr-2" />
                 الإعدادات
               </TabsTrigger>
             </TabsList>
@@ -328,9 +327,7 @@ https://yarasoolallah.org
                     <CardHeader className="text-center bg-gradient-to-r from-emerald-500 to-blue-600 text-white">
                       <div className="flex items-center justify-center gap-4 mb-4">
                         <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                          <span className="material-symbols-outlined text-2xl">
-                            auto_awesome
-                          </span>
+                          <LegacyIcon name="auto_awesome" className="text-2xl" />
                         </div>
                         <div>
                           <CardTitle className="text-2xl font-amiri">
@@ -372,9 +369,7 @@ https://yarasoolallah.org
                           {/* Translation */}
                           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 border shadow-sm">
                             <div className="flex items-center gap-2 mb-4">
-                              <span className="material-symbols-outlined text-blue-600">
-                                translate
-                              </span>
+                              <LegacyIcon name="translate" className="text-blue-600" />
                               <h4 className="font-amiri font-semibold text-blue-700 dark:text-blue-400">
                                 الترجمة
                               </h4>
@@ -389,9 +384,7 @@ https://yarasoolallah.org
                           {/* Simple Tafsir */}
                           <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl p-6 border border-amber-200 dark:border-amber-700">
                             <div className="flex items-center gap-2 mb-4">
-                              <span className="material-symbols-outlined text-amber-600">
-                                lightbulb
-                              </span>
+                              <LegacyIcon name="lightbulb" className="text-amber-600" />
                               <h4 className="font-amiri font-semibold text-amber-700 dark:text-amber-400">
                                 عن التفسير
                               </h4>
@@ -404,9 +397,7 @@ https://yarasoolallah.org
                           {/* Daily Dua */}
                           <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-6 border border-purple-200 dark:border-purple-700">
                             <div className="flex items-center gap-2 mb-4">
-                              <span className="material-symbols-outlined text-purple-600">
-                                hands
-                              </span>
+                              <LegacyIcon name="hands" className="text-purple-600" />
                               <h4 className="font-amiri font-semibold text-purple-700 dark:text-purple-400">
                                 🤲 دعاء اليوم
                               </h4>
@@ -422,18 +413,14 @@ https://yarasoolallah.org
                               onClick={() => shareVerse("whatsapp")}
                               className="bg-green-500 hover:bg-green-600 text-white"
                             >
-                              <span className="material-symbols-outlined mr-2">
-                                chat
-                              </span>
+                              <LegacyIcon name="chat" className="mr-2" />
                               واتساب
                             </Button>
                             <Button
                               onClick={() => shareVerse("telegram")}
                               className="bg-blue-500 hover:bg-blue-600 text-white"
                             >
-                              <span className="material-symbols-outlined mr-2">
-                                send
-                              </span>
+                              <LegacyIcon name="send" className="mr-2" />
                               تيليجرام
                             </Button>
                             <Button
@@ -441,9 +428,7 @@ https://yarasoolallah.org
                               variant="outline"
                               className="border-purple-300 text-purple-600 hover:bg-purple-50"
                             >
-                              <span className="material-symbols-outlined mr-2">
-                                content_copy
-                              </span>
+                              <LegacyIcon name="content_copy" className="mr-2" />
                               نسخ النص
                             </Button>
                             <Button
@@ -451,18 +436,14 @@ https://yarasoolallah.org
                               variant="outline"
                               className="border-indigo-300 text-indigo-600 hover:bg-indigo-50"
                             >
-                              <span className="material-symbols-outlined mr-2">
-                                share
-                              </span>
+                              <LegacyIcon name="share" className="mr-2" />
                               مشاركة عامة
                             </Button>
                           </div>
                         </div>
                       ) : (
                         <div className="text-center py-16">
-                          <span className="material-symbols-outlined text-6xl text-gray-400 mb-4">
-                            error
-                          </span>
+                          <LegacyIcon name="error" className="text-6xl text-gray-400 mb-4" />
                           <p className="text-gray-500 dark:text-gray-400">
                             حدث خطأ في تحميل الآية اليومية
                           </p>
@@ -478,9 +459,7 @@ https://yarasoolallah.org
                   <Card>
                     <CardHeader>
                       <CardTitle className="font-amiri flex items-center gap-2">
-                        <span className="material-symbols-outlined text-emerald-600">
-                          trending_up
-                        </span>
+                        <LegacyIcon name="trending_up" className="text-emerald-600" />
                         إحصائيات اليوم
                       </CardTitle>
                     </CardHeader>
@@ -528,9 +507,7 @@ https://yarasoolallah.org
                   <Card>
                     <CardHeader>
                       <CardTitle className="font-amiri flex items-center gap-2">
-                        <span className="material-symbols-outlined text-blue-600">
-                          schedule
-                        </span>
+                        <LegacyIcon name="schedule" className="text-blue-600" />
                         إعدادات سريعة
                       </CardTitle>
                     </CardHeader>
@@ -603,9 +580,7 @@ https://yarasoolallah.org
                   <Card>
                     <CardHeader>
                       <CardTitle className="font-amiri flex items-center gap-2">
-                        <span className="material-symbols-outlined text-purple-600">
-                          qr_code
-                        </span>
+                        <LegacyIcon name="qr_code" className="text-purple-600" />
                         رمز الاستجابة السريع
                       </CardTitle>
                     </CardHeader>
@@ -619,9 +594,7 @@ https://yarasoolallah.org
                         لنشر التطبيق في المساجد والمدارس
                       </p>
                       <Button variant="outline" size="sm" className="w-full">
-                        <span className="material-symbols-outlined mr-2">
-                          download
-                        </span>
+                        <LegacyIcon name="download" className="mr-2" />
                         تحميل الصورة
                       </Button>
                     </CardContent>
@@ -637,9 +610,7 @@ https://yarasoolallah.org
                 <Card>
                   <CardHeader>
                     <CardTitle className="font-amiri flex items-center gap-2">
-                      <span className="material-symbols-outlined text-emerald-600">
-                        schedule_send
-                      </span>
+                      <LegacyIcon name="schedule_send" className="text-emerald-600" />
                       إعدادات المشاركة التلقائية
                     </CardTitle>
                   </CardHeader>
@@ -751,9 +722,7 @@ https://yarasoolallah.org
                   <CardHeader>
                     <CardTitle className="font-amiri flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-blue-600">
-                          contacts
-                        </span>
+                        <LegacyIcon name="contacts" className="text-blue-600" />
                         قائمة جهات الاتصال
                       </div>
                       <Badge variant="secondary">{shareContacts.length}</Badge>
@@ -812,9 +781,7 @@ https://yarasoolallah.org
                         }
                       />
                       <Button onClick={addContact} className="w-full" size="sm">
-                        <span className="material-symbols-outlined mr-2">
-                          add
-                        </span>
+                        <LegacyIcon name="add" className="mr-2" />
                         إضافة
                       </Button>
                     </div>
@@ -855,9 +822,7 @@ https://yarasoolallah.org
                         ))
                       ) : (
                         <div className="text-center py-8">
-                          <span className="material-symbols-outlined text-4xl text-gray-400 mb-2">
-                            person_add
-                          </span>
+                          <LegacyIcon name="person_add" className="text-4xl text-gray-400 mb-2" />
                           <p className="text-gray-500 dark:text-gray-400 text-sm">
                             لم تتم إضافة أي جهة اتصال بعد
                           </p>
@@ -876,9 +841,7 @@ https://yarasoolallah.org
                 <Card>
                   <CardHeader>
                     <CardTitle className="font-amiri flex items-center gap-2">
-                      <span className="material-symbols-outlined text-purple-600">
-                        widgets
-                      </span>
+                      <LegacyIcon name="widgets" className="text-purple-600" />
                       معاينة Widget العالمي
                     </CardTitle>
                   </CardHeader>
@@ -892,9 +855,7 @@ https://yarasoolallah.org
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <div className="w-6 h-6 bg-emerald-600 rounded-full flex items-center justify-center">
-                              <span className="material-symbols-outlined text-white text-sm">
-                                auto_awesome
-                              </span>
+                              <LegacyIcon name="auto_awesome" className="text-white text-sm" />
                             </div>
                             <span className="text-xs font-bold text-emerald-700">
                               الكتاب المبين
@@ -934,9 +895,7 @@ https://yarasoolallah.org
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <div className="w-6 h-6 bg-gradient-to-br from-emerald-500 to-blue-600 rounded-full flex items-center justify-center">
-                              <span className="material-symbols-outlined text-white text-sm">
-                                menu_book
-                              </span>
+                              <LegacyIcon name="menu_book" className="text-white text-sm" />
                             </div>
                             <span className="text-xs font-bold text-gray-800">
                               الكتاب المبين
@@ -956,9 +915,7 @@ https://yarasoolallah.org
 
                         <div className="text-center">
                           <div className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full text-xs">
-                            <span className="material-symbols-outlined text-xs">
-                              touch_app
-                            </span>
+                            <LegacyIcon name="touch_app" className="text-xs" />
                             انقر للمزيد
                           </div>
                         </div>
@@ -971,9 +928,7 @@ https://yarasoolallah.org
                 <Card>
                   <CardHeader>
                     <CardTitle className="font-amiri flex items-center gap-2">
-                      <span className="material-symbols-outlined text-green-600">
-                        star
-                      </span>
+                      <LegacyIcon name="star" className="text-green-600" />
                       مميزات Widget العالمي
                     </CardTitle>
                   </CardHeader>
@@ -1021,11 +976,10 @@ https://yarasoolallah.org
                           key={index}
                           className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
                         >
-                          <span
-                            className={`material-symbols-outlined ${feature.color}`}
-                          >
-                            {feature.icon}
-                          </span>
+                          <LegacyIcon
+                            name={feature.icon}
+                            className={feature.color}
+                          />
                           <div>
                             <h5 className="font-amiri font-semibold text-sm">
                               {feature.title}
@@ -1057,9 +1011,7 @@ https://yarasoolallah.org
                     </div>
 
                     <Button className="w-full bg-gradient-to-r from-emerald-500 to-blue-600">
-                      <span className="material-symbols-outlined mr-2">
-                        download
-                      </span>
+                      <LegacyIcon name="download" className="mr-2" />
                       تحديث التطبيق للحصول على Widget
                     </Button>
                   </CardContent>
@@ -1074,9 +1026,7 @@ https://yarasoolallah.org
                 <Card>
                   <CardHeader>
                     <CardTitle className="font-amiri flex items-center gap-2">
-                      <span className="material-symbols-outlined text-blue-600">
-                        settings
-                      </span>
+                      <LegacyIcon name="settings" className="text-blue-600" />
                       الإعدادات العامة
                     </CardTitle>
                   </CardHeader>
@@ -1180,9 +1130,7 @@ https://yarasoolallah.org
                 <Card>
                   <CardHeader>
                     <CardTitle className="font-amiri flex items-center gap-2">
-                      <span className="material-symbols-outlined text-purple-600">
-                        smart_toy
-                      </span>
+                      <LegacyIcon name="smart_toy" className="text-purple-600" />
                       ربط الذكاء الاصطناعي
                     </CardTitle>
                   </CardHeader>
@@ -1190,9 +1138,7 @@ https://yarasoolallah.org
                     <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-lg p-4">
                       <div className="flex items-center gap-3 mb-3">
                         <div className="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
-                          <span className="material-symbols-outlined text-white text-sm">
-                            psychology
-                          </span>
+                          <LegacyIcon name="psychology" className="text-white text-sm" />
                         </div>
                         <h4 className="font-amiri font-semibold text-purple-700 dark:text-purple-400">
                           المساعد الذكي
@@ -1264,9 +1210,7 @@ https://yarasoolallah.org
                             className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-800 rounded"
                           >
                             <div className="flex items-center gap-2">
-                              <span className="material-symbols-outlined text-sm text-gray-600">
-                                {item.icon}
-                              </span>
+                              <LegacyIcon name={item.icon} className="text-sm text-gray-600" />
                               <span className="text-sm">{item.text}</span>
                             </div>
                             <Switch aria-label={item.text} checked={item.active} />
@@ -1276,9 +1220,7 @@ https://yarasoolallah.org
                     </div>
 
                     <Button className="w-full bg-gradient-to-r from-purple-500 to-blue-600">
-                      <span className="material-symbols-outlined mr-2">
-                        chat
-                      </span>
+                      <LegacyIcon name="chat" className="mr-2" />
                       تجربة المساعد الذكي الآن
                     </Button>
                   </CardContent>

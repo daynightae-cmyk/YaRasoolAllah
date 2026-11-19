@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useProgress } from "../contexts/ProgressContext";
 import { useLanguage } from "../contexts/LanguageContext";
+import { LegacyIcon } from "@/components/common/LegacyIcon";
 
 interface FAQItem {
   id: string;
@@ -265,7 +266,7 @@ export default function WomenInIslamPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center space-x-2 rtl:space-x-reverse bg-pink-100 dark:bg-pink-900/30 px-4 py-2 rounded-full mb-6">
-            <span className="material-symbols-outlined text-pink-600 dark:text-pink-400">female</span>
+            <LegacyIcon name="female" className="text-pink-600 dark:text-pink-400" />
             <span className="text-sm font-medium text-pink-700 dark:text-pink-300">مكانة المرأة المؤمنة</span>
           </div>
           
@@ -303,12 +304,13 @@ export default function WomenInIslamPage() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className={`w-full ${direction === "rtl" ? "text-right pr-12" : "text-left pl-12"}`}
                 />
-                <span className={`material-symbols-outlined absolute ${direction === "rtl" ? "right-4" : "left-4"} top-1/2 transform -translate-y-1/2 text-gray-400`}>
-                  search
-                </span>
+                <LegacyIcon
+                  name="search"
+                  className={`absolute ${direction === "rtl" ? "right-4" : "left-4"} top-1/2 -translate-y-1/2 text-gray-400`}
+                />
               </div>
               <Button className="bg-pink-600 hover:bg-pink-700 shrink-0">
-                <span className="material-symbols-outlined mr-2 rtl:ml-2">search</span>
+                <LegacyIcon name="search" className="mr-2 rtl:ml-2" />
                 بحث
               </Button>
             </div>
@@ -344,7 +346,7 @@ export default function WomenInIslamPage() {
               }`}
             >
               <div className="text-center w-full">
-                <span className="material-symbols-outlined text-2xl mb-2 block">{category.icon}</span>
+                <LegacyIcon name={category.icon} className="text-2xl mb-2 block" />
                 <span className="font-amiri text-sm block">{category.name}</span>
                 <Badge variant="secondary" className="mt-1 text-xs">
                   {category.id === "all" ? faqItems.length : faqItems.filter(item => item.category === category.id).length}
@@ -380,9 +382,7 @@ export default function WomenInIslamPage() {
                         ))}
                       </div>
                     </div>
-                    <span className="material-symbols-outlined text-pink-600 dark:text-pink-400">
-                      arrow_forward
-                    </span>
+                    <LegacyIcon name="arrow_forward" className="text-pink-600 dark:text-pink-400" />
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -404,7 +404,7 @@ export default function WomenInIslamPage() {
                     onClick={() => setSelectedFAQ(null)}
                     className="text-pink-600"
                   >
-                    <span className="material-symbols-outlined mr-2 rtl:ml-2">arrow_back</span>
+                    <LegacyIcon name="arrow_back" className="mr-2 rtl:ml-2" />
                     العودة للأسئلة
                   </Button>
                   
@@ -438,19 +438,19 @@ export default function WomenInIslamPage() {
                 {/* Action Buttons */}
                 <div className="flex flex-wrap gap-4 justify-center mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
                   <Button className="bg-pink-600 hover:bg-pink-700">
-                    <span className="material-symbols-outlined mr-2 rtl:ml-2">bookmark_add</span>
+                    <LegacyIcon name="bookmark_add" className="mr-2 rtl:ml-2" />
                     حفظ
                   </Button>
                   <Button variant="outline">
-                    <span className="material-symbols-outlined mr-2 rtl:ml-2">share</span>
+                    <LegacyIcon name="share" className="mr-2 rtl:ml-2" />
                     مشاركة
                   </Button>
                   <Button variant="outline" className="text-purple-600 border-purple-200">
-                    <span className="material-symbols-outlined mr-2 rtl:ml-2">thumb_up</span>
+                    <LegacyIcon name="thumb_up" className="mr-2 rtl:ml-2" />
                     مفيد
                   </Button>
                   <Button variant="outline">
-                    <span className="material-symbols-outlined mr-2 rtl:ml-2">print</span>
+                    <LegacyIcon name="print" className="mr-2 rtl:ml-2" />
                     طباعة
                   </Button>
                 </div>
@@ -467,19 +467,19 @@ export default function WomenInIslamPage() {
             </h3>
             <div className="grid md:grid-cols-3 gap-4">
               <div className="text-center p-4 bg-white dark:bg-gray-800 rounded-lg">
-                <span className="material-symbols-outlined text-3xl text-pink-600 mb-2 block">menu_book</span>
+                <LegacyIcon name="menu_book" className="text-3xl text-pink-600 mb-2 block" />
                 <h4 className="font-amiri font-bold mb-2">كتب متخصصة</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">مكتبة متنوعة من الكتب عن المرأة في الإسلام</p>
               </div>
               
               <div className="text-center p-4 bg-white dark:bg-gray-800 rounded-lg">
-                <span className="material-symbols-outlined text-3xl text-purple-600 mb-2 block">video_library</span>
+                <LegacyIcon name="video_library" className="text-3xl text-purple-600 mb-2 block" />
                 <h4 className="font-amiri font-bold mb-2">محاضرات ودروس</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">محاضرات علمية متخصصة للمرأة المسلمة</p>
               </div>
               
               <div className="text-center p-4 bg-white dark:bg-gray-800 rounded-lg">
-                <span className="material-symbols-outlined text-3xl text-emerald-600 mb-2 block">groups</span>
+                <LegacyIcon name="groups" className="text-3xl text-emerald-600 mb-2 block" />
                 <h4 className="font-amiri font-bold mb-2">مجتمع نسائي</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400">تواصلي مع أخواتك المسلمات وتبادلي الخبرات</p>
               </div>

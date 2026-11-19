@@ -1,5 +1,6 @@
 import { useLanguage } from "../../contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
+import { LegacyIcon } from "@/components/common/LegacyIcon";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,15 +30,11 @@ export default function LanguageSwitcher() {
           size="sm" 
           className="flex items-center space-x-2 rtl:space-x-reverse bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300"
         >
-          <span className="material-symbols-outlined text-emerald-600 dark:text-emerald-400">
-            language
-          </span>
+          <LegacyIcon name="language" className="text-emerald-600 dark:text-emerald-400" />
           <span className="text-sm font-medium hidden sm:inline">
             {currentLanguage?.nativeName || "عربي"}
           </span>
-          <span className="material-symbols-outlined text-gray-500 dark:text-gray-400">
-            expand_more
-          </span>
+          <LegacyIcon name="expand_more" className="text-gray-500 dark:text-gray-400" />
         </Button>
       </DropdownMenuTrigger>
       
@@ -57,9 +54,7 @@ export default function LanguageSwitcher() {
               <span className="text-xs text-gray-500 dark:text-gray-400">{lang.name}</span>
             </div>
             {language === lang.code && (
-              <span className="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-sm">
-                check
-              </span>
+              <LegacyIcon name="check" className="text-emerald-600 dark:text-emerald-400 text-sm" />
             )}
           </DropdownMenuItem>
         ))}

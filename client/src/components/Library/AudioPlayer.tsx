@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
+import { LegacyIcon } from "@/components/common/LegacyIcon";
 
 interface AudioTrack {
   id: string;
@@ -104,9 +105,7 @@ export default function AudioPlayer({
     return (
       <Card className="max-w-md mx-auto">
         <CardContent className="p-6 text-center">
-          <span className="material-symbols-outlined text-4xl text-gray-400 mb-4">
-            no_sound
-          </span>
+          <LegacyIcon name="no_sound" className="text-4xl text-gray-400 mb-4" />
           <p className="text-gray-600 dark:text-gray-400">
             لا توجد ملفات صوتية متاحة
           </p>
@@ -122,7 +121,7 @@ export default function AudioPlayer({
           <div className="flex items-center justify-between">
             <CardTitle className="font-amiri text-xl">🎧 {title}</CardTitle>
             <Button variant="ghost" size="sm" onClick={onClose}>
-              <span className="material-symbols-outlined">close</span>
+              <LegacyIcon name="close" />
             </Button>
           </div>
           {description && (
@@ -168,7 +167,7 @@ export default function AudioPlayer({
               onClick={() => skipTrack("prev")}
               disabled={currentTrack === 0}
             >
-              <span className="material-symbols-outlined">skip_previous</span>
+              <LegacyIcon name="skip_previous" />
             </Button>
 
             <Button
@@ -176,9 +175,7 @@ export default function AudioPlayer({
               onClick={togglePlay}
               className="w-16 h-16 rounded-full bg-emerald-600 hover:bg-emerald-700"
             >
-              <span className="material-symbols-outlined text-2xl">
-                {isPlaying ? "pause" : "play_arrow"}
-              </span>
+              <LegacyIcon name={isPlaying ? "pause" : "play_arrow"} className="text-2xl" />
             </Button>
 
             <Button
@@ -187,7 +184,7 @@ export default function AudioPlayer({
               onClick={() => skipTrack("next")}
               disabled={currentTrack === tracks.length - 1}
             >
-              <span className="material-symbols-outlined">skip_next</span>
+              <LegacyIcon name="skip_next" />
             </Button>
           </div>
 
@@ -196,7 +193,7 @@ export default function AudioPlayer({
             {/* التحكم في الصوت */}
             <div className="space-y-2">
               <label className="text-sm font-medium flex items-center gap-2">
-                <span className="material-symbols-outlined">volume_up</span>
+                <LegacyIcon name="volume_up" />
                 الصوت: {volume}%
               </label>
               <Slider
@@ -210,7 +207,7 @@ export default function AudioPlayer({
             {/* سرعة التشغيل */}
             <div className="space-y-2">
               <label className="text-sm font-medium flex items-center gap-2">
-                <span className="material-symbols-outlined">speed</span>
+                <LegacyIcon name="speed" />
                 السرعة: {playbackSpeed}x
               </label>
               <select
@@ -231,7 +228,7 @@ export default function AudioPlayer({
           {/* قائمة المقاطع */}
           <div className="max-h-48 overflow-y-auto">
             <h4 className="font-medium mb-3 flex items-center gap-2">
-              <span className="material-symbols-outlined">playlist_play</span>
+              <LegacyIcon name="playlist_play" />
               قائمة التشغيل ({tracks.length} مقطع)
             </h4>
             <div className="space-y-2">
@@ -252,9 +249,7 @@ export default function AudioPlayer({
                     <span className="font-amiri text-sm">{track.title}</span>
                     <div className="flex items-center gap-2 text-xs text-gray-500">
                       {index === currentTrack && isPlaying && (
-                        <span className="material-symbols-outlined text-sm text-emerald-600 animate-pulse">
-                          volume_up
-                        </span>
+                        <LegacyIcon name="volume_up" className="text-sm text-emerald-600 animate-pulse" />
                       )}
                       <span>{track.duration}</span>
                     </div>

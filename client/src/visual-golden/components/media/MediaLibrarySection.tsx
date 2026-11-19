@@ -92,7 +92,7 @@ export function MediaLibrarySection({ kind, title, subtitle }: Props) {
   const resetPaging = () => setVisibleCount(12);
 
   return (
-    <section className={styles.section} aria-labelledby={`${kind}-media-title`}>
+    <section className={styles.section} aria-labelledby={`${kind}-media-title`} data-visual="media-library" data-media-kind={kind}>
       <div className={styles.heading}>
         <div>
           <span className={styles.eyebrow}><ShieldAlert size={15} /> كتالوج استحواذ موثّق المصدر</span>

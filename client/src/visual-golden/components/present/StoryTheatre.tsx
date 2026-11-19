@@ -95,7 +95,7 @@ export function StoryTheatre({
       {(sources?.length || (position && position.total > 1)) ? (
         <div className={styles.theatreFooter}>
           {sources?.length ? (
-            <div className={styles.sourcePanel}>
+            <div className={styles.sourcePanel} data-visual="kids-source-panel">
               <div className={styles.sourcePanelHead}>
                 <Link2 size={15} aria-hidden="true" />
                 <strong>للمرافق: الدليل والمصدر</strong>
@@ -117,7 +117,7 @@ export function StoryTheatre({
           ) : null}
 
           {position && position.total > 1 ? (
-            <div className={styles.theatreNav} aria-label="التنقل بين مواد القراءة">
+            <div className={styles.theatreNav} aria-label="التنقل بين مواد القراءة" data-visual="kids-theatre-nav">
               <button type="button" onClick={onPrevious} disabled={!onPrevious} aria-label="المادة السابقة">
                 <ArrowRight size={14} aria-hidden="true" /> السابقة
               </button>

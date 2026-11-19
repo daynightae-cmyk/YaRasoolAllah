@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useProgress } from "../contexts/ProgressContext";
 import { useLanguage } from "../contexts/LanguageContext";
+import { LegacyIcon } from "@/components/common/LegacyIcon";
 
 interface Pillar {
   id: string;
@@ -356,7 +357,7 @@ export default function FivePillarsPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center space-x-2 rtl:space-x-reverse bg-emerald-100 dark:bg-emerald-900/30 px-4 py-2 rounded-full mb-6">
-            <span className="material-symbols-outlined text-emerald-600 dark:text-emerald-400">temple_buddhist</span>
+            <LegacyIcon name="temple_buddhist" className="text-emerald-600 dark:text-emerald-400" />
             <span className="text-sm font-medium text-emerald-700 dark:text-emerald-300">أسس الدين الحنيف</span>
           </div>
           
@@ -380,7 +381,7 @@ export default function FivePillarsPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center space-x-3 rtl:space-x-reverse">
                     <div className={`w-12 h-12 ${pillarTone(pillar.color).icon} rounded-xl flex items-center justify-center`}>
-                      <span className="material-symbols-outlined text-white text-2xl">{pillar.icon}</span>
+                      <LegacyIcon name={pillar.icon} className="text-white text-2xl" />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 rtl:space-x-reverse mb-1">
@@ -404,9 +405,10 @@ export default function FivePillarsPage() {
                     <Badge className={pillarTone(pillar.color).badge}>
                       ركن أساسي
                     </Badge>
-                    <span className={`material-symbols-outlined ${pillarTone(pillar.color).glyph}`}>
-                      arrow_forward
-                    </span>
+                    <LegacyIcon
+                      name="arrow_forward"
+                      className={pillarTone(pillar.color).glyph}
+                    />
                   </div>
                 </CardContent>
               </Card>
@@ -423,7 +425,7 @@ export default function FivePillarsPage() {
                     onClick={() => setSelectedPillar(null)}
                     className="text-emerald-600"
                   >
-                    <span className="material-symbols-outlined mr-2 rtl:ml-2">arrow_back</span>
+                    <LegacyIcon name="arrow_back" className="mr-2 rtl:ml-2" />
                     العودة للأركان
                   </Button>
                   
@@ -431,14 +433,14 @@ export default function FivePillarsPage() {
                     onClick={() => handlePillarComplete(selectedPillar.id)}
                     className="bg-green-600 hover:bg-green-700"
                   >
-                    <span className="material-symbols-outlined mr-2 rtl:ml-2">check_circle</span>
+                    <LegacyIcon name="check_circle" className="mr-2 rtl:ml-2" />
                     أتممت دراسة هذا الركن
                   </Button>
                 </div>
                 
                 <div className="text-center mb-6">
                   <div className={`w-24 h-24 bg-gradient-to-br ${pillarTone(selectedPillar.color).hero} rounded-full flex items-center justify-center mx-auto mb-4`}>
-                    <span className="material-symbols-outlined text-white text-4xl">{selectedPillar.icon}</span>
+                    <LegacyIcon name={selectedPillar.icon} className="text-white text-4xl" />
                   </div>
                   
                   <h2 className="text-3xl font-amiri font-bold text-gray-900 dark:text-white mb-2">
@@ -479,7 +481,7 @@ export default function FivePillarsPage() {
                   <ul className="space-y-2">
                     {selectedPillar.conditions.map((condition, index) => (
                       <li key={index} className="flex items-start space-x-2 rtl:space-x-reverse">
-                        <span className="material-symbols-outlined text-blue-600 dark:text-blue-400 text-sm mt-1">check_circle</span>
+                        <LegacyIcon name="check_circle" className="text-blue-600 dark:text-blue-400 text-sm mt-1" />
                         <span className="text-gray-700 dark:text-gray-300 font-inter">{condition}</span>
                       </li>
                     ))}
@@ -494,7 +496,7 @@ export default function FivePillarsPage() {
                   <ul className="space-y-2">
                     {selectedPillar.benefits.map((benefit, index) => (
                       <li key={index} className="flex items-start space-x-2 rtl:space-x-reverse">
-                        <span className="material-symbols-outlined text-green-600 dark:text-green-400 text-sm mt-1">star</span>
+                        <LegacyIcon name="star" className="text-green-600 dark:text-green-400 text-sm mt-1" />
                         <span className="text-gray-700 dark:text-gray-300 font-inter">{benefit}</span>
                       </li>
                     ))}
@@ -509,7 +511,7 @@ export default function FivePillarsPage() {
                   <ul className="space-y-2">
                     {selectedPillar.commonMistakes.map((mistake, index) => (
                       <li key={index} className="flex items-start space-x-2 rtl:space-x-reverse">
-                        <span className="material-symbols-outlined text-red-600 dark:text-red-400 text-sm mt-1">warning</span>
+                        <LegacyIcon name="warning" className="text-red-600 dark:text-red-400 text-sm mt-1" />
                         <span className="text-gray-700 dark:text-gray-300 font-inter">{mistake}</span>
                       </li>
                     ))}
@@ -519,19 +521,19 @@ export default function FivePillarsPage() {
                 {/* Action Buttons */}
                 <div className="flex flex-wrap gap-4 justify-center pt-6 border-t border-gray-200 dark:border-gray-700">
                   <Button className="bg-emerald-600 hover:bg-emerald-700">
-                    <span className="material-symbols-outlined mr-2 rtl:ml-2">bookmark_add</span>
+                    <LegacyIcon name="bookmark_add" className="mr-2 rtl:ml-2" />
                     حفظ
                   </Button>
                   <Button variant="outline">
-                    <span className="material-symbols-outlined mr-2 rtl:ml-2">share</span>
+                    <LegacyIcon name="share" className="mr-2 rtl:ml-2" />
                     مشاركة
                   </Button>
                   <Button variant="outline" className="text-purple-600 border-purple-200">
-                    <span className="material-symbols-outlined mr-2 rtl:ml-2">quiz</span>
+                    <LegacyIcon name="quiz" className="mr-2 rtl:ml-2" />
                     اختبار الفهم
                   </Button>
                   <Button variant="outline">
-                    <span className="material-symbols-outlined mr-2 rtl:ml-2">print</span>
+                    <LegacyIcon name="print" className="mr-2 rtl:ml-2" />
                     طباعة
                   </Button>
                 </div>

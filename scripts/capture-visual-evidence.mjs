@@ -9,6 +9,15 @@ const origin = process.env.VISUAL_BASE_URL ?? "http://127.0.0.1:4173";
 const chromePath = process.env.CHROME_PATH ?? "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
 const evidenceDir = resolve("artifacts", "visual-evidence");
 const debuggingPort = 9337;
+/**
+ * Optional case filter. `VISUAL_CASES=media-shelf` captures only the cases
+ * whose name matches, so a targeted before/after review never overwrites the
+ * historical evidence of unrelated routes.
+ */
+const caseFilter = process.env.VISUAL_CASES ? new RegExp(process.env.VISUAL_CASES, "i") : null;
+const outputDir = process.env.VISUAL_OUTPUT_DIR
+  ? resolve(process.env.VISUAL_OUTPUT_DIR)
+  : evidenceDir;
 
 export const cases = [
   { name: "gate-1440-light-rtl", path: "/", width: 1440, height: 1000, theme: "light", language: "ar" },
@@ -44,10 +53,17 @@ export const cases = [
   { name: "tafsir-1440-light-rtl", path: "/tafsir", width: 1440, height: 1000, theme: "light", language: "ar", readySelector: '[data-visual="tafsir-study"][data-tafsir-state="ready"]' },
   { name: "library-1440-light-rtl", path: "/library", width: 1440, height: 1000, theme: "light", language: "ar", readySelector: '[data-visual="library-domains"]' },
   { name: "hadith-1440-light-rtl", path: "/hadith", width: 1440, height: 1000, theme: "light", language: "ar", readySelector: '[data-visual="hadith-corpus-scope"]' },
+  // Post-consolidation evidence: the unified media shelf, the parent source
+  // panel, and the two legacy-baseline routes that were empty before.
+  { name: "kids-media-shelf-1440-dark-rtl", path: "/kids", width: 1440, height: 1000, theme: "dark", language: "ar", scrollSelector: '[data-visual="media-library"]', scrollOffset: -80 },
+  { name: "kids-source-panel-1440-dark-rtl", path: "/kids", width: 1440, height: 1000, theme: "dark", language: "ar", clickText: "افتح القصة", scrollSelector: '[data-visual="kids-source-panel"]', scrollOffset: -140 },
+  { name: "seerah-media-shelf-768-dark-rtl", path: "/seerah", width: 768, height: 1024, theme: "dark", language: "ar", scrollSelector: '[data-visual="media-library"]', scrollOffset: -80 },
+  { name: "prayer-guide-1440-light-rtl", path: "/prayer-guide", width: 1440, height: 1000, theme: "light", language: "ar", scrollSelector: '[data-visual="prayer-guide-review"]', scrollOffset: -80 },
+  { name: "islamic-knowledge-1440-dark-rtl", path: "/islamic-knowledge", width: 1440, height: 1000, theme: "dark", language: "ar", scrollSelector: '[data-visual="islamic-knowledge-review"]', scrollOffset: -80 },
 ];
 
 async function main() {
-mkdirSync(evidenceDir, { recursive: true });
+mkdirSync(outputDir, { recursive: true });
 const profileDir = mkdtempSync(join(tmpdir(), "yra-visual-evidence-"));
 
 const chrome = spawn(chromePath, [
@@ -176,6 +192,7 @@ try {
   await waitForDocument(session);
 
   for (const testCase of cases) {
+    if (caseFilter && !caseFilter.test(testCase.name)) continue;
     const eventStart = session.events.length;
     await session.send("Emulation.setDeviceMetricsOverride", {
       width: testCase.width,
@@ -324,7 +341,7 @@ try {
       fromSurface: true,
       captureBeyondViewport: false,
     });
-    const screenshotPath = join(evidenceDir, `${testCase.name}.jpg`);
+    const screenshotPath = join(outputDir, `${testCase.name}.jpg`);
     writeFileSync(screenshotPath, Buffer.from(screenshot.data, "base64"));
 
     const newEvents = session.events.slice(eventStart);
@@ -365,7 +382,7 @@ try {
   const mismatched = withExpectations.filter(
     (item) => !item.matchesDeclaredLanguage || !item.matchesDeclaredDirection,
   );
-  const reportPath = join(evidenceDir, "visual-evidence-report.json");
+  const reportPath = join(outputDir, "visual-evidence-report.json");
   writeFileSync(
     reportPath,
     `${JSON.stringify({ origin, reducedMotion: true, cases: withExpectations }, null, 2)}\n`,

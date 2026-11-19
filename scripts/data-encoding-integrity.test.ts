@@ -22,11 +22,16 @@ const IGNORED_DIRECTORIES = new Set(["node_modules", "dist", "build", "artifacts
  * Damage that is knowingly left in place because restoring it would require
  * guessing the original characters. Each entry must state why, and must be
  * removed from this list as soon as the text is confirmed by a human.
+ *
+ * Entries are matched by file plus a text fragment rather than by line
+ * number: any edit above the damaged line would otherwise silently re-open
+ * an unreviewed damage report.
  */
-const REVIEWED_ALLOWANCES: Array<{ file: string; line: number; reason: string }> = [
+const REVIEWED_ALLOWANCES: Array<{ file: string; line: number; snippet: string; reason: string }> = [
   {
     file: "client/src/components/BabAlsamaa/BabAlsamaa.tsx",
-    line: 75,
+    line: 76,
+    snippet: "من نصب ولا و",
     reason:
       "Hadith text \"ما أصاب المسلم من نصب ولا و<FFFD><FFFD>ب\": the lost character is either a letter (ويب) or a kasra diacritic (وِب) and the rest of the string carries no diacritics, so the original characters cannot be derived. Hadith wording must not be reconstructed by guessing; needs scholarly confirmation.",
   },
@@ -83,27 +88,35 @@ describe("data encoding integrity", () => {
 
   it("carries no U+FFFD replacement characters from broken UTF-8", () => {
     const damage = collectDamage();
-    const allowanceKeys = new Set(REVIEWED_ALLOWANCES.map((item) => `${item.file}:${item.line}`));
-    const unreviewed = damage.filter(
-      (item) => !allowanceKeys.has(`${item.file}:${item.line}`),
-    );
+    const isAllowed = (item: Damage) =>
+      REVIEWED_ALLOWANCES.some(
+        (allowance) => allowance.file === item.file && item.text.includes(allowance.snippet),
+      );
+    const unreviewed = damage.filter((item) => !isAllowed(item));
     assert.equal(
       unreviewed.length,
       0,
       `unreviewed replacement characters found (restore the original bytes, do not delete the text):\n${formatDamage(unreviewed)}`,
     );
-    const unused = [...allowanceKeys].filter(
-      (key) => !damage.some((item) => `${item.file}:${item.line}` === key),
+    const unused = REVIEWED_ALLOWANCES.filter(
+      (allowance) =>
+        !damage.some(
+          (item) => allowance.file === item.file && item.text.includes(allowance.snippet),
+        ),
     );
     assert.equal(
       unused.length,
       0,
-      `allowance no longer needed, remove it: ${unused.join(", ")}`,
+      `allowance no longer needed, remove it: ${unused.map((item) => `${item.file}:${item.line}`).join(", ")}`,
     );
     for (const allowance of REVIEWED_ALLOWANCES) {
       assert.ok(
         allowance.reason.length > 40,
         `allowance ${allowance.file}:${allowance.line} must state why it cannot be repaired`,
+      );
+      assert.ok(
+        allowance.snippet.length > 3,
+        `allowance ${allowance.file}:${allowance.line} must pin the damaged text`,
       );
     }
   });

@@ -1,6 +1,86 @@
 .page {
   overflow-x: hidden;
 }
+.adaptGrid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+}
+.adaptCard {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas:
+    "index body"
+    "index action";
+  gap: 0.35rem 0.8rem;
+  height: 100%;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--border-panel);
+  border-radius: 1rem;
+  background: var(--bg-glass-strong);
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+.adaptCard:hover {
+  border-color: var(--gold-400);
+  transform: translateY(-2px);
+}
+.adaptCard[data-current="true"] {
+  border-color: var(--gold-400);
+  box-shadow: 0 0 0 1px rgba(232, 197, 71, 0.45) inset;
+}
+.adaptIndex {
+  grid-area: index;
+  align-self: start;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--gold-400);
+  opacity: 0.85;
+}
+.adaptBody {
+  grid-area: body;
+  display: grid;
+  gap: 0.3rem;
+}
+.adaptBody h3 {
+  margin: 0;
+  font-size: 1.02rem;
+  color: var(--text-primary);
+}
+.adaptBody p {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+.adaptMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.55rem;
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+}
+.adaptPending {
+  color: #e0a94a;
+}
+.adaptSeen {
+  color: #6fbf8f;
+}
+.adaptCard button {
+  grid-area: action;
+  justify-self: start;
+  margin-top: 0.35rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .adaptCard {
+    transition: none;
+  }
+  .adaptCard:hover {
+    transform: none;
+  }
+}
 .garden {
   position: relative;
   overflow: hidden;

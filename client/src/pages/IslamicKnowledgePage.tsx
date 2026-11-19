@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { useProgress } from "../contexts/ProgressContext";
 import { useLanguage } from "../contexts/LanguageContext";
 import { ISLAMIC_KNOWLEDGE_DATA, ISLAMIC_KNOWLEDGE_PENDING_REVIEW, ISLAMIC_KNOWLEDGE_PROVENANCE } from "../data/islamicKnowledgeData";
+import { LegacyIcon } from "@/components/common/LegacyIcon";
 
 interface KnowledgeItem {
   id: string;
@@ -94,7 +95,7 @@ export default function IslamicKnowledgePage() {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center space-x-2 rtl:space-x-reverse bg-purple-100 dark:bg-purple-900/30 px-4 py-2 rounded-full mb-6">
-            <span className="material-symbols-outlined text-purple-600 dark:text-purple-400">school</span>
+            <LegacyIcon name="school" className="text-purple-600 dark:text-purple-400" />
             <span className="text-sm font-medium text-purple-700 dark:text-purple-300">موسوعة المعرفة الإسلامية</span>
           </div>
           
@@ -107,7 +108,7 @@ export default function IslamicKnowledgePage() {
           </p>
         </div>
 
-        <div className="mb-8 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 text-right">
+        <div className="mb-8 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4 text-right" data-visual="islamic-knowledge-review">
           <p className="font-amiri font-bold text-amber-700 dark:text-amber-300 mb-1">حالة المحتوى</p>
           <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
             مواد منشورة بعد المراجعة: <b>{ISLAMIC_KNOWLEDGE_DATA.length}</b> · مسودات موروثة بانتظار
@@ -126,12 +127,13 @@ export default function IslamicKnowledgePage() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className={`w-full ${direction === "rtl" ? "text-right pr-12" : "text-left pl-12"}`}
                 />
-                <span className={`material-symbols-outlined absolute ${direction === "rtl" ? "right-4" : "left-4"} top-1/2 transform -translate-y-1/2 text-gray-400`}>
-                  search
-                </span>
+                <LegacyIcon
+                  name="search"
+                  className={`absolute ${direction === "rtl" ? "right-4" : "left-4"} top-1/2 -translate-y-1/2 text-gray-400`}
+                />
               </div>
               <Button className="bg-emerald-600 hover:bg-emerald-700 shrink-0">
-                <span className="material-symbols-outlined mr-2 rtl:ml-2">search</span>
+                <LegacyIcon name="search" className="mr-2 rtl:ml-2" />
                 بحث
               </Button>
             </div>
@@ -167,7 +169,7 @@ export default function IslamicKnowledgePage() {
               }`}
             >
               <div className="text-center w-full">
-                <span className="material-symbols-outlined text-2xl mb-2 block">{category.icon}</span>
+                <LegacyIcon name={category.icon} className="text-2xl mb-2 block" />
                 <span className="font-amiri text-sm block">{category.name}</span>
                 <Badge variant="secondary" className="mt-1 text-xs">
                   {category.count}
@@ -225,12 +227,10 @@ export default function IslamicKnowledgePage() {
                   
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2 rtl:space-x-reverse text-sm text-gray-500">
-                      <span className="material-symbols-outlined text-sm">schedule</span>
+                      <LegacyIcon name="schedule" className="text-sm" />
                       <span>{item.readTime} دقائق</span>
                     </div>
-                    <span className="material-symbols-outlined text-emerald-600 dark:text-emerald-400">
-                      arrow_forward
-                    </span>
+                    <LegacyIcon name="arrow_forward" className="text-emerald-600 dark:text-emerald-400" />
                   </div>
                 </CardContent>
               </Card>
@@ -247,7 +247,7 @@ export default function IslamicKnowledgePage() {
                     onClick={() => setSelectedItem(null)}
                     className="text-emerald-600"
                   >
-                    <span className="material-symbols-outlined mr-2 rtl:ml-2">arrow_back</span>
+                    <LegacyIcon name="arrow_back" className="mr-2 rtl:ml-2" />
                     العودة للقائمة
                   </Button>
                   
@@ -326,19 +326,19 @@ export default function IslamicKnowledgePage() {
                 {/* Action Buttons */}
                 <div className="flex flex-wrap gap-4 justify-center mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
                   <Button className="bg-emerald-600 hover:bg-emerald-700">
-                    <span className="material-symbols-outlined mr-2 rtl:ml-2">bookmark_add</span>
+                    <LegacyIcon name="bookmark_add" className="mr-2 rtl:ml-2" />
                     حفظ
                   </Button>
                   <Button variant="outline">
-                    <span className="material-symbols-outlined mr-2 rtl:ml-2">share</span>
+                    <LegacyIcon name="share" className="mr-2 rtl:ml-2" />
                     مشاركة
                   </Button>
                   <Button variant="outline" className="text-purple-600 border-purple-200">
-                    <span className="material-symbols-outlined mr-2 rtl:ml-2">quiz</span>
+                    <LegacyIcon name="quiz" className="mr-2 rtl:ml-2" />
                     اختبار الفهم
                   </Button>
                   <Button variant="outline">
-                    <span className="material-symbols-outlined mr-2 rtl:ml-2">print</span>
+                    <LegacyIcon name="print" className="mr-2 rtl:ml-2" />
                     طباعة
                   </Button>
                 </div>
@@ -357,7 +357,7 @@ export default function IslamicKnowledgePage() {
               <Link href="/five-pillars" asChild>
                 <Button variant="outline" className="w-full h-auto p-4">
                   <div className="text-center">
-                    <span className="material-symbols-outlined text-2xl mb-2 block text-emerald-600">temple_buddhist</span>
+                    <LegacyIcon name="temple_buddhist" className="text-2xl mb-2 block text-emerald-600" />
                     <span className="font-amiri text-sm">أركان الإسلام</span>
                   </div>
                 </Button>
@@ -366,7 +366,7 @@ export default function IslamicKnowledgePage() {
               <Link href="/women-in-islam" asChild>
                 <Button variant="outline" className="w-full h-auto p-4">
                   <div className="text-center">
-                    <span className="material-symbols-outlined text-2xl mb-2 block text-purple-600">female</span>
+                    <LegacyIcon name="female" className="text-2xl mb-2 block text-purple-600" />
                     <span className="font-amiri text-sm">المرأة في الإسلام</span>
                   </div>
                 </Button>
@@ -375,7 +375,7 @@ export default function IslamicKnowledgePage() {
               <Link href="/seerah" asChild>
                 <Button variant="outline" className="w-full h-auto p-4">
                   <div className="text-center">
-                    <span className="material-symbols-outlined text-2xl mb-2 block text-gold-600">account_circle</span>
+                    <LegacyIcon name="account_circle" className="text-2xl mb-2 block text-gold-600" />
                     <span className="font-amiri text-sm">السيرة النبوية</span>
                   </div>
                 </Button>
@@ -384,7 +384,7 @@ export default function IslamicKnowledgePage() {
               <Link href="/ai-assistant" asChild>
                 <Button variant="outline" className="w-full h-auto p-4">
                   <div className="text-center">
-                    <span className="material-symbols-outlined text-2xl mb-2 block text-blue-600">psychology</span>
+                    <LegacyIcon name="psychology" className="text-2xl mb-2 block text-blue-600" />
                     <span className="font-amiri text-sm">المساعد الذكي</span>
                   </div>
                 </Button>

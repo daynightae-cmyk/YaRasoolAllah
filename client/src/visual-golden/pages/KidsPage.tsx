@@ -180,7 +180,7 @@ export function KidsPage() {
               htmlFor="kids-adaptation-select"
               style={{ display: "block", marginBottom: "0.45rem", color: "var(--text-secondary)", fontSize: "0.82rem" }}
             >
-              اختر تكييفًا محليًا لفتحه
+              اختيار سريع للتكييف
             </label>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.6rem", alignItems: "center" }}>
               <select
@@ -221,9 +221,47 @@ export function KidsPage() {
                 افتح التكييف المختار
               </button>
             </div>
-            <p id="kids-adaptation-help" className="muted" style={{ margin: "0.55rem 0 0", fontSize: "0.76rem" }}>
-              لا تُحتسب القصة كمفتوحة إلا عند فتح التكييف المختار فعليًا.
+            <p id="kids-adaptation-help" className="muted" style={{ margin: "0.55rem 0 0.6rem", fontSize: "0.76rem" }}>
+              الاختيار وحده لا يُحتسب فتحًا؛ تُحتسب القصة عند فتحها فعليًا من القائمة أدناه.
             </p>
+            <ul className={styles.adaptGrid} aria-label="قائمة التكييفات المحلية">
+              {KIDS_STORIES.map((story, index) => {
+                const isSeen = seen.includes(story.adaptationId);
+                const isCurrent = story.adaptationId === activeAdaptationId;
+                return (
+                  <li key={story.adaptationId}>
+                    <article className={styles.adaptCard} data-seen={isSeen} data-current={isCurrent}>
+                      <span className={styles.adaptIndex} aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                      <div className={styles.adaptBody}>
+                        <h3>{story.titleAr}</h3>
+                        <p>{story.summaryAr}</p>
+                        <div className={styles.adaptMeta}>
+                          <span>{ageBandLabel(story.ageBand)}</span>
+                          <span>{story.sourceIds.length} مصادر</span>
+                          <span className={styles.adaptPending}>مراجعة تحريرية وعلمية معلّقة</span>
+                          {isSeen ? <span className={styles.adaptSeen}>فُتحت</span> : null}
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        className="btn-gold"
+                        onClick={() => {
+                          setActiveAdaptationId(story.adaptationId);
+                          markSeen(story.adaptationId);
+                          setTheatre(true);
+                        }}
+                        aria-label={`فتح ${story.titleAr}`}
+                      >
+                        افتح القصة
+                      </button>
+                    </article>
+                  </li>
+                );
+              })}
+            </ul>
+            {!KIDS_STORIES.length && (
+              <p className="muted" style={{ fontSize: "0.8rem" }}>لا توجد تكييفات مسجلة بعد.</p>
+            )}
           </section>
           <KidsTVRoom onReadStory={current ? openCurrentStory : undefined} />
         </>

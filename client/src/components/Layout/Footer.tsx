@@ -1,6 +1,7 @@
 import { Link } from "wouter";
 import { useLanguage } from "../../contexts/LanguageContext";
 import { BRAND } from "@/config/brand";
+import { LegacyIcon } from "@/components/common/LegacyIcon";
 
 export default function Footer() {
   const { t, isRTL } = useLanguage();
@@ -81,7 +82,7 @@ export default function Footer() {
                 </li>
               ))}
               <li className="flex items-center space-x-2 rtl:space-x-reverse pt-2 text-slate-400">
-                <span className="material-symbols-outlined text-sm">email</span>
+                <LegacyIcon name="email" className="text-sm" />
                 <span className="font-mono text-[11px]">support@{BRAND.domain}</span>
               </li>
             </ul>

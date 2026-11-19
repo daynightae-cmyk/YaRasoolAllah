@@ -7,6 +7,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import ThemeToggle from "../common/ThemeToggle";
 import LanguageSwitcher from "../common/LanguageSwitcher";
 import { BRAND } from "@/config/brand";
+import { LegacyIcon } from "@/components/common/LegacyIcon";
 
 export default function Header() {
   const [location] = useLocation();
@@ -52,9 +53,7 @@ export default function Header() {
             className="flex items-center space-x-3 rtl:space-x-reverse hover:opacity-80 transition-opacity"
           >
             <div className="bg-gradient-to-br from-emerald-600 to-emerald-700 p-2 rounded-xl shadow-lg">
-              <span className="material-symbols-outlined text-white text-2xl">
-                menu_book
-              </span>
+              <LegacyIcon name="menu_book" className="text-white text-2xl" />
             </div>
             <div className={`${isRTL ? "text-right" : "text-left"}`}>
               <h1 className="text-xl font-amiri font-bold text-emerald-700 dark:text-emerald-400">
@@ -78,9 +77,7 @@ export default function Header() {
                     : "text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
                 }`}
               >
-                <span className="material-symbols-outlined text-sm">
-                  {item.icon}
-                </span>
+                <LegacyIcon name={item.icon} className="text-sm" />
                 <span className="text-sm">{item.label}</span>
               </Link>
             ))}
@@ -97,9 +94,7 @@ export default function Header() {
                     size="sm"
                     className="flex items-center space-x-2 rtl:space-x-reverse"
                   >
-                    <span className="material-symbols-outlined">
-                      more_horiz
-                    </span>
+                    <LegacyIcon name="more_horiz" />
                     <span className="text-sm">{t("nav.more")}</span>
                   </Button>
                 </SheetTrigger>
@@ -118,9 +113,7 @@ export default function Header() {
                             : "text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
                         }`}
                       >
-                        <span className="material-symbols-outlined">
-                          {item.icon}
-                        </span>
+                        <LegacyIcon name={item.icon} />
                         <span className="font-medium">{item.label}</span>
                       </Link>
                     ))}
@@ -137,7 +130,7 @@ export default function Header() {
               <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
                 <SheetTrigger asChild>
                   <Button variant="ghost" size="sm">
-                    <span className="material-symbols-outlined">menu</span>
+                    <LegacyIcon name="menu" />
                   </Button>
                 </SheetTrigger>
                 <SheetContent side={isRTL ? "left" : "right"} className="w-80">
@@ -156,9 +149,7 @@ export default function Header() {
                             : "text-gray-700 dark:text-gray-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
                         }`}
                       >
-                        <span className="material-symbols-outlined">
-                          {item.icon}
-                        </span>
+                        <LegacyIcon name={item.icon} />
                         <span className="font-medium">{item.label}</span>
                       </Link>
                     ))}
@@ -169,9 +160,7 @@ export default function Header() {
 
             {/* Profile */}
             <div className="w-8 h-8 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center cursor-pointer hover:shadow-lg transition-shadow">
-              <span className="material-symbols-outlined text-white text-sm">
-                person
-              </span>
+              <LegacyIcon name="person" className="text-white text-sm" />
             </div>
           </div>
         </div>

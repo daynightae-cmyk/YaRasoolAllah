@@ -24,6 +24,7 @@ import {
 } from "@/hooks/useBabAlsamaa";
 import { useSpiritualNotifications } from "@/services/spiritualNotifications";
 import { cn } from "@/lib/utils";
+import { LegacyIcon } from "@/components/common/LegacyIcon";
 
 export default function BabAlsamaaSettingsPage() {
   const { t, isRTL } = useLanguage();
@@ -144,9 +145,7 @@ export default function BabAlsamaaSettingsPage() {
               className="inline-flex items-center gap-4 mb-6"
             >
               <div className="w-16 h-16 bg-gradient-to-br from-purple-500 via-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
-                <span className="material-symbols-outlined text-white text-3xl">
-                  settings
-                </span>
+                <LegacyIcon name="settings" className="text-white text-3xl" />
               </div>
               <div>
                 <h1 className="text-4xl md:text-5xl font-amiri font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent">
@@ -238,25 +237,19 @@ export default function BabAlsamaaSettingsPage() {
           >
             <TabsList className="grid w-full grid-cols-4 mb-8">
               <TabsTrigger value="notifications" className="font-amiri">
-                <span className="material-symbols-outlined mr-2">
-                  notifications
-                </span>
+                <LegacyIcon name="notifications" className="mr-2" />
                 الإشعارات
               </TabsTrigger>
               <TabsTrigger value="analytics" className="font-amiri">
-                <span className="material-symbols-outlined mr-2">
-                  analytics
-                </span>
+                <LegacyIcon name="analytics" className="mr-2" />
                 الإحصائيات
               </TabsTrigger>
               <TabsTrigger value="mood" className="font-amiri">
-                <span className="material-symbols-outlined mr-2">
-                  psychology
-                </span>
+                <LegacyIcon name="psychology" className="mr-2" />
                 المزاج
               </TabsTrigger>
               <TabsTrigger value="advanced" className="font-amiri">
-                <span className="material-symbols-outlined mr-2">tune</span>
+                <LegacyIcon name="tune" className="mr-2" />
                 متقدم
               </TabsTrigger>
             </TabsList>
@@ -268,9 +261,7 @@ export default function BabAlsamaaSettingsPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="font-amiri flex items-center gap-2">
-                      <span className="material-symbols-outlined text-purple-600">
-                        notifications_active
-                      </span>
+                      <LegacyIcon name="notifications_active" className="text-purple-600" />
                       إعدادات الإشعارات
                     </CardTitle>
                   </CardHeader>
@@ -406,9 +397,7 @@ export default function BabAlsamaaSettingsPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="font-amiri flex items-center gap-2">
-                      <span className="material-symbols-outlined text-blue-600">
-                        psychology
-                      </span>
+                      <LegacyIcon name="psychology" className="text-blue-600" />
                       الذكاء العاطفي
                     </CardTitle>
                   </CardHeader>
@@ -474,9 +463,7 @@ export default function BabAlsamaaSettingsPage() {
                           onClick={testNotification}
                           className="text-purple-600 border-purple-300"
                         >
-                          <span className="material-symbols-outlined mr-1 text-sm">
-                            science
-                          </span>
+                          <LegacyIcon name="science" className="mr-1 text-sm" />
                           اختبار إشعار
                         </Button>
                         <Button
@@ -485,9 +472,7 @@ export default function BabAlsamaaSettingsPage() {
                           onClick={() => openBab("manual")}
                           className="text-emerald-600 border-emerald-300"
                         >
-                          <span className="material-symbols-outlined mr-1 text-sm">
-                            door_open
-                          </span>
+                          <LegacyIcon name="door_open" className="mr-1 text-sm" />
                           فتح الباب
                         </Button>
                       </div>
@@ -504,9 +489,7 @@ export default function BabAlsamaaSettingsPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="font-amiri flex items-center gap-2">
-                      <span className="material-symbols-outlined text-emerald-600">
-                        trending_up
-                      </span>
+                      <LegacyIcon name="trending_up" className="text-emerald-600" />
                       إحصائيات الاستخدام
                     </CardTitle>
                   </CardHeader>
@@ -580,9 +563,7 @@ export default function BabAlsamaaSettingsPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="font-amiri flex items-center gap-2">
-                      <span className="material-symbols-outlined text-blue-600">
-                        notifications
-                      </span>
+                      <LegacyIcon name="notifications" className="text-blue-600" />
                       تاريخ الإشعارات
                     </CardTitle>
                   </CardHeader>
@@ -628,9 +609,7 @@ export default function BabAlsamaaSettingsPage() {
                       onClick={clearHistory}
                       className="w-full"
                     >
-                      <span className="material-symbols-outlined mr-2">
-                        delete
-                      </span>
+                      <LegacyIcon name="delete" className="mr-2" />
                       مسح تاريخ الإشعارات
                     </Button>
                   </CardContent>
@@ -645,9 +624,7 @@ export default function BabAlsamaaSettingsPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="font-amiri flex items-center gap-2">
-                      <span className="material-symbols-outlined text-rose-600">
-                        favorite
-                      </span>
+                      <LegacyIcon name="favorite" className="text-rose-600" />
                       تحليل حالتك العاطفية
                     </CardTitle>
                   </CardHeader>
@@ -706,9 +683,7 @@ export default function BabAlsamaaSettingsPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle className="font-amiri flex items-center gap-2">
-                      <span className="material-symbols-outlined text-emerald-600">
-                        lightbulb
-                      </span>
+                      <LegacyIcon name="lightbulb" className="text-emerald-600" />
                       نصائح شخصية
                     </CardTitle>
                   </CardHeader>
@@ -759,9 +734,7 @@ export default function BabAlsamaaSettingsPage() {
                       onClick={() => openBab("manual")}
                       className="w-full bg-gradient-to-r from-purple-500 to-rose-500 hover:from-purple-600 hover:to-rose-600"
                     >
-                      <span className="material-symbols-outlined mr-2">
-                        door_open
-                      </span>
+                      <LegacyIcon name="door_open" className="mr-2" />
                       ادخل باب السماء الآن
                     </Button>
                   </CardContent>
@@ -774,9 +747,7 @@ export default function BabAlsamaaSettingsPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="font-amiri flex items-center gap-2">
-                    <span className="material-symbols-outlined text-red-600">
-                      settings
-                    </span>
+                    <LegacyIcon name="settings" className="text-red-600" />
                     إعدادات متقدمة
                   </CardTitle>
                 </CardHeader>
@@ -807,9 +778,7 @@ export default function BabAlsamaaSettingsPage() {
                             a.click();
                           }}
                         >
-                          <span className="material-symbols-outlined mr-2">
-                            download
-                          </span>
+                          <LegacyIcon name="download" className="mr-2" />
                           تصدير البيانات
                         </Button>
                         <Button
@@ -843,9 +812,7 @@ export default function BabAlsamaaSettingsPage() {
                             input.click();
                           }}
                         >
-                          <span className="material-symbols-outlined mr-2">
-                            upload
-                          </span>
+                          <LegacyIcon name="upload" className="mr-2" />
                           استيراد البيانات
                         </Button>
                       </div>
@@ -870,9 +837,7 @@ export default function BabAlsamaaSettingsPage() {
                             }
                           }}
                         >
-                          <span className="material-symbols-outlined mr-2">
-                            delete_forever
-                          </span>
+                          <LegacyIcon name="delete_forever" className="mr-2" />
                           مسح جميع البيانات
                         </Button>
                         <Button
@@ -896,9 +861,7 @@ export default function BabAlsamaaSettingsPage() {
                             alert("تم إعادة تعيين الإعدادات للوضع الافتراضي");
                           }}
                         >
-                          <span className="material-symbols-outlined mr-2">
-                            restart_alt
-                          </span>
+                          <LegacyIcon name="restart_alt" className="mr-2" />
                           إعادة تعيين الإعدادات
                         </Button>
                       </div>

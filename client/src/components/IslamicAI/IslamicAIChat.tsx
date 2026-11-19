@@ -13,6 +13,7 @@ import {
   IslamicKnowledgeEntry,
 } from "@/services/islamicAI";
 import { cn } from "@/lib/utils";
+import { LegacyIcon } from "@/components/common/LegacyIcon";
 
 interface ChatMessage {
   id: string;
@@ -166,9 +167,7 @@ export default function IslamicAIChat({
           className={cn("flex gap-3", isRTL ? "flex-row-reverse" : "flex-row")}
         >
           <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-            <span className="material-symbols-outlined text-white text-sm">
-              smart_toy
-            </span>
+            <LegacyIcon name="smart_toy" className="text-white text-sm" />
           </div>
           <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl p-4 max-w-[80%]">
             <div className="flex items-center gap-1">
@@ -214,9 +213,7 @@ export default function IslamicAIChat({
               : "bg-gradient-to-br from-emerald-500 to-blue-600",
           )}
         >
-          <span className="material-symbols-outlined text-white text-sm">
-            {message.type === "user" ? "person" : "smart_toy"}
-          </span>
+          <LegacyIcon name={message.type === "user" ? "person" : "smart_toy"} className="text-white text-sm" />
         </div>
 
         {/* محتوى الرسالة */}
@@ -275,9 +272,7 @@ export default function IslamicAIChat({
                 message.response.warnings.length > 0 && (
                   <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-3">
                     <div className="flex items-center gap-2 mb-2">
-                      <span className="material-symbols-outlined text-amber-600 text-sm">
-                        warning
-                      </span>
+                      <LegacyIcon name="warning" className="text-amber-600 text-sm" />
                       <span className="text-sm font-semibold text-amber-700 dark:text-amber-400">
                         تنبيه مهم
                       </span>
@@ -306,9 +301,7 @@ export default function IslamicAIChat({
                     }
                     className="text-xs"
                   >
-                    <span className="material-symbols-outlined mr-1 text-sm">
-                      library_books
-                    </span>
+                    <LegacyIcon name="library_books" className="mr-1 text-sm" />
                     عرض المصادر ({message.response.sources.length})
                   </Button>
 
@@ -431,9 +424,7 @@ export default function IslamicAIChat({
         <CardHeader className="bg-gradient-to-r from-emerald-500 to-blue-600 text-white">
           <CardTitle className="font-amiri flex items-center gap-3">
             <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-              <span className="material-symbols-outlined text-xl">
-                psychology
-              </span>
+              <LegacyIcon name="psychology" className="text-xl" />
             </div>
             <div>
               <h3 className="text-xl">المُبين بوت - الذكاء الإسلامي</h3>
@@ -505,7 +496,7 @@ export default function IslamicAIChat({
                   className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
                 />
               ) : (
-                <span className="material-symbols-outlined">send</span>
+                <LegacyIcon name="send" />
               )}
             </Button>
           </div>
@@ -515,9 +506,7 @@ export default function IslamicAIChat({
               <span>💡 نصيحة: كن محدداً في سؤالك للحصول على إجابة أفضل</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-sm text-emerald-600">
-                verified
-              </span>
+              <LegacyIcon name="verified" className="text-sm text-emerald-600" />
               <span>مصادر موثوقة</span>
             </div>
           </div>

@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { LegacyIcon } from "@/components/common/LegacyIcon";
 
 interface SpiritualResponse {
   dua: string;
@@ -255,9 +256,7 @@ https://yarasoolallah.org
                   transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
                   className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-gold-400 to-amber-500 rounded-full shadow-lg"
                 >
-                  <span className="material-symbols-outlined text-white text-3xl">
-                    mosque
-                  </span>
+                  <LegacyIcon name="mosque" className="text-white text-3xl" />
                 </motion.div>
 
                 <div className="space-y-2">
@@ -275,9 +274,7 @@ https://yarasoolallah.org
                       animate={{ scale: 1 }}
                       className="inline-flex items-center gap-2 bg-emerald-500/20 text-emerald-300 px-4 py-2 rounded-full text-sm"
                     >
-                      <span className="material-symbols-outlined text-sm">
-                        notifications_active
-                      </span>
+                      <LegacyIcon name="notifications_active" className="text-sm" />
                       الله يناديك... استجب للنداء
                     </motion.div>
                   )}
@@ -359,7 +356,7 @@ https://yarasoolallah.org
                       </div>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined">send</span>
+                        <LegacyIcon name="send" />
                         ✨ أرسل إلى باب السماء
                       </div>
                     )}
@@ -383,9 +380,7 @@ https://yarasoolallah.org
                         {/* Mood Badge */}
                         <div className="flex items-center justify-between">
                           <Badge className="bg-emerald-500/20 text-emerald-300 border-emerald-400/50">
-                            <span className="material-symbols-outlined mr-1 text-sm">
-                              psychology
-                            </span>
+                            <LegacyIcon name="psychology" className="mr-1 text-sm" />
                             حالتك: {response.mood}
                           </Badge>
                           <Badge className="bg-gold-500/20 text-gold-300 border-gold-400/50">
@@ -396,9 +391,7 @@ https://yarasoolallah.org
                         {/* Main Dua */}
                         <div className="text-center space-y-3">
                           <div className="flex items-center justify-center gap-2 mb-3">
-                            <span className="material-symbols-outlined text-gold-400">
-                              hands
-                            </span>
+                            <LegacyIcon name="hands" className="text-gold-400" />
                             <h3 className="text-xl font-amiri font-bold text-gold-300">
                               دعاؤك المستجاب
                             </h3>
@@ -412,9 +405,7 @@ https://yarasoolallah.org
                         {response.verse && (
                           <div className="bg-emerald-500/10 rounded-xl p-4 border border-emerald-400/30">
                             <div className="flex items-center gap-2 mb-2">
-                              <span className="material-symbols-outlined text-emerald-400">
-                                menu_book
-                              </span>
+                              <LegacyIcon name="menu_book" className="text-emerald-400" />
                               <span className="text-emerald-300 font-semibold">
                                 آية كريمة
                               </span>
@@ -429,9 +420,7 @@ https://yarasoolallah.org
                         {response.story && (
                           <div className="bg-purple-500/10 rounded-xl p-4 border border-purple-400/30">
                             <div className="flex items-center gap-2 mb-2">
-                              <span className="material-symbols-outlined text-purple-400">
-                                auto_stories
-                              </span>
+                              <LegacyIcon name="auto_stories" className="text-purple-400" />
                               <span className="text-purple-300 font-semibold">
                                 قصة مؤثرة
                               </span>
@@ -463,9 +452,7 @@ https://yarasoolallah.org
                         variant="outline"
                         className="border-blue-400/50 text-blue-300 hover:bg-blue-500/20"
                       >
-                        <span className="material-symbols-outlined mr-2">
-                          {isPlaying ? "pause" : "play_arrow"}
-                        </span>
+                        <LegacyIcon name={isPlaying ? "pause" : "play_arrow"} className="mr-2" />
                         {isPlaying ? "إيقاف" : "استمع للدعاء"}
                       </Button>
                     )}
@@ -475,9 +462,7 @@ https://yarasoolallah.org
                       variant="outline"
                       className="border-green-400/50 text-green-300 hover:bg-green-500/20"
                     >
-                      <span className="material-symbols-outlined mr-2">
-                        share
-                      </span>
+                      <LegacyIcon name="share" className="mr-2" />
                       شارك الخير
                     </Button>
 
@@ -486,9 +471,7 @@ https://yarasoolallah.org
                       variant="outline"
                       className="border-purple-400/50 text-purple-300 hover:bg-purple-500/20"
                     >
-                      <span className="material-symbols-outlined mr-2">
-                        refresh
-                      </span>
+                      <LegacyIcon name="refresh" className="mr-2" />
                       جرعة روحية جديدة
                     </Button>
                   </div>
@@ -511,7 +494,7 @@ https://yarasoolallah.org
                 variant="ghost"
                 className="absolute top-4 right-4 w-10 h-10 p-0 text-white/60 hover:text-white hover:bg-white/20"
               >
-                <span className="material-symbols-outlined">close</span>
+                <LegacyIcon name="close" />
               </Button>
             </CardContent>
           </Card>
