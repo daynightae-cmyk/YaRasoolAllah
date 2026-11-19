@@ -11,8 +11,8 @@
   "inputs": [
     {
       "path": "data-sources/media/acquisition/media-acquisition-manifest.json",
-      "sha256": "da48454270324f339f6a8850f522ce980410429fa4afb4e377ccdd9246b0d3fc",
-      "bytes": 1261,
+      "sha256": "ec248dc092be69016a30b93e8c6a0b983fe48d0bc0f977691c1ac67de53970ef",
+      "bytes": 1266,
       "hashMode": "utf8-lf"
     },
     {
@@ -29,47 +29,50 @@
     },
     {
       "path": "data-sources/media/acquisition/seerah-media-catalog.csv",
-      "sha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb",
-      "bytes": 44137,
+      "sha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e",
+      "bytes": 73067,
       "hashMode": "utf8-lf"
     },
     {
       "path": "data-sources/media/acquisition/seerah-media-catalog.json",
-      "sha256": "3394fc7c860d0a2b525115f926d6f13a668b48e947e238c7058137ea3e3a1f0b",
-      "bytes": 79211,
+      "sha256": "94da03d7935a7e83ec9f6f24df4bdeaf7ade860a235a147336f0a49da582be69",
+      "bytes": 131389,
       "hashMode": "utf8-lf"
     },
     {
       "path": "data-sources/media/acquisition/media-rights-ledger.csv",
-      "sha256": "6732cc175a035ea41fec6584fc601cb6703debfc1edfb009c8de13affdf10738",
-      "bytes": 29919,
+      "sha256": "498e21d77c943a33c530c47b2c25ac7d6683ede3d1d700fe9b077b49352806b1",
+      "bytes": 35757,
       "hashMode": "utf8-lf"
     },
     {
       "path": "data-sources/media/acquisition/media-rejected-and-pending.csv",
-      "sha256": "eb992d2fcaf8d577c797bcb3c650d5875118c9806028dda3c17fc673fe4c1825",
-      "bytes": 30016,
+      "sha256": "b5c60587323acc0c01dda182b4e73b75dcfcc27b6edc74b7ed6a1b40fd241cf7",
+      "bytes": 36761,
       "hashMode": "utf8-lf"
     }
   ],
-  "totalUniqueRecords": 95,
+  "totalUniqueRecords": 116,
   "duplicatesSkipped": 0,
   "byCategory": {
     "kids": 46,
     "seerah": 14,
     "السيرة النبوية": 9,
     "السيرة النبوية الكاملة": 9,
-    "القرآن الكريم للأطفال": 17
+    "القرآن الكريم للأطفال": 17,
+    "سيرة نبوية": 7,
+    "قصص الأنبياء والدروس": 5,
+    "محاضرات ومواعظ": 9
   },
   "byPublicationStatus": {
-    "DRAFT": 95
+    "DRAFT": 116
   },
   "byRightsStatus": {
-    "UNKNOWN": 95
+    "UNKNOWN": 116
   },
   "approvedForPublicDisplay": 0,
-  "blockedPendingReview": 95,
-  "rightsUnknown": 95,
+  "blockedPendingReview": 116,
+  "rightsUnknown": 116,
   "declaredFilesMissing": [
     "kids-media-catalog-README.md",
     "media-agent-handoff.md",
@@ -81,18 +84,18 @@
   "outputs": {
     "catalog": {
       "path": "data-sources/media/discovery/media-discovery-catalog.json",
-      "sha256": "da9a0ab92dc4c7fa0ad6951f12f43b01ea5facc2e684d18b762b91522993a3ae",
-      "bytes": 273048
+      "sha256": "2ade5de6860f1977ec099c5e127859d6c2c37c653e6a9c3db1366ecc8d940dd3",
+      "bytes": 336441
     },
     "clientCatalog": {
       "path": "client/src/visual-golden/data/media-discovery.generated.ts",
-      "sha256": "77bdcb140a693cec31f0808f4051f16a4cfb3bd12086f6ccef7ba8fba6d2d83e",
-      "bytes": 240997
+      "sha256": "111dd2d54668e4b834d8a11226d203ee4a8969adc9dee66cbf98c0e7ae82d38a",
+      "bytes": 297439
     },
     "clientStatus": {
       "path": "client/src/visual-golden/data/media-discovery-status.generated.ts",
-      "sha256": "8d054e29293e3d81e211d7f77d9c09dd198687bb763b0fdd2e7fd21b2b227749",
-      "bytes": 393
+      "sha256": "e22c61d0ede39763f52f41de54aad66c05b2ae272454050e33e2b0b08ce5a874",
+      "bytes": 396
     }
   },
   "policy": "Discovery-only ingestion. No record is promoted to APPROVED. embed_url remains UNTESTED candidate until runtime verification."

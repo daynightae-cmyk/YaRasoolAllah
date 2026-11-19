@@ -58,11 +58,11 @@ test("the four formerly shifted source rows keep every review field aligned", ()
 });
 
 test("generated discovery catalog is fail-closed and repairs the shifted statuses", () => {
-  assert.equal(DISCOVERED_MEDIA_COUNTS.total, 95);
+  assert.equal(DISCOVERED_MEDIA_COUNTS.total, 116);
   assert.equal(DISCOVERED_MEDIA_COUNTS.approved, 0);
-  assert.equal(DISCOVERED_MEDIA_COUNTS.pending, 95);
-  assert.equal(DISCOVERED_MEDIA_CATALOG.length, 95);
-  assert.equal(new Set(DISCOVERED_MEDIA_CATALOG.map((record) => record.id)).size, 95);
+  assert.equal(DISCOVERED_MEDIA_COUNTS.pending, 116);
+  assert.equal(DISCOVERED_MEDIA_CATALOG.length, 116);
+  assert.equal(new Set(DISCOVERED_MEDIA_CATALOG.map((record) => record.id)).size, 116);
   assert.ok(DISCOVERED_MEDIA_CATALOG.every((record) => record.rights_status === "UNKNOWN"));
   assert.ok(DISCOVERED_MEDIA_CATALOG.every((record) => record.publication_status === "DRAFT"));
   assert.ok(DISCOVERED_MEDIA_CATALOG.every((record) => record.embedding_status === "UNTESTED"));
@@ -91,10 +91,10 @@ test("the discovery manifest records canonical input and output hashes", () => {
     outputs: { catalog: { sha256: string }; clientCatalog: { sha256: string } };
   };
   assert.equal(manifest.generatedAt, "2026-11-15T00:00:00.000Z");
-  assert.equal(manifest.totalUniqueRecords, 95);
+  assert.equal(manifest.totalUniqueRecords, 116);
   assert.equal(manifest.approvedForPublicDisplay, 0);
-  assert.equal(manifest.blockedPendingReview, 95);
-  assert.equal(manifest.rightsUnknown, 95);
+  assert.equal(manifest.blockedPendingReview, 116);
+  assert.equal(manifest.rightsUnknown, 116);
   assert.ok(manifest.inputs.length >= 7);
   assert.ok(manifest.inputs.every((input) => input.hashMode === "utf8-lf" && /^[a-f0-9]{64}$/.test(input.sha256)));
 
@@ -108,12 +108,12 @@ test("the discovery manifest records canonical input and output hashes", () => {
 test("review filters and gate semantics are deterministic", () => {
   const counts = mediaReviewCounts(DISCOVERED_MEDIA_CATALOG);
   assert.deepEqual(counts, {
-    total: 95,
+    total: 116,
     approved: 0,
-    pending: 95,
-    rightsUnknown: 95,
-    embeddingUntested: 95,
-    editorialPending: 95,
+    pending: 116,
+    rightsUnknown: 116,
+    embeddingUntested: 116,
+    editorialPending: 116,
   });
 
   const quotedComma = filterMediaDiscoveryRecords(DISCOVERED_MEDIA_CATALOG, "Prayer, duas", "all", "all");

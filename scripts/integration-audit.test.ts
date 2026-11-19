@@ -2,21 +2,21 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import { MEDIA_LIBRARY } from "../client/src/data/mediaLibrary";
-import { BASIRAH_COUNTS } from "../client/src/visual-golden/services/basirah";
+import { DISCOVERED_MEDIA_CATALOG, DISCOVERED_MEDIA_COUNTS } from "../client/src/visual-golden/data/media-discovery.generated";
+import { BASIRAH_COUNTS, QURAN_TEXT_SOURCE_ID } from "../client/src/visual-golden/services/basirah";
 import { KIDS_COUNTS } from "../client/src/visual-golden/services/kids";
 import { LIBRARY_COUNTS } from "../client/src/visual-golden/services/library";
 
 const root = path.resolve(import.meta.dirname, "..");
 
-test("Quran provenance uses the acquired Tanzil source in Basirah", () => {
+test("Quran provenance resolves to the acquired Tanzil source in Basirah", () => {
+  assert.equal(QURAN_TEXT_SOURCE_ID, "src-tanzil-uthmani-min-1-1-acquired");
   const files = [
     "client/src/visual-golden/services/basirah.ts",
     "client/src/visual-golden/pages/BasirahPage.tsx",
   ];
   for (const relative of files) {
     const source = fs.readFileSync(path.join(root, relative), "utf8");
-    assert.match(source, /src-tanzil-uthmani-min-1-1-acquired/);
     assert.doesNotMatch(source, /src-tanzil-uthmani-1-1-candidate/);
   }
 });
@@ -28,17 +28,22 @@ test("Basirah and library counters are explicit and distinct", () => {
   assert.equal(BASIRAH_COUNTS.catalogWorks, 16);
 });
 
-test("media catalog has unique IDs and secure source URLs", () => {
-  const ids = MEDIA_LIBRARY.map((item) => item.id);
-  const videoIds = MEDIA_LIBRARY.map((item) => item.videoId);
+test("media discovery catalog has unique IDs, secure source URLs, and zero approvals", () => {
+  const ids = DISCOVERED_MEDIA_CATALOG.map((item) => item.id);
   assert.equal(new Set(ids).size, ids.length);
-  assert.equal(new Set(videoIds).size, videoIds.length);
-  for (const item of MEDIA_LIBRARY) {
-    assert.match(item.sourceUrl, /^https:\/\//);
-    assert.match(item.thumbnail, /^https:\/\//);
-    assert.ok(item.channel);
+  assert.equal(DISCOVERED_MEDIA_COUNTS.total, 116);
+  assert.equal(DISCOVERED_MEDIA_COUNTS.approved, 0);
+  for (const item of DISCOVERED_MEDIA_CATALOG) {
+    if (item.official_url) assert.match(item.official_url, /^https:\/\//);
+    if (item.embed_url) assert.match(item.embed_url, /^https:\/\//);
+    assert.ok(item.channel_name);
     assert.ok(item.category);
+    assert.equal(item.publication_status, "DRAFT");
   }
+});
+
+test("the retired duplicate media catalog module is gone", () => {
+  assert.equal(fs.existsSync(path.join(root, "client/src/data/mediaLibrary.ts")), false);
 });
 
 test("kids governance exposes the pending cleared-media state", () => {

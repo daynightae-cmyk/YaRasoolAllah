@@ -3,9 +3,9 @@
   "generatedAt": "2026-11-15T00:00:00.000Z",
   "policy": "Discovery-only ingestion. No record is promoted to APPROVED. embed_url remains UNTESTED candidate until runtime verification.",
   "counts": {
-    "total": 95,
+    "total": 116,
     "approved": 0,
-    "pending": 95
+    "pending": 116
   },
   "records": [
     {
@@ -60,7 +60,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 25,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -279,6 +279,59 @@
       }
     },
     {
+      "id": "youtube:2IICQtyIJnU",
+      "provider": "youtube",
+      "video_id": "2IICQtyIJnU",
+      "official_url": "https://www.youtube.com/watch?v=2IICQtyIJnU",
+      "title_original": "4- السيرة النبوية | غار حراء ونزول الوحي | الشيخ سعد العتيق",
+      "title_ar": "4- السيرة النبوية | غار حراء ونزول الوحي | الشيخ سعد العتيق",
+      "description_ar": null,
+      "language": "ar",
+      "duration_seconds": null,
+      "published_at": null,
+      "channel_id": null,
+      "channel_name": "أضواء الرباط",
+      "channel_url": "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+      "publisher_status": "UNKNOWN",
+      "series_name": "السيرة النبوية كاملة للشيخ سعد العتيق",
+      "playlist_id": null,
+      "episode_number": null,
+      "category": "سيرة نبوية",
+      "subcategory": "سيرة نبوية",
+      "age_band": null,
+      "speaker": "الشيخ سعد العتيق",
+      "content_type": "lecture",
+      "rights_holder": null,
+      "rights_notice": null,
+      "rights_status": "UNKNOWN",
+      "license_type": "UNKNOWN",
+      "license_evidence_url": null,
+      "attribution_text": "أضواء الرباط",
+      "embedding_status": "UNTESTED",
+      "embed_url": "https://www.youtube.com/embed/2IICQtyIJnU",
+      "editorial_status": "PENDING_REVIEW",
+      "publication_status": "DRAFT",
+      "religious_review_status": "PENDING_REVIEW",
+      "depiction_review_status": "PENDING_REVIEW",
+      "thumbnail_url": "https://i.ytimg.com/vi/2IICQtyIJnU/hqdefault.jpg",
+      "thumbnail_rights_status": "UNKNOWN",
+      "source_checked_at": "2026-11-15",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "verification_evidence_urls": [
+        "https://www.youtube.com/watch?v=2IICQtyIJnU",
+        "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg"
+      ],
+      "notes": "مصدر مرئي من صفحة الفيديو وقناة أضواء الرباط. أضيف للعرض والتشغيل بالنقر، مع بقاء مراجعة الحقوق والتحرير مطلوبة. أُدمج السجل من كتالوج العرض القديم إلى كتالوج المصادر الواحد؛ التشغيل الداخلي يبقى محجوبًا حتى اكتمال مراجعة الحقوق والتضمين.",
+      "rights_action": "مراجعة الحقوق والتضمين والتحرير قبل أي عرض داخلي",
+      "review_reason": "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
+      "review_next_action": "verify rights, review content, test official embed, then approval gate",
+      "provenance": {
+        "sourceFile": "seerah-media-catalog.csv",
+        "sourceRow": 53,
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
+      }
+    },
+    {
       "id": "youtube:2N3uRbjl3zs",
       "provider": "youtube",
       "video_id": "2N3uRbjl3zs",
@@ -383,7 +436,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 3,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -490,7 +543,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 29,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -543,7 +596,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 11,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -759,7 +812,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 23,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -867,6 +920,59 @@
         "sourceFile": "kids-media-catalog.csv",
         "sourceRow": 39,
         "inputSha256": "b5797f46785bbf98f3c6bb18a18f18d37083721e798c27b23dd6eb84874cfc75"
+      }
+    },
+    {
+      "id": "youtube:8FTfJ_KMIOQ",
+      "provider": "youtube",
+      "video_id": "8FTfJ_KMIOQ",
+      "official_url": "https://www.youtube.com/watch?v=8FTfJ_KMIOQ",
+      "title_original": "د العريفي: إن كانت الحياة بحرًا من الهموم فاعبرها بقارب الصبر",
+      "title_ar": "د العريفي: إن كانت الحياة بحرًا من الهموم فاعبرها بقارب الصبر",
+      "description_ar": null,
+      "language": "ar",
+      "duration_seconds": null,
+      "published_at": null,
+      "channel_id": null,
+      "channel_name": "مقاطع الشيخ محمد العريفي alarefe",
+      "channel_url": "https://www.youtube.com/@hamode656",
+      "publisher_status": "UNKNOWN",
+      "series_name": "محاضرات الشيخ محمد العريفي",
+      "playlist_id": null,
+      "episode_number": null,
+      "category": "محاضرات ومواعظ",
+      "subcategory": "محاضرات ومواعظ",
+      "age_band": null,
+      "speaker": "الشيخ محمد العريفي",
+      "content_type": "lecture",
+      "rights_holder": null,
+      "rights_notice": null,
+      "rights_status": "UNKNOWN",
+      "license_type": "UNKNOWN",
+      "license_evidence_url": null,
+      "attribution_text": "مقاطع الشيخ محمد العريفي alarefe",
+      "embedding_status": "UNTESTED",
+      "embed_url": "https://www.youtube.com/embed/8FTfJ_KMIOQ",
+      "editorial_status": "PENDING_REVIEW",
+      "publication_status": "DRAFT",
+      "religious_review_status": "PENDING_REVIEW",
+      "depiction_review_status": "PENDING_REVIEW",
+      "thumbnail_url": "https://i.ytimg.com/vi/8FTfJ_KMIOQ/hqdefault.jpg",
+      "thumbnail_rights_status": "UNKNOWN",
+      "source_checked_at": "2026-11-15",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "verification_evidence_urls": [
+        "https://www.youtube.com/watch?v=8FTfJ_KMIOQ",
+        "https://www.youtube.com/@hamode656"
+      ],
+      "notes": "مصدر مرئي من صفحة الفيديو وقناة مقاطع الشيخ محمد العريفي alarefe. أضيف للعرض والتشغيل بالنقر، مع بقاء مراجعة الحقوق والتحرير مطلوبة. أُدمج السجل من كتالوج العرض القديم إلى كتالوج المصادر الواحد؛ التشغيل الداخلي يبقى محجوبًا حتى اكتمال مراجعة الحقوق والتضمين.",
+      "rights_action": "مراجعة الحقوق والتضمين والتحرير قبل أي عرض داخلي",
+      "review_reason": "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
+      "review_next_action": "verify rights, review content, test official embed, then approval gate",
+      "provenance": {
+        "sourceFile": "seerah-media-catalog.csv",
+        "sourceRow": 39,
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -1031,6 +1137,59 @@
       }
     },
     {
+      "id": "youtube:9jy5aRKoCZ8",
+      "provider": "youtube",
+      "video_id": "9jy5aRKoCZ8",
+      "official_url": "https://www.youtube.com/watch?v=9jy5aRKoCZ8",
+      "title_original": "3- السيرة النبوية | قصة بحيرا الراهب بالشام | الشيخ سعد العتيق",
+      "title_ar": "3- السيرة النبوية | قصة بحيرا الراهب بالشام | الشيخ سعد العتيق",
+      "description_ar": null,
+      "language": "ar",
+      "duration_seconds": null,
+      "published_at": null,
+      "channel_id": null,
+      "channel_name": "أضواء الرباط",
+      "channel_url": "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+      "publisher_status": "UNKNOWN",
+      "series_name": "السيرة النبوية كاملة للشيخ سعد العتيق",
+      "playlist_id": null,
+      "episode_number": null,
+      "category": "سيرة نبوية",
+      "subcategory": "سيرة نبوية",
+      "age_band": null,
+      "speaker": "الشيخ سعد العتيق",
+      "content_type": "lecture",
+      "rights_holder": null,
+      "rights_notice": null,
+      "rights_status": "UNKNOWN",
+      "license_type": "UNKNOWN",
+      "license_evidence_url": null,
+      "attribution_text": "أضواء الرباط",
+      "embedding_status": "UNTESTED",
+      "embed_url": "https://www.youtube.com/embed/9jy5aRKoCZ8",
+      "editorial_status": "PENDING_REVIEW",
+      "publication_status": "DRAFT",
+      "religious_review_status": "PENDING_REVIEW",
+      "depiction_review_status": "PENDING_REVIEW",
+      "thumbnail_url": "https://i.ytimg.com/vi/9jy5aRKoCZ8/hqdefault.jpg",
+      "thumbnail_rights_status": "UNKNOWN",
+      "source_checked_at": "2026-11-15",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "verification_evidence_urls": [
+        "https://www.youtube.com/watch?v=9jy5aRKoCZ8",
+        "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg"
+      ],
+      "notes": "مصدر مرئي من صفحة الفيديو وقناة أضواء الرباط. أضيف للعرض والتشغيل بالنقر، مع بقاء مراجعة الحقوق والتحرير مطلوبة. أُدمج السجل من كتالوج العرض القديم إلى كتالوج المصادر الواحد؛ التشغيل الداخلي يبقى محجوبًا حتى اكتمال مراجعة الحقوق والتضمين.",
+      "rights_action": "مراجعة الحقوق والتضمين والتحرير قبل أي عرض داخلي",
+      "review_reason": "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
+      "review_next_action": "verify rights, review content, test official embed, then approval gate",
+      "provenance": {
+        "sourceFile": "seerah-media-catalog.csv",
+        "sourceRow": 52,
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
+      }
+    },
+    {
       "id": "youtube:aiojJAA-uQc",
       "provider": "youtube",
       "video_id": "aiojJAA-uQc",
@@ -1082,6 +1241,59 @@
         "sourceFile": "kids-media-catalog.csv",
         "sourceRow": 42,
         "inputSha256": "b5797f46785bbf98f3c6bb18a18f18d37083721e798c27b23dd6eb84874cfc75"
+      }
+    },
+    {
+      "id": "youtube:AoUR_I6734s",
+      "provider": "youtube",
+      "video_id": "AoUR_I6734s",
+      "official_url": "https://www.youtube.com/watch?v=AoUR_I6734s",
+      "title_original": "محاضرة الفرحة: قصص مشوقة وعبر مفيدة - الشيخ عمر عبد الكافي",
+      "title_ar": "محاضرة الفرحة: قصص مشوقة وعبر مفيدة - الشيخ عمر عبد الكافي",
+      "description_ar": null,
+      "language": "ar",
+      "duration_seconds": null,
+      "published_at": null,
+      "channel_id": null,
+      "channel_name": "عمر عبد الكافي",
+      "channel_url": "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+      "publisher_status": "UNKNOWN",
+      "series_name": "محاضرات الشيخ عمر عبد الكافي",
+      "playlist_id": null,
+      "episode_number": null,
+      "category": "محاضرات ومواعظ",
+      "subcategory": "محاضرات ومواعظ",
+      "age_band": null,
+      "speaker": "الشيخ عمر عبد الكافي",
+      "content_type": "lecture",
+      "rights_holder": null,
+      "rights_notice": null,
+      "rights_status": "UNKNOWN",
+      "license_type": "UNKNOWN",
+      "license_evidence_url": null,
+      "attribution_text": "عمر عبد الكافي",
+      "embedding_status": "UNTESTED",
+      "embed_url": "https://www.youtube.com/embed/AoUR_I6734s",
+      "editorial_status": "PENDING_REVIEW",
+      "publication_status": "DRAFT",
+      "religious_review_status": "PENDING_REVIEW",
+      "depiction_review_status": "PENDING_REVIEW",
+      "thumbnail_url": "https://i.ytimg.com/vi/AoUR_I6734s/hqdefault.jpg",
+      "thumbnail_rights_status": "UNKNOWN",
+      "source_checked_at": "2026-11-15",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "verification_evidence_urls": [
+        "https://www.youtube.com/watch?v=AoUR_I6734s",
+        "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos"
+      ],
+      "notes": "مصدر مرئي من صفحة الفيديو وقناة عمر عبد الكافي. أضيف للعرض والتشغيل بالنقر، مع بقاء مراجعة الحقوق والتحرير مطلوبة. أُدمج السجل من كتالوج العرض القديم إلى كتالوج المصادر الواحد؛ التشغيل الداخلي يبقى محجوبًا حتى اكتمال مراجعة الحقوق والتضمين.",
+      "rights_action": "مراجعة الحقوق والتضمين والتحرير قبل أي عرض داخلي",
+      "review_reason": "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
+      "review_next_action": "verify rights, review content, test official embed, then approval gate",
+      "provenance": {
+        "sourceFile": "seerah-media-catalog.csv",
+        "sourceRow": 48,
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -1139,6 +1351,59 @@
       }
     },
     {
+      "id": "youtube:BoN38WWe1O8",
+      "provider": "youtube",
+      "video_id": "BoN38WWe1O8",
+      "official_url": "https://www.youtube.com/watch?v=BoN38WWe1O8",
+      "title_original": "الشيخ محمد العريفي محاضرة بعنوان مجالس الطيبين",
+      "title_ar": "الشيخ محمد العريفي محاضرة بعنوان مجالس الطيبين",
+      "description_ar": null,
+      "language": "ar",
+      "duration_seconds": null,
+      "published_at": null,
+      "channel_id": null,
+      "channel_name": "مقاطع الشيخ محمد العريفي alarefe",
+      "channel_url": "https://www.youtube.com/@hamode656",
+      "publisher_status": "UNKNOWN",
+      "series_name": "محاضرات الشيخ محمد العريفي",
+      "playlist_id": null,
+      "episode_number": null,
+      "category": "محاضرات ومواعظ",
+      "subcategory": "محاضرات ومواعظ",
+      "age_band": null,
+      "speaker": "الشيخ محمد العريفي",
+      "content_type": "lecture",
+      "rights_holder": null,
+      "rights_notice": null,
+      "rights_status": "UNKNOWN",
+      "license_type": "UNKNOWN",
+      "license_evidence_url": null,
+      "attribution_text": "مقاطع الشيخ محمد العريفي alarefe",
+      "embedding_status": "UNTESTED",
+      "embed_url": "https://www.youtube.com/embed/BoN38WWe1O8",
+      "editorial_status": "PENDING_REVIEW",
+      "publication_status": "DRAFT",
+      "religious_review_status": "PENDING_REVIEW",
+      "depiction_review_status": "PENDING_REVIEW",
+      "thumbnail_url": "https://i.ytimg.com/vi/BoN38WWe1O8/hqdefault.jpg",
+      "thumbnail_rights_status": "UNKNOWN",
+      "source_checked_at": "2026-11-15",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "verification_evidence_urls": [
+        "https://www.youtube.com/watch?v=BoN38WWe1O8",
+        "https://www.youtube.com/@hamode656"
+      ],
+      "notes": "مصدر مرئي من صفحة الفيديو وقناة مقاطع الشيخ محمد العريفي alarefe. أضيف للعرض والتشغيل بالنقر، مع بقاء مراجعة الحقوق والتحرير مطلوبة. أُدمج السجل من كتالوج العرض القديم إلى كتالوج المصادر الواحد؛ التشغيل الداخلي يبقى محجوبًا حتى اكتمال مراجعة الحقوق والتضمين.",
+      "rights_action": "مراجعة الحقوق والتضمين والتحرير قبل أي عرض داخلي",
+      "review_reason": "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
+      "review_next_action": "verify rights, review content, test official embed, then approval gate",
+      "provenance": {
+        "sourceFile": "seerah-media-catalog.csv",
+        "sourceRow": 36,
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
+      }
+    },
+    {
       "id": "youtube:BZT7p-T77VY",
       "provider": "youtube",
       "video_id": "BZT7p-T77VY",
@@ -1189,6 +1454,59 @@
         "sourceFile": "kids-media-catalog.csv",
         "sourceRow": 57,
         "inputSha256": "b5797f46785bbf98f3c6bb18a18f18d37083721e798c27b23dd6eb84874cfc75"
+      }
+    },
+    {
+      "id": "youtube:c-nqGuRmXqY",
+      "provider": "youtube",
+      "video_id": "c-nqGuRmXqY",
+      "official_url": "https://www.youtube.com/watch?v=c-nqGuRmXqY",
+      "title_original": "قصة نبي الله شعيب عليه السلام مليئة بالعبر",
+      "title_ar": "قصة نبي الله شعيب عليه السلام مليئة بالعبر",
+      "description_ar": null,
+      "language": "ar",
+      "duration_seconds": null,
+      "published_at": null,
+      "channel_id": null,
+      "channel_name": "الشيخ صالح المغامسي",
+      "channel_url": "https://www.youtube.com/@Alrasekhoon",
+      "publisher_status": "UNKNOWN",
+      "series_name": "دروس الشيخ صالح المغامسي",
+      "playlist_id": null,
+      "episode_number": null,
+      "category": "قصص الأنبياء والدروس",
+      "subcategory": "قصص الأنبياء والدروس",
+      "age_band": null,
+      "speaker": "الشيخ صالح المغامسي",
+      "content_type": "lecture",
+      "rights_holder": null,
+      "rights_notice": null,
+      "rights_status": "UNKNOWN",
+      "license_type": "UNKNOWN",
+      "license_evidence_url": null,
+      "attribution_text": "الشيخ صالح المغامسي",
+      "embedding_status": "UNTESTED",
+      "embed_url": "https://www.youtube.com/embed/c-nqGuRmXqY",
+      "editorial_status": "PENDING_REVIEW",
+      "publication_status": "DRAFT",
+      "religious_review_status": "PENDING_REVIEW",
+      "depiction_review_status": "PENDING_REVIEW",
+      "thumbnail_url": "https://i.ytimg.com/vi/c-nqGuRmXqY/hqdefault.jpg",
+      "thumbnail_rights_status": "UNKNOWN",
+      "source_checked_at": "2026-11-15",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "verification_evidence_urls": [
+        "https://www.youtube.com/watch?v=c-nqGuRmXqY",
+        "https://www.youtube.com/@Alrasekhoon"
+      ],
+      "notes": "مصدر مرئي من صفحة الفيديو وقناة الشيخ صالح المغامسي. أضيف للعرض والتشغيل بالنقر، مع بقاء مراجعة الحقوق والتحرير مطلوبة. أُدمج السجل من كتالوج العرض القديم إلى كتالوج المصادر الواحد؛ التشغيل الداخلي يبقى محجوبًا حتى اكتمال مراجعة الحقوق والتضمين.",
+      "rights_action": "مراجعة الحقوق والتضمين والتحرير قبل أي عرض داخلي",
+      "review_reason": "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
+      "review_next_action": "verify rights, review content, test official embed, then approval gate",
+      "provenance": {
+        "sourceFile": "seerah-media-catalog.csv",
+        "sourceRow": 42,
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -1295,7 +1613,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 16,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -1350,7 +1668,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 8,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -1404,7 +1722,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 21,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -1564,7 +1882,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 5,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -1617,7 +1935,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 30,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -1672,7 +1990,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 10,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -1779,7 +2097,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 27,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -1832,7 +2150,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 15,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -2047,7 +2365,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 33,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -2101,7 +2419,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 20,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -2268,6 +2586,59 @@
       }
     },
     {
+      "id": "youtube:I3cJrdbd1h0",
+      "provider": "youtube",
+      "video_id": "I3cJrdbd1h0",
+      "official_url": "https://www.youtube.com/watch?v=I3cJrdbd1h0",
+      "title_original": "2- السيرة النبوية | تاريخ مكة المكرمة قبل الإسلام | الشيخ سعد العتيق",
+      "title_ar": "2- السيرة النبوية | تاريخ مكة المكرمة قبل الإسلام | الشيخ سعد العتيق",
+      "description_ar": null,
+      "language": "ar",
+      "duration_seconds": null,
+      "published_at": null,
+      "channel_id": null,
+      "channel_name": "أضواء الرباط",
+      "channel_url": "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+      "publisher_status": "UNKNOWN",
+      "series_name": "السيرة النبوية كاملة للشيخ سعد العتيق",
+      "playlist_id": null,
+      "episode_number": null,
+      "category": "سيرة نبوية",
+      "subcategory": "سيرة نبوية",
+      "age_band": null,
+      "speaker": "الشيخ سعد العتيق",
+      "content_type": "lecture",
+      "rights_holder": null,
+      "rights_notice": null,
+      "rights_status": "UNKNOWN",
+      "license_type": "UNKNOWN",
+      "license_evidence_url": null,
+      "attribution_text": "أضواء الرباط",
+      "embedding_status": "UNTESTED",
+      "embed_url": "https://www.youtube.com/embed/I3cJrdbd1h0",
+      "editorial_status": "PENDING_REVIEW",
+      "publication_status": "DRAFT",
+      "religious_review_status": "PENDING_REVIEW",
+      "depiction_review_status": "PENDING_REVIEW",
+      "thumbnail_url": "https://i.ytimg.com/vi/I3cJrdbd1h0/hqdefault.jpg",
+      "thumbnail_rights_status": "UNKNOWN",
+      "source_checked_at": "2026-11-15",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "verification_evidence_urls": [
+        "https://www.youtube.com/watch?v=I3cJrdbd1h0",
+        "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg"
+      ],
+      "notes": "مصدر مرئي من صفحة الفيديو وقناة أضواء الرباط. أضيف للعرض والتشغيل بالنقر، مع بقاء مراجعة الحقوق والتحرير مطلوبة. أُدمج السجل من كتالوج العرض القديم إلى كتالوج المصادر الواحد؛ التشغيل الداخلي يبقى محجوبًا حتى اكتمال مراجعة الحقوق والتضمين.",
+      "rights_action": "مراجعة الحقوق والتضمين والتحرير قبل أي عرض داخلي",
+      "review_reason": "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
+      "review_next_action": "verify rights, review content, test official embed, then approval gate",
+      "provenance": {
+        "sourceFile": "seerah-media-catalog.csv",
+        "sourceRow": 51,
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
+      }
+    },
+    {
       "id": "youtube:IIYU2y3a6L8",
       "provider": "youtube",
       "video_id": "IIYU2y3a6L8",
@@ -2319,6 +2690,59 @@
         "sourceFile": "kids-media-catalog.csv",
         "sourceRow": 37,
         "inputSha256": "b5797f46785bbf98f3c6bb18a18f18d37083721e798c27b23dd6eb84874cfc75"
+      }
+    },
+    {
+      "id": "youtube:IR-ol17Is2Q",
+      "provider": "youtube",
+      "video_id": "IR-ol17Is2Q",
+      "official_url": "https://www.youtube.com/watch?v=IR-ol17Is2Q",
+      "title_original": "د العريفي الذاكرين الله كثيرًا والذاكرات",
+      "title_ar": "د العريفي الذاكرين الله كثيرًا والذاكرات",
+      "description_ar": null,
+      "language": "ar",
+      "duration_seconds": null,
+      "published_at": null,
+      "channel_id": null,
+      "channel_name": "مقاطع الشيخ محمد العريفي alarefe",
+      "channel_url": "https://www.youtube.com/@hamode656",
+      "publisher_status": "UNKNOWN",
+      "series_name": "محاضرات الشيخ محمد العريفي",
+      "playlist_id": null,
+      "episode_number": null,
+      "category": "محاضرات ومواعظ",
+      "subcategory": "محاضرات ومواعظ",
+      "age_band": null,
+      "speaker": "الشيخ محمد العريفي",
+      "content_type": "lecture",
+      "rights_holder": null,
+      "rights_notice": null,
+      "rights_status": "UNKNOWN",
+      "license_type": "UNKNOWN",
+      "license_evidence_url": null,
+      "attribution_text": "مقاطع الشيخ محمد العريفي alarefe",
+      "embedding_status": "UNTESTED",
+      "embed_url": "https://www.youtube.com/embed/IR-ol17Is2Q",
+      "editorial_status": "PENDING_REVIEW",
+      "publication_status": "DRAFT",
+      "religious_review_status": "PENDING_REVIEW",
+      "depiction_review_status": "PENDING_REVIEW",
+      "thumbnail_url": "https://i.ytimg.com/vi/IR-ol17Is2Q/hqdefault.jpg",
+      "thumbnail_rights_status": "UNKNOWN",
+      "source_checked_at": "2026-11-15",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "verification_evidence_urls": [
+        "https://www.youtube.com/watch?v=IR-ol17Is2Q",
+        "https://www.youtube.com/@hamode656"
+      ],
+      "notes": "مصدر مرئي من صفحة الفيديو وقناة مقاطع الشيخ محمد العريفي alarefe. أضيف للعرض والتشغيل بالنقر، مع بقاء مراجعة الحقوق والتحرير مطلوبة. أُدمج السجل من كتالوج العرض القديم إلى كتالوج المصادر الواحد؛ التشغيل الداخلي يبقى محجوبًا حتى اكتمال مراجعة الحقوق والتضمين.",
+      "rights_action": "مراجعة الحقوق والتضمين والتحرير قبل أي عرض داخلي",
+      "review_reason": "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
+      "review_next_action": "verify rights, review content, test official embed, then approval gate",
+      "provenance": {
+        "sourceFile": "seerah-media-catalog.csv",
+        "sourceRow": 38,
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -2424,7 +2848,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 12,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -2586,6 +3010,112 @@
         "sourceFile": "kids-media-catalog.csv",
         "sourceRow": 47,
         "inputSha256": "b5797f46785bbf98f3c6bb18a18f18d37083721e798c27b23dd6eb84874cfc75"
+      }
+    },
+    {
+      "id": "youtube:l2dLtP_x2qA",
+      "provider": "youtube",
+      "video_id": "l2dLtP_x2qA",
+      "official_url": "https://www.youtube.com/watch?v=l2dLtP_x2qA",
+      "title_original": "قصة موسى وفرعون كاملة ونهاية الطغيان | الشيخ صالح المغامسي",
+      "title_ar": "قصة موسى وفرعون كاملة ونهاية الطغيان | الشيخ صالح المغامسي",
+      "description_ar": null,
+      "language": "ar",
+      "duration_seconds": null,
+      "published_at": null,
+      "channel_id": null,
+      "channel_name": "الشيخ صالح المغامسي",
+      "channel_url": "https://www.youtube.com/@Alrasekhoon",
+      "publisher_status": "UNKNOWN",
+      "series_name": "دروس الشيخ صالح المغامسي",
+      "playlist_id": null,
+      "episode_number": null,
+      "category": "قصص الأنبياء والدروس",
+      "subcategory": "قصص الأنبياء والدروس",
+      "age_band": null,
+      "speaker": "الشيخ صالح المغامسي",
+      "content_type": "lecture",
+      "rights_holder": null,
+      "rights_notice": null,
+      "rights_status": "UNKNOWN",
+      "license_type": "UNKNOWN",
+      "license_evidence_url": null,
+      "attribution_text": "الشيخ صالح المغامسي",
+      "embedding_status": "UNTESTED",
+      "embed_url": "https://www.youtube.com/embed/l2dLtP_x2qA",
+      "editorial_status": "PENDING_REVIEW",
+      "publication_status": "DRAFT",
+      "religious_review_status": "PENDING_REVIEW",
+      "depiction_review_status": "PENDING_REVIEW",
+      "thumbnail_url": "https://i.ytimg.com/vi/l2dLtP_x2qA/hqdefault.jpg",
+      "thumbnail_rights_status": "UNKNOWN",
+      "source_checked_at": "2026-11-15",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "verification_evidence_urls": [
+        "https://www.youtube.com/watch?v=l2dLtP_x2qA",
+        "https://www.youtube.com/@Alrasekhoon"
+      ],
+      "notes": "مصدر مرئي من صفحة الفيديو وقناة الشيخ صالح المغامسي. أضيف للعرض والتشغيل بالنقر، مع بقاء مراجعة الحقوق والتحرير مطلوبة. أُدمج السجل من كتالوج العرض القديم إلى كتالوج المصادر الواحد؛ التشغيل الداخلي يبقى محجوبًا حتى اكتمال مراجعة الحقوق والتضمين.",
+      "rights_action": "مراجعة الحقوق والتضمين والتحرير قبل أي عرض داخلي",
+      "review_reason": "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
+      "review_next_action": "verify rights, review content, test official embed, then approval gate",
+      "provenance": {
+        "sourceFile": "seerah-media-catalog.csv",
+        "sourceRow": 44,
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
+      }
+    },
+    {
+      "id": "youtube:L873wrflZ9w",
+      "provider": "youtube",
+      "video_id": "L873wrflZ9w",
+      "official_url": "https://www.youtube.com/watch?v=L873wrflZ9w",
+      "title_original": "برنامج مع القرآن (22) | علامات تدل أن قلبك سليم",
+      "title_ar": "برنامج مع القرآن (22) | علامات تدل أن قلبك سليم",
+      "description_ar": null,
+      "language": "ar",
+      "duration_seconds": null,
+      "published_at": null,
+      "channel_id": null,
+      "channel_name": "عمر عبد الكافي",
+      "channel_url": "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+      "publisher_status": "UNKNOWN",
+      "series_name": "محاضرات الشيخ عمر عبد الكافي",
+      "playlist_id": null,
+      "episode_number": null,
+      "category": "محاضرات ومواعظ",
+      "subcategory": "محاضرات ومواعظ",
+      "age_band": null,
+      "speaker": "الشيخ عمر عبد الكافي",
+      "content_type": "lecture",
+      "rights_holder": null,
+      "rights_notice": null,
+      "rights_status": "UNKNOWN",
+      "license_type": "UNKNOWN",
+      "license_evidence_url": null,
+      "attribution_text": "عمر عبد الكافي",
+      "embedding_status": "UNTESTED",
+      "embed_url": "https://www.youtube.com/embed/L873wrflZ9w",
+      "editorial_status": "PENDING_REVIEW",
+      "publication_status": "DRAFT",
+      "religious_review_status": "PENDING_REVIEW",
+      "depiction_review_status": "PENDING_REVIEW",
+      "thumbnail_url": "https://i.ytimg.com/vi/L873wrflZ9w/hqdefault.jpg",
+      "thumbnail_rights_status": "UNKNOWN",
+      "source_checked_at": "2026-11-15",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "verification_evidence_urls": [
+        "https://www.youtube.com/watch?v=L873wrflZ9w",
+        "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos"
+      ],
+      "notes": "مصدر مرئي من صفحة الفيديو وقناة عمر عبد الكافي. أضيف للعرض والتشغيل بالنقر، مع بقاء مراجعة الحقوق والتحرير مطلوبة. أُدمج السجل من كتالوج العرض القديم إلى كتالوج المصادر الواحد؛ التشغيل الداخلي يبقى محجوبًا حتى اكتمال مراجعة الحقوق والتضمين.",
+      "rights_action": "مراجعة الحقوق والتضمين والتحرير قبل أي عرض داخلي",
+      "review_reason": "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
+      "review_next_action": "verify rights, review content, test official embed, then approval gate",
+      "provenance": {
+        "sourceFile": "seerah-media-catalog.csv",
+        "sourceRow": 49,
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -2805,6 +3335,59 @@
       }
     },
     {
+      "id": "youtube:MXXhMIC16Es",
+      "provider": "youtube",
+      "video_id": "MXXhMIC16Es",
+      "official_url": "https://www.youtube.com/watch?v=MXXhMIC16Es",
+      "title_original": "1- السيرة النبوية | فوائد تعلم سيرة النبي ﷺ | الشيخ سعد العتيق",
+      "title_ar": "1- السيرة النبوية | فوائد تعلم سيرة النبي ﷺ | الشيخ سعد العتيق",
+      "description_ar": null,
+      "language": "ar",
+      "duration_seconds": null,
+      "published_at": null,
+      "channel_id": null,
+      "channel_name": "أضواء الرباط",
+      "channel_url": "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+      "publisher_status": "UNKNOWN",
+      "series_name": "السيرة النبوية كاملة للشيخ سعد العتيق",
+      "playlist_id": null,
+      "episode_number": null,
+      "category": "سيرة نبوية",
+      "subcategory": "سيرة نبوية",
+      "age_band": null,
+      "speaker": "الشيخ سعد العتيق",
+      "content_type": "lecture",
+      "rights_holder": null,
+      "rights_notice": null,
+      "rights_status": "UNKNOWN",
+      "license_type": "UNKNOWN",
+      "license_evidence_url": null,
+      "attribution_text": "أضواء الرباط",
+      "embedding_status": "UNTESTED",
+      "embed_url": "https://www.youtube.com/embed/MXXhMIC16Es",
+      "editorial_status": "PENDING_REVIEW",
+      "publication_status": "DRAFT",
+      "religious_review_status": "PENDING_REVIEW",
+      "depiction_review_status": "PENDING_REVIEW",
+      "thumbnail_url": "https://i.ytimg.com/vi/MXXhMIC16Es/hqdefault.jpg",
+      "thumbnail_rights_status": "UNKNOWN",
+      "source_checked_at": "2026-11-15",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "verification_evidence_urls": [
+        "https://www.youtube.com/watch?v=MXXhMIC16Es",
+        "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg"
+      ],
+      "notes": "مصدر مرئي من صفحة الفيديو وقناة أضواء الرباط. أضيف للعرض والتشغيل بالنقر، مع بقاء مراجعة الحقوق والتحرير مطلوبة. أُدمج السجل من كتالوج العرض القديم إلى كتالوج المصادر الواحد؛ التشغيل الداخلي يبقى محجوبًا حتى اكتمال مراجعة الحقوق والتضمين.",
+      "rights_action": "مراجعة الحقوق والتضمين والتحرير قبل أي عرض داخلي",
+      "review_reason": "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
+      "review_next_action": "verify rights, review content, test official embed, then approval gate",
+      "provenance": {
+        "sourceFile": "seerah-media-catalog.csv",
+        "sourceRow": 50,
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
+      }
+    },
+    {
       "id": "youtube:n-wybr5unG4",
       "provider": "youtube",
       "video_id": "n-wybr5unG4",
@@ -2859,6 +3442,59 @@
       }
     },
     {
+      "id": "youtube:N0MG6XN4bJ4",
+      "provider": "youtube",
+      "video_id": "N0MG6XN4bJ4",
+      "official_url": "https://www.youtube.com/watch?v=N0MG6XN4bJ4",
+      "title_original": "من هي الجسّاسة وما علاقتها بالمسيح الدجال؟ | الشيخ صالح المغامسي",
+      "title_ar": "من هي الجسّاسة وما علاقتها بالمسيح الدجال؟ | الشيخ صالح المغامسي",
+      "description_ar": null,
+      "language": "ar",
+      "duration_seconds": null,
+      "published_at": null,
+      "channel_id": null,
+      "channel_name": "الشيخ صالح المغامسي",
+      "channel_url": "https://www.youtube.com/@Alrasekhoon",
+      "publisher_status": "UNKNOWN",
+      "series_name": "دروس الشيخ صالح المغامسي",
+      "playlist_id": null,
+      "episode_number": null,
+      "category": "قصص الأنبياء والدروس",
+      "subcategory": "قصص الأنبياء والدروس",
+      "age_band": null,
+      "speaker": "الشيخ صالح المغامسي",
+      "content_type": "lecture",
+      "rights_holder": null,
+      "rights_notice": null,
+      "rights_status": "UNKNOWN",
+      "license_type": "UNKNOWN",
+      "license_evidence_url": null,
+      "attribution_text": "الشيخ صالح المغامسي",
+      "embedding_status": "UNTESTED",
+      "embed_url": "https://www.youtube.com/embed/N0MG6XN4bJ4",
+      "editorial_status": "PENDING_REVIEW",
+      "publication_status": "DRAFT",
+      "religious_review_status": "PENDING_REVIEW",
+      "depiction_review_status": "PENDING_REVIEW",
+      "thumbnail_url": "https://i.ytimg.com/vi/N0MG6XN4bJ4/hqdefault.jpg",
+      "thumbnail_rights_status": "UNKNOWN",
+      "source_checked_at": "2026-11-15",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "verification_evidence_urls": [
+        "https://www.youtube.com/watch?v=N0MG6XN4bJ4",
+        "https://www.youtube.com/@Alrasekhoon"
+      ],
+      "notes": "مصدر مرئي من صفحة الفيديو وقناة الشيخ صالح المغامسي. أضيف للعرض والتشغيل بالنقر، مع بقاء مراجعة الحقوق والتحرير مطلوبة. أُدمج السجل من كتالوج العرض القديم إلى كتالوج المصادر الواحد؛ التشغيل الداخلي يبقى محجوبًا حتى اكتمال مراجعة الحقوق والتضمين.",
+      "rights_action": "مراجعة الحقوق والتضمين والتحرير قبل أي عرض داخلي",
+      "review_reason": "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
+      "review_next_action": "verify rights, review content, test official embed, then approval gate",
+      "provenance": {
+        "sourceFile": "seerah-media-catalog.csv",
+        "sourceRow": 40,
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
+      }
+    },
+    {
       "id": "youtube:NA6bFjTI108",
       "provider": "youtube",
       "video_id": "NA6bFjTI108",
@@ -2909,7 +3545,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 32,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -3021,6 +3657,59 @@
       }
     },
     {
+      "id": "youtube:NhV_u_67HP8",
+      "provider": "youtube",
+      "video_id": "NhV_u_67HP8",
+      "official_url": "https://www.youtube.com/watch?v=NhV_u_67HP8",
+      "title_original": "الحياة السعيدة محاضرة الشيخ عمر عبد الكافي",
+      "title_ar": "الحياة السعيدة محاضرة الشيخ عمر عبد الكافي",
+      "description_ar": null,
+      "language": "ar",
+      "duration_seconds": null,
+      "published_at": null,
+      "channel_id": null,
+      "channel_name": "عمر عبد الكافي",
+      "channel_url": "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+      "publisher_status": "UNKNOWN",
+      "series_name": "محاضرات الشيخ عمر عبد الكافي",
+      "playlist_id": null,
+      "episode_number": null,
+      "category": "محاضرات ومواعظ",
+      "subcategory": "محاضرات ومواعظ",
+      "age_band": null,
+      "speaker": "الشيخ عمر عبد الكافي",
+      "content_type": "lecture",
+      "rights_holder": null,
+      "rights_notice": null,
+      "rights_status": "UNKNOWN",
+      "license_type": "UNKNOWN",
+      "license_evidence_url": null,
+      "attribution_text": "عمر عبد الكافي",
+      "embedding_status": "UNTESTED",
+      "embed_url": "https://www.youtube.com/embed/NhV_u_67HP8",
+      "editorial_status": "PENDING_REVIEW",
+      "publication_status": "DRAFT",
+      "religious_review_status": "PENDING_REVIEW",
+      "depiction_review_status": "PENDING_REVIEW",
+      "thumbnail_url": "https://i.ytimg.com/vi/NhV_u_67HP8/hqdefault.jpg",
+      "thumbnail_rights_status": "UNKNOWN",
+      "source_checked_at": "2026-11-15",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "verification_evidence_urls": [
+        "https://www.youtube.com/watch?v=NhV_u_67HP8",
+        "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos"
+      ],
+      "notes": "مصدر مرئي من صفحة الفيديو وقناة عمر عبد الكافي. أضيف للعرض والتشغيل بالنقر، مع بقاء مراجعة الحقوق والتحرير مطلوبة. أُدمج السجل من كتالوج العرض القديم إلى كتالوج المصادر الواحد؛ التشغيل الداخلي يبقى محجوبًا حتى اكتمال مراجعة الحقوق والتضمين.",
+      "rights_action": "مراجعة الحقوق والتضمين والتحرير قبل أي عرض داخلي",
+      "review_reason": "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
+      "review_next_action": "verify rights, review content, test official embed, then approval gate",
+      "provenance": {
+        "sourceFile": "seerah-media-catalog.csv",
+        "sourceRow": 47,
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
+      }
+    },
+    {
       "id": "youtube:nNhaFbvqah4",
       "provider": "youtube",
       "video_id": "nNhaFbvqah4",
@@ -3125,7 +3814,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 2,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -3233,7 +3922,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 31,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -3288,7 +3977,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 24,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -3342,6 +4031,112 @@
         "sourceFile": "kids-media-catalog.csv",
         "sourceRow": 51,
         "inputSha256": "b5797f46785bbf98f3c6bb18a18f18d37083721e798c27b23dd6eb84874cfc75"
+      }
+    },
+    {
+      "id": "youtube:oTv_Qy9CFFg",
+      "provider": "youtube",
+      "video_id": "oTv_Qy9CFFg",
+      "official_url": "https://www.youtube.com/watch?v=oTv_Qy9CFFg",
+      "title_original": "5- السيرة النبوية | الدعوة السرية والدعوة الجهرية | الشيخ سعد العتيق",
+      "title_ar": "5- السيرة النبوية | الدعوة السرية والدعوة الجهرية | الشيخ سعد العتيق",
+      "description_ar": null,
+      "language": "ar",
+      "duration_seconds": null,
+      "published_at": null,
+      "channel_id": null,
+      "channel_name": "أضواء الرباط",
+      "channel_url": "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+      "publisher_status": "UNKNOWN",
+      "series_name": "السيرة النبوية كاملة للشيخ سعد العتيق",
+      "playlist_id": null,
+      "episode_number": null,
+      "category": "سيرة نبوية",
+      "subcategory": "سيرة نبوية",
+      "age_band": null,
+      "speaker": "الشيخ سعد العتيق",
+      "content_type": "lecture",
+      "rights_holder": null,
+      "rights_notice": null,
+      "rights_status": "UNKNOWN",
+      "license_type": "UNKNOWN",
+      "license_evidence_url": null,
+      "attribution_text": "أضواء الرباط",
+      "embedding_status": "UNTESTED",
+      "embed_url": "https://www.youtube.com/embed/oTv_Qy9CFFg",
+      "editorial_status": "PENDING_REVIEW",
+      "publication_status": "DRAFT",
+      "religious_review_status": "PENDING_REVIEW",
+      "depiction_review_status": "PENDING_REVIEW",
+      "thumbnail_url": "https://i.ytimg.com/vi/oTv_Qy9CFFg/hqdefault.jpg",
+      "thumbnail_rights_status": "UNKNOWN",
+      "source_checked_at": "2026-11-15",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "verification_evidence_urls": [
+        "https://www.youtube.com/watch?v=oTv_Qy9CFFg",
+        "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg"
+      ],
+      "notes": "مصدر مرئي من صفحة الفيديو وقناة أضواء الرباط. أضيف للعرض والتشغيل بالنقر، مع بقاء مراجعة الحقوق والتحرير مطلوبة. أُدمج السجل من كتالوج العرض القديم إلى كتالوج المصادر الواحد؛ التشغيل الداخلي يبقى محجوبًا حتى اكتمال مراجعة الحقوق والتضمين.",
+      "rights_action": "مراجعة الحقوق والتضمين والتحرير قبل أي عرض داخلي",
+      "review_reason": "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
+      "review_next_action": "verify rights, review content, test official embed, then approval gate",
+      "provenance": {
+        "sourceFile": "seerah-media-catalog.csv",
+        "sourceRow": 54,
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
+      }
+    },
+    {
+      "id": "youtube:ouOz30mHrEg",
+      "provider": "youtube",
+      "video_id": "ouOz30mHrEg",
+      "official_url": "https://www.youtube.com/watch?v=ouOz30mHrEg",
+      "title_original": "إيمانيات - الحلقة 1 - الشيخ عمر عبد الكافي",
+      "title_ar": "إيمانيات - الحلقة 1 - الشيخ عمر عبد الكافي",
+      "description_ar": null,
+      "language": "ar",
+      "duration_seconds": null,
+      "published_at": null,
+      "channel_id": null,
+      "channel_name": "عمر عبد الكافي",
+      "channel_url": "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+      "publisher_status": "UNKNOWN",
+      "series_name": "محاضرات الشيخ عمر عبد الكافي",
+      "playlist_id": null,
+      "episode_number": null,
+      "category": "محاضرات ومواعظ",
+      "subcategory": "محاضرات ومواعظ",
+      "age_band": null,
+      "speaker": "الشيخ عمر عبد الكافي",
+      "content_type": "lecture",
+      "rights_holder": null,
+      "rights_notice": null,
+      "rights_status": "UNKNOWN",
+      "license_type": "UNKNOWN",
+      "license_evidence_url": null,
+      "attribution_text": "عمر عبد الكافي",
+      "embedding_status": "UNTESTED",
+      "embed_url": "https://www.youtube.com/embed/ouOz30mHrEg",
+      "editorial_status": "PENDING_REVIEW",
+      "publication_status": "DRAFT",
+      "religious_review_status": "PENDING_REVIEW",
+      "depiction_review_status": "PENDING_REVIEW",
+      "thumbnail_url": "https://i.ytimg.com/vi/ouOz30mHrEg/hqdefault.jpg",
+      "thumbnail_rights_status": "UNKNOWN",
+      "source_checked_at": "2026-11-15",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "verification_evidence_urls": [
+        "https://www.youtube.com/watch?v=ouOz30mHrEg",
+        "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos"
+      ],
+      "notes": "مصدر مرئي من صفحة الفيديو وقناة عمر عبد الكافي. أضيف للعرض والتشغيل بالنقر، مع بقاء مراجعة الحقوق والتحرير مطلوبة. أُدمج السجل من كتالوج العرض القديم إلى كتالوج المصادر الواحد؛ التشغيل الداخلي يبقى محجوبًا حتى اكتمال مراجعة الحقوق والتضمين.",
+      "rights_action": "مراجعة الحقوق والتضمين والتحرير قبل أي عرض داخلي",
+      "review_reason": "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
+      "review_next_action": "verify rights, review content, test official embed, then approval gate",
+      "provenance": {
+        "sourceFile": "seerah-media-catalog.csv",
+        "sourceRow": 45,
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -3449,7 +4244,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 4,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -3556,7 +4351,60 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 18,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
+      }
+    },
+    {
+      "id": "youtube:QF_6YzkDuXw",
+      "provider": "youtube",
+      "video_id": "QF_6YzkDuXw",
+      "official_url": "https://www.youtube.com/watch?v=QF_6YzkDuXw",
+      "title_original": "د العريفي محاضرة بعنوان الأصل الأخلاقي عند أهل السنة",
+      "title_ar": "د العريفي محاضرة بعنوان الأصل الأخلاقي عند أهل السنة",
+      "description_ar": null,
+      "language": "ar",
+      "duration_seconds": null,
+      "published_at": null,
+      "channel_id": null,
+      "channel_name": "مقاطع الشيخ محمد العريفي alarefe",
+      "channel_url": "https://www.youtube.com/@hamode656",
+      "publisher_status": "UNKNOWN",
+      "series_name": "محاضرات الشيخ محمد العريفي",
+      "playlist_id": null,
+      "episode_number": null,
+      "category": "محاضرات ومواعظ",
+      "subcategory": "محاضرات ومواعظ",
+      "age_band": null,
+      "speaker": "الشيخ محمد العريفي",
+      "content_type": "lecture",
+      "rights_holder": null,
+      "rights_notice": null,
+      "rights_status": "UNKNOWN",
+      "license_type": "UNKNOWN",
+      "license_evidence_url": null,
+      "attribution_text": "مقاطع الشيخ محمد العريفي alarefe",
+      "embedding_status": "UNTESTED",
+      "embed_url": "https://www.youtube.com/embed/QF_6YzkDuXw",
+      "editorial_status": "PENDING_REVIEW",
+      "publication_status": "DRAFT",
+      "religious_review_status": "PENDING_REVIEW",
+      "depiction_review_status": "PENDING_REVIEW",
+      "thumbnail_url": "https://i.ytimg.com/vi/QF_6YzkDuXw/hqdefault.jpg",
+      "thumbnail_rights_status": "UNKNOWN",
+      "source_checked_at": "2026-11-15",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "verification_evidence_urls": [
+        "https://www.youtube.com/watch?v=QF_6YzkDuXw",
+        "https://www.youtube.com/@hamode656"
+      ],
+      "notes": "مصدر مرئي من صفحة الفيديو وقناة مقاطع الشيخ محمد العريفي alarefe. أضيف للعرض والتشغيل بالنقر، مع بقاء مراجعة الحقوق والتحرير مطلوبة. أُدمج السجل من كتالوج العرض القديم إلى كتالوج المصادر الواحد؛ التشغيل الداخلي يبقى محجوبًا حتى اكتمال مراجعة الحقوق والتضمين.",
+      "rights_action": "مراجعة الحقوق والتضمين والتحرير قبل أي عرض داخلي",
+      "review_reason": "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
+      "review_next_action": "verify rights, review content, test official embed, then approval gate",
+      "provenance": {
+        "sourceFile": "seerah-media-catalog.csv",
+        "sourceRow": 37,
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -3663,7 +4511,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 19,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -3716,7 +4564,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 13,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -3770,6 +4618,59 @@
         "sourceFile": "kids-media-catalog.csv",
         "sourceRow": 15,
         "inputSha256": "b5797f46785bbf98f3c6bb18a18f18d37083721e798c27b23dd6eb84874cfc75"
+      }
+    },
+    {
+      "id": "youtube:qZ7HpSbtZW4",
+      "provider": "youtube",
+      "video_id": "qZ7HpSbtZW4",
+      "official_url": "https://www.youtube.com/watch?v=qZ7HpSbtZW4",
+      "title_original": "السيرة النبوية | الحلقة (21) | معركة مؤتة ودعوة النبي ﷺ للملوك | د. طارق السويدان",
+      "title_ar": "السيرة النبوية | الحلقة (21) | معركة مؤتة ودعوة النبي ﷺ للملوك | د. طارق السويدان",
+      "description_ar": null,
+      "language": "ar",
+      "duration_seconds": null,
+      "published_at": null,
+      "channel_id": null,
+      "channel_name": "د. طارق السويدان",
+      "channel_url": "https://www.youtube.com/@DrAlSuwaidan",
+      "publisher_status": "UNKNOWN",
+      "series_name": "سلسلة السيرة النبوية | د. طارق السويدان",
+      "playlist_id": null,
+      "episode_number": null,
+      "category": "سيرة نبوية",
+      "subcategory": "سيرة نبوية",
+      "age_band": null,
+      "speaker": "الدكتور طارق السويدان",
+      "content_type": "lecture",
+      "rights_holder": null,
+      "rights_notice": null,
+      "rights_status": "UNKNOWN",
+      "license_type": "UNKNOWN",
+      "license_evidence_url": null,
+      "attribution_text": "د. طارق السويدان",
+      "embedding_status": "UNTESTED",
+      "embed_url": "https://www.youtube.com/embed/qZ7HpSbtZW4",
+      "editorial_status": "PENDING_REVIEW",
+      "publication_status": "DRAFT",
+      "religious_review_status": "PENDING_REVIEW",
+      "depiction_review_status": "PENDING_REVIEW",
+      "thumbnail_url": "https://i.ytimg.com/vi/qZ7HpSbtZW4/hqdefault.jpg",
+      "thumbnail_rights_status": "UNKNOWN",
+      "source_checked_at": "2026-11-15",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "verification_evidence_urls": [
+        "https://www.youtube.com/watch?v=qZ7HpSbtZW4",
+        "https://www.youtube.com/@DrAlSuwaidan"
+      ],
+      "notes": "مصدر مرئي من صفحة الفيديو وقناة د. طارق السويدان. أضيف للعرض والتشغيل بالنقر، مع بقاء مراجعة الحقوق والتحرير مطلوبة. أُدمج السجل من كتالوج العرض القديم إلى كتالوج المصادر الواحد؛ التشغيل الداخلي يبقى محجوبًا حتى اكتمال مراجعة الحقوق والتضمين.",
+      "rights_action": "مراجعة الحقوق والتضمين والتحرير قبل أي عرض داخلي",
+      "review_reason": "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
+      "review_next_action": "verify rights, review content, test official embed, then approval gate",
+      "provenance": {
+        "sourceFile": "seerah-media-catalog.csv",
+        "sourceRow": 35,
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -3875,7 +4776,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 28,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -3932,6 +4833,59 @@
       }
     },
     {
+      "id": "youtube:RukFPc4qA1A",
+      "provider": "youtube",
+      "video_id": "RukFPc4qA1A",
+      "official_url": "https://www.youtube.com/watch?v=RukFPc4qA1A",
+      "title_original": "قصة لوط عليه السلام عبرة لكل زمان",
+      "title_ar": "قصة لوط عليه السلام عبرة لكل زمان",
+      "description_ar": null,
+      "language": "ar",
+      "duration_seconds": null,
+      "published_at": null,
+      "channel_id": null,
+      "channel_name": "الشيخ صالح المغامسي",
+      "channel_url": "https://www.youtube.com/@Alrasekhoon",
+      "publisher_status": "UNKNOWN",
+      "series_name": "دروس الشيخ صالح المغامسي",
+      "playlist_id": null,
+      "episode_number": null,
+      "category": "قصص الأنبياء والدروس",
+      "subcategory": "قصص الأنبياء والدروس",
+      "age_band": null,
+      "speaker": "الشيخ صالح المغامسي",
+      "content_type": "lecture",
+      "rights_holder": null,
+      "rights_notice": null,
+      "rights_status": "UNKNOWN",
+      "license_type": "UNKNOWN",
+      "license_evidence_url": null,
+      "attribution_text": "الشيخ صالح المغامسي",
+      "embedding_status": "UNTESTED",
+      "embed_url": "https://www.youtube.com/embed/RukFPc4qA1A",
+      "editorial_status": "PENDING_REVIEW",
+      "publication_status": "DRAFT",
+      "religious_review_status": "PENDING_REVIEW",
+      "depiction_review_status": "PENDING_REVIEW",
+      "thumbnail_url": "https://i.ytimg.com/vi/RukFPc4qA1A/hqdefault.jpg",
+      "thumbnail_rights_status": "UNKNOWN",
+      "source_checked_at": "2026-11-15",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "verification_evidence_urls": [
+        "https://www.youtube.com/watch?v=RukFPc4qA1A",
+        "https://www.youtube.com/@Alrasekhoon"
+      ],
+      "notes": "مصدر مرئي من صفحة الفيديو وقناة الشيخ صالح المغامسي. أضيف للعرض والتشغيل بالنقر، مع بقاء مراجعة الحقوق والتحرير مطلوبة. أُدمج السجل من كتالوج العرض القديم إلى كتالوج المصادر الواحد؛ التشغيل الداخلي يبقى محجوبًا حتى اكتمال مراجعة الحقوق والتضمين.",
+      "rights_action": "مراجعة الحقوق والتضمين والتحرير قبل أي عرض داخلي",
+      "review_reason": "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
+      "review_next_action": "verify rights, review content, test official embed, then approval gate",
+      "provenance": {
+        "sourceFile": "seerah-media-catalog.csv",
+        "sourceRow": 43,
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
+      }
+    },
+    {
       "id": "youtube:s5ZPujmYhUE",
       "provider": "youtube",
       "video_id": "s5ZPujmYhUE",
@@ -3982,7 +4936,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 9,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -4089,7 +5043,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 14,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -4197,7 +5151,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 26,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -4469,6 +5423,59 @@
       }
     },
     {
+      "id": "youtube:vaPPoOeSGAk",
+      "provider": "youtube",
+      "video_id": "vaPPoOeSGAk",
+      "official_url": "https://www.youtube.com/watch?v=vaPPoOeSGAk",
+      "title_original": "هل فرعون ربّى موسى ولبث عنده سنين؟ | الشيخ صالح المغامسي",
+      "title_ar": "هل فرعون ربّى موسى ولبث عنده سنين؟ | الشيخ صالح المغامسي",
+      "description_ar": null,
+      "language": "ar",
+      "duration_seconds": null,
+      "published_at": null,
+      "channel_id": null,
+      "channel_name": "الشيخ صالح المغامسي",
+      "channel_url": "https://www.youtube.com/@Alrasekhoon",
+      "publisher_status": "UNKNOWN",
+      "series_name": "دروس الشيخ صالح المغامسي",
+      "playlist_id": null,
+      "episode_number": null,
+      "category": "قصص الأنبياء والدروس",
+      "subcategory": "قصص الأنبياء والدروس",
+      "age_band": null,
+      "speaker": "الشيخ صالح المغامسي",
+      "content_type": "lecture",
+      "rights_holder": null,
+      "rights_notice": null,
+      "rights_status": "UNKNOWN",
+      "license_type": "UNKNOWN",
+      "license_evidence_url": null,
+      "attribution_text": "الشيخ صالح المغامسي",
+      "embedding_status": "UNTESTED",
+      "embed_url": "https://www.youtube.com/embed/vaPPoOeSGAk",
+      "editorial_status": "PENDING_REVIEW",
+      "publication_status": "DRAFT",
+      "religious_review_status": "PENDING_REVIEW",
+      "depiction_review_status": "PENDING_REVIEW",
+      "thumbnail_url": "https://i.ytimg.com/vi/vaPPoOeSGAk/hqdefault.jpg",
+      "thumbnail_rights_status": "UNKNOWN",
+      "source_checked_at": "2026-11-15",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "verification_evidence_urls": [
+        "https://www.youtube.com/watch?v=vaPPoOeSGAk",
+        "https://www.youtube.com/@Alrasekhoon"
+      ],
+      "notes": "مصدر مرئي من صفحة الفيديو وقناة الشيخ صالح المغامسي. أضيف للعرض والتشغيل بالنقر، مع بقاء مراجعة الحقوق والتحرير مطلوبة. أُدمج السجل من كتالوج العرض القديم إلى كتالوج المصادر الواحد؛ التشغيل الداخلي يبقى محجوبًا حتى اكتمال مراجعة الحقوق والتضمين.",
+      "rights_action": "مراجعة الحقوق والتضمين والتحرير قبل أي عرض داخلي",
+      "review_reason": "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
+      "review_next_action": "verify rights, review content, test official embed, then approval gate",
+      "provenance": {
+        "sourceFile": "seerah-media-catalog.csv",
+        "sourceRow": 41,
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
+      }
+    },
+    {
       "id": "youtube:vd7ga4-V6jQ",
       "provider": "youtube",
       "video_id": "vd7ga4-V6jQ",
@@ -4573,7 +5580,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 22,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -4626,7 +5633,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 17,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -4734,7 +5741,60 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 6,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
+      }
+    },
+    {
+      "id": "youtube:y0uTP-pc-5A",
+      "provider": "youtube",
+      "video_id": "y0uTP-pc-5A",
+      "official_url": "https://www.youtube.com/watch?v=y0uTP-pc-5A",
+      "title_original": "الحلقة الثانية - بدر المشاري - السيرة النبوية",
+      "title_ar": "الحلقة الثانية - بدر المشاري - السيرة النبوية",
+      "description_ar": null,
+      "language": "ar",
+      "duration_seconds": null,
+      "published_at": null,
+      "channel_id": null,
+      "channel_name": "Bedaya TV | قناة بداية الفضائية",
+      "channel_url": "https://www.youtube.com/@tvbedaya",
+      "publisher_status": "UNKNOWN",
+      "series_name": "السيرة النبوية",
+      "playlist_id": null,
+      "episode_number": null,
+      "category": "سيرة نبوية",
+      "subcategory": "سيرة نبوية",
+      "age_band": null,
+      "speaker": "الشيخ بدر المشاري",
+      "content_type": "lecture",
+      "rights_holder": null,
+      "rights_notice": null,
+      "rights_status": "UNKNOWN",
+      "license_type": "UNKNOWN",
+      "license_evidence_url": null,
+      "attribution_text": "Bedaya TV | قناة بداية الفضائية",
+      "embedding_status": "UNTESTED",
+      "embed_url": "https://www.youtube.com/embed/y0uTP-pc-5A",
+      "editorial_status": "PENDING_REVIEW",
+      "publication_status": "DRAFT",
+      "religious_review_status": "PENDING_REVIEW",
+      "depiction_review_status": "PENDING_REVIEW",
+      "thumbnail_url": "https://i.ytimg.com/vi/y0uTP-pc-5A/hqdefault.jpg",
+      "thumbnail_rights_status": "UNKNOWN",
+      "source_checked_at": "2026-11-15",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "verification_evidence_urls": [
+        "https://www.youtube.com/watch?v=y0uTP-pc-5A",
+        "https://www.youtube.com/@tvbedaya"
+      ],
+      "notes": "مصدر مرئي من صفحة الفيديو وقناة Bedaya TV | قناة بداية الفضائية. أضيف للعرض والتشغيل بالنقر، مع بقاء مراجعة الحقوق والتحرير مطلوبة. أُدمج السجل من كتالوج العرض القديم إلى كتالوج المصادر الواحد؛ التشغيل الداخلي يبقى محجوبًا حتى اكتمال مراجعة الحقوق والتضمين.",
+      "rights_action": "مراجعة الحقوق والتضمين والتحرير قبل أي عرض داخلي",
+      "review_reason": "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
+      "review_next_action": "verify rights, review content, test official embed, then approval gate",
+      "provenance": {
+        "sourceFile": "seerah-media-catalog.csv",
+        "sourceRow": 34,
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -4788,6 +5848,59 @@
         "sourceFile": "kids-media-catalog.csv",
         "sourceRow": 49,
         "inputSha256": "b5797f46785bbf98f3c6bb18a18f18d37083721e798c27b23dd6eb84874cfc75"
+      }
+    },
+    {
+      "id": "youtube:YPf0c1mcgYg",
+      "provider": "youtube",
+      "video_id": "YPf0c1mcgYg",
+      "official_url": "https://www.youtube.com/watch?v=YPf0c1mcgYg",
+      "title_original": "الهجرة طريق ريادة ومنهج حضارة محاضرة عمر عبد الكافي",
+      "title_ar": "الهجرة طريق ريادة ومنهج حضارة محاضرة عمر عبد الكافي",
+      "description_ar": null,
+      "language": "ar",
+      "duration_seconds": null,
+      "published_at": null,
+      "channel_id": null,
+      "channel_name": "عمر عبد الكافي",
+      "channel_url": "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+      "publisher_status": "UNKNOWN",
+      "series_name": "محاضرات الشيخ عمر عبد الكافي",
+      "playlist_id": null,
+      "episode_number": null,
+      "category": "محاضرات ومواعظ",
+      "subcategory": "محاضرات ومواعظ",
+      "age_band": null,
+      "speaker": "الشيخ عمر عبد الكافي",
+      "content_type": "lecture",
+      "rights_holder": null,
+      "rights_notice": null,
+      "rights_status": "UNKNOWN",
+      "license_type": "UNKNOWN",
+      "license_evidence_url": null,
+      "attribution_text": "عمر عبد الكافي",
+      "embedding_status": "UNTESTED",
+      "embed_url": "https://www.youtube.com/embed/YPf0c1mcgYg",
+      "editorial_status": "PENDING_REVIEW",
+      "publication_status": "DRAFT",
+      "religious_review_status": "PENDING_REVIEW",
+      "depiction_review_status": "PENDING_REVIEW",
+      "thumbnail_url": "https://i.ytimg.com/vi/YPf0c1mcgYg/hqdefault.jpg",
+      "thumbnail_rights_status": "UNKNOWN",
+      "source_checked_at": "2026-11-15",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "verification_evidence_urls": [
+        "https://www.youtube.com/watch?v=YPf0c1mcgYg",
+        "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos"
+      ],
+      "notes": "مصدر مرئي من صفحة الفيديو وقناة عمر عبد الكافي. أضيف للعرض والتشغيل بالنقر، مع بقاء مراجعة الحقوق والتحرير مطلوبة. أُدمج السجل من كتالوج العرض القديم إلى كتالوج المصادر الواحد؛ التشغيل الداخلي يبقى محجوبًا حتى اكتمال مراجعة الحقوق والتضمين.",
+      "rights_action": "مراجعة الحقوق والتضمين والتحرير قبل أي عرض داخلي",
+      "review_reason": "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
+      "review_next_action": "verify rights, review content, test official embed, then approval gate",
+      "provenance": {
+        "sourceFile": "seerah-media-catalog.csv",
+        "sourceRow": 46,
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {
@@ -5056,7 +6169,7 @@
       "provenance": {
         "sourceFile": "seerah-media-catalog.csv",
         "sourceRow": 7,
-        "inputSha256": "bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb"
+        "inputSha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e"
       }
     },
     {

@@ -2,26 +2,26 @@
 
 تاريخ الإنشاء الثابت: 2026-11-15T00:00:00.000Z
 مولّد البيانات: media-discovery-ingest/2.0.0
-عدد السجلات الفريدة المستوردة: 95
+عدد السجلات الفريدة المستوردة: 116
 تم تخطي المكررات: 0
 المؤهلة للعرض العام (APPROVED): 0
-المعلّقة للمراجعة (PENDING/DRAFT): 95
-بحقوق UNKNOWN: 95
+المعلّقة للمراجعة (PENDING/DRAFT): 116
+بحقوق UNKNOWN: 116
 
 ## بصمات المدخلات
-- data-sources/media/acquisition/media-acquisition-manifest.json: da48454270324f339f6a8850f522ce980410429fa4afb4e377ccdd9246b0d3fc (1261 bytes, utf8-lf)
+- data-sources/media/acquisition/media-acquisition-manifest.json: ec248dc092be69016a30b93e8c6a0b983fe48d0bc0f977691c1ac67de53970ef (1266 bytes, utf8-lf)
 - data-sources/media/acquisition/kids-media-catalog.csv: b5797f46785bbf98f3c6bb18a18f18d37083721e798c27b23dd6eb84874cfc75 (69917 bytes, utf8-lf)
 - data-sources/media/acquisition/kids-media-catalog.json: 4ec861095869ab9049041c300237e88a8935d67ebf8a1c6e47a53e7101cc10af (139638 bytes, utf8-lf)
-- data-sources/media/acquisition/seerah-media-catalog.csv: bfbdf45fa7fdc6c2efbf05ba3958cee2e7b19a703147db058c3606b16fbeeecb (44137 bytes, utf8-lf)
-- data-sources/media/acquisition/seerah-media-catalog.json: 3394fc7c860d0a2b525115f926d6f13a668b48e947e238c7058137ea3e3a1f0b (79211 bytes, utf8-lf)
-- data-sources/media/acquisition/media-rights-ledger.csv: 6732cc175a035ea41fec6584fc601cb6703debfc1edfb009c8de13affdf10738 (29919 bytes, utf8-lf)
-- data-sources/media/acquisition/media-rejected-and-pending.csv: eb992d2fcaf8d577c797bcb3c650d5875118c9806028dda3c17fc673fe4c1825 (30016 bytes, utf8-lf)
+- data-sources/media/acquisition/seerah-media-catalog.csv: 280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e (73067 bytes, utf8-lf)
+- data-sources/media/acquisition/seerah-media-catalog.json: 94da03d7935a7e83ec9f6f24df4bdeaf7ade860a235a147336f0a49da582be69 (131389 bytes, utf8-lf)
+- data-sources/media/acquisition/media-rights-ledger.csv: 498e21d77c943a33c530c47b2c25ac7d6683ede3d1d700fe9b077b49352806b1 (35757 bytes, utf8-lf)
+- data-sources/media/acquisition/media-rejected-and-pending.csv: b5c60587323acc0c01dda182b4e73b75dcfcc27b6edc74b7ed6a1b40fd241cf7 (36761 bytes, utf8-lf)
 
 ## بصمات المخرجات
-- media-discovery-catalog.json: da9a0ab92dc4c7fa0ad6951f12f43b01ea5facc2e684d18b762b91522993a3ae
-- ingestion-manifest.json: 429728ef13a3251ab40d55950afea213bc42c02c7e518a285fcc2f53ce7b3dec
-- media-discovery.generated.ts: 77bdcb140a693cec31f0808f4051f16a4cfb3bd12086f6ccef7ba8fba6d2d83e
-- media-discovery-status.generated.ts: 8d054e29293e3d81e211d7f77d9c09dd198687bb763b0fdd2e7fd21b2b227749
+- media-discovery-catalog.json: 2ade5de6860f1977ec099c5e127859d6c2c37c653e6a9c3db1366ecc8d940dd3
+- ingestion-manifest.json: c73f4057461fc7cdbae097ee7878ed5b5d119648d24f6039bed9bea1c14bf80b
+- media-discovery.generated.ts: 111dd2d54668e4b834d8a11226d203ee4a8969adc9dee66cbf98c0e7ae82d38a
+- media-discovery-status.generated.ts: e22c61d0ede39763f52f41de54aad66c05b2ae272454050e33e2b0b08ce5a874
 
 ## حسب الفئة
 - kids: 46
@@ -29,12 +29,15 @@
 - السيرة النبوية: 9
 - السيرة النبوية الكاملة: 9
 - القرآن الكريم للأطفال: 17
+- سيرة نبوية: 7
+- قصص الأنبياء والدروس: 5
+- محاضرات ومواعظ: 9
 
 ## حسب حالة النشر
-- DRAFT: 95
+- DRAFT: 116
 
 ## حسب حالة الحقوق
-- UNKNOWN: 95
+- UNKNOWN: 116
 
 ## السياسة
 - لا يوجد سجل تمت ترقيته إلى APPROVED.

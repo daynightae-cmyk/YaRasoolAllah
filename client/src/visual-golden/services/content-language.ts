@@ -301,9 +301,9 @@ export const ROUTE_CONTENT_DECLARATIONS: readonly RouteContentDeclaration[] = [
     "Retrieval results are Arabic, but each result also carries an English title, kind and hint that the evidence cards render.",
     ["client/src/visual-golden/services/basirah.ts", "client/src/visual-golden/pages/BasirahPage.tsx"],
     [
-      { language: "en", field: "titleEn", at: "client/src/visual-golden/services/basirah.ts:62" },
-      { language: "en", field: "kindEn", at: "client/src/visual-golden/services/basirah.ts:64" },
-        { language: "en", field: "hintEn", at: "client/src/visual-golden/services/basirah.ts:67" },
+      { language: "en", field: "titleEn", at: "client/src/visual-golden/services/basirah.ts:63" },
+      { language: "en", field: "kindEn", at: "client/src/visual-golden/services/basirah.ts:65" },
+        { language: "en", field: "hintEn", at: "client/src/visual-golden/services/basirah.ts:68" },
       ],
       "The English is a short generated label and hint written beside the Arabic record, not a translation of the underlying text.",
     ),
