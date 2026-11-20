@@ -1,0 +1,82 @@
+/* QuranDuas — verified-corpus supplication cards. Token-based surfaces so
+   they follow the daily wing's dark study / parchment themes. */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.8rem;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border-panel);
+  border-radius: 16px;
+  background: var(--bg-card);
+  box-shadow: var(--shadow-card);
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.head h4 {
+  margin: 0;
+  color: var(--text-gold);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.ref {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+}
+
+.text {
+  margin: 0;
+  font-family: var(--font-reading);
+  font-size: 1.02rem;
+  line-height: var(--line-height-reading, 2.15);
+  color: var(--text-primary);
+}
+
+.loading,
+.unavailable {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  line-height: 1.8;
+}
+
+.unavailable {
+  color: var(--state-review, #f59e0b);
+}
+
+.open {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: auto;
+  min-height: 36px;
+  color: var(--text-emerald);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.open:hover {
+  color: var(--accent-emerald-soft);
+  text-decoration: underline;
+}
+
+.scope {
+  grid-column: 1 / -1;
+  margin: 0.2rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  line-height: 1.8;
+}

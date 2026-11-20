@@ -5,6 +5,7 @@ import { PageHero } from "@/visual-golden/components/shared/PageHero";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import { TasbihBeads } from "@/visual-golden/components/unique/TasbihBeads";
 import { PrayerObservatory } from "@/visual-golden/components/prayer/PrayerObservatory";
+import { QuranDuas } from "@/visual-golden/components/prayer/QuranDuas";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
 import p from "@/visual-golden/components/present/present.module.css";
@@ -19,14 +20,6 @@ const hours = [
   { t: "المغرب", n: "أسرة ومودة" },
   { t: "العشاء", n: "علم وتزكية" },
   { t: "قبل النوم", n: "مراجعة وذكر" },
-];
-const duas = [
-  { title: "أدعية من القرآن", img: art.mushafOpen },
-  { title: "أدعية من السنة", img: art.lanternGlow },
-  { title: "أدعية الحياة اليومية", img: art.mosque },
-  { title: "أدعية الكرب والهم", img: art.archesNight },
-  { title: "أدعية الرزق", img: art.kaaba },
-  { title: "أدعية الهداية", img: art.domeCard },
 ];
 const quick = ["سبحان الله", "الحمد لله", "الله أكبر", "لا إله إلا الله", "أستغفر الله", "حسبي الله"];
 
@@ -106,15 +99,8 @@ export function DailyPage() {
 
       <div className={styles.lower}>
         <section className={styles.panel}>
-          <SectionHead title="أدعية مختارة" en="Selected Duʿas" />
-          <div className={styles.duas}>
-            {duas.map((d) => (
-              <article key={d.title}>
-                <img src={d.img} alt="" />
-                <span>{d.title}</span>
-              </article>
-            ))}
-          </div>
+          <SectionHead title="أدعية من القرآن" en="Qur'anic Duʿas · verified corpus" />
+          <QuranDuas />
         </section>
         <section className={styles.panel}>
           <SectionHead title="أذكار سريعة" en="Quick Adhkar" />
