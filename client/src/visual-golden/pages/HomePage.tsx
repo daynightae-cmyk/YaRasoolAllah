@@ -31,6 +31,7 @@ import {
   type QuranChapter,
 } from "@/services/quranService";
 import { discoveryFacts } from "@/visual-golden/services/discovery";
+import { SEERAH_COUNTS } from "@/visual-golden/services/seerah";
 import p from "@/visual-golden/components/present/present.module.css";
 import styles from "./HomePage.module.css";
 
@@ -186,51 +187,73 @@ export function HomePage() {
 
   return (
     <div className={styles.page}>
-      <section className={styles.hero}>
-        <img className={styles.heroBg} src={art.mosque} alt="" />
+      <section className={styles.hero} data-visual="home-gateway" dir="rtl" lang="ar">
+        <img className={styles.heroBg} src={art.sceneThreshold} alt="" />
         <div className={styles.heroOrnament} />
+        <div className={styles.heroBloom} aria-hidden />
         <div className={styles.heroVeil} />
         <div className={styles.heroIllumination} />
         <div className={styles.heroCopy}>
-          <p className={styles.invoke} lang="ar">
-            يا رسول الله
+          <p className={styles.heroKicker}>
+            <span className={styles.kickerRule} aria-hidden />
+            الموسوعة الحية للسيرة النبوية
+            <span className={styles.kickerRule} aria-hidden />
           </p>
           <h1 className="calligraphy">
-            {lang === "ar" ? "بوابة النور" : "Gateway of Light"}
+            يا رسول الله <span className={styles.heroSalat}>ﷺ</span>
           </h1>
+          <p className={styles.heroLatin}>THE LIVING SEERAH</p>
           <p className={styles.heroSub}>
-            {lang === "ar"
-              ? "رحلة معرفية إلى سيرة خير البشر ﷺ، القرآن الكريم، والسنة المطهرة — من مصادرها، وبإذن الله."
-              : "A journey through the life, message and legacy of the Prophet ﷺ — from the Qur'an, Seerah, Sunnah and their verified sources."}
+            رحلةٌ في المكان والزمان، من مكة إلى المدينة، ومن الغار إلى الفتح.
           </p>
           <p className={styles.heroDesc}>
-            {lang === "ar"
-              ? "من هنا نبدأ طلب العلم على هدي النبي محمد ﷺ. نكتشف سيرته وأخلاقه وهديه، وننهل من نوره الذي أضاء للعالمين، كل ذلك موثقٌ بالمراجع والمصادر."
-              : "Explore the Qur'an, Seerah, Sunnah and the source library through their own spaces and verified records."}
+            أطلسٌ حيّ، وفصولٌ غامرة، وقاعدةٌ زمنية تربط كل حدث بمصدره — دون تجسيد،
+            ودون اختلاق. ادخل من البوابة، ثم اختر طريقك: الفصل، أو المكان، أو المصدر.
           </p>
+          <div className={styles.heroActions}>
+            <Link href="/seerah" className={styles.heroPrimary}>
+              ابدأ رحلة السيرة <span aria-hidden>←</span>
+            </Link>
+            <Link href="/seerah/database" className={styles.heroSecondary}>
+              قاعدة السيرة
+            </Link>
+            <Link href="/atlas" className={styles.heroSecondary}>
+              الأطلس التاريخي
+            </Link>
+          </div>
+          <form
+            className={styles.heroSearch}
+            onSubmit={(e) => {
+              e.preventDefault();
+              navigate(heroQ.trim() ? `/basirah?q=${encodeURIComponent(heroQ.trim())}` : "/basirah");
+            }}
+          >
+            <Search size={15} className="sr-only" />
+            <span className="sr-only">بحث</span>
+            <input
+              value={heroQ}
+              onChange={(e) => setHeroQ(e.target.value)}
+              placeholder="ابحث في بصيرة: حدث، موضع، أو مصدر…"
+              aria-label="البحث في بصيرة"
+            />
+            <button type="submit">بحث</button>
+          </form>
         </div>
-        <form
-          className={styles.heroSearch}
-          onSubmit={(e) => {
-            e.preventDefault();
-            navigate(heroQ.trim() ? `/basirah?q=${encodeURIComponent(heroQ.trim())}` : "/basirah");
-          }}
-        >
-          <Search size={15} className="sr-only" />
-          <span className="sr-only">بحث</span>
-          <input
-            value={heroQ}
-            onChange={(e) => setHeroQ(e.target.value)}
-            placeholder={lang === "ar" ? "ماذا تريد أن تتعلم اليوم؟" : "What would you like to explore?"}
-            aria-label={lang === "ar" ? "البحث في بصيرة" : "Search Basirah"}
-          />
-          <button type="submit">
-            {lang === "ar" ? "بحث" : "Search"}
-          </button>
-        </form>
+        <div className={styles.heroFooter}>
+          <p>
+            <strong>{SEERAH_COUNTS.chapters}</strong> فصول
+            <span aria-hidden>·</span>
+            <strong>{SEERAH_COUNTS.timelineEvents}</strong> محطة
+            <span aria-hidden>·</span>
+            <strong>{SEERAH_COUNTS.categories}</strong> مراحل سردية
+          </p>
+          <a href="#knowledge-wings" className={styles.heroScroll}>
+            اكتشف الأجنحة <span aria-hidden>↓</span>
+          </a>
+        </div>
       </section>
 
-      <section className={styles.section}>
+      <section className={styles.section} id="knowledge-wings">
         <div className={styles.headRow}>
           <div>
             <p className={styles.wingEyebrow}>

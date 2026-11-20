@@ -256,9 +256,23 @@
 }
 
 .eraGroup ol {
+  position: relative;
   margin: 0;
   padding: 0.25rem 0.4rem 0.55rem;
   list-style: none;
+}
+
+/* Chronological spine: the order medallions hang from one continuous thread,
+   so an era reads as a sequence instead of a plain list. */
+.eraGroup ol::before {
+  content: "";
+  position: absolute;
+  top: 1.1rem;
+  bottom: 1.4rem;
+  inset-inline-start: 1.825rem;
+  width: 1px;
+  background: linear-gradient(180deg, rgba(232, 197, 71, 0.5), rgba(232, 197, 71, 0.06));
+  pointer-events: none;
 }
 
 .eraGroup li {
@@ -291,6 +305,8 @@
 }
 
 .eventOrder {
+  position: relative;
+  z-index: 1;
   flex: 0 0 auto;
   display: grid;
   place-items: center;
@@ -298,8 +314,16 @@
   height: 1.75rem;
   border: 1px solid var(--border-panel);
   border-radius: var(--radius-full);
+  background: var(--bg-elevated);
   color: var(--text-gold);
   font-size: 0.66rem;
+}
+
+.eventRow.eventOn .eventOrder {
+  border-color: var(--gold-300);
+  background: var(--gold-300);
+  color: var(--text-ink-dark);
+  box-shadow: 0 0 14px rgba(232, 197, 71, 0.35);
 }
 
 .eventText {

@@ -1,21 +1,19 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import {
   ChevronRight,
   ChevronLeft,
   BookOpenCheck,
   Map,
-  BookOpen,
-  Feather,
-  Compass,
   Database,
+  ScrollText,
+  Compass,
+  ArrowLeft,
 } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
-import { PageHero } from "@/visual-golden/components/shared/PageHero";
+import { useEffectiveMotion } from "@/visual-golden/lib/institution/effective-motion";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
-import p from "@/visual-golden/components/present/present.module.css";
-import u from "@/visual-golden/components/unique/unique.module.css";
 import {
   CHAPTERS,
   CATEGORIES,
@@ -26,13 +24,14 @@ import {
   chooseSeerahEvent,
   getRelatedChapters,
   resolveSeerahSelection,
+  stationCountLabel,
   type SeerahSelection,
 } from "@/visual-golden/services/seerah";
 import { getSeerahScene } from "@/visual-golden/services/seerah-scene";
 import { getGhazawatScene } from "@/visual-golden/services/seerah-ghazawat";
-import { ChapterGateway } from "@/visual-golden/components/seerah/ChapterGateway";
 import { ChapterEnvironment } from "@/visual-golden/components/seerah/ChapterEnvironment";
 import { GhazawatEnvironment } from "@/visual-golden/components/seerah/GhazawatEnvironment";
+import { SeerahChapterStage } from "@/visual-golden/components/seerah/SeerahChapterStage";
 import {
   SEERAH_GRAPH,
   SEERAH_GRAPH_COUNTS,
@@ -60,21 +59,31 @@ function findEvent(key: string): SeerahGraphEventNode | null {
 }
 
 const STAGE_ART = [
-  art.reciterKaaba,
-  art.lanternGlow,
-  art.kaaba,
-  art.storyHijrah,
-  art.reciterDome,
-  art.desert,
-  art.mosque,
-  art.mushafOpen,
+  art.sceneMakkah,
+  art.sceneHira,
+  art.sceneDawah,
+  art.sceneHijrah,
+  art.sceneMadinah,
+  art.sceneBadr,
+  art.sceneHajj,
+  art.sceneFarewell,
 ];
+
+const CATEGORY_ART = [art.sceneMakkah, art.sceneDawah, art.sceneHijrah];
+
+/** Prefer the recorded Ghazwah plate; fall back to the generic chapter art. */
+function eventThumb(eventId: string, fallbackIndex: number): string {
+  const scene = getGhazawatScene(eventId);
+  return scene ? art[scene.plate] : STAGE_ART[fallbackIndex % STAGE_ART.length];
+}
 
 export function SeerahPage() {
   const search = useSearch();
   const [, navigate] = useLocation();
   const [read, setRead] = useState<string[]>(() => safeReadRead());
   const recordReadingProgress = useInstitution((state) => state.recordReadingProgress);
+  const effectiveMotion = useEffectiveMotion();
+  const timelineRef = useRef<HTMLDivElement>(null);
   const selection = useMemo(
     () => resolveSeerahSelection(CHAPTERS, search),
     [search],
@@ -83,6 +92,20 @@ export function SeerahPage() {
   const index = Math.max(0, CHAPTERS.findIndex((chapter) => chapter.id === selection.chapterId));
   const chapter = CHAPTERS[index] ?? CHAPTERS[0];
   const scene = getSeerahScene(chapter.id);
+
+  useEffect(() => {
+    const rail = timelineRef.current;
+    const active = rail?.querySelector<HTMLElement>(`[data-chapter-id="${chapter.id}"]`);
+    if (!rail || !active) return;
+    // Horizontal only: a direct chapter link must not drag the page vertically.
+    // RTL scroll offsets run from 0 downwards, so clamp on the opposite side.
+    const centered = active.offsetLeft - (rail.clientWidth - active.clientWidth) / 2;
+    const rtl = getComputedStyle(rail).direction === "rtl";
+    rail.scrollTo({
+      left: rtl ? Math.min(0, centered) : Math.max(0, centered),
+      behavior: effectiveMotion === "reduced" ? "auto" : "smooth",
+    });
+  }, [chapter.id, effectiveMotion]);
   const related = useMemo(() => getRelatedChapters(chapter.id), [chapter.id]);
   const events = chapter.timelineEvents ?? [];
   const selectedEvent = events.find((event) => event.id === selection.eventId) ?? null;
@@ -155,38 +178,62 @@ export function SeerahPage() {
     selectChapter(CHAPTERS[next].id);
   };
 
+  const paragraphs = chapter.details.split("\n\n").filter((paragraph) => paragraph.trim().length > 0);
+
   return (
-    <div className={styles.page}>
-      <PageHero
-        title="درب السيرة"
-        subtitle={`رحلة سردية · ${SEERAH_COUNTS.chapters} فصول · ${SEERAH_COUNTS.categories} مرحلة`}
-        desc="بنية تحريرية محلية لفصول السيرة ومحطاتها — المراحل والتسلسل سرديان لا تقويمًا تاريخيًا دقيقًا"
-        image={art.desert}
-        tall
-        wing="seerah"
-      >
-        <div className={styles.heroBtns}>
-          <button
-            className="btn-gold"
-            type="button"
-            onClick={() => document.getElementById("seerah-journey")?.scrollIntoView({ behavior: "smooth" })}
-          >
-            ابدأ الرحلة
-          </button>
-          <Link href="/atlas" className="btn-outline">
-            <Map size={14} /> الخريطة التخطيطية
-          </Link>
-          <Link href="/seerah/database" className="btn-outline">
-            <Database size={14} /> قاعدة السيرة الزمنية
-          </Link>
+    <div className={styles.page} dir="rtl" lang="ar">
+      <header className={styles.journeyHead} data-visual="seerah-journey-head">
+        <div className={styles.journeyCopy}>
+          <p className={styles.journeyKicker}>
+            <span className={styles.journeyRule} aria-hidden />
+            الموسوعة الحية للسيرة النبوية
+          </p>
+          <h1 className={styles.journeyTitle}>درب السيرة</h1>
+          <p className={styles.journeyLead}>
+            رحلة سردية في المكان والزمان: من مكة إلى المدينة، ومن الغار إلى الفتح.
+            كل فصلٍ مسرحٌ قائم بذاته، وكل محطةٍ تعود إلى قاعدتها الزمنية وموضعها في الأطلس.
+          </p>
+          <div className={styles.journeyActions}>
+            <Link href="/seerah/database" className="btn-gold">
+              <Database size={14} /> قاعدة السيرة الزمنية
+            </Link>
+            <Link href="/atlas" className="btn-outline">
+              <Map size={14} /> الأطلس التاريخي
+            </Link>
+            <button
+              type="button"
+              className="btn-outline"
+              onClick={() => document.getElementById("chapter-reading")?.scrollIntoView({ behavior: "smooth" })}
+            >
+              <ScrollText size={14} /> اقرأ الفصل الحالي
+            </button>
+          </div>
         </div>
-      </PageHero>
+        <dl className={styles.journeyStats} aria-label="إحصاءات السيرة">
+          <div>
+            <dt>فصول</dt>
+            <dd>{SEERAH_COUNTS.chapters}</dd>
+          </div>
+          <div>
+            <dt>محطات</dt>
+            <dd>{SEERAH_COUNTS.timelineEvents}</dd>
+          </div>
+          <div>
+            <dt>مراحل</dt>
+            <dd>{SEERAH_COUNTS.categories}</dd>
+          </div>
+          <div>
+            <dt>مقروء</dt>
+            <dd>{readCount}</dd>
+          </div>
+        </dl>
+      </header>
 
       <section className={styles.timelineWrap} id="seerah-journey" aria-label="فصول السيرة بالترتيب السردي">
         <button type="button" className={styles.arrow} onClick={() => step(-1)} aria-label="الفصل السابق">
           <ChevronRight size={17} />
         </button>
-        <div className={styles.timeline}>
+        <div className={styles.timeline} ref={timelineRef}>
           {CHAPTERS.map((c, i) => (
             <button
               key={c.id}
@@ -194,8 +241,9 @@ export function SeerahPage() {
               className={`${styles.stage} ${i === index ? styles.stageOn : ""}`}
               onClick={() => selectChapter(c.id)}
               aria-current={i === index ? "true" : undefined}
+              data-chapter-id={c.id}
             >
-              <img src={STAGE_ART[i % STAGE_ART.length]} alt="" />
+              <img src={STAGE_ART[i % STAGE_ART.length]} alt="" loading="lazy" />
               <b>{c.title}</b>
               <span>مرحلة {c.order} · ترتيب سردي</span>
             </button>
@@ -211,51 +259,97 @@ export function SeerahPage() {
         </button>
       </section>
 
-      <ChapterGateway chapterId={chapter.id} scene={scene} use3D={false}>
-        <ChapterEnvironment scene={scene}>
-          <div className={styles.main}>
-            <aside className={styles.panel}>
-              <SectionHead title="محطات الفصل" en="Local editorial chapter events · review pending" />
-              {events.length === 0 ? (
-                <p className="muted" style={{ fontSize: "0.8rem" }}>
-                  لا توجد محطات في البنية التحريرية المحلية لهذا الفصل.
-                </p>
-              ) : (
-                <ol className={styles.events} aria-label="محطات الفصل">
-                  {events.map((e) => (
-                    <li key={e.id}>
-                      <button
-                        type="button"
-                        className={`${styles.eventButton} ${selectedEvent?.id === e.id ? styles.evOn : ""}`}
-                        aria-pressed={selectedEvent?.id === e.id}
-                        onClick={() => selectEvent({ chapterId: chapter.id, eventId: e.id })}
-                      >
-                        <img src={STAGE_ART[(e.title.length + index) % STAGE_ART.length]} alt="" />
-                        <span className={styles.eventText}>
-                          <span>{e.date}</span>
-                          <strong>{e.title}</strong>
-                        </span>
-                      </button>
-                    </li>
-                  ))}
-                </ol>
-              )}
-            </aside>
+      <SeerahChapterStage
+        chapter={chapter}
+        scene={scene}
+        index={index}
+        total={CHAPTERS.length}
+        events={events}
+        selectedEventId={selectedEvent?.id}
+        read={read.includes(chapter.id)}
+        onSelectEvent={(eventId) => selectEvent({ chapterId: chapter.id, eventId })}
+        onPrevious={() => step(-1)}
+        onNext={() => step(1)}
+        canPrevious={index > 0}
+        canNext={index < CHAPTERS.length - 1}
+      />
 
-            <section className={styles.mapCard}>
-              <SectionHead title={chapter.title} en={`Local editorial chapter ${chapter.order} · narrative context`} />
-              <p className="muted" style={{ fontSize: "0.78rem", lineHeight: 1.8 }}>
-                {SEERAH_CONTENT_STATUS.noticeAr}
-              </p>
-              <p style={{ lineHeight: 2, fontSize: "0.95rem" }}>{chapter.description}</p>
-              <p className="muted" style={{ lineHeight: 2, fontSize: "0.86rem", whiteSpace: "pre-line" }}>
-                {chapter.details.split("\n\n")[0]}
-              </p>
-              {selectedEvent ? (
+      <ChapterEnvironment scene={scene}>
+        <div className={styles.reading} id="chapter-reading" data-visual="seerah-reading">
+          <div className={styles.readingMain}>
+            <article className={styles.chapterArticle} aria-labelledby="chapter-reading-title">
+              <div className={styles.articleMeta}>
+                <span className={styles.articleBadge}>الفصل {String(chapter.order).padStart(2, "0")}</span>
+                <span>{scene?.eraAr ?? "مرحلة سردية من السيرة"}</span>
+                <span>{stationCountLabel(events.length)} مسجلة</span>
+              </div>
+              <h2 id="chapter-reading-title" className={styles.articleTitle}>
+                {chapter.title}
+              </h2>
+              <p className={styles.articleLead}>{chapter.description}</p>
+              <p className={styles.notice}>{SEERAH_CONTENT_STATUS.noticeAr}</p>
+
+              <div className={styles.prose}>
+                {paragraphs.map((paragraph, paragraphIndex) => (
+                  <p key={`${chapter.id}-p-${paragraphIndex}`}>{paragraph}</p>
+                ))}
+              </div>
+
+              <div className={styles.keywords} aria-label="كلمات مفتاحية">
+                {chapter.keywords.slice(0, 8).map((keyword) => (
+                  <span key={keyword}>{keyword}</span>
+                ))}
+              </div>
+
+              <div className={styles.articleActions}>
+                <button type="button" className="btn-outline" onClick={() => step(-1)} disabled={index <= 0}>
+                  <ChevronRight size={13} /> الفصل السابق
+                </button>
+                <button type="button" className="btn-gold" onClick={toggleRead}>
+                  <BookOpenCheck size={13} />{" "}
+                  {read.includes(chapter.id) ? "تمت القراءة محليًا ✓" : "تعليم كمقروء محليًا"}
+                </button>
+                <button
+                  type="button"
+                  className="btn-outline"
+                  onClick={() => step(1)}
+                  disabled={index >= CHAPTERS.length - 1}
+                >
+                  الفصل التالي <ChevronLeft size={13} />
+                </button>
+              </div>
+            </article>
+
+            {selectedEvent ? (
+              <div className={styles.eventStage}>
                 <GhazawatEnvironment scene={ghazawatScene}>
+                  <header className={styles.eventHead}>
+                    <div>
+                      <span className={styles.eventLabel}>بيئة المكان — مشهد توضيحي غير تاريخي</span>
+                      <h3>{selectedEvent.title}</h3>
+                      <p className={styles.eventEra}>
+                        {ghazawatScene?.eraAr ?? selectedEvent.date}
+                      </p>
+                    </div>
+                    <div className={styles.eventExits}>
+                      {place ? (
+                        <Link
+                          href={`/atlas?place=${encodeURIComponent(place.nodeId)}`}
+                          className={styles.eventLink}
+                        >
+                          <Map size={13} /> {place.name} في الأطلس
+                        </Link>
+                      ) : null}
+                      <Link
+                        href={`/seerah/database?event=${encodeURIComponent(selectedEvent.id)}`}
+                        className={styles.eventLink}
+                      >
+                        <Database size={13} /> سجل المحطة الكامل
+                      </Link>
+                    </div>
+                  </header>
+
                   <article className={styles.eventDetail} aria-live="polite" aria-label="تفاصيل المحطة المختارة">
-                    <span className={styles.eventLabel}>المحطة المختارة من البنية التحريرية المحلية</span>
-                    <h3>{selectedEvent.title}</h3>
                     <p>{selectedEvent.description}</p>
                     <dl>
                       <div>
@@ -270,16 +364,17 @@ export function SeerahPage() {
                         <dt>الموضع المذكور</dt>
                         <dd>{selectedEvent.location || "غير مسجل"}</dd>
                       </div>
+                      <div>
+                        <dt>حالة المراجعة</dt>
+                        <dd>قيد الانتظار — مادة تحريرية محلية</dd>
+                      </div>
                     </dl>
-                    {place ? (
-                      <Link href={`/atlas?place=${encodeURIComponent(place.nodeId)}`} className={styles.eventLink}>
-                        <Map size={13} /> شاهد {place.name} في الأطلس التخطيطي
-                      </Link>
-                    ) : (
+                    {place ? null : (
                       <p className={styles.eventCaveat}>
                         الموضع «{eventNode?.locationText ?? "غير مسجل"}» خارج المواضع التخطيطية المعتمدة، فلا رابط خريطة له.
                       </p>
                     )}
+
                     {eventNode ? (
                       <section
                         className={styles.graph}
@@ -364,65 +459,115 @@ export function SeerahPage() {
                     </p>
                   </article>
                 </GhazawatEnvironment>
-              ) : null}
-              <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap", marginTop: "0.6rem" }}>
-                {chapter.keywords.slice(0, 6).map((keyword) => (
-                  <span
-                    key={keyword}
-                    style={{
-                      fontSize: "0.72rem",
-                      border: "1px solid rgba(212,160,23,0.35)",
-                      borderRadius: 999,
-                      padding: "0.15rem 0.55rem",
-                      color: "var(--text-secondary)",
-                    }}
-                  >
-                    {keyword}
-                  </span>
-                ))}
               </div>
-              <div style={{ display: "flex", gap: "0.4rem", marginTop: "0.8rem", flexWrap: "wrap" }}>
-                <button type="button" className="btn-outline" onClick={() => step(-1)} disabled={index <= 0}>
-                  <ChevronRight size={13} /> الفصل السابق
-                </button>
-                <button
-                  type="button"
-                  className="btn-gold"
-                  onClick={toggleRead}
-                >
-                  <BookOpenCheck size={13} /> {read.includes(chapter.id) ? "تمت القراءة محليًا ✓" : "تعليم كمقروء محليًا"}
-                </button>
-                <button
-                  type="button"
-                  className="btn-outline"
-                  onClick={() => step(1)}
-                  disabled={index >= CHAPTERS.length - 1}
-                >
-                  الفصل التالي <ChevronLeft size={13} />
-                </button>
+            ) : (
+              <div className={styles.readingPrompt}>
+                <Compass size={18} aria-hidden />
+                <div>
+                  <strong>اختر محطة من الفصل</strong>
+                  <p>
+                    كل محطة تفتح تفاصيلها وموضعها في الأطلس وسجلها في قاعدة السيرة، دون تجاوز حدود
+                    البنية التحريرية المحلية.
+                  </p>
+                </div>
               </div>
+            )}
+          </div>
+
+          <aside className={styles.readingSide}>
+            <section className={styles.panel}>
+              <SectionHead title="محطات الفصل" en="Local editorial chapter events · review pending" />
+              {events.length === 0 ? (
+                <p className="muted" style={{ fontSize: "0.8rem" }}>
+                  لا توجد محطات في البنية التحريرية المحلية لهذا الفصل.
+                </p>
+              ) : (
+                <ol className={styles.events} aria-label="محطات الفصل">
+                  {events.map((e, eventIndex) => (
+                    <li key={e.id}>
+                      <button
+                        type="button"
+                        className={`${styles.eventButton} ${selectedEvent?.id === e.id ? styles.evOn : ""}`}
+                        aria-pressed={selectedEvent?.id === e.id}
+                        onClick={() => selectEvent({ chapterId: chapter.id, eventId: e.id })}
+                      >
+                        <span className={styles.eventThumb}>
+                          <img
+                            src={eventThumb(e.id, eventIndex + index)}
+                            alt=""
+                            loading="lazy"
+                          />
+                          <i aria-hidden>{String(eventIndex + 1).padStart(2, "0")}</i>
+                        </span>
+                        <span className={styles.eventText}>
+                          <span>{e.date}</span>
+                          <strong>{e.title}</strong>
+                        </span>
+                        <ArrowLeft size={13} className={styles.eventArrow} aria-hidden />
+                      </button>
+                    </li>
+                  ))}
+                </ol>
+              )}
             </section>
 
-            <aside className={styles.panel}>
+            <section className={styles.panel}>
               <SectionHead title="المراحل السردية" en="Narrative phases" />
               <div className={styles.miles}>
-                {CATEGORIES.map((category) => (
+                {CATEGORIES.map((category, categoryIndex) => (
                   <article key={category.id}>
-                    <img src={STAGE_ART[category.chapters.length % STAGE_ART.length]} alt="" />
+                    <img
+                      src={CATEGORY_ART[categoryIndex % CATEGORY_ART.length]}
+                      alt=""
+                      loading="lazy"
+                    />
                     <span>
-                      {category.name} · {category.chapters.length} {category.chapters.length === 1 ? "فصل" : "فصول"}
+                      {category.name} · {category.chapters.length}{" "}
+                      {category.chapters.length === 1 ? "فصل" : "فصول"}
                     </span>
                   </article>
                 ))}
-                <article>
-                  <img src={art.books} alt="" />
-                  <span>الفصول المقروءة محليًا: {readCount} من {CHAPTERS.length}</span>
-                </article>
               </div>
-            </aside>
-          </div>
-        </ChapterEnvironment>
-      </ChapterGateway>
+            </section>
+
+            <section className={styles.panel}>
+              <SectionHead title="رحلتك في تعلم السيرة" en="Local progress only" />
+              <p className={styles.progressLine}>
+                {readCount} من {CHAPTERS.length} فصول مقروءة محليًا
+              </p>
+              <div className={styles.bar}>
+                <i style={{ width: `${percent}%` }} />
+              </div>
+              <span className={styles.progressNote}>{percent}% · تقدّم محلي على هذا الجهاز فقط</span>
+            </section>
+
+            <section className={styles.panel}>
+              <SectionHead title="فصول مرتبطة" en="Related chapters" />
+              <div className={styles.figures}>
+                {related.length === 0 ? (
+                  <span className="muted">لا توجد روابط مسجلة لهذا الفصل.</span>
+                ) : (
+                  related.map((r) => (
+                    <button key={r.id} type="button" onClick={() => selectChapter(r.id)}>
+                      فصل {r.order} · {r.title}
+                    </button>
+                  ))
+                )}
+              </div>
+            </section>
+
+            <section className={styles.panel}>
+              <SectionHead title="المواقع في السيرة" en="Schematic — not GIS" href="/atlas" action="عرض الخريطة" />
+              <p className="muted" style={{ fontSize: "0.8rem", lineHeight: 1.9 }}>
+                المواقع المذكورة في هذا الفصل:{" "}
+                {[...new Set(events.map((e) => e.location).filter(Boolean))].join(" · ") ||
+                  "غير محددة كبنية مواقع"}
+                . أي تمثيل بصري للمواقع تخطيطي وليس إحداثيات تاريخية دقيقة.
+              </p>
+            </section>
+          </aside>
+        </div>
+      </ChapterEnvironment>
 
       <MediaLibrarySection
         kind="seerah"
@@ -430,42 +575,24 @@ export function SeerahPage() {
         subtitle="سلاسل سيرة ومحاضرات وخطب من صفحات الفيديو العامة، مع اسم القناة والناشر ورابط المصدر تحت كل بطاقة."
       />
 
-      <div className={styles.lower}>
-        <section className={styles.panel}>
-          <SectionHead title="فصول مرتبطة" en="Related chapters" />
-          <div className={styles.figures}>
-            {related.length === 0 ? (
-              <span className="muted">لا توجد روابط مسجلة لهذا الفصل.</span>
-            ) : (
-              related.map((r) => (
-                <button
-                  key={r.id}
-                  type="button"
-                  onClick={() => selectChapter(r.id)}
-                >
-                  فصل {r.order} · {r.title}
-                </button>
-              ))
-            )}
-          </div>
-        </section>
-        <section className={styles.panel}>
-          <SectionHead title="المواقع في السيرة" en="Schematic — not GIS" href="/atlas" action="عرض الخريطة" />
-          <p className="muted" style={{ fontSize: "0.8rem", lineHeight: 1.9 }}>
-            المواقع المذكورة في هذا الفصل:{" "}
-            {[...new Set(events.map((e) => e.location).filter(Boolean))].join(" · ") || "غير محددة كبنية مواقع"}.
-            أي تمثيل بصري للمواقع تخطيطي وليس إحداثيات تاريخية دقيقة.
+      <section className={styles.closing} aria-label="متابعة الرحلة">
+        <div>
+          <p className={styles.closingKicker}>متابعة الرحلة</p>
+          <h2>من الفصل إلى المكان، ومن المكان إلى المصدر</h2>
+          <p>
+            هذه البنية تحفظ الفصل بين السرد والمكان والمصدر. انتقل إلى الأطلس لترى الموضع التخطيطي،
+            أو إلى القاعدة الزمنية لترى سجل الحدث وحالته ومراجعه.
           </p>
-        </section>
-        <section className={styles.panel}>
-          <SectionHead title="رحلتك في تعلم السيرة" en="Local progress only" />
-          <p>{readCount} من {CHAPTERS.length} فصول مقروءة محليًا</p>
-          <div className={styles.bar}>
-            <i style={{ width: `${percent}%` }} />
-          </div>
-          <span>{percent}% · تقدّم محلي على هذا الجهاز فقط</span>
-        </section>
-      </div>
+        </div>
+        <div className={styles.closingActions}>
+          <Link href="/atlas" className="btn-gold">
+            <Map size={14} /> افتح الأطلس
+          </Link>
+          <Link href="/seerah/database" className="btn-outline">
+            <Database size={14} /> قاعدة السيرة
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }

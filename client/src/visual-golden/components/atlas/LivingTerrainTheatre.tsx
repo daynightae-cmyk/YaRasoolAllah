@@ -59,6 +59,7 @@ export function LivingTerrainTheatre({
       >
         <img className={styles.plate} src={plate} alt="" />
         <div className={styles.grade} aria-hidden />
+        <div className={styles.contours} aria-hidden />
         <div className={styles.weather} aria-hidden>
           <span className={styles.sheet} />
           <span className={styles.sheetB} />

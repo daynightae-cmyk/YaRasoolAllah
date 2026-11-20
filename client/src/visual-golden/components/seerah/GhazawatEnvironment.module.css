@@ -5,17 +5,28 @@
 
 .root {
   position: relative;
-  min-height: 60dvh;
   overflow: hidden;
   isolation: isolate;
 }
 
-/* --- Plate (background texture) --- */
+/* --- Scenic band ---
+   A wide landscape crop is legible in a narrow reading column; the plate
+   therefore opens the event as a banner instead of being buried under the
+   full-length article. */
 .plateWrapper {
+  position: relative;
+  z-index: 0;
+  height: clamp(190px, 24vw, 250px);
+  overflow: hidden;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.plateWrapper::after {
+  content: "";
   position: absolute;
   inset: 0;
-  z-index: 0;
-  overflow: hidden;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(2, 8, 12, 0.06) 0%, transparent 45%, rgba(2, 12, 16, 0.88) 100%);
 }
 
 .plate {
@@ -24,15 +35,15 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  object-position: center 62%;
   pointer-events: none;
-  opacity: 0.5;
-  filter: grayscale(0.3) contrast(0.95);
+  opacity: 0.94;
+  filter: saturate(1.04) contrast(1.1);
   transition: opacity 1200ms ease, filter 1200ms ease;
 }
 
 .root[data-theme="light"] .plate {
-  opacity: 0.32;
+  opacity: 0.82;
 }
 
 .fallbackPlate {
@@ -91,7 +102,8 @@
 /* --- Movement layer (decorative, stops on reduced motion) --- */
 .movementLayer {
   position: absolute;
-  inset: 0;
+  inset: 0 0 auto;
+  height: clamp(190px, 24vw, 250px);
   z-index: 2;
   pointer-events: none;
   overflow: hidden;
@@ -141,10 +153,11 @@
 /* --- Vignette depth --- */
 .vignette {
   position: absolute;
-  inset: 0;
+  inset: 0 0 auto;
+  height: clamp(190px, 24vw, 250px);
   z-index: 3;
   pointer-events: none;
-  background: radial-gradient(circle at 50% 30%, transparent 35%, rgba(2, 6, 8, 0.4) 90%);
+  background: radial-gradient(circle at 50% 40%, transparent 40%, rgba(2, 6, 8, 0.45) 100%);
 }
 
 /* --- Content surface --- */
@@ -160,8 +173,8 @@
 /* --- Disclosure --- */
 .disclosure {
   position: absolute;
-  inset-inline-end: 1rem;
-  bottom: 1rem;
+  inset-inline-end: 0.75rem;
+  top: 0.75rem;
   z-index: 5;
   display: inline-flex;
   align-items: center;

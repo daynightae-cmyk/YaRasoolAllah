@@ -325,12 +325,25 @@ export function SeerahDatabasePage() {
   }, [requestedEventId, filtered]);
 
   const selectedId = selected?.event.id ?? null;
+  const requestedEventMatches = Boolean(
+    requestedEventId && selected?.event.id === requestedEventId,
+  );
 
   useEffect(() => {
     if (!requestedPlaceId) return;
     if (!SEERAH_DATABASE.places.some((place) => place.id === requestedPlaceId)) return;
     setPlaceId(requestedPlaceId);
   }, [requestedPlaceId]);
+
+  useEffect(() => {
+    // Direct links from a Seerah station open the database page; bring the
+    // requested record into view without hijacking selection within the page.
+    if (!requestedEventMatches) return;
+    const frame = window.requestAnimationFrame(() => {
+      document.getElementById("seerah-db-detail")?.scrollIntoView({ block: "start" });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [requestedEventId, requestedEventMatches]);
 
   useEffect(() => {
     if (!selectedId) return;

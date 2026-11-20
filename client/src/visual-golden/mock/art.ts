@@ -31,4 +31,23 @@ export const art = {
   storyHijrah: "/visual-golden/art/story-hijrah.webp",
   storyCamel: "/visual-golden/art/story-camel.webp",
   storyAnimals: "/visual-golden/art/story-animals.webp",
+  // Non-figurative environment plates drawn for the immersive Seerah scenes.
+  // They carry no people, faces, sacred architecture, or embedded text, and
+  // are always presented as illustrative reconstructions.
+  sceneThreshold: "/visual-golden/art/scene-threshold.svg",
+  sceneGateway: "/visual-golden/art/scene-gateway.svg",
+  sceneMakkah: "/visual-golden/art/scene-makkah.svg",
+  sceneHira: "/visual-golden/art/scene-hira.svg",
+  sceneDawah: "/visual-golden/art/scene-dawah.svg",
+  sceneHijrah: "/visual-golden/art/scene-hijrah.svg",
+  sceneMadinah: "/visual-golden/art/scene-madinah.svg",
+  sceneHajj: "/visual-golden/art/scene-hajj.svg",
+  sceneFarewell: "/visual-golden/art/scene-farewell.svg",
+  sceneBadr: "/visual-golden/art/scene-badr.svg",
+  sceneUhud: "/visual-golden/art/scene-uhud.svg",
+  sceneKhandaq: "/visual-golden/art/scene-khandaq.svg",
+  sceneKhaybar: "/visual-golden/art/scene-khaybar.svg",
+  sceneFath: "/visual-golden/art/scene-fath.svg",
+  sceneHunayn: "/visual-golden/art/scene-hunayn.svg",
+  sceneTabuk: "/visual-golden/art/scene-tabuk.svg",
 } as const;
