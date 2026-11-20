@@ -114,7 +114,7 @@
   </g>
   <rect x="0" y="640" width="1600" height="170" fill="url(#hazeFade)" opacity="0.34" style="color:#f2d3a0"/>
   <path d="M-40 900 L-40 760 L60 730 L150 780 L210 900 Z" fill="#1e1208"/><path d="M-40 760 L60 730 L150 780 L70 820 Z" fill="#1e1208" opacity="0.7"/><path d="M1640 900 L1640 750 L1540 720 L1440 790 L1390 900 Z" fill="#1e1208"/><path d="M1640 750 L1540 720 L1440 790 L1530 830 Z" fill="#1e1208" opacity="0.7"/>
-  
+
   <rect width="1600" height="900" filter="url(#grain)" opacity="0.55"/>
   <rect width="1600" height="900" fill="url(#vignette)"/>
 </svg>
