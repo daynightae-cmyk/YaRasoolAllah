@@ -78,3 +78,45 @@ describe("capacitor android shell", () => {
     assert.match(strings, /يا رسول الله/);
   });
 });
+
+describe("electron windows shell", () => {
+  const main = read("desktop/main.cjs");
+
+  it("loads only the bundled production build through a privileged scheme", () => {
+    assert.match(main, /"dist", "public"/);
+    assert.match(main, /PACKAGED_WEB_ROOT/);
+    assert.match(main, /registerSchemesAsPrivileged/);
+    assert.match(main, /contextIsolation: true/);
+    assert.match(main, /nodeIntegration: false/);
+    assert.match(main, /sandbox: true/);
+    // Path traversal guard on the local protocol handler.
+    assert.match(main, /startsWith\(WEB_ROOT\)/);
+    // No remote navigation inside the shell window.
+    assert.match(main, /will-navigate/);
+    assert.match(main, /setWindowOpenHandler/);
+  });
+
+  it("marks the desktop runtime so governed calls use the canonical origin", () => {
+    const preload = read("desktop/preload.cjs");
+    assert.match(preload, /contextBridge\.exposeInMainWorld\("__YRA_DESKTOP__", true\)/);
+    const origin = read("client/src/lib/api-origin.ts");
+    assert.match(origin, /__YRA_DESKTOP__/);
+    assert.match(origin, /yra:\/\/institution/);
+  });
+
+  it("packages the real web build, not a fork", () => {
+    const builder = read("electron-builder.config.cjs");
+    assert.match(builder, /app: "dist-desktop\/app"/);
+    assert.match(builder, /appId: "org\.yarasoolallah\.desktop"/);
+    // Zero-dependency host: beforeBuild → false marks node_modules handled
+    // externally, skipping rebuild and parent-tree collection.
+    assert.match(builder, /beforeBuild: \(\) => false/);
+    assert.doesNotMatch(builder, /npmRebuild: false/);
+    const stage = read("scripts/stage-desktop.mjs");
+    assert.match(stage, /"dist", "public"/);
+    assert.match(stage, /main\.cjs/);
+    const appPackage = JSON.parse(read("desktop/package.json"));
+    assert.equal(appPackage.main, "main.cjs");
+    assert.equal(appPackage.dependencies, undefined);
+  });
+});

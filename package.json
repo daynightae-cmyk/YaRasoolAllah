@@ -24,7 +24,12 @@
     "build:worlds": "node scripts/build-world-plates.mjs",
     "android:icons": "node scripts/build-android-icons.mjs",
     "android:sync": "npm run build && cap sync android",
-    "android:apk": "npm run android:sync && cd android && gradlew.bat assembleDebug"
+    "android:apk": "npm run android:sync && cd android && gradlew.bat assembleDebug",
+    "desktop:icon": "node scripts/build-desktop-icon.mjs",
+    "desktop:stage": "node scripts/stage-desktop.mjs",
+    "desktop:start": "npm run build && electron desktop/main.cjs",
+    "desktop:pack": "npm run build && npm run desktop:stage && electron-builder --config electron-builder.config.cjs --win portable",
+    "desktop:dist": "npm run build && npm run desktop:stage && electron-builder --config electron-builder.config.cjs --win nsis"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

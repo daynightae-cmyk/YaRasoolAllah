@@ -1,0 +1,26 @@
+{
+  "packaged": true,
+  "exe": "dist-desktop/win-unpacked/Ya Rasool Allah.exe",
+  "capturedAt": "2026-11-20T14:26:15.655Z",
+  "home": {
+    "title": "يا رسول الله ﷺ",
+    "rootChildren": 1,
+    "shellCount": 1,
+    "backdrop": "home",
+    "backdropLoaded": "true",
+    "heading": "يا رسول الله ﷺ",
+    "desktopMarker": true,
+    "text": 2977,
+    "dir": "rtl",
+    "overflow": false
+  },
+  "daily": {
+    "adhkar": true,
+    "adhkarCards": 6,
+    "adhkarTextRead": 6,
+    "duas": true,
+    "tasbih": true,
+    "overflow": false
+  },
+  "pass": true
+}

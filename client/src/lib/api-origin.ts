@@ -19,13 +19,23 @@ const LOCAL_WEBVIEW_ORIGINS = new Set([
   "http://localhost",
   "capacitor://localhost",
   "ionic://localhost",
+  // Windows desktop shell: privileged local protocol (desktop/main.cjs).
+  "yra://institution",
 ]);
 
 function configuredOrigin(): string {
   const override = (import.meta.env.VITE_API_ORIGIN as string | undefined)?.trim();
   if (override) return override.replace(/\/+$/, "");
-  if (typeof window !== "undefined" && LOCAL_WEBVIEW_ORIGINS.has(window.location.origin)) {
-    return BRAND.canonicalUrl;
+  if (typeof window !== "undefined") {
+    // Desktop shell marker (desktop/preload.cjs): the bundled client runs
+    // from a privileged local protocol, so live content uses the canonical
+    // institution origin even when the page origin looks remote.
+    if ((window as { __YRA_DESKTOP__?: boolean }).__YRA_DESKTOP__) {
+      return BRAND.canonicalUrl;
+    }
+    if (LOCAL_WEBVIEW_ORIGINS.has(window.location.origin)) {
+      return BRAND.canonicalUrl;
+    }
   }
   return "";
 }

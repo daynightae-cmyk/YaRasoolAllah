@@ -1,0 +1,16 @@
+{
+  "probe": {
+    "title": "يا رسول الله ﷺ",
+    "rootChildren": 1,
+    "shellCount": 1,
+    "backdrop": "home",
+    "backdropLoaded": "true",
+    "heading": "يا رسول الله",
+    "desktopMarker": true,
+    "text": 3061,
+    "dir": "rtl"
+  },
+  "errors": [
+    "Electron Security Warning (Insecure Content-Security-Policy) This renderer process has either no Content Security\n  Policy set or a policy with \"unsafe-eval\" enabled. This exposes users of\n  this app to unnecessary security risks.\n\nFor more information and help, consult\nhttps://electronjs.org/docs/tutorial/security.\nThis warning will not show up\nonce the app is packaged."
+  ]
+}

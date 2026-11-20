@@ -16,3 +16,4 @@ test-results/
 bun.lock
 artifacts/library-reading-smoke/
 artifacts/visual-golden-smoke/
+dist-desktop/

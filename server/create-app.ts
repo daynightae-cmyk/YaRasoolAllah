@@ -34,6 +34,7 @@ const NATIVE_SHELL_ORIGINS = new Set([
   "http://localhost",
   "capacitor://localhost",
   "ionic://localhost",
+  "yra://institution",
   "https://yarasoolallah.it.com",
   "https://yarasoolallah.org",
 ]);
