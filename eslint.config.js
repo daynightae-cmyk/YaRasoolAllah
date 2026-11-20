@@ -21,6 +21,10 @@ export default tseslint.config(
       "client/public/**",
       "docs/**",
       "**/*.min.js",
+      // Throwaway screenshot/scroll helpers. They run browser code inside
+      // Playwright `page.evaluate` callbacks, so static `no-undef` cannot see
+      // the browser globals. They are never part of the shipped app.
+      "scripts/**/*.tmp.mjs",
     ],
   },
   js.configs.recommended,

@@ -20,6 +20,14 @@ export const SEERAH_COUNTS = {
 
 export const DEFAULT_SEERAH_CHAPTER_ID = CHAPTERS[3]?.id ?? CHAPTERS[0]?.id ?? "";
 
+/** Arabic count agreement for the station counter shown in the journey. */
+export function stationCountLabel(count: number): string {
+  if (count === 1) return "محطة واحدة";
+  if (count === 2) return "محطتان";
+  if (count >= 3 && count <= 10) return `${count} محطات`;
+  return `${count} محطة`;
+}
+
 /**
  * The current chapter/event records are local editorial structure, not a
  * governed scholarly source or edition. Keep that boundary explicit until

@@ -30,9 +30,10 @@ describe("visual evidence case targets stay wired to the real product", () => {
 
   for (const testCase of cases) {
     it(`${testCase.name} targets a route declared in App.tsx`, () => {
+      const route = testCase.path.split("?")[0];
       assert.ok(
-        testCase.path === "/" ? app.includes('path="/"') : app.includes(`path="${testCase.path}"`),
-        `route ${testCase.path} is not declared in App.tsx`,
+        route === "/" ? app.includes('path="/"') : app.includes(`path="${route}"`),
+        `route ${route} is not declared in App.tsx`,
       );
     });
 

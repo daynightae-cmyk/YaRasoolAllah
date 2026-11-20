@@ -56,6 +56,19 @@ const cases = [
   { name: "sources-360-rtl", path: "/sources", width: 360, height: 844 },
 ];
 
+// Optional targeted runs, e.g. SMOKE_CASES=seerah-1440-rtl,library-1440-rtl.
+// CI runs the full set; filtering only shortens local diagnosis.
+const requestedCases = (process.env.SMOKE_CASES ?? "")
+  .split(",")
+  .map((name) => name.trim())
+  .filter(Boolean);
+const selectedCases = requestedCases.length
+  ? cases.filter((item) => requestedCases.includes(item.name))
+  : cases;
+if (selectedCases.length === 0) {
+  throw new Error(`SMOKE_CASES matched no case: ${requestedCases.join(", ")}`);
+}
+
 const chrome = spawn(chromePath, [
   "--headless",
   "--disable-gpu",
@@ -226,7 +239,7 @@ try {
   await waitFor(session, 'document.readyState === "complete"', "initial origin");
   await evaluate(session, 'sessionStorage.setItem("yra-splash", "1")');
 
-  for (const item of cases) {
+  for (const item of selectedCases) {
     await evaluate(session, `(() => {
       const key = "yra-visual-golden-v1";
       const saved = JSON.parse(localStorage.getItem(key) || "{}");
@@ -246,7 +259,7 @@ try {
     // wait less.
     await waitFor(
       session,
-      `document.readyState === "complete" && location.pathname === "${item.path === "/" ? "/" : item.path}"`,
+      `document.readyState === "complete" && location.pathname === "${item.path === "/" ? "/" : item.path}" && (document.querySelector(".vg-shell main")?.innerText || "").trim().length > 0`,
       item.path,
       300,
     );
@@ -290,7 +303,7 @@ try {
       if (geometry.lang !== expectedLang || geometry.theme !== (item.theme ?? "dark") || geometry.direction !== (expectedLang === "ar" ? "rtl" : "ltr")) {
         throw new Error(`${item.name} language/theme did not hydrate: ${JSON.stringify(geometry)}`);
       }
-      if (!geometry.search || !geometry.form || !geometry.copy || geometry.documentWidth > geometry.viewport + 1 || geometry.search.width < 32 || geometry.search.left < -1 || geometry.search.right > geometry.viewport + 1 || geometry.form.left < -1 || geometry.form.right > geometry.viewport + 1 || geometry.copy.bottom > geometry.form.top + 1) {
+      if (!geometry.search || !geometry.form || !geometry.copy || geometry.documentWidth > geometry.viewport + 1 || geometry.search.width < 32 || geometry.search.left < -1 || geometry.search.right > geometry.viewport + 1 || geometry.form.left < -1 || geometry.form.right > geometry.viewport + 1 || geometry.form.top < geometry.copy.top - 1 || geometry.form.bottom > geometry.copy.bottom + 1) {
         throw new Error(`${item.name} clipped or overlapping shell: ${JSON.stringify(geometry)}`);
       }
       if (geometry.wings.length !== 8 || geometry.wings.some((wing) => wing.width < 80 || wing.left < -1 || wing.right > geometry.viewport + 1)) {
@@ -306,6 +319,12 @@ try {
       // The hall lists domains first; spines only exist once a hall is entered.
       // The domains list comes first; the hall bar and its spines only exist
       // after a hall is entered.
+      // The route may auto-open the 3D arcade on a capable device, so select
+      // the complete shelves explicitly before looking for a hall.
+      await evaluate(session, `(() => {
+        document.querySelector('[data-visual="library-mode-shelves"]')?.click();
+        return true;
+      })()`);
       await waitFor(
         session,
         `(() => {
@@ -428,6 +447,7 @@ try {
       await waitFor(session, 'document.querySelectorAll(\'ol[aria-label="محطات الفصل"] button\').length > 1', `${item.name} events`);
       const seerahGeometry = await evaluate(session, `(() => {
         const detail = document.querySelector('article[aria-label="تفاصيل المحطة المختارة"]');
+        const stage = document.querySelector('[data-visual="seerah-event-stage"]');
         const bounds = detail?.getBoundingClientRect().toJSON();
         const buttons = [...document.querySelectorAll('ol[aria-label="محطات الفصل"] button')];
         const graph = document.querySelector('[data-visual="seerah-event-graph"]');
@@ -437,7 +457,7 @@ try {
           documentWidth: document.documentElement.scrollWidth,
           detail: bounds,
           selected: buttons.filter((button) => button.getAttribute("aria-pressed") === "true").length,
-          placeLink: detail?.querySelector('a[href^="/atlas?place="]')?.getAttribute("href") ?? null,
+          placeLink: stage?.querySelector('a[href^="/atlas?place="]')?.getAttribute("href") ?? null,
           dateUncertainty: detail?.textContent?.includes("غير موثقة في بيانات المحطة"),
           graph: graphBounds ?? null,
           graphRelations: graph?.querySelectorAll("[data-graph-relations] li").length ?? 0,
@@ -462,22 +482,22 @@ try {
         })()`);
         const selected = await waitFor(session, `(() => {
           const buttons = document.querySelectorAll('ol[aria-label="محطات الفصل"] button');
-          const title = document.querySelector('article[aria-label="تفاصيل المحطة المختارة"] h3')?.textContent || "";
+          const title = document.querySelector('[data-visual="seerah-event-title"]')?.textContent || "";
           return buttons[1]?.getAttribute("aria-pressed") === "true" ? title : "";
         })()`, "selected Seerah event");
-        const link = await waitFor(session, 'document.querySelector(\'article[aria-label="تفاصيل المحطة المختارة"] a[href^="/atlas?place="]\')?.getAttribute("href")', "event place link");
-        await evaluate(session, 'document.querySelector(\'article[aria-label="تفاصيل المحطة المختارة"] a[href^="/atlas?place="]\').click()');
+        const link = await waitFor(session, 'document.querySelector(\'[data-visual="seerah-event-stage"] a[href^="/atlas?place="]\')?.getAttribute("href")', "event place link");
+        await evaluate(session, 'document.querySelector(\'[data-visual="seerah-event-stage"] a[href^="/atlas?place="]\').click()');
         await waitFor(session, `location.pathname === "/atlas" && location.search === ${JSON.stringify(new URL(link, origin).search)} && document.querySelector('[data-climate="places"]') !== null`, "linked Atlas place");
         await waitFor(session, `document.querySelector('.vg-shell')?.textContent?.includes(${JSON.stringify(selected)})`, "Atlas event mention");
         const returnLink = await evaluate(session, `document.querySelector('a[href^="/seerah?chapter="]')?.getAttribute("href")`);
         if (!returnLink) throw new Error("Atlas place has no event return link");
         await evaluate(session, 'document.querySelector(\'a[href^="/seerah?chapter="]\').click()');
-        await waitFor(session, `location.pathname === "/seerah" && document.querySelector('article[aria-label="تفاصيل المحطة المختارة"] h3')?.textContent === ${JSON.stringify(selected)}`, "restored Seerah event");
+        await waitFor(session, `location.pathname === "/seerah" && document.querySelector('[data-visual="seerah-event-title"]')?.textContent === ${JSON.stringify(selected)}`, "restored Seerah event");
         diagnostics.roundTrip = { link, returnLink, selected };
-        const beforeGraphTitle = await evaluate(session, 'document.querySelector(\'article[aria-label="تفاصيل المحطة المختارة"] h3\')?.textContent || ""');
+        const beforeGraphTitle = await evaluate(session, 'document.querySelector(\'[data-visual="seerah-event-title"]\')?.textContent || ""');
         const graphNavClicked = await evaluate(session, '(() => { const button = document.querySelector(\'[data-visual="seerah-event-graph"] button\'); if (!button) return false; button.click(); return true; })()');
         if (!graphNavClicked) throw new Error("Seerah event graph has no navigation button");
-        const afterGraphTitle = await waitFor(session, `(() => { const title = document.querySelector('article[aria-label="تفاصيل المحطة المختارة"] h3')?.textContent || ""; return title && title !== ${JSON.stringify(beforeGraphTitle)} ? title : ""; })()`, "Seerah graph navigation");
+        const afterGraphTitle = await waitFor(session, `(() => { const title = document.querySelector('[data-visual="seerah-event-title"]')?.textContent || ""; return title && title !== ${JSON.stringify(beforeGraphTitle)} ? title : ""; })()`, "Seerah graph navigation");
         diagnostics.graphNavigation = { before: beforeGraphTitle, after: afterGraphTitle };
       }
     }

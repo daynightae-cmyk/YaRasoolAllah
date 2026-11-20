@@ -144,6 +144,15 @@ export const ROUTE_CONTENT_DECLARATIONS: readonly RouteContentDeclaration[] = [
     ["client/src/data/seerahData.ts", "client/src/visual-golden/pages/SeerahPage.tsx"],
   ),
   arabicOnly(
+    "/seerah/database",
+    "The chronological Seerah database renders recorded Arabic titles, summaries, sources, Quran text and hadith provenance labels only; it shows no English passage.",
+    [
+      "client/src/data/seerah/events-makkah.ts",
+      "client/src/data/seerah/events-madinah.ts",
+      "client/src/visual-golden/pages/SeerahDatabasePage.tsx",
+    ],
+  ),
+  arabicOnly(
     "/atlas",
     "Atlas place names come from the Arabic timeline-event locations in seerahData.",
     ["client/src/visual-golden/pages/AtlasPage.tsx", "client/src/data/seerahData.ts"],

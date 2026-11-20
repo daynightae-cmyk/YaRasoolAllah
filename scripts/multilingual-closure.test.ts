@@ -279,6 +279,7 @@ describe("the notice tells the truth in all three cases, not one", () => {
       "/al-mufti-al-mubeen": "no_content",
       // Arabic and nothing else.
       "/seerah": "arabic_only",
+      "/seerah/database": "arabic_only",
       "/atlas": "arabic_only",
       "/tafsir": "arabic_only",
       "/audio": "arabic_only",

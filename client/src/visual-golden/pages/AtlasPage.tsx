@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "wouter";
+import { Link, useSearch } from "wouter";
 import {
   ZoomIn,
   ZoomOut,
@@ -9,6 +9,9 @@ import {
   ChevronLeft,
   Mountain,
   BookOpen,
+  BookMarked,
+  Clock,
+  ExternalLink,
 } from "lucide-react";
 import { LivingTerrainTheatre } from "@/visual-golden/components/atlas/LivingTerrainTheatre";
 import {
@@ -25,16 +28,27 @@ import {
   filterNodes,
   type AtlasFilter,
 } from "@/visual-golden/services/atlas";
+import {
+  atlasPlaceDatabaseHref,
+  campaignChapterHref,
+  campaignSeerahHref,
+  findAtlasNodeByQuery,
+  seerahEventForCampaign,
+  seerahEventsForAtlasNode,
+  seerahPlaceForAtlasNode,
+} from "@/visual-golden/services/atlas-seerah";
 import styles from "./LivingAtlasPage.module.css";
 
 const HIJAZ_PLATE = "/visual-golden/art/atlas-hero.webp";
 
 function initialPlace() {
   const requested = new URLSearchParams(window.location.search).get("place");
-  return ATLAS_NODES.find((node) => node.id === requested)?.id ?? null;
+  return findAtlasNodeByQuery(requested)?.id ?? null;
 }
 
 export function AtlasPage() {
+  const search = useSearch();
+  const requestedPlace = useMemo(() => new URLSearchParams(search).get("place"), [search]);
   const [linkedPlace] = useState(initialPlace);
   const [mode, setMode] = useState<"theatre" | "places">(linkedPlace ? "places" : "theatre");
   const [campaignId, setCampaignId] = useState(LIVING_CAMPAIGNS[0].id);
@@ -53,6 +67,19 @@ export function AtlasPage() {
   const weather: Weather = phase.weather;
   const places = useMemo(() => filterNodes(placeFilter), [placeFilter]);
   const place = places.find((node) => node.id === placeId) ?? places[0] ?? null;
+  const placeSeerah = place ? seerahPlaceForAtlasNode(place) : null;
+  const placeEvents = place ? seerahEventsForAtlasNode(place) : [];
+  const campaignEvent = seerahEventForCampaign(campaign.id);
+  const campaignRecordHref = campaignSeerahHref(campaign.id);
+  const campaignChapterLink = campaignChapterHref(campaign.id);
+
+  useEffect(() => {
+    const requested = findAtlasNodeByQuery(requestedPlace);
+    if (!requested) return;
+    setMode("places");
+    setPlaceFilter("all");
+    setPlaceId(requested.id);
+  }, [requestedPlace]);
 
   useEffect(() => {
     setPhaseIndex(0);
@@ -248,18 +275,32 @@ export function AtlasPage() {
             <p className={styles.src}>
               {witnessKind} · {phase.witness.cite}
             </p>
-            <Link href="/seerah" className={styles.seerahLink}>
-              <BookOpen size={14} /> فتح فصول السيرة
-            </Link>
+            {campaignEvent ? (
+              <p className={styles.src}>
+                <Clock size={12} /> {campaignEvent.dateTextAr}
+              </p>
+            ) : null}
+            <div className={styles.recordLinks}>
+              {campaignChapterLink ? (
+                <Link href={campaignChapterLink} className={styles.seerahLink}>
+                  <BookOpen size={14} /> فصل الغزوة
+                </Link>
+              ) : null}
+              {campaignRecordHref ? (
+                <Link href={campaignRecordHref} className={styles.seerahLink} data-visual="atlas-campaign-record">
+                  <BookMarked size={14} /> التفصيل والمصادر
+                </Link>
+              ) : null}
+            </div>
           </aside>
         ) : null}
 
         {mode === "places" && place ? (
-          <aside className={styles.floatCard} aria-live="polite">
+          <aside className={styles.floatCard} aria-live="polite" data-visual="atlas-place-evidence">
             <span className={styles.badge}>موضع تخطيطي — ليس إحداثيات</span>
             <h2>{place.name}</h2>
             <ul className={styles.mentions}>
-              {place.mentions.map((mention) => (
+              {place.mentions.slice(0, 4).map((mention) => (
                 <li key={`${mention.chapterId}-${mention.eventId}`}>
                   <Link href={`/seerah?chapter=${encodeURIComponent(mention.chapterId)}&event=${encodeURIComponent(mention.eventId)}`}>
                     <strong>{mention.eventTitle}</strong>
@@ -270,6 +311,11 @@ export function AtlasPage() {
                 </li>
               ))}
             </ul>
+            {placeSeerah ? (
+              <Link href={atlasPlaceDatabaseHref(placeSeerah)} className={styles.seerahLink}>
+                <BookMarked size={14} /> السجل الزمني للموضع ({placeEvents.length})
+              </Link>
+            ) : null}
             <Link href="/seerah" className={styles.seerahLink}>
               <BookOpen size={14} /> فتح فصول السيرة
             </Link>
@@ -367,6 +413,70 @@ export function AtlasPage() {
             <p>{campaign.geographicBasisAr}</p>
             <p className={styles.src}>{campaign.sources.join(" · ")}</p>
           </section>
+        </section>
+      ) : null}
+
+      {mode === "places" && place ? (
+        <section
+          className={styles.placeBoard}
+          data-visual="atlas-place-timeline"
+          aria-label={`الخط الزمني المسجل لموضع ${place.name}`}
+        >
+          <header className={styles.placeBoardHead}>
+            <div>
+              <span className={styles.badge}>مزامنة مع قاعدة السيرة الزمنية</span>
+              <h2>الخط الزمني للموضع</h2>
+              <p>
+                الأحداث المسجلة في قاعدة السيرة عند «{place.name}»، مرتبة بحسب ترتيبها
+                الزمني في السجل. الموضع نفسه يبقى تخطيطيًا على اللوحة.
+              </p>
+            </div>
+            {placeSeerah ? (
+              <Link href={atlasPlaceDatabaseHref(placeSeerah)} className={styles.seerahLink}>
+                <BookMarked size={14} /> تصفية القاعدة بهذا الموضع
+              </Link>
+            ) : null}
+          </header>
+
+          {placeEvents.length === 0 ? (
+            <p className={styles.placeEmpty}>
+              لا توجد أحداث مرتبطة بهذا الموضع في قاعدة السيرة الحالية. لا يُستنتج
+              وجود حدث من مجرد ورود اسم الموضع في فصل آخر.
+            </p>
+          ) : (
+            <ol className={styles.placeEventList}>
+              {placeEvents.map((event) => (
+                <li key={event.id}>
+                  <Link href={event.href} className={styles.placeEvent}>
+                    <span className={styles.placeOrder}>{event.order}</span>
+                    <span className={styles.placeEventText}>
+                      <span>
+                        {event.yearAH === null ? "قبل الهجرة" : `${event.yearAH} هـ`}
+                        {event.yearCE === null ? "" : ` / ${event.yearCE} م`}
+                        {" · "}
+                        {event.eraTitleAr}
+                      </span>
+                      <strong>{event.titleAr}</strong>
+                      <small>
+                        {event.chapterTitleAr} · {event.dateTextAr}
+                      </small>
+                    </span>
+                    <span className={styles.placeCounts}>
+                      <span>{event.quranCount} قرآن</span>
+                      <span>{event.hadithCount} حديث</span>
+                      <span>{event.sourceCount} مصدر</span>
+                    </span>
+                    <ExternalLink size={14} aria-hidden />
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          )}
+
+          <p className={styles.placeSourceNote}>
+            كل سجل معلّق للمراجعة العلمية. فتح الحدث يعرض إحالاته القرآنية
+            والحديثية وقائمة مصادره، ولا يضيف الموقع علاقة غير مسجلة.
+          </p>
         </section>
       ) : null}
     </div>

@@ -38,6 +38,30 @@
   pointer-events: none;
   overflow: hidden;
 }
+
+/* Cartographic contour rings + grain. The relief plate is a small raster, so
+   this layer gives it a drawn-map surface instead of a soft upscaled photo. */
+.contours {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.7;
+  mix-blend-mode: screen;
+  background-image:
+    repeating-radial-gradient(ellipse 38% 27% at 62% 44%, transparent 0 26px, rgba(232, 197, 71, 0.1) 27px 28px, transparent 29px 54px),
+    repeating-radial-gradient(ellipse 31% 23% at 26% 68%, transparent 0 22px, rgba(232, 197, 71, 0.08) 23px 24px, transparent 25px 48px),
+    repeating-radial-gradient(ellipse 25% 19% at 80% 76%, transparent 0 18px, rgba(232, 197, 71, 0.07) 19px 20px, transparent 21px 42px);
+  mask-image: radial-gradient(ellipse at 50% 46%, black 28%, transparent 84%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 46%, black 28%, transparent 84%);
+}
+.contours::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.22;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
 .sheet,
 .sheetB {
   position: absolute;

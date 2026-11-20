@@ -615,3 +615,153 @@
     transition-duration: 0.001ms !important;
   }
 }
+
+/* --- Seerah database synchronization (place mode) --- */
+.recordLinks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.1rem 0.9rem;
+}
+
+.placeBoard {
+  margin: 1rem;
+  padding: clamp(1rem, 3vw, 2rem);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-xl);
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-panel);
+}
+
+.placeBoardHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.placeBoardHead h2 {
+  margin: 0.45rem 0 0.35rem;
+  color: var(--text-gold);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  letter-spacing: 0.04em;
+}
+
+.placeBoardHead p {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+  line-height: 1.9;
+}
+
+.placeEventList {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.placeEvent {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-lg);
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: border-color 220ms var(--ease-smooth), background 220ms var(--ease-smooth);
+}
+
+.placeEvent:hover,
+.placeEvent:focus-visible {
+  border-color: var(--border-gold);
+  background: rgba(212, 160, 23, 0.08);
+}
+
+.placeOrder {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  min-height: 2rem;
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-full);
+  color: var(--text-gold);
+  font-family: var(--font-latin);
+  font-size: 0.72rem;
+}
+
+.placeEventText {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.placeEventText > span {
+  color: var(--text-gold);
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+}
+
+.placeEventText strong {
+  color: var(--text-primary);
+  font-size: 0.94rem;
+  overflow-wrap: anywhere;
+}
+
+.placeEventText small {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  overflow-wrap: anywhere;
+}
+
+.placeCounts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.placeCounts span {
+  padding: 0.15rem 0.4rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-full);
+  color: var(--text-muted);
+  font-size: 0.6rem;
+  white-space: nowrap;
+}
+
+.placeEmpty {
+  margin: 1rem 0 0;
+  padding: 0.9rem 1rem;
+  border: 1px dashed var(--border-panel);
+  border-radius: var(--radius-lg);
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  line-height: 1.9;
+}
+
+.placeSourceNote {
+  margin: 0.9rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  line-height: 1.85;
+}
+
+@media (max-width: 720px) {
+  .placeBoard {
+    margin: 0.7rem;
+  }
+  .placeEvent {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+  .placeCounts {
+    grid-column: 2 / -1;
+  }
+}

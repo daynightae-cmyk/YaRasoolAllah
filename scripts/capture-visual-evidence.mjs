@@ -32,7 +32,28 @@ export const cases = [
   { name: "seerah-1440-dark-rtl", path: "/seerah", width: 1440, height: 1000, theme: "dark", language: "ar" },
   { name: "seerah-graph-768-dark-rtl", path: "/seerah", width: 768, height: 1024, theme: "dark", language: "ar", readySelector: '[data-visual="seerah-event-graph"]', scrollSelector: '[data-visual="seerah-event-graph"]', scrollOffset: -80 },
   { name: "atlas-1440-dark-rtl", path: "/atlas", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[role="tablist"]', clickText: "مسرح الغزوات", scrollSelector: '[data-visual="atlas-theatre-evidence"]', scrollOffset: -80 },
+  { name: "atlas-place-badr-1440-dark-rtl", path: "/atlas", search: `?place=${encodeURIComponent("بدر")}`, width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-visual="atlas-place-timeline"]', scrollSelector: '[data-visual="atlas-place-timeline"]', scrollOffset: -80 },
+  { name: "atlas-campaign-record-1440-dark-rtl", path: "/atlas", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[role="tablist"]', clickText: "مسرح الغزوات", scrollSelector: '[data-visual="atlas-campaign-record"]', scrollOffset: -80 },
   { name: "seerah-768-light-ltr", path: "/seerah", width: 768, height: 1024, theme: "light", language: "en", scrollSelector: '[data-visual="content-language-notice"]', scrollOffset: -80 },
+  { name: "seerah-birth-1440-dark-rtl", path: "/seerah", search: "?chapter=birth-and-upbringing", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-scene="birth-and-upbringing"]', scrollSelector: '[data-scene="birth-and-upbringing"]', scrollOffset: -80 },
+  { name: "seerah-revelation-1440-dark-rtl", path: "/seerah", search: "?chapter=prophethood-beginning", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-scene="prophethood-beginning"]', scrollSelector: '[data-scene="prophethood-beginning"]', scrollOffset: -80 },
+  { name: "seerah-hijrah-1440-dark-rtl", path: "/seerah", search: "?chapter=hijra-to-madinah", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-scene="hijra-to-madinah"]', scrollSelector: '[data-scene="hijra-to-madinah"]', scrollOffset: -80 },
+  { name: "seerah-battles-1440-dark-rtl", path: "/seerah", search: "?chapter=battles-conquests", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-scene="battles-conquests"]', scrollSelector: '[data-scene="battles-conquests"]', scrollOffset: -80 },
+  { name: "seerah-reading-1440-dark-rtl", path: "/seerah", search: "?chapter=hijra-to-madinah", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-visual="seerah-reading"]', scrollSelector: '[data-visual="seerah-reading"]', scrollOffset: -80 },
+  { name: "seerah-stage-hijrah-1440-dark-rtl", path: "/seerah", search: "?chapter=hijra-to-madinah", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-chapter-stage="hijra-to-madinah"]', scrollSelector: '[data-visual="seerah-chapter-stage"]', scrollOffset: -80 },
+  { name: "seerah-stage-hajj-1440-dark-rtl", path: "/seerah", search: "?chapter=farewell-hajj", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-chapter-stage="farewell-hajj"]', scrollSelector: '[data-visual="seerah-chapter-stage"]', scrollOffset: -80 },
+  { name: "seerah-stage-hijrah-390-dark-rtl", path: "/seerah", search: "?chapter=hijra-to-madinah", width: 390, height: 844, theme: "dark", language: "ar", readySelector: '[data-chapter-stage="hijra-to-madinah"]', scrollSelector: '[data-visual="seerah-chapter-stage"]', scrollOffset: -80 },
+  { name: "ghazawat-badr-1440-dark-rtl", path: "/seerah", search: "?chapter=battles-conquests&event=badr", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-ghazwah="badr"]', scrollSelector: '[data-ghazwah="badr"]', scrollOffset: -80 },
+  { name: "ghazawat-uhud-1440-dark-rtl", path: "/seerah", search: "?chapter=battles-conquests&event=uhud", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-ghazwah="uhud"]', scrollSelector: '[data-ghazwah="uhud"]', scrollOffset: -80 },
+  { name: "ghazawat-khandaq-1440-dark-rtl", path: "/seerah", search: "?chapter=battles-conquests&event=khandaq", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-ghazwah="khandaq"]', scrollSelector: '[data-ghazwah="khandaq"]', scrollOffset: -80 },
+  { name: "ghazawat-mecca-conquest-1440-dark-rtl", path: "/seerah", search: "?chapter=battles-conquests&event=mecca-conquest", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-ghazwah="mecca-conquest"]', scrollSelector: '[data-ghazwah="mecca-conquest"]', scrollOffset: -80 },
+  { name: "ghazawat-khaybar-1440-dark-rtl", path: "/seerah", search: "?chapter=battles-conquests&event=khaybar", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-ghazwah="khaybar"]', scrollSelector: '[data-ghazwah="khaybar"]', scrollOffset: -80 },
+  { name: "ghazawat-hunayn-1440-dark-rtl", path: "/seerah", search: "?chapter=battles-conquests&event=hunayn", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-ghazwah="hunayn"]', scrollSelector: '[data-ghazwah="hunayn"]', scrollOffset: -80 },
+  { name: "ghazawat-tabuk-1440-dark-rtl", path: "/seerah", search: "?chapter=battles-conquests&event=tabuk", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-ghazwah="tabuk"]', scrollSelector: '[data-ghazwah="tabuk"]', scrollOffset: -80 },
+  { name: "seerah-database-1440-dark-rtl", path: "/seerah/database", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-visual="seerah-database"]' },
+  { name: "seerah-database-badr-1440-light-rtl", path: "/seerah/database", search: "?event=badr", width: 1440, height: 1000, theme: "light", language: "ar", readySelector: '[data-visual="seerah-database-detail"]', scrollSelector: '[data-visual="seerah-database-detail"]', scrollOffset: -80 },
+  { name: "seerah-database-quran-1440-dark-rtl", path: "/seerah/database", search: "?event=badr", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-visual="seerah-database-quran"]', scrollSelector: '[data-visual="seerah-database-quran"]', scrollOffset: -90 },
+  { name: "seerah-database-hadith-360-dark-rtl", path: "/seerah/database", search: "?event=badr", width: 360, height: 900, theme: "dark", language: "ar", readySelector: '[data-visual="seerah-database-hadith"]', scrollSelector: '[data-visual="seerah-database-hadith"]', scrollOffset: -80 },
   { name: "children-360-light-rtl", path: "/kids", width: 360, height: 900, theme: "light", language: "ar" },
   { name: "children-1440-dark-ltr", path: "/children-tv", width: 1440, height: 1000, theme: "dark", language: "en" },
   { name: "hadith-768-dark-rtl", path: "/sunnah", width: 768, height: 1024, theme: "dark", language: "ar" },
@@ -227,7 +248,7 @@ try {
         )} }));
       })();`,
     });
-    await session.send("Page.navigate", { url: `${origin}${testCase.path}` });
+    await session.send("Page.navigate", { url: `${origin}${testCase.path}${testCase.search ?? ""}` });
     await waitForDocument(session, testCase.path === "/home" ? "/" : testCase.path);
     await waitForMainContent(session);
 
