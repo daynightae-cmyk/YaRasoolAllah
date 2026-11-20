@@ -33,6 +33,8 @@ import { chapterWorldPlate, eventWorldPlate } from "@/visual-golden/services/see
 import { ChapterEnvironment } from "@/visual-golden/components/seerah/ChapterEnvironment";
 import { GhazawatEnvironment } from "@/visual-golden/components/seerah/GhazawatEnvironment";
 import { SeerahChapterStage } from "@/visual-golden/components/seerah/SeerahChapterStage";
+import { SeerahJourneyTheatre } from "@/visual-golden/components/seerah/SeerahJourneyTheatre";
+import { SEERAH_JOURNEY_STOPS } from "@/visual-golden/services/seerah-journey";
 import {
   SEERAH_GRAPH,
   SEERAH_GRAPH_COUNTS,
@@ -100,6 +102,15 @@ export function SeerahPage() {
   const index = Math.max(0, CHAPTERS.findIndex((chapter) => chapter.id === selection.chapterId));
   const chapter = CHAPTERS[index] ?? CHAPTERS[0];
   const scene = getSeerahScene(chapter.id);
+
+  // Optional cinematic journey deep link (?journey=<stop id>); read once,
+  // never written back — chapter/event selection stays the URL authority.
+  const journeyInitialIndex = useMemo(() => {
+    const requested = new URLSearchParams(search).get("journey");
+    if (!requested) return 0;
+    const found = SEERAH_JOURNEY_STOPS.findIndex((stop) => stop.id === requested);
+    return found >= 0 ? found : 0;
+  }, [search]);
 
   useEffect(() => {
     const rail = timelineRef.current;
@@ -215,6 +226,17 @@ export function SeerahPage() {
             >
               <ScrollText size={14} /> اقرأ الفصل الحالي
             </button>
+            <button
+              type="button"
+              className="btn-outline"
+              onClick={() =>
+                document.getElementById("seerah-journey-theatre")?.scrollIntoView({
+                  behavior: effectiveMotion === "reduced" ? "auto" : "smooth",
+                })
+              }
+            >
+              <Compass size={14} /> الرحلة السينمائية
+            </button>
           </div>
         </div>
         <dl className={styles.journeyStats} aria-label="إحصاءات السيرة">
@@ -236,6 +258,10 @@ export function SeerahPage() {
           </div>
         </dl>
       </header>
+
+      <div id="seerah-journey-theatre">
+        <SeerahJourneyTheatre initialIndex={journeyInitialIndex} />
+      </div>
 
       <section className={styles.timelineWrap} id="seerah-journey" aria-label="فصول السيرة بالترتيب السردي">
         <button type="button" className={styles.arrow} onClick={() => step(-1)} aria-label="الفصل السابق">

@@ -1,0 +1,319 @@
+/* SeerahJourneyTheatre — full-bleed cinematic journey stage.
+   Dark study surface in every theme (immersive wing contract). */
+
+.theatre {
+  --jt-gold: #e8c547;
+  --jt-gold-deep: #d4a017;
+  --jt-ivory: #fefdf8;
+  --jt-muted: #cfc8b8;
+  --jt-night: #020617;
+  margin: 0 0 2rem;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid rgba(212, 160, 23, 0.32);
+  background: var(--jt-night);
+  box-shadow: 0 24px 70px -28px rgba(0, 0, 0, 0.8);
+}
+
+.stage {
+  position: relative;
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  isolation: isolate;
+  animation: jtEnter 700ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.plate {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+  z-index: -3;
+  animation: jtDrift 30s ease-in-out infinite alternate;
+  transform-origin: center 40%;
+}
+
+.veil {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(0deg, rgba(2, 6, 23, 0.94) 0%, rgba(2, 6, 23, 0.62) 34%, rgba(2, 6, 23, 0.18) 68%, rgba(2, 6, 23, 0.34) 100%),
+    linear-gradient(90deg, rgba(2, 6, 23, 0.55), transparent 45%);
+}
+
+.glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse at 85% 12%, rgba(232, 197, 71, 0.14), transparent 46%);
+  pointer-events: none;
+}
+
+.copy {
+  padding: 2.2rem 2.4rem 1.4rem;
+  max-width: 46rem;
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 0 0.7rem;
+  color: var(--jt-muted);
+  font-size: 0.78rem;
+}
+
+.kickerIndex {
+  color: var(--jt-gold);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.kickerDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--jt-gold-deep);
+}
+
+.title {
+  margin: 0 0 0.65rem;
+  font-family: var(--font-display, "Amiri", serif);
+  font-size: clamp(1.9rem, 4vw, 3rem);
+  line-height: 1.25;
+  color: var(--jt-ivory);
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.65);
+}
+
+.orientation {
+  margin: 0 0 1.2rem;
+  max-width: 40rem;
+  color: #efe9da;
+  font-size: 1rem;
+  line-height: 2;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.7);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.primary {
+  background: linear-gradient(135deg, var(--jt-gold), var(--jt-gold-deep));
+  color: #1c1503;
+  box-shadow: 0 8px 26px -8px rgba(212, 160, 23, 0.65);
+}
+
+.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px -8px rgba(232, 197, 71, 0.75);
+}
+
+.secondary {
+  border: 1px solid rgba(232, 197, 71, 0.45);
+  color: var(--jt-gold);
+  background: rgba(2, 6, 23, 0.55);
+  backdrop-filter: blur(6px);
+}
+
+.secondary:hover {
+  background: rgba(212, 160, 23, 0.16);
+}
+
+.disclosure {
+  margin: 0;
+  max-width: 40rem;
+  color: var(--jt-muted);
+  font-size: 0.72rem;
+  line-height: 1.8;
+  border-inline-start: 2px solid rgba(212, 160, 23, 0.4);
+  padding-inline-start: 0.7rem;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.9rem 2.4rem 1.3rem;
+}
+
+.navButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(232, 197, 71, 0.45);
+  background: rgba(2, 6, 23, 0.6);
+  color: var(--jt-gold);
+  cursor: pointer;
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.navButton:hover:not(:disabled) {
+  background: rgba(212, 160, 23, 0.2);
+  transform: scale(1.06);
+}
+
+.navButton:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.progress {
+  flex: 1;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(254, 253, 248, 0.14);
+  overflow: hidden;
+}
+
+.progress i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--jt-gold-deep), var(--jt-gold));
+  transition: width 450ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.rail {
+  display: flex;
+  gap: 0.6rem;
+  padding: 0.9rem 1.1rem 1.1rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  border-top: 1px solid rgba(212, 160, 23, 0.22);
+  background: rgba(2, 6, 23, 0.82);
+}
+
+.railStop {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 64px;
+  padding: 0.4rem 0.7rem 0.4rem 0.4rem;
+  border-radius: 14px;
+  border: 1px solid rgba(254, 253, 248, 0.1);
+  background: rgba(254, 253, 248, 0.04);
+  color: var(--jt-muted);
+  cursor: pointer;
+  text-align: start;
+  transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
+}
+
+.railStop:hover {
+  border-color: rgba(232, 197, 71, 0.4);
+  transform: translateY(-2px);
+}
+
+.railStopOn {
+  border-color: var(--jt-gold);
+  background: rgba(212, 160, 23, 0.14);
+  color: var(--jt-ivory);
+  box-shadow: 0 0 0 1px rgba(232, 197, 71, 0.35), 0 8px 22px -10px rgba(212, 160, 23, 0.5);
+}
+
+.railStop img {
+  width: 84px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 9px;
+  border: 1px solid rgba(212, 160, 23, 0.3);
+}
+
+.railStop span {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  max-width: 11rem;
+}
+
+.railStop b {
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.railStop small {
+  font-size: 0.64rem;
+  opacity: 0.75;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@keyframes jtEnter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes jtDrift {
+  from {
+    transform: scale(1.03);
+  }
+  to {
+    transform: scale(1.1) translateY(-1.5%);
+  }
+}
+
+.theatre[data-motion="reduced"] .plate,
+.theatre[data-motion="reduced"] .stage {
+  animation: none !important;
+}
+
+@media (max-width: 768px) {
+  .stage {
+    min-height: 420px;
+  }
+
+  .copy {
+    padding: 1.6rem 1.2rem 1rem;
+  }
+
+  .nav {
+    padding: 0.7rem 1.2rem 1rem;
+  }
+
+  .railStop img {
+    width: 64px;
+    height: 42px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plate,
+  .stage {
+    animation: none !important;
+  }
+}

@@ -32,6 +32,11 @@ import {
   battlesTimelinePlate,
 } from "../client/src/visual-golden/services/seerah-worlds";
 import { listSeerahScenes } from "../client/src/visual-golden/services/seerah-scene";
+import {
+  SEERAH_JOURNEY_STOPS,
+  journeyStopHref,
+  journeyStopPlate,
+} from "../client/src/visual-golden/services/seerah-journey";
 import { listGhazawatScenes } from "../client/src/visual-golden/services/seerah-ghazawat";
 import { CHAPTERS } from "../client/src/visual-golden/services/seerah";
 
@@ -122,6 +127,39 @@ describe("seerah cinematic worlds", () => {
       assert.equal(eventWorldPlate(id), null, id);
     }
     assert.ok(existsSync(publicPath(battlesTimelinePlate())));
+  });
+
+  it("runs a ten-stop cinematic journey bound only to canonical selections", () => {
+    assert.equal(SEERAH_JOURNEY_STOPS.length, 10);
+    const chapterIds = new Set(CHAPTERS.map((chapter) => chapter.id));
+    const eventIdsByChapter = new Map(
+      CHAPTERS.map((chapter) => [
+        chapter.id,
+        new Set((chapter.timelineEvents ?? []).map((event) => event.id)),
+      ]),
+    );
+    const seen = new Set<string>();
+    for (const stop of SEERAH_JOURNEY_STOPS) {
+      assert.ok(!seen.has(stop.id), `duplicate stop ${stop.id}`);
+      seen.add(stop.id);
+      assert.ok(chapterIds.has(stop.chapterId), stop.chapterId);
+      if (stop.eventId) {
+        assert.ok(
+          eventIdsByChapter.get(stop.chapterId)?.has(stop.eventId),
+          `${stop.eventId} must belong to ${stop.chapterId}`,
+        );
+      }
+      assert.ok(stop.disclosureAr.length > 20, stop.id);
+      assert.ok(existsSync(publicPath(journeyStopPlate(stop))), stop.id);
+      assert.match(journeyStopHref(stop), /^\/seerah\?chapter=/);
+    }
+    // The theatre is mounted inside the real Seerah page.
+    const page = read("client/src/visual-golden/pages/SeerahPage.tsx");
+    assert.match(page, /<SeerahJourneyTheatre initialIndex=\{journeyInitialIndex\} \/>/);
+    const theatre = read("client/src/visual-golden/components/seerah/SeerahJourneyTheatre.tsx");
+    assert.match(theatre, /useEffectiveMotion/);
+    assert.match(theatre, /stop\.disclosureAr/);
+    assert.match(theatre, /data-visual="seerah-journey-theatre"/);
   });
 
   it("keeps the honesty contract: disclosures and schematic fallbacks intact", () => {
