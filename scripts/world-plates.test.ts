@@ -179,6 +179,14 @@ describe("seerah cinematic worlds", () => {
     const ghazawatEnv = read("client/src/visual-golden/components/seerah/GhazawatEnvironment.tsx");
     assert.match(ghazawatEnv, /eventWorldPlate\(scene\.eventId\)/);
     assert.match(ghazawatEnv, /scene\.disclosureAr/);
+    // The chapter stage enters through the ChapterGateway threshold, which
+    // prefers cinematic plates and never traps reduced-motion visitors.
+    const seerahPage = read("client/src/visual-golden/pages/SeerahPage.tsx");
+    assert.match(seerahPage, /<ChapterGateway chapterId=\{chapter\.id\} scene=\{scene\} use3D>/);
+    const gateway = read("client/src/visual-golden/components/seerah/ChapterGateway.tsx");
+    assert.match(gateway, /chapterWorldPlate\(chapterId\)/);
+    assert.match(gateway, /useEffectiveMotion/);
+    assert.match(gateway, /reducedMotion/);
   });
 });
 

@@ -16,6 +16,7 @@ import { art } from "@/visual-golden/mock/art";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { useEffectiveMotion } from "@/visual-golden/lib/institution/effective-motion";
 import { SectionEntry3D } from "@/visual-golden/components/entry/SectionEntry3D";
+import { chapterWorldPlate } from "@/visual-golden/services/seerah-worlds";
 import type { SeerahSceneConfig } from "@/visual-golden/services/seerah-scene";
 import styles from "./ChapterGateway.module.css";
 
@@ -68,25 +69,27 @@ export function ChapterGateway({
     return { ar: chapterId, en: chapterId };
   }, [chapterId, scene]);
 
+  // Prefer the 2026 cinematic world plate; the schematic SVG scene remains
+  // the fallback for chapters the pack does not cover.
+  const previewPlate = chapterWorldPlate(chapterId) ?? (scene ? art[scene.plate] ?? art.desert : art.desert);
+
   return (
     <div className={styles.root} data-chapter={chapterId}>
-      {/* Atmosphere preview behind the door */}
-      <div className={styles.atmospherePreview} aria-hidden>
-        {scene ? (
-          <div className={styles.previewPlate} style={{ backgroundImage: `url(${art[scene.plate] ?? art.desert})` }} />
-        ) : (
-          <div className={styles.previewPlate} />
-        )}
-        <div className={styles.previewVignette} />
-        <div className={styles.previewLabel}>
-          <span className={styles.labelKicker}>مدخل الفصل</span>
-          <h2 className={styles.labelTitle}>{label.ar}</h2>
-          <span className={styles.labelEra}>{label.en}</span>
-          <p className={styles.labelDesc}>
-            بيئة توضيحية للفصل — ليست تصويرًا تاريخيًا دقيقًا.
-          </p>
+      {/* Atmosphere preview behind the door — only while the door is closed. */}
+      {showDoor ? (
+        <div className={styles.atmospherePreview} aria-hidden>
+          <div className={styles.previewPlate} style={{ backgroundImage: `url(${previewPlate})` }} />
+          <div className={styles.previewVignette} />
+          <div className={styles.previewLabel}>
+            <span className={styles.labelKicker}>مدخل الفصل</span>
+            <h2 className={styles.labelTitle}>{label.ar}</h2>
+            <span className={styles.labelEra}>{label.en}</span>
+            <p className={styles.labelDesc}>
+              بيئة توضيحية للفصل — ليست تصويرًا تاريخيًا دقيقًا.
+            </p>
+          </div>
         </div>
-      </div>
+      ) : null}
 
       {showDoor ? (
         <SectionEntry3D

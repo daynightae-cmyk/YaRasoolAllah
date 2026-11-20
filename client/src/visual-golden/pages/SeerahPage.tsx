@@ -33,6 +33,7 @@ import { chapterWorldPlate, eventWorldPlate } from "@/visual-golden/services/see
 import { ChapterEnvironment } from "@/visual-golden/components/seerah/ChapterEnvironment";
 import { GhazawatEnvironment } from "@/visual-golden/components/seerah/GhazawatEnvironment";
 import { SeerahChapterStage } from "@/visual-golden/components/seerah/SeerahChapterStage";
+import { ChapterGateway } from "@/visual-golden/components/seerah/ChapterGateway";
 import { SeerahJourneyTheatre } from "@/visual-golden/components/seerah/SeerahJourneyTheatre";
 import { SEERAH_JOURNEY_STOPS } from "@/visual-golden/services/seerah-journey";
 import {
@@ -293,20 +294,22 @@ export function SeerahPage() {
         </button>
       </section>
 
-      <SeerahChapterStage
-        chapter={chapter}
-        scene={scene}
-        index={index}
-        total={CHAPTERS.length}
-        events={events}
-        selectedEventId={selectedEvent?.id}
-        read={read.includes(chapter.id)}
-        onSelectEvent={(eventId) => selectEvent({ chapterId: chapter.id, eventId })}
-        onPrevious={() => step(-1)}
-        onNext={() => step(1)}
-        canPrevious={index > 0}
-        canNext={index < CHAPTERS.length - 1}
-      />
+      <ChapterGateway chapterId={chapter.id} scene={scene} use3D>
+        <SeerahChapterStage
+          chapter={chapter}
+          scene={scene}
+          index={index}
+          total={CHAPTERS.length}
+          events={events}
+          selectedEventId={selectedEvent?.id}
+          read={read.includes(chapter.id)}
+          onSelectEvent={(eventId) => selectEvent({ chapterId: chapter.id, eventId })}
+          onPrevious={() => step(-1)}
+          onNext={() => step(1)}
+          canPrevious={index > 0}
+          canNext={index < CHAPTERS.length - 1}
+        />
+      </ChapterGateway>
 
       <ChapterEnvironment scene={scene}>
         <div className={styles.reading} id="chapter-reading" data-visual="seerah-reading">

@@ -4,7 +4,6 @@
 
 .root {
   position: relative;
-  min-height: 60dvh;
   overflow: hidden;
   isolation: isolate;
 }
