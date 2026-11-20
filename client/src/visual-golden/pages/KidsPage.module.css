@@ -90,6 +90,19 @@
     radial-gradient(circle at 10% 85%, #d8eeee 0, transparent 34%),
     linear-gradient(135deg, #fffdf3, #f5f6e9);
 }
+/* Cinematic oasis world plate (2026 pack) under the parchment wash. */
+.gardenWorld {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  opacity: 0.28;
+  filter: saturate(0.8) brightness(1.05);
+  pointer-events: none;
+  z-index: 0;
+}
 .garden::after {
   content: "";
   position: absolute;

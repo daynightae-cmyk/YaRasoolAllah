@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Puzzle, Palette, Lightbulb, Star, BookOpen, Users, FileText, ExternalLink, Film, Heart, Leaf } from "lucide-react";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
+import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
 import { ColoringStudio } from "@/visual-golden/components/unique/ColoringStudio";
 import { StoryTheatre } from "@/visual-golden/components/present/StoryTheatre";
 import { KidsTVRoom } from "@/visual-golden/components/kids-tv/KidsTVRoom";
@@ -129,6 +130,14 @@ export function KidsPage() {
   return (
     <div className={styles.page}>
       <section className={styles.garden} aria-label="مسارات واحة الأطفال">
+        <img
+          className={styles.gardenWorld}
+          src={worldPlateForWing("kids").plate}
+          alt=""
+          loading="eager"
+          decoding="async"
+          aria-hidden
+        />
         <div className={styles.gardenIntro}>
           <span className={styles.gardenMark}><Leaf size={18} aria-hidden="true" /> واحة الأطفال</span>
           <h2>كل حكاية تفتح بابًا للخير</h2>
