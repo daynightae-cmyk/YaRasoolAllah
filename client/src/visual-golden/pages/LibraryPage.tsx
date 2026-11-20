@@ -426,6 +426,7 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
               className={view === "shelves" ? styles.modeOn : ""}
               onClick={() => setViewChoice("shelves")}
               aria-pressed={view === "shelves"}
+              data-visual="library-mode-shelves"
             >
               <LibraryBig size={19} aria-hidden="true" />
               <span>

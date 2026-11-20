@@ -56,6 +56,19 @@ const cases = [
   { name: "sources-360-rtl", path: "/sources", width: 360, height: 844 },
 ];
 
+// Optional targeted runs, e.g. SMOKE_CASES=seerah-1440-rtl,library-1440-rtl.
+// CI runs the full set; filtering only shortens local diagnosis.
+const requestedCases = (process.env.SMOKE_CASES ?? "")
+  .split(",")
+  .map((name) => name.trim())
+  .filter(Boolean);
+const selectedCases = requestedCases.length
+  ? cases.filter((item) => requestedCases.includes(item.name))
+  : cases;
+if (selectedCases.length === 0) {
+  throw new Error(`SMOKE_CASES matched no case: ${requestedCases.join(", ")}`);
+}
+
 const chrome = spawn(chromePath, [
   "--headless",
   "--disable-gpu",
@@ -226,7 +239,7 @@ try {
   await waitFor(session, 'document.readyState === "complete"', "initial origin");
   await evaluate(session, 'sessionStorage.setItem("yra-splash", "1")');
 
-  for (const item of cases) {
+  for (const item of selectedCases) {
     await evaluate(session, `(() => {
       const key = "yra-visual-golden-v1";
       const saved = JSON.parse(localStorage.getItem(key) || "{}");
@@ -306,6 +319,12 @@ try {
       // The hall lists domains first; spines only exist once a hall is entered.
       // The domains list comes first; the hall bar and its spines only exist
       // after a hall is entered.
+      // The route may auto-open the 3D arcade on a capable device, so select
+      // the complete shelves explicitly before looking for a hall.
+      await evaluate(session, `(() => {
+        document.querySelector('[data-visual="library-mode-shelves"]')?.click();
+        return true;
+      })()`);
       await waitFor(
         session,
         `(() => {
