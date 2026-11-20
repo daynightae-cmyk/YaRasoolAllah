@@ -52,6 +52,7 @@ interface InstitutionState {
   notifyLeadMin: 5 | 10 | 15 | 30;
   notifyPrayers: string[];
   notifySound: boolean;
+  ambientEnabled: boolean;
   locationId: string;
   customLocation: PrayerLocation | null;
   calc: PrayerCalculationSettings;
@@ -67,6 +68,7 @@ interface InstitutionState {
   recordVisit: (path: string, label: string) => void;
   recordReadingProgress: (entry: ReadingProgressInput) => void;
   setNotify: (patch: Partial<Pick<InstitutionState, "notifyLeadMin" | "notifyPrayers" | "notifySound">>) => void;
+  setAmbientEnabled: (enabled: boolean) => void;
   setLocation: (loc: PrayerLocation) => void;
   setCalc: (patch: Partial<PrayerCalculationSettings>) => void;
 }
@@ -232,6 +234,7 @@ function hydrateState(raw: string | null): void {
       notifyLeadMin: sanitizeNotifyLead(parsed.notifyLeadMin),
       notifyPrayers,
       notifySound: typeof parsed.notifySound === "boolean" ? parsed.notifySound : state.notifySound,
+      ambientEnabled: typeof parsed.ambientEnabled === "boolean" ? parsed.ambientEnabled : state.ambientEnabled,
       locationId,
       customLocation,
       calc,
@@ -308,6 +311,9 @@ const actions = {
   setNotify(notifyPatch: Partial<Pick<InstitutionState, "notifyLeadMin" | "notifyPrayers" | "notifySound">>) {
     patch(notifyPatch);
   },
+  setAmbientEnabled(enabled: boolean) {
+    patch({ ambientEnabled: enabled });
+  },
   setLocation(loc: PrayerLocation) {
     const known = findLocation(loc.id);
     const recents = [loc.id, ...state.recentLocationIds.filter((id) => id !== loc.id)].slice(0, 6);
@@ -338,6 +344,7 @@ state = {
   notifyLeadMin: 10,
   notifyPrayers: ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"],
   notifySound: false,
+  ambientEnabled: false,
   locationId: "ae-auh",
   customLocation: null,
   calc: { method: 8, school: 0, highLatitude: "auto" },

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Accessibility, Pause, Play, Square, Volume2 } from "lucide-react";
+import { setVoiceActive } from "../../audio/voice-presence";
 import styles from "./ReadingChamber.module.css";
 
 interface Props {
@@ -19,8 +20,12 @@ export function DeviceTtsFallback({ text }: Props) {
   useEffect(() => {
     if (!supported) return;
     window.speechSynthesis.cancel();
+    setVoiceActive(false);
     setState("idle");
-    return () => window.speechSynthesis.cancel();
+    return () => {
+      window.speechSynthesis.cancel();
+      setVoiceActive(false);
+    };
   }, [supported, text]);
 
   const start = () => {
@@ -33,9 +38,16 @@ export function DeviceTtsFallback({ text }: Props) {
       .find((voice) => voice.lang.toLowerCase().startsWith("ar"));
     if (arabicVoice) utterance.voice = arabicVoice;
     utterance.rate = rate;
-    utterance.onend = () => setState("idle");
-    utterance.onerror = () => setState("error");
+    utterance.onend = () => {
+      setVoiceActive(false);
+      setState("idle");
+    };
+    utterance.onerror = () => {
+      setVoiceActive(false);
+      setState("error");
+    };
     window.speechSynthesis.speak(utterance);
+    setVoiceActive(true);
     setState("playing");
   };
 
@@ -56,6 +68,7 @@ export function DeviceTtsFallback({ text }: Props) {
               className="btn-gold"
               onClick={() => {
                 window.speechSynthesis.pause();
+                setVoiceActive(false);
                 setState("paused");
               }}
             >
@@ -67,6 +80,7 @@ export function DeviceTtsFallback({ text }: Props) {
               className="btn-gold"
               onClick={() => {
                 window.speechSynthesis.resume();
+                setVoiceActive(true);
                 setState("playing");
               }}
             >
@@ -82,6 +96,7 @@ export function DeviceTtsFallback({ text }: Props) {
             className="btn-outline"
             onClick={() => {
               window.speechSynthesis.cancel();
+              setVoiceActive(false);
               setState("idle");
             }}
             disabled={state === "idle"}

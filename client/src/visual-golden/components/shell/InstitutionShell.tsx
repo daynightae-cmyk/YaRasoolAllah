@@ -9,6 +9,7 @@ import { DiscoveryPalette } from "@/visual-golden/components/present/DiscoveryPa
 import { Spotlight } from "@/visual-golden/components/present/Spotlight";
 import { ContentLanguageNotice } from "./ContentLanguageNotice";
 import { SplashCeremony } from "@/visual-golden/components/ceremony/SplashCeremony";
+import { AmbientSound } from "@/visual-golden/audio/AmbientSound";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { useEffectiveMotion } from "@/visual-golden/lib/institution/effective-motion";
 import { workspaceContext } from "@/visual-golden/lib/institution/workspace";
@@ -151,6 +152,7 @@ export function InstitutionShell({ children }: { children: ReactNode }) {
       <div className={styles.ambient} aria-hidden>
         {Array.from({ length: 18 }, (_, index) => <span key={index} style={{ "--i": index } as CSSProperties} />)}
       </div>
+      <AmbientSound />
       <InstitutionSidebar open={sidebarOpen} onClose={closeSidebar} onReplaySplash={openSplash} />
       <div className={styles.mainArea}>
         <InstitutionHeader onMenuClick={openMenu} onSearch={openDiscover} />

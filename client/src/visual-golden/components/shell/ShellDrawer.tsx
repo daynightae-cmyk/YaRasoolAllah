@@ -21,6 +21,8 @@ export function ShellDrawer() {
   const notifyPrayers = useInstitution((state) => state.notifyPrayers);
   const notifySound = useInstitution((state) => state.notifySound);
   const setNotify = useInstitution((state) => state.setNotify);
+  const ambientEnabled = useInstitution((state) => state.ambientEnabled);
+  const setAmbientEnabled = useInstitution((state) => state.setAmbientEnabled);
   const [noteTitle, setNoteTitle] = useState("");
   const [noteBody, setNoteBody] = useState("");
   const [perm, setPerm] = useState<NotificationPermission | "unsupported">("default");
@@ -181,6 +183,15 @@ export function ShellDrawer() {
               <input type="checkbox" checked={notifySound} onChange={(event) => setNotify({ notifySound: event.target.checked })} />
               {lang === "ar" ? "صوت (واجهة فقط)" : "Sound (UI preference)"}
             </label>
+            <label>
+              <input type="checkbox" checked={ambientEnabled} onChange={(event) => setAmbientEnabled(event.target.checked)} />
+              {lang === "ar" ? "بنية صوتية محيطة (مركّبة محليًا، إيقاف افتراضي)" : "Ambient soundscape (locally synthesized, off by default)"}
+            </label>
+            <p className={styles.drawerScope}>
+              {lang === "ar"
+                ? "تُبنى البنية الصوتية محليًا ولا تنقل تسجيلات ولا مستودعات؛ وتخفي وترتفع تلقائيًا عند التلاوة أو القراءة الصوتية."
+                : "The soundscape is synthesized locally; it carries no recordings or repositories and yields automatically to recitation or speech."}
+            </p>
             {perm === "unsupported" ? (
               <p className="muted">{lang === "ar" ? "واجهة الإشعارات غير مدعومة هنا." : "Notification API is unsupported here."}</p>
             ) : perm !== "granted" ? (
