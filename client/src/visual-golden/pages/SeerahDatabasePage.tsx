@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState, type ReactNode } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import {
   ArrowLeft,
@@ -335,14 +335,14 @@ export function SeerahDatabasePage() {
     setPlaceId(requestedPlaceId);
   }, [requestedPlaceId]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // Direct links from a Seerah station open the database page; bring the
     // requested record into view without hijacking selection within the page.
+    // A layout effect scrolls before paint and does not depend on a visible
+    // tab's animation frame, so a deep link lands on the record even when the
+    // page is opened in the background.
     if (!requestedEventMatches) return;
-    const frame = window.requestAnimationFrame(() => {
-      document.getElementById("seerah-db-detail")?.scrollIntoView({ block: "start" });
-    });
-    return () => window.cancelAnimationFrame(frame);
+    document.getElementById("seerah-db-detail")?.scrollIntoView({ block: "start" });
   }, [requestedEventId, requestedEventMatches]);
 
   useEffect(() => {

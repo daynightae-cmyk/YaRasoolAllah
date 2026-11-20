@@ -246,7 +246,7 @@ try {
     // wait less.
     await waitFor(
       session,
-      `document.readyState === "complete" && location.pathname === "${item.path === "/" ? "/" : item.path}"`,
+      `document.readyState === "complete" && location.pathname === "${item.path === "/" ? "/" : item.path}" && (document.querySelector(".vg-shell main")?.innerText || "").trim().length > 0`,
       item.path,
       300,
     );
@@ -428,6 +428,7 @@ try {
       await waitFor(session, 'document.querySelectorAll(\'ol[aria-label="محطات الفصل"] button\').length > 1', `${item.name} events`);
       const seerahGeometry = await evaluate(session, `(() => {
         const detail = document.querySelector('article[aria-label="تفاصيل المحطة المختارة"]');
+        const stage = document.querySelector('[data-visual="seerah-event-stage"]');
         const bounds = detail?.getBoundingClientRect().toJSON();
         const buttons = [...document.querySelectorAll('ol[aria-label="محطات الفصل"] button')];
         const graph = document.querySelector('[data-visual="seerah-event-graph"]');
@@ -437,7 +438,7 @@ try {
           documentWidth: document.documentElement.scrollWidth,
           detail: bounds,
           selected: buttons.filter((button) => button.getAttribute("aria-pressed") === "true").length,
-          placeLink: detail?.querySelector('a[href^="/atlas?place="]')?.getAttribute("href") ?? null,
+          placeLink: stage?.querySelector('a[href^="/atlas?place="]')?.getAttribute("href") ?? null,
           dateUncertainty: detail?.textContent?.includes("غير موثقة في بيانات المحطة"),
           graph: graphBounds ?? null,
           graphRelations: graph?.querySelectorAll("[data-graph-relations] li").length ?? 0,
@@ -462,22 +463,22 @@ try {
         })()`);
         const selected = await waitFor(session, `(() => {
           const buttons = document.querySelectorAll('ol[aria-label="محطات الفصل"] button');
-          const title = document.querySelector('article[aria-label="تفاصيل المحطة المختارة"] h3')?.textContent || "";
+          const title = document.querySelector('[data-visual="seerah-event-title"]')?.textContent || "";
           return buttons[1]?.getAttribute("aria-pressed") === "true" ? title : "";
         })()`, "selected Seerah event");
-        const link = await waitFor(session, 'document.querySelector(\'article[aria-label="تفاصيل المحطة المختارة"] a[href^="/atlas?place="]\')?.getAttribute("href")', "event place link");
-        await evaluate(session, 'document.querySelector(\'article[aria-label="تفاصيل المحطة المختارة"] a[href^="/atlas?place="]\').click()');
+        const link = await waitFor(session, 'document.querySelector(\'[data-visual="seerah-event-stage"] a[href^="/atlas?place="]\')?.getAttribute("href")', "event place link");
+        await evaluate(session, 'document.querySelector(\'[data-visual="seerah-event-stage"] a[href^="/atlas?place="]\').click()');
         await waitFor(session, `location.pathname === "/atlas" && location.search === ${JSON.stringify(new URL(link, origin).search)} && document.querySelector('[data-climate="places"]') !== null`, "linked Atlas place");
         await waitFor(session, `document.querySelector('.vg-shell')?.textContent?.includes(${JSON.stringify(selected)})`, "Atlas event mention");
         const returnLink = await evaluate(session, `document.querySelector('a[href^="/seerah?chapter="]')?.getAttribute("href")`);
         if (!returnLink) throw new Error("Atlas place has no event return link");
         await evaluate(session, 'document.querySelector(\'a[href^="/seerah?chapter="]\').click()');
-        await waitFor(session, `location.pathname === "/seerah" && document.querySelector('article[aria-label="تفاصيل المحطة المختارة"] h3')?.textContent === ${JSON.stringify(selected)}`, "restored Seerah event");
+        await waitFor(session, `location.pathname === "/seerah" && document.querySelector('[data-visual="seerah-event-title"]')?.textContent === ${JSON.stringify(selected)}`, "restored Seerah event");
         diagnostics.roundTrip = { link, returnLink, selected };
-        const beforeGraphTitle = await evaluate(session, 'document.querySelector(\'article[aria-label="تفاصيل المحطة المختارة"] h3\')?.textContent || ""');
+        const beforeGraphTitle = await evaluate(session, 'document.querySelector(\'[data-visual="seerah-event-title"]\')?.textContent || ""');
         const graphNavClicked = await evaluate(session, '(() => { const button = document.querySelector(\'[data-visual="seerah-event-graph"] button\'); if (!button) return false; button.click(); return true; })()');
         if (!graphNavClicked) throw new Error("Seerah event graph has no navigation button");
-        const afterGraphTitle = await waitFor(session, `(() => { const title = document.querySelector('article[aria-label="تفاصيل المحطة المختارة"] h3')?.textContent || ""; return title && title !== ${JSON.stringify(beforeGraphTitle)} ? title : ""; })()`, "Seerah graph navigation");
+        const afterGraphTitle = await waitFor(session, `(() => { const title = document.querySelector('[data-visual="seerah-event-title"]')?.textContent || ""; return title && title !== ${JSON.stringify(beforeGraphTitle)} ? title : ""; })()`, "Seerah graph navigation");
         diagnostics.graphNavigation = { before: beforeGraphTitle, after: afterGraphTitle };
       }
     }

@@ -321,12 +321,12 @@ export function SeerahPage() {
             </article>
 
             {selectedEvent ? (
-              <div className={styles.eventStage}>
+              <div className={styles.eventStage} data-visual="seerah-event-stage">
                 <GhazawatEnvironment scene={ghazawatScene}>
                   <header className={styles.eventHead}>
                     <div>
                       <span className={styles.eventLabel}>بيئة المكان — مشهد توضيحي غير تاريخي</span>
-                      <h3>{selectedEvent.title}</h3>
+                      <h3 data-visual="seerah-event-title">{selectedEvent.title}</h3>
                       <p className={styles.eventEra}>
                         {ghazawatScene?.eraAr ?? selectedEvent.date}
                       </p>
