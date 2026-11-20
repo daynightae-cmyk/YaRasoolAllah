@@ -1,3 +1,5 @@
+import { apiUrl } from "@/lib/api-origin";
+
 export interface QuranTafsirAyah {
   ayah: number;
   text: string;
@@ -20,7 +22,7 @@ export async function getQuranTafsir(
   signal?: AbortSignal,
 ): Promise<QuranTafsirResponse> {
   const params = new URLSearchParams({ surah: String(surah) });
-  const response = await fetch(`/api/content/quran/tafsir?${params.toString()}`, { signal });
+  const response = await fetch(apiUrl(`/api/content/quran/tafsir?${params.toString()}`), { signal });
   if (!response.ok) {
     const body = await response.json().catch(() => ({})) as { message?: string };
     throw new Error(body.message || `HTTP ${response.status}`);

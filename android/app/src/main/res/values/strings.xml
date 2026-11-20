@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">يا رسول الله</string>
+    <string name="title_activity_main">يا رسول الله</string>
+    <string name="package_name">org.yarasoolallah.app</string>
+    <string name="custom_url_scheme">org.yarasoolallah.app</string>
+</resources>

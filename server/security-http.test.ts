@@ -103,6 +103,30 @@ test("demo-token is rejected and register/login persist hashed credentials", asy
   });
 });
 
+test("native shell CORS allows only the declared WebView origins", async () => {
+  await withServer(createApiApp(), async (base) => {
+    const allowed = await fetch(`${base}/api/content/hadith/status`, {
+      headers: { origin: "https://localhost" },
+    });
+    assert.equal(allowed.status, 200);
+    assert.equal(allowed.headers.get("access-control-allow-origin"), "https://localhost");
+    assert.equal(allowed.headers.get("access-control-allow-credentials"), null);
+
+    const preflight = await fetch(`${base}/api/content/hadith/status`, {
+      method: "OPTIONS",
+      headers: { origin: "capacitor://localhost", "access-control-request-method": "GET" },
+    });
+    assert.equal(preflight.status, 204);
+    assert.equal(preflight.headers.get("access-control-allow-origin"), "capacitor://localhost");
+
+    const foreign = await fetch(`${base}/api/content/hadith/status`, {
+      headers: { origin: "https://evil.example.com" },
+    });
+    assert.equal(foreign.status, 200);
+    assert.equal(foreign.headers.get("access-control-allow-origin"), null);
+  });
+});
+
 test("legacy demo knowledge endpoints are gone", async () => {
   await withServer(createApiApp(), async (base) => {
     const paths = [

@@ -1,3 +1,5 @@
+import { apiUrl } from "@/lib/api-origin";
+
 export interface QuranReciterStream {
   id: number;
   name: string;
@@ -29,7 +31,7 @@ export async function getQuranRecitations(
   surah: number,
   signal?: AbortSignal,
 ): Promise<QuranRecitationPayload> {
-  const response = await fetch(`/api/content/audio/reciters?sura=${surah}`, { signal });
+  const response = await fetch(apiUrl(`/api/content/audio/reciters?sura=${surah}`), { signal });
   if (!response.ok) {
     const body = await response.json().catch(() => ({})) as { message?: string };
     throw new Error(body.message || `HTTP ${response.status}`);

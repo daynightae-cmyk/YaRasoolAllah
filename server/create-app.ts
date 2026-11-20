@@ -23,6 +23,38 @@ function securityHeaders(req: express.Request, res: express.Response, next: expr
   next();
 }
 
+/**
+ * Native-shell CORS — the Capacitor Android WebView (and packaged desktop
+ * shells) serve the bundled client from a local origin, so governed public
+ * content endpoints must accept those exact origins. Allowlist only; no
+ * credentials, no wildcard, GET/OPTIONS only.
+ */
+const NATIVE_SHELL_ORIGINS = new Set([
+  "https://localhost",
+  "http://localhost",
+  "capacitor://localhost",
+  "ionic://localhost",
+  "https://yarasoolallah.it.com",
+  "https://yarasoolallah.org",
+]);
+
+function nativeShellCors(req: express.Request, res: express.Response, next: express.NextFunction): void {
+  if (!req.path.startsWith("/api")) return next();
+  const origin = req.headers.origin;
+  if (typeof origin === "string" && NATIVE_SHELL_ORIGINS.has(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+    res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Accept, Content-Type");
+    res.setHeader("Access-Control-Max-Age", "86400");
+    if (req.method === "OPTIONS") {
+      res.status(204).end();
+      return;
+    }
+  }
+  next();
+}
+
 export function createApiApp(): Express {
   assertRuntimeConfig();
 
@@ -31,6 +63,7 @@ export function createApiApp(): Express {
   app.use(express.json({ limit: "32kb" }));
   app.use(express.urlencoded({ extended: false, limit: "32kb" }));
   app.use(securityHeaders);
+  app.use(nativeShellCors);
   app.use(requestLogging);
 
   registerOpenLibraryRoutes(app);

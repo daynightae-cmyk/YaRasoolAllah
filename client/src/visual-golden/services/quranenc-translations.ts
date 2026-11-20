@@ -1,3 +1,5 @@
+import { apiUrl } from "@/lib/api-origin";
+
 export type QuranEncTranslationKey = "english_rwwad" | "urdu_junagarhi";
 export type TranslationKey = QuranEncTranslationKey;
 
@@ -54,7 +56,7 @@ export function getQuranEncTranslation(
   if (existing) return existing;
 
   const request = fetch(
-    `/api/content/quran/translation?sura=${encodeURIComponent(String(sura))}&translation=${encodeURIComponent(translation)}`,
+    apiUrl(`/api/content/quran/translation?sura=${encodeURIComponent(String(sura))}&translation=${encodeURIComponent(translation)}`),
     { headers: { Accept: "application/json" } },
   ).then(async (response) => {
     if (!response.ok) {

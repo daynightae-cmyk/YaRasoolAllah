@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Institution identity: emerald night + gold. -->
+    <color name="colorPrimary">#0B1F1A</color>
+    <color name="colorPrimaryDark">#020617</color>
+    <color name="colorAccent">#D4A017</color>
+</resources>

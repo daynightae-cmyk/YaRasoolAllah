@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
+import { apiUrl } from "@/lib/api-origin";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import {
   getQuranChapters,
@@ -84,7 +85,7 @@ export function AudioPage() {
     setCurrentTime(0);
     setDuration(0);
 
-    fetch(`/api/content/audio/reciters?sura=${active}`, { signal: controller.signal })
+    fetch(apiUrl(`/api/content/audio/reciters?sura=${active}`), { signal: controller.signal })
       .then(async (response) => {
         if (!response.ok) {
           const body = await response.json().catch(() => ({})) as { message?: string };

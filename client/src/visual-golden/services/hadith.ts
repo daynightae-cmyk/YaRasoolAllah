@@ -5,6 +5,7 @@ import {
   type HadithRecord,
 } from "@/data/hadithData";
 import type { HadithCorpusStatus } from "@shared/hadith";
+import { apiUrl } from "@/lib/api-origin";
 
 export type { HadithCollection, HadithRecord };
 export type { HadithCorpusStatus } from "@shared/hadith";
@@ -19,7 +20,7 @@ export const HADITH_COUNTS = {
 };
 
 export async function getHadithCorpusStatus(signal?: AbortSignal): Promise<HadithCorpusStatus> {
-  const response = await fetch("/api/content/hadith/status", { signal });
+  const response = await fetch(apiUrl("/api/content/hadith/status"), { signal });
   const body = await response.json().catch(() => null) as { message?: string } | null;
   if (!response.ok) {
     throw new Error(body?.message || `HTTP ${response.status}`);
