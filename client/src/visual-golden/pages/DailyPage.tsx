@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { RotateCcw } from "lucide-react";
-import { art } from "@/visual-golden/mock/art";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import { TasbihBeads } from "@/visual-golden/components/unique/TasbihBeads";
 import { PrayerObservatory } from "@/visual-golden/components/prayer/PrayerObservatory";
 import { QuranDuas } from "@/visual-golden/components/prayer/QuranDuas";
+import { QuranAdhkar } from "@/visual-golden/components/prayer/QuranAdhkar";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
 import p from "@/visual-golden/components/present/present.module.css";
@@ -54,19 +54,8 @@ export function DailyPage() {
 
       <div className={styles.grid}>
         <div className={styles.panel}>
-          <SectionHead title="أذكار اليوم" en="Daily Adhkar" />
-          <div className={styles.adhkarCard}>
-            <img src={art.mosque} alt="" />
-            <div>
-              <h4>{lang === "ar" ? "أذكار الصباح" : "Morning adhkar"}</h4>
-              <p>
-                {lang === "ar"
-                  ? "متن الأذكار اليومية غير مربوط بعد بمصدر موثق — لا يُعرض هنا متن مدّعى."
-                  : "The daily adhkar corpus is not yet bound to a verified source."}
-              </p>
-              <span>{lang === "ar" ? "قيد مراجعة المصدر والحقوق" : "Source review pending"}</span>
-            </div>
-          </div>
+          <SectionHead title="أذكار اليوم" en="Daily Adhkar · verified corpus" />
+          <QuranAdhkar />
         </div>
 
         <div className={styles.panel}>
