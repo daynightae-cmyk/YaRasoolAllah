@@ -10,6 +10,7 @@ import { Spotlight } from "@/visual-golden/components/present/Spotlight";
 import { ContentLanguageNotice } from "./ContentLanguageNotice";
 import { SplashCeremony } from "@/visual-golden/components/ceremony/SplashCeremony";
 import { AmbientSound } from "@/visual-golden/audio/AmbientSound";
+import { WorldBackdrop } from "./WorldBackdrop";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { useEffectiveMotion } from "@/visual-golden/lib/institution/effective-motion";
 import { workspaceContext } from "@/visual-golden/lib/institution/workspace";
@@ -148,6 +149,7 @@ export function InstitutionShell({ children }: { children: ReactNode }) {
       dir={lang === "ar" || lang === "ur" ? "rtl" : "ltr"}
     >
       {splash ? <SplashCeremony onDone={closeSplash} reducedMotion={reducedMotion} /> : null}
+      <WorldBackdrop wing={workspace.wing.id} />
       <Spotlight />
       <div className={styles.ambient} aria-hidden>
         {Array.from({ length: 18 }, (_, index) => <span key={index} style={{ "--i": index } as CSSProperties} />)}

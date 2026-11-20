@@ -1,0 +1,188 @@
+{
+  "generatedBy": "scripts/build-world-plates.mjs",
+  "referencePack": "YRA_ULTIMATE_MULTIPLATFORM_PACK/YRA_REFERENCE_PACK (owner-approved 2026)",
+  "encoder": "ffmpeg libwebp quality=88",
+  "honesty": "لوحات فنية توضيحية لبيئات الأقسام ومشاهد السيرة — لا تجسيد للنبي ﷺ ولا لأصحابه، وليست توثيقًا أثريًا.",
+  "plates": [
+    {
+      "kind": "wing",
+      "wing": "library",
+      "plate": "/visual-golden/art/worlds/library.webp",
+      "source": "02_ENVIRONMENT_ART/01_library.png",
+      "sourceSha256": "35f29fdc6f2eb2282fb7447c1849633b8bcf6feddd915bd551b010f863611404",
+      "outputSha256": "d1c41cd2a6d90ac2854a53f076d0f29bfff8f464f2b107173b5e485b140d7a80",
+      "outputBytes": 431486
+    },
+    {
+      "kind": "wing",
+      "wing": "sources",
+      "plate": "/visual-golden/art/worlds/sources.webp",
+      "source": "02_ENVIRONMENT_ART/02_sources.png",
+      "sourceSha256": "a3dce1e0636e5498426b238790f26986444a81a80e1a00e951ada9582d7343c3",
+      "outputSha256": "eb2651fbc5a69ebe19b12316e4700f81036b4f01ddee69e33dbfeb9f3da8dd31",
+      "outputBytes": 264326
+    },
+    {
+      "kind": "wing",
+      "wing": "audio",
+      "plate": "/visual-golden/art/worlds/audio.webp",
+      "source": "02_ENVIRONMENT_ART/03_audio.png",
+      "sourceSha256": "18855bd6016a16e1d8a7b67ba38fa0797e27fd753206345bb071eabc348d0d1f",
+      "outputSha256": "ca135c57c18024dd12dfa9a2571ce2ead07587157cebc4cb49c0252e64eabc49",
+      "outputBytes": 242262
+    },
+    {
+      "kind": "wing",
+      "wing": "daily",
+      "plate": "/visual-golden/art/worlds/daily.webp",
+      "source": "02_ENVIRONMENT_ART/04_daily.png",
+      "sourceSha256": "4ad322b51bc7abfe9de84ffb459d5ffe52b94ea5a71e27f0be6c28602503af0d",
+      "outputSha256": "3ead4b97bcf19e8d4cf007767e0f10eec2ef566ef2414e5b8de81088b39db10b",
+      "outputBytes": 182302
+    },
+    {
+      "kind": "wing",
+      "wing": "atlas",
+      "plate": "/visual-golden/art/worlds/atlas.webp",
+      "source": "02_ENVIRONMENT_ART/05_atlas.png",
+      "sourceSha256": "05d4431ea93649390e939bdbec8e2c4075cfd3cdcca51a348db2dc43ee52727b",
+      "outputSha256": "83cf42f6a178fd6a8aeace37898416d2620a08a7a8e0e480a42fad5655323c3a",
+      "outputBytes": 351070
+    },
+    {
+      "kind": "wing",
+      "wing": "kids",
+      "plate": "/visual-golden/art/worlds/kids.webp",
+      "source": "02_ENVIRONMENT_ART/06_children.png",
+      "sourceSha256": "a63d321fd385d4ebf96e6c3acbd48ae112d2c7e17bf5334e80487a8105355a55",
+      "outputSha256": "570c47681f34c8419c9943c94b2fb9cf76eb4cf7276f1bb9aa9e9131c3bd8f2f",
+      "outputBytes": 350416
+    },
+    {
+      "kind": "wing",
+      "wing": "quran",
+      "plate": "/visual-golden/art/worlds/quran.webp",
+      "source": "02_ENVIRONMENT_ART/07_quran.png",
+      "sourceSha256": "6cf9ce7741efab3fc1cd755542cae9f225172cc841081575003d90967de42dce",
+      "outputSha256": "4cd38235430b9b2a14a5265391af6092e92d05bc23554293b3c6242a5b80b32d",
+      "outputBytes": 211408
+    },
+    {
+      "kind": "wing",
+      "wing": "hadith",
+      "plate": "/visual-golden/art/worlds/hadith.webp",
+      "source": "02_ENVIRONMENT_ART/08_hadith.png",
+      "sourceSha256": "2121b52d0885bfa783a99683a314d2a43f08c3e1e98a4f9a17f1a3b61c86f6be",
+      "outputSha256": "0b24b0a278720fb8357ade0acd9904afcbe13dd67e2079a9f88c6e8124770e2a",
+      "outputBytes": 275132
+    },
+    {
+      "kind": "wing",
+      "wing": "seerah",
+      "plate": "/visual-golden/art/worlds/seerah.webp",
+      "source": "02_ENVIRONMENT_ART/09_seerah.png",
+      "sourceSha256": "510b4303f99142c4ef5587bc2bccff8b70345f51413e7bcf5a8424cdb28111b2",
+      "outputSha256": "f90c430e0778ebb70612e67419890b2d16a1c88b5c7f9ae96b21536b32b2448c",
+      "outputBytes": 289268
+    },
+    {
+      "kind": "wing",
+      "wing": "home",
+      "plate": "/visual-golden/art/worlds/home.webp",
+      "source": "02_ENVIRONMENT_ART/10_home.png",
+      "sourceSha256": "d28da98962d579365f1f88768cc8b980912f8623265804e11e7bfd39af63335e",
+      "outputSha256": "74721ec0b6858f927eef32c559351c62257b8ad7efe9309dc8909c7dccffe742",
+      "outputBytes": 201686
+    },
+    {
+      "kind": "seerah",
+      "scene": "hijrah-overview",
+      "plate": "/visual-golden/art/worlds/seerah/hijrah-overview.webp",
+      "source": "03_IMMERSIVE_SEERAH/84222_seerah_hijrah_overview.png",
+      "sourceSha256": "3d6e5272cb62c09a05c62e1009250dfaa8121a16f274cc54fb226d5d33c08e55",
+      "outputSha256": "a494c4b958f68b156502b30341d75373ea181984ffa9c7e2f085a0e4ec9770d5",
+      "outputBytes": 241482
+    },
+    {
+      "kind": "seerah",
+      "scene": "hijrah-night",
+      "plate": "/visual-golden/art/worlds/seerah/hijrah-night.webp",
+      "source": "03_IMMERSIVE_SEERAH/84223_hijrah_night.png",
+      "sourceSha256": "0d8de9fc6e8039ce5c9527474c66014877385d4144d3e14780bf4657cf476219",
+      "outputSha256": "ce67ba1d0ab94ce0ca6d739e893a96ea80226d9ea533546c8538ae7f006430c8",
+      "outputBytes": 206154
+    },
+    {
+      "kind": "seerah",
+      "scene": "badr",
+      "plate": "/visual-golden/art/worlds/seerah/badr.webp",
+      "source": "03_IMMERSIVE_SEERAH/84224_badr_immersive.png",
+      "sourceSha256": "99ccb6017addf30f6dc77bed32006ef6ea4851b6fc45ede685b624887c177b16",
+      "outputSha256": "efa31603304bece59d8528e215cb9b7fb6238c2ca60bfefc2c09818d2814e295",
+      "outputBytes": 211812
+    },
+    {
+      "kind": "seerah",
+      "scene": "fath-makkah",
+      "plate": "/visual-golden/art/worlds/seerah/fath-makkah.webp",
+      "source": "03_IMMERSIVE_SEERAH/84225_fath_makkah.png",
+      "sourceSha256": "d1b31370e0ddc9c609c4b55d03a4023fe9add781f2ed523eb502c45aba39dc74",
+      "outputSha256": "68d5ae6b438029c4c34ca34bc04dfc277acd0d12471ff273d45b3736e6814d2b",
+      "outputBytes": 230926
+    },
+    {
+      "kind": "seerah",
+      "scene": "hijrah-thawr",
+      "plate": "/visual-golden/art/worlds/seerah/hijrah-thawr.webp",
+      "source": "03_IMMERSIVE_SEERAH/84226_hijrah_thawr.png",
+      "sourceSha256": "38838d564bf96f0fa159fec9c9fdf0d264ef768ad91ed7985497d133d946fce0",
+      "outputSha256": "08393a83f6cfd03c7046124b04c34eb9b3af29cce30010fbc1cbed83e7835df3",
+      "outputBytes": 308318
+    },
+    {
+      "kind": "seerah",
+      "scene": "badr-timeline",
+      "plate": "/visual-golden/art/worlds/seerah/badr-timeline.webp",
+      "source": "03_IMMERSIVE_SEERAH/84227_badr_timeline.png",
+      "sourceSha256": "f01376f53e5068269d933fbe5677282d5c980ee5d96f3d17c9aa5a1a22c4cbc0",
+      "outputSha256": "d14179fef4509089bf9af36ab18dcc7e1cfb318f6490d193b46d5df3cadd0ed6",
+      "outputBytes": 262134
+    },
+    {
+      "kind": "seerah",
+      "scene": "madinah-walk",
+      "plate": "/visual-golden/art/worlds/seerah/madinah-walk.webp",
+      "source": "03_IMMERSIVE_SEERAH/84228_madinah_walk.png",
+      "sourceSha256": "ea66f5c1a96d527e969d0ec603b012cd58976e24c2d3c38a552302379a38609a",
+      "outputSha256": "8394b45173fd2a827a8a4e84d0126157d0676bc63be2260f154f0b04fb449909",
+      "outputBytes": 284686
+    },
+    {
+      "kind": "seerah",
+      "scene": "makkah-before-islam",
+      "plate": "/visual-golden/art/worlds/seerah/makkah-before-islam.webp",
+      "source": "03_IMMERSIVE_SEERAH/84229_makkah_before_islam.png",
+      "sourceSha256": "79080f04d032fd018459286982b8244c3cbe818a14e49117dbff26ff5d781253",
+      "outputSha256": "8f2640ab2b126a34950c3dbc6c5ce1e1fe374689d093fa07abee811d6d0fc683",
+      "outputBytes": 247348
+    },
+    {
+      "kind": "seerah",
+      "scene": "hijrah-desert",
+      "plate": "/visual-golden/art/worlds/seerah/hijrah-desert.webp",
+      "source": "03_IMMERSIVE_SEERAH/84230_hijrah_desert.png",
+      "sourceSha256": "e5808d63fabf687022f7849ed8a5503534d45913f08404703cd8ffe0ca20bc24",
+      "outputSha256": "7edb3803185d740afa5818d973a30ce968bd9f8a16a93fcfd72e06d5017629a2",
+      "outputBytes": 231746
+    },
+    {
+      "kind": "seerah",
+      "scene": "hira",
+      "plate": "/visual-golden/art/worlds/seerah/hira.webp",
+      "source": "03_IMMERSIVE_SEERAH/84231_hira.png",
+      "sourceSha256": "bf9d3f549ef3752c43f519a57fd4e3570b19aa9b84b9ef5581fcd0f334c16cfd",
+      "outputSha256": "da60d5bd24aab49a7468c9936eaac2ae03b65297027b02f7b774c8195bac9727",
+      "outputBytes": 245204
+    }
+  ]
+}

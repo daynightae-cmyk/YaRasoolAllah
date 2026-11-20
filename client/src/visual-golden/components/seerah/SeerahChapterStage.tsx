@@ -14,6 +14,7 @@
 import { Link } from "wouter";
 import { ArrowLeft, BookOpen, ChevronLeft, ChevronRight, Database, Map, Sparkles } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
+import { chapterWorldPlate } from "@/visual-golden/services/seerah-worlds";
 import type { SeerahChapter } from "@/data/seerahData";
 import type { SeerahSceneConfig } from "@/visual-golden/services/seerah-scene";
 import { stationCountLabel } from "@/visual-golden/services/seerah";
@@ -54,7 +55,9 @@ export function SeerahChapterStage({
   canPrevious,
   canNext,
 }: SeerahChapterStageProps) {
-  const plate = scene ? art[scene.plate] : art.desert;
+  // Prefer the 2026 cinematic world plate when the pack provides one for
+  // this chapter; otherwise keep the schematic SVG scene plate.
+  const plate = chapterWorldPlate(chapter.id) ?? (scene ? art[scene.plate] : art.desert);
   const visibleEvents = events.slice(0, 5);
   const hiddenCount = Math.max(0, events.length - visibleEvents.length);
 

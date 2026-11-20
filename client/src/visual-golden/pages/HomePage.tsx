@@ -32,6 +32,7 @@ import {
 } from "@/services/quranService";
 import { discoveryFacts } from "@/visual-golden/services/discovery";
 import { SEERAH_COUNTS } from "@/visual-golden/services/seerah";
+import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
 import p from "@/visual-golden/components/present/present.module.css";
 import styles from "./HomePage.module.css";
 
@@ -42,7 +43,7 @@ const gateways = [
     en: "Prophetic Biography",
     desc: "رحلة سردية موثقة في حياة النبي ﷺ من مولده إلى وفاته",
     enDesc: "A sourced narrative journey through the Prophet's life ﷺ",
-    img: art.domeCard,
+    img: worldPlateForWing("seerah").plate,
     icon: Compass,
     color: "amber",
   },
@@ -52,7 +53,7 @@ const gateways = [
     en: "The Qur'an",
     desc: "المصحف العربي، القراءة، البحث، والتفسير بالسياق النبوي",
     enDesc: "Arabic text, reading, search and prophetic-context tafsir",
-    img: art.mushafOpen,
+    img: worldPlateForWing("quran").plate,
     icon: BookMarked,
     color: "teal",
   },
@@ -62,7 +63,7 @@ const gateways = [
     en: "Sunnah & Hadith",
     desc: "فهرس المصادر وسجلات محلية قيد المراجعة والتوثيق",
     enDesc: "Source catalog and local records under review",
-    img: art.books,
+    img: worldPlateForWing("hadith").plate,
     icon: Feather,
     color: "cyan",
   },
@@ -72,7 +73,7 @@ const gateways = [
     en: "Library on Shelves",
     desc: "أرفف تفاعلية للكتب والمصادر التراثية والمعاصرة",
     enDesc: "Interactive shelves of classical and modern Islamic texts",
-    img: art.library,
+    img: worldPlateForWing("library").plate,
     icon: Library,
     color: "violet",
   },
@@ -82,7 +83,7 @@ const gateways = [
     en: "Historical Atlas",
     desc: "مواضع ومسارات تخطيطية للسيرة النبوية",
     enDesc: "Schematic places and routes through the Seerah",
-    img: art.desert,
+    img: worldPlateForWing("atlas").plate,
     icon: Sun,
     color: "rose",
   },
@@ -92,7 +93,7 @@ const gateways = [
     en: "Family & Children",
     desc: "مساحة آمنة تربوية بلا تجسيد تحبب الأجيال في رسول الله ﷺ",
     enDesc: "A secure, ad-free world nurturing the love of the Prophet ﷺ",
-    img: art.kidsRead,
+    img: worldPlateForWing("kids").plate,
     icon: Users,
     color: "rose",
   },
@@ -102,7 +103,7 @@ const gateways = [
     en: "Daily Sanctuary",
     desc: "مواقيت الصلاة والذكر والتقويم الهجري حسب المكان",
     enDesc: "Prayer times, adhkar and Hijri calendar by location",
-    img: art.lantern,
+    img: worldPlateForWing("daily").plate,
     icon: Moon,
     color: "emerald",
   },
@@ -112,7 +113,7 @@ const gateways = [
     en: "Sources Vault",
     desc: "الأصول، الحقوق، المزودون، وضمانات النزاهة العلمية",
     enDesc: "Origins, rights, providers and editorial integrity",
-    img: art.arches,
+    img: worldPlateForWing("sources").plate,
     icon: ShieldCheck,
     color: "slate",
   },
@@ -447,7 +448,7 @@ export function HomePage() {
         </article>
 
         <article className={styles.inspire}>
-          <img src={art.mosque} alt="" />
+          <img src={worldPlateForWing("home").plate} alt="" />
           <div className={styles.inspireInner}>
             <SectionHead title="إلهام اليوم" en="Daily Inspiration" />
             <p className={styles.hadithLabel}>آية اليوم — تدوير يومي على المصحف الكامل</p>

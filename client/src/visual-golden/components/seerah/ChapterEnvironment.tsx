@@ -11,6 +11,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { art } from "@/visual-golden/mock/art";
+import { chapterWorldPlate } from "@/visual-golden/services/seerah-worlds";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { useEffectiveMotion } from "@/visual-golden/lib/institution/effective-motion";
 import type { SeerahSceneConfig } from "@/visual-golden/services/seerah-scene";
@@ -31,7 +32,9 @@ export function ChapterEnvironment({ scene, children }: ChapterEnvironmentProps)
     setMounted(true);
   }, []);
 
-  const plate = scene ? art[scene.plate] ?? art.desert : null;
+  const plate = scene
+    ? chapterWorldPlate(scene.chapterId) ?? art[scene.plate] ?? art.desert
+    : null;
   const hasPlate = !!plate;
   const sceneWeather = scene?.weather ?? "clear-dawn";
   const sceneMovement = scene?.movement ?? "none";

@@ -20,6 +20,7 @@ import {
 import { art } from "@/visual-golden/mock/art";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
+import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
 import { FocusBar } from "@/visual-golden/components/present/FocusBar";
 import {
   getQuranChapterVerses,
@@ -585,7 +586,7 @@ export function QuranPage() {
           title="رواق القرآن"
           subtitle="المصحف العربي الكامل · نص موثّق"
           desc="النص العربي من نسخة Tanzil Uthmani-min 1.1 المحفوظة حرفيًا دون تعديل."
-          image={art.mushafOpen}
+          image={worldPlateForWing("quran").plate}
           compact
           wing="quran"
         />

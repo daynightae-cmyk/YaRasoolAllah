@@ -3,6 +3,7 @@ import { Search, Bookmark, BookmarkCheck, ExternalLink, ShieldCheck, Database, C
 import { art } from "@/visual-golden/mock/art";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
+import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import { IsnadChain } from "@/visual-golden/components/unique/IsnadChain";
 import p from "@/visual-golden/components/present/present.module.css";
@@ -197,7 +198,7 @@ export function HadithPage() {
         title="دار الحديث"
         subtitle={`ARCHIVE · ${HADITH_COUNTS.collections} مصنفات ببليوغرافية · ${HADITH_COUNTS.localSamples} سجلات محلية`}
         desc="أرشيف يفرّق بين بيانات المصنفات الببليوغرافية والسجلات التطويرية المحلية — العدد الكلي للمصنف ليس حجم المتن المحلي"
-        image={art.shelves}
+        image={worldPlateForWing("hadith").plate}
         wing="hadith"
       >
         <form className={styles.search} onSubmit={(e) => e.preventDefault()}>

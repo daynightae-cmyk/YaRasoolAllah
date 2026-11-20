@@ -12,6 +12,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { art } from "@/visual-golden/mock/art";
+import { eventWorldPlate } from "@/visual-golden/services/seerah-worlds";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { useEffectiveMotion } from "@/visual-golden/lib/institution/effective-motion";
 import type { GhazawatSceneConfig } from "@/visual-golden/services/seerah-ghazawat";
@@ -32,7 +33,9 @@ export function GhazawatEnvironment({ scene, children }: GhazawatEnvironmentProp
     setMounted(true);
   }, []);
 
-  const plate = scene ? art[scene.plate] ?? art.desert : null;
+  const plate = scene
+    ? eventWorldPlate(scene.eventId) ?? art[scene.plate] ?? art.desert
+    : null;
   const hasPlate = !!plate;
   const sceneWeather = scene?.weather ?? "clear-dawn";
   const sceneMovement = scene?.movement ?? "none";

@@ -1,0 +1,80 @@
+/* Cinematic world plate layer — sits behind shell chrome and page content.
+   Kept subtle so glass panels, text and controls stay fully legible. */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 900ms var(--ease-smooth, ease);
+}
+
+.backdrop[data-world-loaded="true"] {
+  opacity: 1;
+}
+
+.plate {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  filter: saturate(0.92) brightness(0.86);
+  animation: worldBreathe 36s ease-in-out infinite alternate;
+  transform-origin: center 35%;
+}
+
+/* Deep obsidian veil keeps the institutional dark identity over the art. */
+.veil {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(2, 6, 23, 0.62) 0%, rgba(2, 6, 23, 0.74) 42%, rgba(2, 6, 23, 0.92) 100%),
+    radial-gradient(ellipse at 50% 0%, rgba(16, 185, 129, 0.07), transparent 55%);
+}
+
+/* Gold horizon line anchors the plate to the emerald/gold identity. */
+.horizon {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 42%;
+  background: linear-gradient(180deg, rgba(212, 160, 23, 0.08), transparent 80%);
+}
+
+/* Warm parchment theme: the world becomes a faint manuscript wash. */
+:global(.vg-shell[data-theme="light"]) .plate {
+  filter: saturate(0.55) brightness(1.12);
+}
+
+:global(.vg-shell[data-theme="light"]) .veil {
+  background:
+    linear-gradient(180deg, rgba(250, 246, 235, 0.82) 0%, rgba(250, 246, 235, 0.9) 45%, rgba(250, 246, 235, 0.97) 100%);
+}
+
+:global(.vg-shell[data-theme="light"]) .horizon {
+  background: linear-gradient(180deg, rgba(150, 108, 36, 0.07), transparent 80%);
+}
+
+@keyframes worldBreathe {
+  from {
+    transform: scale(1.02) translateY(0);
+  }
+  to {
+    transform: scale(1.07) translateY(-1.2%);
+  }
+}
+
+@media (max-width: 640px) {
+  .plate {
+    object-position: center 22%;
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plate {
+    animation: none !important;
+  }
+}

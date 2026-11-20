@@ -6,6 +6,7 @@ import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import { TasbihBeads } from "@/visual-golden/components/unique/TasbihBeads";
 import { PrayerObservatory } from "@/visual-golden/components/prayer/PrayerObservatory";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
+import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
 import p from "@/visual-golden/components/present/present.module.css";
 import styles from "./DailyPage.module.css";
 
@@ -43,7 +44,7 @@ export function DailyPage() {
         title={lang === "ar" ? "مرصد الصلاة" : "Prayer Observatory"}
         subtitle={lang === "ar" ? "محراب اليوم · حساب علمي للمواقيت" : "Daily sanctuary · scientific prayer times"}
         desc={lang === "ar" ? "المواقيت تُحسب من مزوّد علني حسب المدينة المختارة، وليست أرقامًا ثابتة." : "Times are fetched from a public provider for the selected city — never hard-coded."}
-        image={art.kaaba}
+        image={worldPlateForWing("daily").plate}
         wing="daily"
       />
 

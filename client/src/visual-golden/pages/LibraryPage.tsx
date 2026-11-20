@@ -9,6 +9,7 @@ import {
 import { art } from "@/visual-golden/mock/art";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
+import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
 import { CatalogShelfHall } from "@/visual-golden/components/library/CatalogShelfHall";
 import { LibraryCatalog } from "@/visual-golden/components/library/LibraryCatalog";
 import { CatalogReadingChamber } from "@/visual-golden/components/library/CatalogReadingChamber";
@@ -388,7 +389,7 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
         title={labels.title}
         subtitle={labels.subtitle}
         desc={labels.description}
-        image={art.library}
+        image={worldPlateForWing("library").plate}
         wing="library"
         compact
       >

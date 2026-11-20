@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
+import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import { SEERAH_DATABASE_STATUS } from "@/data/seerah/types";
 import type { SeerahCertainty, SeerahEraId } from "@/data/seerah/types";
@@ -391,7 +392,7 @@ export function SeerahDatabasePage() {
         title="قاعدة السيرة الزمنية"
         subtitle={`${SEERAH_DATABASE_STATS.events} حدثًا · ${SEERAH_DATABASE_STATS.people} شخصية · ${SEERAH_DATABASE_STATS.places} موضعًا · ${SEERAH_DATABASE_STATS.quranRefs} إحالة قرآنية`}
         desc="من الولادة إلى الوفاة: سجل زمني مترابط مع القرآن والحديث والمواضع، وكل السجلات معلّقة للمراجعة العلمية"
-        image={art.mushafOpen}
+        image={worldPlateForWing("seerah").plate}
         compact
         wing="seerah"
       >

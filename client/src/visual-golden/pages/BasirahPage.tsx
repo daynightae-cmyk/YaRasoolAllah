@@ -20,7 +20,7 @@ import {
   searchVerifiedQuran,
   type QuranSearchHit,
 } from "@/visual-golden/services/quran-search";
-import { art } from "@/visual-golden/mock/art";
+import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { t } from "@/visual-golden/lib/i18n";
 import { BasirahResearchBox } from "@/visual-golden/components/basirah/BasirahResearchBox";
@@ -139,7 +139,7 @@ export function BasirahPage() {
   return (
     <div className={styles.page} data-visual="basirah-desk" data-basirah-state={catalogState}>
       <header className={styles.hero}>
-        <img className={styles.heroArt} src={art.library} alt="" />
+        <img className={styles.heroArt} src={worldPlateForWing("basirah").plate} alt="" />
         <p className="muted">{t(lang, "basirahSub")}</p>
         <h1>{lang === "ar" ? "بَصِيرَة" : "Basirah"}</h1>
         <p>

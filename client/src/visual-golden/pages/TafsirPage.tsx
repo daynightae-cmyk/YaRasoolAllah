@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
+import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import { FocusBar } from "@/visual-golden/components/present/FocusBar";
 import p from "@/visual-golden/components/present/present.module.css";
@@ -177,7 +178,7 @@ export function TafsirPage() {
           title="التفسير والتدبر"
           subtitle={`غرفة الدراسة العلمية · ${TAFSIR_WORKS.length} مصنفات مفسّرة في الفهرس`}
           desc="الآية من المصحف المحلي الموثق. بعض النسخ التفسيرية التاريخية المؤهلة متاحة للقراءة عبر قارئ المكتبة، بينما تبقى المراجعة العلمية واعتماد الطبعة حالتين منفصلتين لم تُثبتا."
-          image={art.mushaf}
+          image={worldPlateForWing("quran").plate}
           compact
           wing="tafsir"
         />

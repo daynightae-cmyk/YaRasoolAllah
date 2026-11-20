@@ -27,9 +27,17 @@
   overflow-y: auto;
   overflow-x: hidden;
   padding: 0;
+  position: relative;
+  z-index: 1;
+  /* Transparent by default so the cinematic WorldBackdrop plate shows
+     through; wing tints below are translucent washes over the artwork. */
   background:
-    radial-gradient(ellipse at 80% 0%, rgba(16, 185, 129, 0.08), transparent 50%),
-    var(--bg-primary);
+    radial-gradient(ellipse at 80% 0%, rgba(16, 185, 129, 0.08), transparent 50%);
+}
+
+/* When no world plate is mounted (contrast theme), restore the solid page. */
+.shell[data-theme="contrast"] .content {
+  background: var(--bg-primary);
 }
 
 .contentLanguage {
@@ -60,56 +68,48 @@
   opacity: 0.85;
 }
 
+/* Per-wing washes stay translucent so each wing's cinematic world plate
+   (WorldBackdrop) reads through with its own emerald/gold atmosphere. */
 .shell[data-wing="kids"] .content {
   background:
     radial-gradient(ellipse at 70% 0%, rgba(245, 158, 11, 0.14), transparent 48%),
-    radial-gradient(ellipse at 10% 100%, rgba(30, 64, 175, 0.16), transparent 42%),
-    #07111c;
+    radial-gradient(ellipse at 10% 100%, rgba(30, 64, 175, 0.16), transparent 42%);
 }
 .shell[data-wing="atlas"] .content {
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(180, 83, 9, 0.12), transparent 48%),
-    #081410;
+    radial-gradient(ellipse at 50% 0%, rgba(180, 83, 9, 0.12), transparent 48%);
 }
 .shell[data-wing="audio"] .content {
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(212, 160, 23, 0.14), transparent 42%),
-    #061018;
+    radial-gradient(ellipse at 50% 0%, rgba(212, 160, 23, 0.14), transparent 42%);
 }
 .shell[data-wing="quran"] .content {
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(244, 233, 208, 0.07), transparent 40%),
-    #071612;
+    radial-gradient(ellipse at 50% 0%, rgba(244, 233, 208, 0.07), transparent 40%);
 }
 .shell[data-wing="tafsir"] .content {
   background:
-    radial-gradient(ellipse at 80% 0%, rgba(16, 185, 129, 0.12), transparent 45%),
-    #081410;
+    radial-gradient(ellipse at 80% 0%, rgba(16, 185, 129, 0.12), transparent 45%);
 }
 .shell[data-wing="hadith"] .content {
   background:
-    radial-gradient(ellipse at 20% 0%, rgba(120, 53, 15, 0.14), transparent 45%),
-    #0a1210;
+    radial-gradient(ellipse at 20% 0%, rgba(120, 53, 15, 0.14), transparent 45%);
 }
 .shell[data-wing="library"] .content {
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(146, 64, 14, 0.12), transparent 46%),
-    #0c100c;
+    radial-gradient(ellipse at 50% 0%, rgba(146, 64, 14, 0.12), transparent 46%);
 }
 .shell[data-wing="seerah"] .content {
   background:
-    radial-gradient(ellipse at 70% 0%, rgba(212, 160, 23, 0.1), transparent 46%),
-    #0c120c;
+    radial-gradient(ellipse at 70% 0%, rgba(212, 160, 23, 0.1), transparent 46%);
 }
 .shell[data-wing="daily"] .content {
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(16, 185, 129, 0.1), transparent 46%),
-    #071018;
+    radial-gradient(ellipse at 50% 0%, rgba(16, 185, 129, 0.1), transparent 46%);
 }
 .shell[data-wing="basirah"] .content {
   background:
-    radial-gradient(ellipse at 70% 0%, rgba(212, 160, 23, 0.12), transparent 46%),
-    #061410;
+    radial-gradient(ellipse at 70% 0%, rgba(212, 160, 23, 0.12), transparent 46%);
 }
 
 .sidebar {

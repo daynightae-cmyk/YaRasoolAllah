@@ -29,6 +29,7 @@ import {
 } from "@/visual-golden/services/seerah";
 import { getSeerahScene } from "@/visual-golden/services/seerah-scene";
 import { getGhazawatScene } from "@/visual-golden/services/seerah-ghazawat";
+import { chapterWorldPlate, eventWorldPlate } from "@/visual-golden/services/seerah-worlds";
 import { ChapterEnvironment } from "@/visual-golden/components/seerah/ChapterEnvironment";
 import { GhazawatEnvironment } from "@/visual-golden/components/seerah/GhazawatEnvironment";
 import { SeerahChapterStage } from "@/visual-golden/components/seerah/SeerahChapterStage";
@@ -71,10 +72,17 @@ const STAGE_ART = [
 
 const CATEGORY_ART = [art.sceneMakkah, art.sceneDawah, art.sceneHijrah];
 
-/** Prefer the recorded Ghazwah plate; fall back to the generic chapter art. */
+/** Cinematic world plate first, then the recorded Ghazwah plate, then chapter art. */
 function eventThumb(eventId: string, fallbackIndex: number): string {
+  const world = eventWorldPlate(eventId);
+  if (world) return world;
   const scene = getGhazawatScene(eventId);
   return scene ? art[scene.plate] : STAGE_ART[fallbackIndex % STAGE_ART.length];
+}
+
+/** Chapter rail thumbnail: cinematic world plate when available, else SVG scene. */
+function chapterThumb(chapterId: string, fallbackIndex: number): string {
+  return chapterWorldPlate(chapterId) ?? STAGE_ART[fallbackIndex % STAGE_ART.length];
 }
 
 export function SeerahPage() {
@@ -243,7 +251,7 @@ export function SeerahPage() {
               aria-current={i === index ? "true" : undefined}
               data-chapter-id={c.id}
             >
-              <img src={STAGE_ART[i % STAGE_ART.length]} alt="" loading="lazy" />
+              <img src={chapterThumb(c.id, i)} alt="" loading="lazy" />
               <b>{c.title}</b>
               <span>مرحلة {c.order} · ترتيب سردي</span>
             </button>

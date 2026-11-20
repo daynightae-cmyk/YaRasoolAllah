@@ -11,6 +11,7 @@ import {
   Volume2,
 } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
+import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import {
   getQuranChapters,
@@ -181,7 +182,7 @@ export function AudioPage() {
   return (
     <div className={styles.page}>
       <header className={styles.hero}>
-        <img className={styles.bg} src={art.kaaba} alt="" />
+        <img className={styles.bg} src={worldPlateForWing("audio").plate} alt="" />
         <div className={styles.nowPlaying}>
           <div className={`${styles.coverWrap} ${playing ? styles.coverPlaying : ""}`} aria-hidden="true">
             <img className={styles.cover} src={art.mushaf} alt="" />
