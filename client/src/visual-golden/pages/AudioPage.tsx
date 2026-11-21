@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useRef, useState, type SyntheticEvent } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type SyntheticEvent } from "react";
 import { Link } from "wouter";
 import {
   ExternalLink,
   Headphones,
   Heart,
+  Lamp,
   Pause,
   Play,
   Repeat,
@@ -27,7 +28,16 @@ import {
   isPlaybackAbortError,
   rightsLabel,
 } from "@/visual-golden/services/audio";
+import { getInteriorScene } from "@/visual-golden/services/interior-scenes";
 import styles from "./AudioPage.module.css";
+
+// Three.js stays out of the initial chunk: the studio loads only when the
+// visitor explicitly opts into the immersive listening room (directive §4.E).
+const AudioStudio3D = lazy(() =>
+  import("@/visual-golden/components/audio/AudioStudio3D").then((module) => ({
+    default: module.AudioStudio3D,
+  })),
+);
 
 interface StreamReciter {
   id: number;
@@ -133,6 +143,19 @@ export function AudioPage() {
   const autoAdvanceRef = useRef(false);
   const favorites = useInstitution((state) => state.favorites);
   const toggleFavorite = useInstitution((state) => state.toggleFavorite);
+
+  // Immersive studio (opt-in). The real <audio> element and every player
+  // control stay mounted while the scene is open — listening never stops or
+  // restarts when entering/leaving the room; the scene only visualizes state.
+  const [studioOpen, setStudioOpen] = useState(false);
+  const [studioFailed, setStudioFailed] = useState(false);
+  const [studioLamp, setStudioLamp] = useState(true);
+  const studioScene = useMemo(() => getInteriorScene("audio-studio"), []);
+  const studioAvailable = !!studioScene && !studioFailed;
+  const showStudio = studioOpen && studioAvailable;
+  // Reciters shown as catalog records in the studio overlay — the same real
+  // governed MP3Quran response the full surface uses, never invented names.
+  const studioReciters = reciters.state === "ready" ? reciters.items.slice(0, 8) : [];
 
   useEffect(() => {
     let cancelled = false;
@@ -278,7 +301,6 @@ export function AudioPage() {
       handleStreamError();
     });
     // Intentionally keyed on the loaded stream only: play once per arrival.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedReciter?.streamUrl, reciters.state]);
 
   // Browser / OS media-session controls reflect the real governed stream.
@@ -303,7 +325,6 @@ export function AudioPage() {
     } catch {
       // Media Session is progressive enhancement; the in-page player governs.
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedReciter?.streamUrl, current?.number]);
 
   useEffect(() => {
@@ -388,7 +409,163 @@ export function AudioPage() {
 
   return (
     <div className={styles.page}>
-      <header className={styles.hero}>
+      {showStudio && studioScene ? (
+        <Suspense fallback={<div className={styles.studioLoading} role="status">جارٍ تهيئة استوديو الاستماع ثلاثي الأبعاد…</div>}>
+          <AudioStudio3D
+            scene={studioScene}
+            lampOn={studioLamp}
+            playing={playing}
+            onExit={() => setStudioOpen(false)}
+            onUnavailable={() => {
+              setStudioFailed(true);
+              setStudioOpen(false);
+            }}
+            overlay={
+              <div className={styles.studioCard} data-visual="audio-studio-player">
+                <div className={styles.studioCardHead}>
+                  <strong>{current ? `سورة ${current.arabicName}` : "التلاوات الصوتية"}</strong>
+                  <span className={styles.studioReciterName}>
+                    {selectedReciter
+                      ? `${selectedReciter.name} · ${selectedReciter.reading}`
+                      : reciters.state === "loading"
+                        ? "جارٍ جلب القراء…"
+                        : "لا توجد تلاوة متاحة الآن"}
+                  </span>
+                </div>
+
+                <div className={styles.studioTransport}>
+                  <button
+                    type="button"
+                    className={styles.studioPlay}
+                    onClick={() => void togglePlay()}
+                    disabled={!selectedReciter}
+                    aria-label={playing ? "إيقاف التلاوة مؤقتًا" : "تشغيل التلاوة"}
+                  >
+                    {playing ? <Pause size={20} aria-hidden /> : <Play size={20} aria-hidden />}
+                  </button>
+                  <button type="button" className={styles.studioIcon} onClick={() => changeSurah(active - 1)} disabled={active <= 1} aria-label="السورة السابقة">
+                    <SkipBack size={15} aria-hidden />
+                  </button>
+                  <button type="button" className={styles.studioIcon} onClick={() => changeSurah(active + 1)} disabled={active >= 114} aria-label="السورة التالية">
+                    <SkipForward size={15} aria-hidden />
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.studioIcon} ${repeat ? styles.studioToolOn : ""}`}
+                    data-visual="studio-repeat"
+                    aria-pressed={repeat}
+                    onClick={() => setRepeat((value) => !value)}
+                    aria-label={repeat ? "إلغاء تكرار السورة" : "تكرار السورة الحالية"}
+                  >
+                    <Repeat size={15} aria-hidden />
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.studioIcon} ${isFavorite ? styles.studioToolOn : ""}`}
+                    data-visual="studio-favorite"
+                    aria-pressed={isFavorite}
+                    disabled={!selectedReciter}
+                    onClick={toggleTrackFavorite}
+                    aria-label={isFavorite ? "إزالة التلاوة من المفضلة" : "حفظ التلاوة في المفضلة"}
+                  >
+                    <Heart size={15} fill={isFavorite ? "currentColor" : "none"} aria-hidden />
+                  </button>
+                </div>
+
+                <div className={styles.studioProgress}>
+                  <span>{formatTime(currentTime)}</span>
+                  <input
+                    className={styles.seek}
+                    type="range"
+                    min={0}
+                    max={Number.isFinite(duration) && duration > 0 ? duration : 1}
+                    step={1}
+                    value={Math.min(currentTime, Number.isFinite(duration) && duration > 0 ? duration : 1)}
+                    disabled={!duration}
+                    onChange={(event) => {
+                      const next = Number(event.target.value);
+                      if (audioRef.current) audioRef.current.currentTime = next;
+                      setCurrentTime(next);
+                    }}
+                    aria-label="موضع التلاوة"
+                  />
+                  <span>{formatTime(duration)}</span>
+                </div>
+
+                <label className={styles.studioVolume}>
+                  <Volume2 size={14} aria-hidden />
+                  <input
+                    type="range"
+                    min={0}
+                    max={1}
+                    step={0.05}
+                    value={volume}
+                    onChange={(event) => {
+                      const next = Number(event.target.value);
+                      setVolume(next);
+                      if (audioRef.current) audioRef.current.volume = next;
+                    }}
+                    aria-label="مستوى الصوت"
+                  />
+                </label>
+
+                {streamError ? <span role="alert" className={styles.streamError}>{streamError}</span> : null}
+
+                <div className={styles.studioCatalog} role="tablist" aria-label="فهرس القراء">
+                  {studioReciters.map((item) => (
+                    <button
+                      key={`${item.id}-${item.moshafId}`}
+                      type="button"
+                      role="tab"
+                      aria-selected={item.id === selectedReciter?.id && item.moshafId === selectedReciter.moshafId}
+                      className={item.id === selectedReciter?.id && item.moshafId === selectedReciter.moshafId ? styles.studioReciterOn : ""}
+                      onClick={() => chooseReciter(item)}
+                    >
+                      <Headphones size={13} aria-hidden />
+                      <span><strong>{item.name}</strong><small>{item.reading}</small></span>
+                    </button>
+                  ))}
+                  {reciters.state === "ready" && !studioReciters.length ? (
+                    <span className={styles.studioMeta}>لا توجد تلاوة في استجابة المزوّد لهذه السورة الآن.</span>
+                  ) : null}
+                </div>
+
+                <div className={styles.studioCardTools}>
+                  <button
+                    type="button"
+                    className={studioLamp ? styles.studioToolOn : ""}
+                    onClick={() => setStudioLamp((value) => !value)}
+                  >
+                    <Lamp size={13} aria-hidden /> {studioLamp ? "إطفاء المصباح" : "إضاءة المصباح"}
+                  </button>
+                  <button type="button" onClick={() => setStudioOpen(false)}>
+                    الواجهة الكاملة والفهرس
+                  </button>
+                </div>
+
+                <p className={styles.studioBoundary}>
+                  البث مباشر من خوادم MP3Quran.net داخل المشغل — لا أصوات مولدة ولا صور قراء مختلقة.
+                  شريط الصوت في المشهد يتحرك فقط أثناء التشغيل الحقيقي، والموضع أعلاه هو موضع الوسائط الفعلي.
+                </p>
+              </div>
+            }
+          />
+        </Suspense>
+      ) : null}
+
+      {studioAvailable && !showStudio ? (
+        <button
+          type="button"
+          className={styles.studioEnter}
+          data-visual="audio-studio-enter"
+          onClick={() => setStudioOpen(true)}
+        >
+          <Headphones size={15} aria-hidden />
+          ادخل استوديو الاستماع ثلاثي الأبعاد — رحل وسماعات وبث حقيقي
+        </button>
+      ) : null}
+
+      <header className={`${styles.hero} ${showStudio ? styles.studioHidden : ""}`}>
         <img className={styles.bg} src={worldPlateForWing("audio").plate} alt="" />
         <div className={styles.nowPlaying}>
           <div className={`${styles.coverWrap} ${playing ? styles.coverPlaying : ""}`} aria-hidden="true">
@@ -442,7 +619,7 @@ export function AudioPage() {
           </ul>
         </aside>
 
-        <div className={styles.player} data-visual="audio-studio-player">
+        <div className={styles.player} data-visual="audio-player">
           <audio
             ref={audioRef}
             src={selectedReciter?.streamUrl}
@@ -545,6 +722,7 @@ export function AudioPage() {
         </div>
       </header>
 
+      <div className={showStudio ? styles.studioHidden : undefined}>
       <section className={styles.pad} aria-label="اختيار القارئ">
         <div className={styles.reciterDiscovery}>
           <div>
@@ -627,6 +805,7 @@ export function AudioPage() {
             مصدرها استجابة MP3Quran الرسمية لكل سورة.
           </p>
         </section>
+      </div>
       </div>
     </div>
   );

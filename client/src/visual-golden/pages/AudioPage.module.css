@@ -564,3 +564,198 @@
   .player { align-items: center; }
   .volume { width: 100%; justify-content: center; }
 }
+
+/* ===== Audio studio 3D entry + listening overlay (directive 4.E) ===== */
+.studioEnter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  align-self: flex-start;
+  min-height: 44px;
+  margin: 0.6rem clamp(0.8rem, 2vw, 1.6rem) 0;
+  padding: 0.55rem 1.1rem;
+  border: 1px solid var(--border-gold);
+  border-radius: 999px;
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.16), rgba(90, 61, 34, 0.2));
+  color: var(--text-gold);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 200ms ease, border-color 200ms ease;
+}
+.studioEnter:hover {
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.28), rgba(90, 61, 34, 0.3));
+}
+.studioEnter:focus-visible {
+  outline: 3px solid var(--border-gold);
+  outline-offset: 2px;
+}
+.studioLoading {
+  margin: 1rem clamp(0.8rem, 2vw, 1.6rem);
+  padding: 2.4rem 1rem;
+  border: 1px dashed var(--border-gold);
+  border-radius: var(--radius-lg);
+  color: var(--text-muted);
+  text-align: center;
+  font-size: 0.85rem;
+}
+/* The real player + full surface stay mounted (audio never restarts on
+   enter/exit) but are visually hidden while the studio is open. */
+.studioHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.studioCard {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.8rem 1rem 0.9rem;
+}
+.studioCardHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+.studioCardHead strong {
+  font-size: 1rem;
+  color: var(--text-gold);
+}
+.studioReciterName {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+.studioTransport {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+.studioPlay {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--border-gold);
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.3), rgba(90, 61, 34, 0.3));
+  color: var(--text-gold);
+  cursor: pointer;
+  transition: background 200ms ease;
+}
+.studioPlay:hover:not(:disabled) {
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.45), rgba(90, 61, 34, 0.4));
+}
+.studioPlay:disabled { opacity: 0.45; cursor: not-allowed; }
+.studioIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  min-height: 38px;
+  border-radius: 50%;
+  border: 1px solid var(--border-gold);
+  background: rgba(10, 20, 18, 0.55);
+  color: var(--text-gold);
+  cursor: pointer;
+  transition: background 200ms ease;
+}
+.studioIcon:hover:not(:disabled) { background: rgba(212, 160, 23, 0.22); }
+.studioIcon:disabled { opacity: 0.4; cursor: not-allowed; }
+.studioProgress {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.studioProgress .seek { flex: 1; }
+.studioVolume {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  color: var(--text-muted);
+}
+.studioVolume input { width: 130px; }
+.studioCatalog {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: center;
+  max-height: 96px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-gold) transparent;
+}
+.studioCatalog button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 36px;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--border-gold);
+  border-radius: 999px;
+  background: rgba(10, 20, 18, 0.55);
+  color: var(--text-main);
+  font: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: background 200ms ease;
+}
+.studioCatalog button span { display: grid; text-align: start; }
+.studioCatalog button small { color: var(--text-muted); font-size: 0.64rem; }
+.studioCatalog button:hover { background: rgba(212, 160, 23, 0.2); }
+.studioReciterOn {
+  background: rgba(212, 160, 23, 0.3) !important;
+  border-color: var(--accent-gold-soft) !important;
+}
+.studioMeta { font-size: 0.74rem; color: var(--text-muted); }
+.studioCardTools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+}
+.studioCardTools button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 38px;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--border-gold);
+  border-radius: 999px;
+  background: rgba(10, 20, 18, 0.55);
+  color: var(--text-gold);
+  font: inherit;
+  font-size: 0.74rem;
+  cursor: pointer;
+  transition: background 200ms ease;
+}
+.studioCardTools button:hover { background: rgba(212, 160, 23, 0.22); }
+.studioToolOn {
+  background: rgba(212, 160, 23, 0.3) !important;
+  border-color: var(--accent-gold-soft) !important;
+}
+.studioBoundary {
+  margin: 0;
+  font-size: 0.68rem;
+  line-height: 1.7;
+  color: var(--text-muted);
+  text-align: center;
+}
+@media (max-width: 760px) {
+  .studioEnter,
+  .studioCardTools button {
+    font-size: 0.78rem;
+  }
+  .studioCatalog { max-height: 76px; }
+  .studioVolume input { width: 100px; }
+}
