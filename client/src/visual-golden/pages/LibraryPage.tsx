@@ -13,6 +13,7 @@ import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
 import { CatalogShelfHall } from "@/visual-golden/components/library/CatalogShelfHall";
 import { LibraryCatalog } from "@/visual-golden/components/library/LibraryCatalog";
 import { CatalogReadingChamber } from "@/visual-golden/components/library/CatalogReadingChamber";
+import { LibraryLivingShelf } from "@/visual-golden/components/library/LibraryLivingShelf";
 import { SectionEntry3D } from "@/visual-golden/components/entry/SectionEntry3D";
 import { useEffectiveMotion } from "@/visual-golden/lib/institution/effective-motion";
 import {
@@ -122,8 +123,14 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
     isLowCapacityDevice(readDeviceCapacitySignals()),
   );
   const [query, setQuery] = useState("");
+  // `?view=shelves` lets the immersive hall hand the reader back to the shelves
+  // instead of trapping them in the arcade after they leave the 3D view.
   const [viewChoice, setViewChoice] = useState<LibraryView | "auto">(
-    initialWorkId ? "catalog" : "auto",
+    initialWorkId
+      ? "catalog"
+      : new URLSearchParams(window.location.search).get("view") === "shelves"
+        ? "shelves"
+        : "auto",
   );
   const [shelfDomain, setShelfDomain] = useState<string | undefined>();
   const [catalogCategory, setCatalogCategory] = useState<string | undefined>();
@@ -178,6 +185,15 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
     }
     return counts;
   }, [payload]);
+
+  // Entering through the hall's own exit (`?view=shelves`) is a deliberate
+  // request for the shelf surface; honour it once the catalog has loaded so
+  // the reader is never bounced back into the arcade they just left.
+  const shelfRequested = typeof window !== "undefined"
+    && new URLSearchParams(window.location.search).get("view") === "shelves";
+  useEffect(() => {
+    if (shelfRequested) setViewChoice("shelves");
+  }, [shelfRequested]);
 
   const arNumber = useMemo(() => new Intl.NumberFormat("ar-EG"), []);
   const enNumber = useMemo(() => new Intl.NumberFormat("en-US"), []);
@@ -455,17 +471,22 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
             </p>
           ) : null}
 
-          {view === "library3d" ? (
-            scenePanel
-          ) : view === "shelves" ? (
-            <CatalogShelfHall
-              key={shelfDomain ?? "all"}
-              query={query}
-              initialCategory={shelfDomain}
-              onOpen={openReader}
-            />
-          ) : (
-            catalogContent
+          {view === "catalog" ? catalogContent : (
+            <>
+              {payload ? (
+                <LibraryLivingShelf works={payload.works} onOpen={openReader} />
+              ) : null}
+              {view === "library3d" ? (
+                scenePanel
+              ) : (
+                <CatalogShelfHall
+                  key={shelfDomain ?? "all"}
+                  query={query}
+                  initialCategory={shelfDomain}
+                  onOpen={openReader}
+                />
+              )}
+            </>
           )}
 
           {gateways}

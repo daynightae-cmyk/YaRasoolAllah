@@ -11,12 +11,14 @@ import {
   BookOpen,
   ChevronDown,
   ChevronUp,
+  DoorOpen,
   Eye,
   Layers3,
   LocateFixed,
   Move3d,
   X,
 } from "lucide-react";
+import { Link } from "wouter";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import {
@@ -1301,6 +1303,16 @@ export function Library3D({
           >
             <LocateFixed size={17} />
           </button>
+          <div className={styles.exitHall}>
+            <DoorOpen size={14} aria-hidden="true" />
+            <Link
+              href="/library?view=shelves"
+              data-visual="library-exit-hall"
+              title="الإقامة في قاعة الرفوف بدل التجوال"
+            >
+              إلى الرفوف
+            </Link>
+          </div>
           <button
             type="button"
             className={styles.roundButton}

@@ -28,6 +28,71 @@
     0 30px 80px -34px rgba(0, 0, 0, 0.72);
 }
 
+/* --- Cinema surface -------------------------------------------------------
+   On the library route the shell hides its chrome (data-surface="cinema"), so
+   the hall is the page. Fill the viewport edge-to-edge: the reader walks the
+   arcade instead of looking at a postage-stamp box pasted under a header. */
+:global(.vg-shell[data-surface="cinema"]) .page {
+  height: 100svh;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  overflow: hidden;
+}
+
+:global(.vg-shell[data-surface="cinema"]) .stage {
+  min-height: 0;
+  height: 100%;
+}
+
+:global(.vg-shell[data-surface="cinema"]) .scene {
+  height: 100%;
+  min-height: 420px;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* The immersive wrapper stays a pass-through even after the door closes. */
+:global(.sectionEntry3DWrapper[data-stationary-pass="1"]) {
+  display: contents;
+}
+
+/* Exit the hall without leaving the wing: reads as part of the top overlay so
+   it travels with the identity block, never floating over the shelves. */
+.exitHall {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-inline-start: 0.45rem;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid rgba(232, 197, 71, 0.34);
+  border-radius: 999px;
+  background: rgba(6, 14, 12, 0.6);
+  color: rgba(245, 237, 216, 0.88);
+  font-size: 0.68rem;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+}
+.exitHall a {
+  color: inherit;
+  text-decoration: none;
+}
+.exitHall:hover,
+.exitHall:focus-within {
+  border-color: rgba(232, 197, 71, 0.75);
+  background: rgba(26, 22, 10, 0.78);
+  color: #f0d67c;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .exitHall {
+    transition: none;
+  }
+}
+
 .scene::before {
   content: "";
   position: absolute;

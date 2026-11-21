@@ -1,0 +1,227 @@
+/* ==========================================================================
+   SEERAH TERRAIN STUDIO — full-screen observer environment.
+   The scene owns the viewport; all copy stays in DOM (never baked into WebGL).
+   ========================================================================== */
+
+.studio {
+  position: relative;
+  z-index: 60;
+  min-height: 100svh;
+  padding: clamp(0.6rem, 1.6vw, 1.4rem);
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(20, 64, 52, 0.55), transparent 60%),
+    radial-gradient(90% 60% at 80% 110%, rgba(212, 160, 23, 0.12), transparent 70%),
+    #050a0b;
+  color: var(--text-primary, #f3e9d2);
+}
+
+.stage {
+  position: relative;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  height: calc(100svh - clamp(1.2rem, 3.2vw, 2.8rem));
+  min-height: 520px;
+  border: 1px solid rgba(212, 160, 23, 0.22);
+  border-radius: clamp(14px, 2vw, 22px);
+  overflow: hidden;
+  background: #070d0e;
+  box-shadow:
+    0 40px 120px -48px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* The engine section fills the first row. */
+.stage > section {
+  height: 100%;
+  min-height: 0;
+}
+
+/* Glass caption: story context floats over the first frames of the terrain. */
+.caption {
+  position: absolute;
+  inset-inline-start: clamp(0.8rem, 2vw, 1.5rem);
+  top: clamp(3.2rem, 6vw, 4.6rem);
+  z-index: 4;
+  max-width: min(340px, 42vw);
+  padding: clamp(0.7rem, 1.2vw, 1rem) clamp(0.85rem, 1.4vw, 1.15rem);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg, 14px);
+  background:
+    linear-gradient(180deg, rgba(8, 18, 20, 0.62), rgba(4, 10, 12, 0.76));
+  backdrop-filter: blur(14px) saturate(1.15);
+  -webkit-backdrop-filter: blur(14px) saturate(1.15);
+  box-shadow:
+    0 18px 40px -26px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  pointer-events: none;
+}
+
+.captionKicker {
+  display: block;
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(232, 197, 71, 0.72);
+}
+
+.captionText h1 {
+  margin: 0.28rem 0 0.16rem;
+  font-size: clamp(1.05rem, 2.3vw, 1.6rem);
+  line-height: 1.25;
+  color: #f3e9d2;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+}
+
+.captionText p {
+  margin: 0;
+  font-size: 0.72rem;
+  color: rgba(201, 191, 168, 0.92);
+}
+
+.captionStats {
+  display: flex;
+  gap: 0.9rem;
+  margin: 0.75rem 0 0;
+  padding: 0.55rem 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.09);
+}
+
+.captionStats div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.captionStats dt {
+  font-size: 0.56rem;
+  letter-spacing: 0.04em;
+  color: rgba(201, 191, 168, 0.6);
+}
+
+.captionStats dd {
+  margin: 0;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: #e8c547;
+}
+
+/* Dock of related destinations, bottom-left over the terrain. */
+.dock {
+  position: absolute;
+  inset-inline-start: clamp(0.8rem, 2vw, 1.5rem);
+  bottom: clamp(0.8rem, 2vw, 1.4rem);
+  z-index: 4;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.dockLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.34rem 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-full, 999px);
+  background: rgba(6, 14, 16, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: rgba(243, 233, 210, 0.9);
+  font-size: 0.62rem;
+  text-decoration: none;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.dockLink:hover,
+.dockLink:focus-visible {
+  border-color: rgba(212, 160, 23, 0.62);
+  background: rgba(30, 26, 14, 0.86);
+  color: #e8c547;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  height: 100%;
+  min-height: 460px;
+  font-size: 0.8rem;
+  color: rgba(201, 191, 168, 0.8);
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  min-height: 70svh;
+  color: rgba(201, 191, 168, 0.8);
+}
+
+.emptyLink {
+  color: #e8c547;
+}
+
+@media (max-width: 720px) {
+  .stage {
+    height: calc(100svh - 0.9rem);
+    min-height: 480px;
+    border-radius: 12px;
+  }
+  .caption {
+    inset-inline: 0.7rem;
+    max-width: none;
+    top: 3.5rem;
+  }
+  .captionStats {
+    gap: 0.7rem;
+    flex-wrap: wrap;
+  }
+  .dock {
+    inset-inline: 0.7rem;
+    bottom: 0.7rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dockLink {
+    transition: none;
+  }
+}
+
+/* --- Internal exit affordance: visible even when shell chrome is hidden. --- */
+.exitBar {
+  position: absolute;
+  inset-inline-end: clamp(0.8rem, 2vw, 1.4rem);
+  bottom: clamp(0.8rem, 2vw, 1.4rem);
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-full, 999px);
+  background: rgba(6, 14, 16, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: rgba(243, 233, 210, 0.94);
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.exitBar:hover,
+.exitBar:focus-visible {
+  border-color: rgba(212, 160, 23, 0.62);
+  background: rgba(30, 26, 14, 0.9);
+  color: #e8c547;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .exitBar {
+    transition: none;
+  }
+}

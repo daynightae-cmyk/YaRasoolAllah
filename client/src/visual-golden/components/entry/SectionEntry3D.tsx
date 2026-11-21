@@ -74,6 +74,37 @@ function hasSeenDoor(wing: Wing): boolean {
   }
 }
 
+/**
+ * Stationary-pass guard.
+ *
+ * A wing may hold a living station: the Library arcade where the visitor walks
+ * the hall, or the Seerah terrain studio where the observer stands on a height.
+ * Once the visitor has crossed into that station the door must not re-arm on a
+ * re-render, a state change, or a re-focus — otherwise it re-mounts over the
+ * station, swallows the pointer and takes the camera away every time the view
+ * inside updates. The pass is remembered for the session, so re-entering the
+ * wing goes straight to the station the reader already chose.
+ */
+const PASS_PREFIX = "yra-pass-v1-";
+
+function markStationaryPass(wing: string) {
+  if (typeof window === "undefined") return;
+  try {
+    sessionStorage.setItem(`${PASS_PREFIX}${wing}`, "1");
+  } catch {
+    // Storage can be unavailable; the station still works for this visit.
+  }
+}
+
+export function hasStationaryPass(wing: string): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return sessionStorage.getItem(`${PASS_PREFIX}${wing}`) === "1";
+  } catch {
+    return false;
+  }
+}
+
 function forcedDoorPreference(): "0" | "1" | null {
   if (typeof window === "undefined") return null;
   const value = new URLSearchParams(window.location.search).get("door");
@@ -107,6 +138,8 @@ function splashCeremonyActive(): boolean {
  */
 function shouldShowDoor(active: boolean, wing: Wing, reducedMotion: boolean): boolean {
   if (!active || reducedMotion || typeof window === "undefined") return false;
+  // Already standing inside this wing's station: never re-arm over it.
+  if (hasStationaryPass(wing)) return false;
   const forced = forcedDoorPreference();
   if (forced === "0") return false;
   if (forced === "1") return !splashCeremonyActive();
@@ -152,15 +185,17 @@ export function SectionEntry3D({
 
   const handleEntered = useCallback(() => {
     rememberEntry();
+    markStationaryPass(wing);
     setShowDoor(false);
     onEntered?.();
-  }, [onEntered, rememberEntry]);
+  }, [onEntered, rememberEntry, wing]);
 
   const handleCancel = useCallback(() => {
     rememberEntry();
+    markStationaryPass(wing);
     setShowDoor(false);
     onEntered?.();
-  }, [onEntered, rememberEntry]);
+  }, [onEntered, rememberEntry, wing]);
 
   useEffect(() => {
     if (!active) {
@@ -189,9 +224,11 @@ export function SectionEntry3D({
   return (
     <div
       className="sectionEntry3DWrapper"
+      data-stationary-pass={showDoor ? undefined : "1"}
       style={{
         position: "relative",
         minHeight: showDoor ? "100dvh" : undefined,
+        height: showDoor ? undefined : "100%",
         width: "100%",
       }}
     >

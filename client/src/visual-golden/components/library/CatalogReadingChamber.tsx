@@ -118,6 +118,54 @@ function writeStoredPage(workId: string, page: number) {
 }
 const PAGE_SIZE = 24;
 
+/* ==========================================================================
+   CINEMATIC OPENING — the moment a book leaves the shelf
+   The cover rises off the arcade, catches the light, then turns on its spine
+   hinge to reveal the reader beneath it. Pure DOM/CSS: the title stays a text
+   layer (never a texture). Reduced-motion and assistive technology skip
+   straight to the page, because the reader is the point and the motion is not.
+   ========================================================================== */
+const OPEN_MS = 1180;
+const TURN_AT_MS = 440;
+
+function OpeningCover({
+  work,
+  title,
+  author,
+  category,
+  lang,
+  turning,
+}: {
+  work: CatalogWork;
+  title: string;
+  author: string;
+  category: string;
+  lang: "ar" | "en" | "fr" | "ur";
+  turning: boolean;
+}) {
+  return (
+    <div className={styles.opening} aria-hidden="true" data-visual="library-opening">
+      <div className={styles.openingBook} data-turning={turning ? "1" : "0"}>
+        <div className={styles.openingFace}>
+          <span className={styles.openingCategory}>{category}</span>
+          <strong className={styles.openingTitle}>{title}</strong>
+          <span className={styles.openingAuthor}>{author}</span>
+          {work.deathHijri ? (
+            <small className={styles.openingDeath}>هـ {work.deathHijri}</small>
+          ) : null}
+          <span className={styles.openingRule} />
+          <em className={styles.openingStamp}>المكتبة الكبرى</em>
+          <span className={styles.openingGlare} />
+        </div>
+      </div>
+      <p className={styles.openingCaption}>
+        {lang === "ar" ? "فتحُ الكتاب" : "Opening the book"}
+      </p>
+    </div>
+  );
+}
+
+
 function normalize(value: string) {
   return value
     .normalize("NFKD")
@@ -129,6 +177,16 @@ function normalize(value: string) {
 
 export function CatalogReadingChamber({ work, onClose }: Props) {
   const lang = useInstitution((state) => state.lang);
+  // The opening is staged motion. Whoever asked for reduced motion gets the
+  // reader, not an animation: the page is already beneath the cover anyway.
+  const [stillMotion] = useState(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return false;
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  });
+  const [turnKey, setTurnKey] = useState(0);
+  const [opening, setOpening] = useState(() => !stillMotion);
+  const [turning, setTurning] = useState(false);
+  const [citationCopied, setCitationCopied] = useState(false);
   const favorites = useInstitution((state) => state.favorites);
   const toggleFavorite = useInstitution((state) => state.toggleFavorite);
   const addNote = useInstitution((state) => state.addNote);
@@ -159,7 +217,6 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
   const [fontScale, setFontScale] = useState(1);
   const [noteDraft, setNoteDraft] = useState("");
   const [noteOpen, setNoteOpen] = useState(false);
-  const [citationCopied, setCitationCopied] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const favoriteId = `library:${work.id}`;
@@ -189,10 +246,27 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
     setPage(1);
     setMode("details");
     setReader({ state: "idle" });
+    if (stillMotion) {
+      setOpening(false);
+      setTurning(false);
+      setNoteDraft("");
+      setNoteOpen(false);
+      setCitationCopied(false);
+      return;
+    }
+    setOpening(true);
+    setTurning(false);
+    setTurnKey((key) => key + 1);
     setNoteDraft("");
     setNoteOpen(false);
     setCitationCopied(false);
-  }, [work.id]);
+    const turn = window.setTimeout(() => setTurning(true), TURN_AT_MS);
+    const done = window.setTimeout(() => setOpening(false), OPEN_MS);
+    return () => {
+      window.clearTimeout(turn);
+      window.clearTimeout(done);
+    };
+  }, [work.id, stillMotion]);
 
   useEffect(() => {
     if (reader.state !== "ready") return;
@@ -350,9 +424,23 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
 
   return (
     <div className={styles.scrim} role="presentation" onMouseDown={onClose}>
+      {opening ? (
+        <OpeningCover
+          key={turnKey}
+          work={work}
+          title={title}
+          author={author}
+          category={work.category || (lang === "ar" ? "المكتبة" : "Library")}
+          lang={lang}
+          turning={turning}
+        />
+      ) : null}
       <section
         ref={dialogRef}
         className={styles.chamber}
+        data-visual="library-chamber"
+        data-opening={opening ? "cover" : "open"}
+        data-opening-turned={turning ? "1" : "0"}
         role="dialog"
         aria-modal="true"
         aria-label={title}

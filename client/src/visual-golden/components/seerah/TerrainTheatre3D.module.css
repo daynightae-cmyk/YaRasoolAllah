@@ -13,6 +13,15 @@
   outline: none;
 }
 
+/* Immersive studio: the observer environment owns the full viewport instead of
+   sitting in the reading column where the heightfield cannot read as terrain. */
+.theatre[data-immersive="true"] {
+  height: 100%;
+  min-height: 0;
+  border-radius: 0;
+  background: #050a0b;
+}
+
 .theatre:focus-visible {
   box-shadow: inset 0 0 0 2px var(--accent-amber, #d4a017);
 }

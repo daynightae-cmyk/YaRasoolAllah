@@ -38,6 +38,7 @@ const VisualQuranPage = lazy(() => import("@/visual-golden/pages/QuranPage").the
 const VisualTafsirPage = lazy(() => import("@/visual-golden/pages/TafsirPage").then((m) => ({ default: m.TafsirPage })));
 const VisualSeerahPage = lazy(() => import("@/visual-golden/pages/SeerahPage").then((m) => ({ default: m.SeerahPage })));
 const VisualSeerahDatabasePage = lazy(() => import("@/visual-golden/pages/SeerahDatabasePage").then((m) => ({ default: m.SeerahDatabasePage })));
+const VisualSeerahTerrainStudio = lazy(() => import("@/visual-golden/pages/SeerahTerrainStudio").then((m) => ({ default: m.SeerahTerrainStudio })));
 const VisualAtlasPage = lazy(() => import("@/visual-golden/pages/AtlasPage").then((m) => ({ default: m.AtlasPage })));
 const VisualHadithPage = lazy(() => import("@/visual-golden/pages/HadithPage").then((m) => ({ default: m.HadithPage })));
 const VisualKidsPage = lazy(() => import("@/visual-golden/pages/KidsPage").then((m) => ({ default: m.KidsPage })));
@@ -165,6 +166,9 @@ function AppContent() {
         </Route>
         <Route path="/seerah/database">
           {() => <VisualRoute><VisualSeerahDatabasePage /></VisualRoute>}
+        </Route>
+        <Route path="/seerah/terrain">
+          {() => <VisualRoute><VisualSeerahTerrainStudio /></VisualRoute>}
         </Route>
         <Route path="/seerah">
           {() => <VisualRoute><VisualSeerahPage /></VisualRoute>}

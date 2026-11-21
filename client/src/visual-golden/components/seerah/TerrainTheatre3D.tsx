@@ -35,6 +35,8 @@ interface TerrainTheatre3DProps {
   onExit: () => void;
   /** Called when WebGL cannot run; caller shows its plate fallback. */
   onUnavailable: () => void;
+  /** Full-viewport studio mode: fills its container instead of banner height. */
+  immersive?: boolean;
 }
 
 /* ------------------------------------------------------------------ */
@@ -716,8 +718,9 @@ function buildTerrainScene(
 /* React shell — one runtime, engine captured in the adapter closure   */
 /* ------------------------------------------------------------------ */
 
-export function TerrainTheatre3D({ scene: config, onExit, onUnavailable }: TerrainTheatre3DProps) {
+export function TerrainTheatre3D({ scene: config, onExit, onUnavailable, immersive = false }: TerrainTheatre3DProps) {
   const effectiveMotion = useEffectiveMotion();
+  const rootRef = useRef<HTMLElement>(null);
   const hostRef = useRef<HTMLDivElement>(null);
   const runtimeRef = useRef<ThreeRuntime | null>(null);
   const engineRef = useRef<TerrainEngineHandle | null>(null);
@@ -774,6 +777,29 @@ export function TerrainTheatre3D({ scene: config, onExit, onUnavailable }: Terra
     runtimeRef.current?.setMotion(effectiveMotion);
   }, [effectiveMotion]);
 
+  /* Take focus (and therefore arrow/Escape keys) as soon as the theatre
+     mounts, and give it back to the entering control when it unmounts. */
+  useEffect(() => {
+    const root = rootRef.current;
+    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    root?.focus({ preventScroll: true });
+    return () => {
+      if (opener && opener.isConnected) opener.focus({ preventScroll: true });
+    };
+  }, []);
+
+  /* Global Escape: the theatre is a full-screen studio, so the key must close
+     it even when focus sits on a HUD chip or inside the WebGL canvas. */
+  useEffect(() => {
+    const onWindowKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      onExit();
+    };
+    window.addEventListener("keydown", onWindowKeyDown);
+    return () => window.removeEventListener("keydown", onWindowKeyDown);
+  }, [onExit]);
+
   const goTo = useCallback(
     (index: number) => {
       const engine = engineRef.current;
@@ -798,9 +824,6 @@ export function TerrainTheatre3D({ scene: config, onExit, onUnavailable }: Terra
     } else if (event.key === "End") {
       event.preventDefault();
       goTo(config.nodes.length - 1);
-    } else if (event.key === "Escape") {
-      event.preventDefault();
-      onExit();
     }
   };
 
@@ -810,10 +833,12 @@ export function TerrainTheatre3D({ scene: config, onExit, onUnavailable }: Terra
 
   return (
     <section
+      ref={rootRef}
       className={styles.theatre}
       data-visual="seerah-terrain-theatre"
       data-terrain={config.eventId}
       data-node={node.id}
+      data-immersive={immersive ? "true" : undefined}
       aria-label={`بيئة ${config.eventId} ثلاثية الأبعاد — مراقب محايد`}
       onKeyDown={onKeyDown}
       tabIndex={0}
@@ -822,8 +847,11 @@ export function TerrainTheatre3D({ scene: config, onExit, onUnavailable }: Terra
 
       <div className={styles.hud}>
         <div className={styles.hudTop}>
-          <span className={styles.badge}>
+          <span className={styles.badge} data-visual="seerah-terrain-badge">
             <Compass size={13} aria-hidden /> بيئة ثلاثية الأبعاد — مراقب محايد
+            <span className={styles.badgeIndex}>
+              {nodeIndex + 1}/{config.nodes.length}
+            </span>
           </span>
           <div className={styles.hudActions}>
             <button
@@ -834,13 +862,19 @@ export function TerrainTheatre3D({ scene: config, onExit, onUnavailable }: Terra
             >
               <RotateCcw size={14} aria-hidden />
             </button>
-            <button type="button" className={styles.hudButton} onClick={onExit} aria-label="الخروج إلى القراءة">
+            <button
+              type="button"
+              className={styles.hudButton}
+              data-visual="seerah-terrain-exit"
+              onClick={onExit}
+              aria-label="الخروج إلى القراءة"
+            >
               <LogOut size={14} aria-hidden /> خروج
             </button>
           </div>
         </div>
 
-        <div className={styles.stationNote} aria-live="polite">
+        <div className={styles.stationNote} aria-live="polite" data-terrain-station={node.id}>
           <strong>{node.labelAr}</strong>
           <p>{node.noteAr}</p>
         </div>
@@ -849,6 +883,7 @@ export function TerrainTheatre3D({ scene: config, onExit, onUnavailable }: Terra
           <button
             type="button"
             className={styles.travelButton}
+            data-visual="seerah-terrain-prev"
             onClick={() => goTo(nodeIndex - 1)}
             disabled={nodeIndex === 0 || traveling}
             aria-label="المحطة السابقة"
@@ -873,6 +908,7 @@ export function TerrainTheatre3D({ scene: config, onExit, onUnavailable }: Terra
           <button
             type="button"
             className={styles.travelButton}
+            data-visual="seerah-terrain-next"
             onClick={() => goTo(nodeIndex + 1)}
             disabled={nodeIndex === config.nodes.length - 1 || traveling}
             aria-label="المحطة التالية"
