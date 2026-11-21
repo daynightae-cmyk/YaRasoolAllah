@@ -68,7 +68,17 @@
 
 ## 5. المراجع البصرية
 
-المراجع العشرة المعتمدة للمزاج والتكوين:
+> **سجل تاريخي — NOT the current visual authority.** القائمة التالية هي مجموعة
+> الاستخلاص السابقة (بوسترات فبراير 2026) التي وُثّقت في
+> `docs/evidence/visual-reference-matrix-2026-09-23.md`. الحزمة المعتمدة الحالية
+> هي حزمة 2026-11-20 في
+> `K:\Knoux Projects\YaRasoolAllah\YRA_ULTIMATE_MULTIPLATFORM_PACK\YRA_REFERENCE_PACK`
+> (انظر `START_HERE.md` و`manifest.json`؛ يُتحقق الأصول عبر
+> `npm run verify:reference-pack`). يبقى أسلوب الاستخلاص الموثوق به؛ أما القائمة
+> التالية فهي ليست الحزمة المعتمدة الحاليّة، ولا تُستخدم صور
+> `Base/attached_assets` (يونيو 2025) كبديل عنها.
+
+السجل الأول: المراجع العشرة المستخدمة في الاستخلاص السابق للمزاج والتكوين:
 
 1. https://i.postimg.cc/NfDzLHy9/Chat-GPT-Image-23-sbtmbr-2026-02-15-38-s-(1).png
 2. https://i.postimg.cc/cLJ53LYb/Chat-GPT-Image-23-sbtmbr-2026-02-15-39-s-(2).png

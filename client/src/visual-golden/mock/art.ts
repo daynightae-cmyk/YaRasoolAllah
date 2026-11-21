@@ -1,4 +1,13 @@
-/** VISUAL PROTOTYPE DATA — REPLACE WITH PRODUCTION DATA SOURCE. */
+/**
+ * Fallback environment-art registry for the visual institution.
+ *
+ * Cinematic world plates from the owner-approved 2026 reference pack are
+ * preferred wherever a wing/chapter/event maps to one; this module supplies the
+ * shipped non-figurative SVG/WebP fallback (and reading/ceremony surfaces) when
+ * no cinematic plate exists. Paths are production assets under
+ * `client/public/visual-golden/art/`, not placeholders — provenance for the
+ * plate-derived artwork is recorded in `art/worlds/manifest.json`.
+ */
 export const art = {
   mosque: "/visual-golden/art/mosque-hero.webp",
   kaaba: "/visual-golden/art/kaaba-night.webp",

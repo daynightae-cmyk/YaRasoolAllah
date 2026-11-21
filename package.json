@@ -22,6 +22,7 @@
     "promote:kids-media": "tsx scripts/acquire/promote-kids-media.ts",
     "verify:providers": "tsx scripts/verify-provider-endpoints.ts",
     "build:worlds": "node scripts/build-world-plates.mjs",
+    "verify:reference-pack": "node scripts/verify-reference-pack.mjs",
     "android:icons": "node scripts/build-android-icons.mjs",
     "android:sync": "npm run build && cap sync android",
     "android:apk": "npm run android:sync && cd android && gradlew.bat assembleDebug",
