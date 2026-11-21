@@ -53,6 +53,7 @@ export function filterWings(query: string) {
 }
 
 import type { QuranChapter } from "@/services/quranService";
+import { ATLAS_COUNTS } from "./atlas";
 
 /** Registry-derived facts. Surah/ayah totals always derive from chapter metadata. */
 export function discoveryFacts(chapters: QuranChapter[]) {
@@ -61,9 +62,47 @@ export function discoveryFacts(chapters: QuranChapter[]) {
     ayahs: chapters.reduce((sum, chapter) => sum + chapter.ayahCount, 0),
     works: workRegistry.length,
     versions: digitalVersionRegistry.length,
+    /** Editions whose full text is rights-cleared for in-app reading. */
+    readableVersions: digitalVersionRegistry.filter(
+      (version) => version.contentAvailability === "full_text_cleared",
+    ).length,
     seerahChapters: seerahChapters.length,
     hadithSamples: HADITH_DEVELOPMENT_SAMPLES.length,
+    atlasPlaces: ATLAS_COUNTS.nodes,
   };
+}
+
+/**
+ * Recent catalog additions derived from actual registry records — the most
+ * recently verified digital editions and their parent works. Dates are the
+ * registry's own `checkedAt` verification timestamps, never invented
+ * "published" dates; the UI must label them as such.
+ */
+export function recentCatalogAdditions(limit = 4) {
+  const workById = new Map(workRegistry.map((work) => [work.workId, work]));
+  // One entry per work (its most recently verified edition): four editions
+  // of the same book are not four additions.
+  const newestByWork = new Map<string, (typeof digitalVersionRegistry)[number]>();
+  for (const version of [...digitalVersionRegistry].sort((a, b) =>
+    b.checkedAt.localeCompare(a.checkedAt),
+  )) {
+    if (!newestByWork.has(version.workId)) newestByWork.set(version.workId, version);
+  }
+  return [...newestByWork.values()]
+    .sort((a, b) => b.checkedAt.localeCompare(a.checkedAt))
+    .slice(0, limit)
+    .map((version) => {
+      const work = workById.get(version.workId);
+      return {
+        versionId: version.versionId,
+        workId: version.workId,
+        titleAr: work?.titleAr ?? version.openitiUri,
+        titleEn: work?.titleEn ?? version.openitiUri,
+        authorAr: work?.authorAr ?? "",
+        checkedAt: version.checkedAt,
+        path: `/library/work/${encodeURIComponent(version.workId)}`,
+      };
+    });
 }
 
 export type { BasirahRecord, BasirahScope };

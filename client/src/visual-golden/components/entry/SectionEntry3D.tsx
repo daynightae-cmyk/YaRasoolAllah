@@ -81,6 +81,23 @@ function forcedDoorPreference(): "0" | "1" | null {
 }
 
 /**
+ * The shell's splash ceremony owns the first-arrival moment. A wing doorway
+ * must never stack on top of it: while the ceremony is up (or about to be),
+ * the door waits; once the ceremony closes, the doorway may appear.
+ */
+function splashCeremonyActive(): boolean {
+  if (typeof window === "undefined") return false;
+  const query = new URLSearchParams(window.location.search);
+  if (query.get("ceremony") === "0") return false;
+  if (query.get("ceremony") === "1") return true;
+  try {
+    return sessionStorage.getItem("yra-splash") !== "1";
+  } catch {
+    return false;
+  }
+}
+
+/**
  * The door is an entrance, not a toll gate.
  *
  * - `?door=1` replays it on demand; `?door=0` skips it.
@@ -92,7 +109,8 @@ function shouldShowDoor(active: boolean, wing: Wing, reducedMotion: boolean): bo
   if (!active || reducedMotion || typeof window === "undefined") return false;
   const forced = forcedDoorPreference();
   if (forced === "0") return false;
-  if (forced === "1") return true;
+  if (forced === "1") return !splashCeremonyActive();
+  if (splashCeremonyActive()) return false;
   return !hasSeenDoor(wing);
 }
 
@@ -108,6 +126,21 @@ export function SectionEntry3D({
     shouldShowDoor(active, wing, reducedMotion),
   );
   const label = WING_LABELS[wing] ?? WING_LABELS.home;
+
+  // The shell splash may still be up at mount (or forced via ?ceremony=1).
+  // Poll lightly until it closes, then re-evaluate the doorway once — the
+  // door never stacks over the ceremony, and never reappears after entry.
+  useEffect(() => {
+    if (!active || reducedMotion || typeof window === "undefined") return;
+    if (!splashCeremonyActive()) return;
+    const timer = window.setInterval(() => {
+      if (!splashCeremonyActive()) {
+        window.clearInterval(timer);
+        setShowDoor(shouldShowDoor(active, wing, reducedMotion));
+      }
+    }, 400);
+    return () => window.clearInterval(timer);
+  }, [active, reducedMotion, wing]);
 
   const rememberEntry = useCallback(() => {
     try {

@@ -514,7 +514,7 @@
 /* --- Facts Panel --- */
 .facts {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(7, minmax(0, 1fr));
   gap: 0.65rem;
   padding: 0 1.4rem 1.3rem;
 }
@@ -551,6 +551,77 @@
   font-size: 0.7rem;
   color: var(--text-secondary);
   line-height: 1.4;
+}
+
+/* --- Recent verified additions (registry-derived) --- */
+.additions {
+  list-style: none;
+  margin: 0;
+  padding: 0 1.4rem 1.3rem;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+.additions li a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  height: 100%;
+  padding: 0.85rem 0.9rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  transition: border-color var(--duration-base), transform var(--duration-base);
+}
+.additions li a:hover {
+  border-color: var(--border-gold);
+  transform: translateY(-2px);
+}
+.additions strong {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+.additions span {
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+}
+.additions small {
+  margin-top: auto;
+  color: var(--text-muted);
+  font-size: 0.66rem;
+}
+
+/* --- Learning journey (persisted local activity) --- */
+.journeyList {
+  list-style: none;
+  margin: 0;
+  padding: 0 1.4rem 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.journeyList li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.55rem 0.85rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-md);
+  font-size: 0.82rem;
+}
+.journeyList a {
+  color: var(--text-primary);
+  text-decoration: none;
+}
+.journeyList a:hover { color: var(--text-gold); }
+.journeyList small {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  white-space: nowrap;
 }
 
 /* --- Bottom Grid: Continue / Inspire / Quick --- */
@@ -737,6 +808,7 @@
   }
   .gateGrid .gateCard:nth-child(n + 2) { grid-column: span 3; }
   .facts { grid-template-columns: repeat(3, 1fr); }
+  .additions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .bottomGrid { grid-template-columns: 1fr; }
 }
 @media (max-width: 760px) {
@@ -760,6 +832,7 @@
   .heroArch { inset: 0.55rem; }
   .heroSearch { width: 100%; }
   .facts { grid-template-columns: repeat(2, 1fr); }
+  .additions { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 700px) {
   .gateGrid { grid-template-columns: minmax(0, 1fr); }

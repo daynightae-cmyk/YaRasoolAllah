@@ -17,7 +17,9 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
+import { apiUrl } from "@/lib/api-origin";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
+import { SectionEntry3D } from "@/visual-golden/components/entry/SectionEntry3D";
 import {
   readingProgressPercent,
   readingResumeTarget,
@@ -30,7 +32,7 @@ import {
   type DailyVerse,
   type QuranChapter,
 } from "@/services/quranService";
-import { discoveryFacts } from "@/visual-golden/services/discovery";
+import { discoveryFacts, recentCatalogAdditions } from "@/visual-golden/services/discovery";
 import { SEERAH_COUNTS } from "@/visual-golden/services/seerah";
 import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
 import p from "@/visual-golden/components/present/present.module.css";
@@ -98,6 +100,16 @@ const gateways = [
     color: "rose",
   },
   {
+    to: "/audio" as const,
+    title: "ستوديو التلاوات",
+    en: "Recitation Studio",
+    desc: "تلاوات حقيقية من مزوّد موثّق مع تحكم كامل بالاستماع",
+    enDesc: "Real recitations from a governed provider with full playback control",
+    img: worldPlateForWing("audio").plate,
+    icon: Headphones,
+    color: "teal",
+  },
+  {
     to: "/daily" as const,
     title: "محراب اليوم",
     en: "Daily Sanctuary",
@@ -136,10 +148,14 @@ export function HomePage() {
   const [heroQ, setHeroQ] = useState("");
   const [chapters, setChapters] = useState<QuranChapter[]>([]);
   const [daily, setDaily] = useState<DailyVerse | null>(null);
+  // Live reciter count from the governed provider — null until proven, never
+  // a sample statistic. Failure keeps the honest "provider unavailable" state.
+  const [reciterCount, setReciterCount] = useState<number | null>(null);
   const lang = useInstitution((s) => s.lang);
   const favorites = useInstitution((s) => s.favorites);
   const notes = useInstitution((s) => s.notes);
   const visits = useInstitution((s) => s.visits);
+  const journey = useInstitution((s) => s.journey);
   const readingProgress = useInstitution((s) => s.readingProgress);
   const toggleFavorite = useInstitution((s) => s.toggleFavorite);
   const resumeTarget = useMemo(() => readingResumeTarget(readingProgress), [readingProgress]);
@@ -165,12 +181,40 @@ export function HomePage() {
       .catch(() => {
         if (!cancelled) setDaily(null);
       });
+    // Governed recitation availability for surah 1 — the same endpoint and
+    // https/mp3quran filter the audio studio uses. Count only what the
+    // provider actually returned; a failure leaves the count unknown.
+    const controller = new AbortController();
+    fetch(apiUrl("/api/content/audio/reciters?sura=1"), { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return response.json() as Promise<{ reciters?: { streamUrl?: string }[] }>;
+      })
+      .then((data) => {
+        if (cancelled) return;
+        const items = (data.reciters ?? []).filter((item) => {
+          try {
+            const url = new URL(item.streamUrl ?? "");
+            return url.protocol === "https:"
+              && (url.hostname === "mp3quran.net" || url.hostname.endsWith(".mp3quran.net"));
+          } catch {
+            return false;
+          }
+        });
+        setReciterCount(items.length);
+      })
+      .catch(() => {
+        if (!cancelled) setReciterCount(null);
+      });
     return () => {
       cancelled = true;
+      controller.abort();
     };
   }, []);
 
   const facts = discoveryFacts(chapters);
+  const recentAdditions = useMemo(() => recentCatalogAdditions(4), []);
+  const recentJourney = journey.slice(0, 4);
   const recentFavorites = favorites.slice(0, 3);
   const previewFor = (path: (typeof gateways)[number]["to"]) => {
     if (path === "/quran" && facts.surahs)
@@ -178,7 +222,19 @@ export function HomePage() {
     if (path === "/seerah" && facts.seerahChapters)
       return lang === "ar" ? `${facts.seerahChapters} فصلًا سرديًا` : `${facts.seerahChapters} narrative chapters`;
     if (path === "/library" && facts.works)
-      return lang === "ar" ? `${facts.works} عملًا مسجلًا · ${facts.versions} نسخة مفهرسة` : `${facts.works} registered works · ${facts.versions} cataloged editions`;
+      return lang === "ar"
+        ? `${facts.works} عملًا مسجلًا · ${facts.readableVersions} نسخة قابلة للقراءة`
+        : `${facts.works} registered works · ${facts.readableVersions} readable editions`;
+    if (path === "/audio")
+      return reciterCount !== null
+        ? lang === "ar"
+          ? `${reciterCount} تلاوة متاحة الآن من المزوّد`
+          : `${reciterCount} recitations available now from the provider`
+        : lang === "ar"
+          ? "التلاوات تُجلب من المزوّد عند الدخول"
+          : "Recitations are fetched from the provider on entry";
+    if (path === "/atlas" && facts.atlasPlaces)
+      return lang === "ar" ? `${facts.atlasPlaces} موضعًا تخطيطيًا` : `${facts.atlasPlaces} schematic places`;
     if (path === "/hadith" && facts.hadithSamples)
       return lang === "ar" ? `${facts.hadithSamples} عينات محلية قيد المراجعة` : `${facts.hadithSamples} local samples under review`;
     if (path === "/daily" && daily)
@@ -187,6 +243,7 @@ export function HomePage() {
   };
 
   return (
+    <SectionEntry3D wing="home">
     <div className={styles.page}>
       <section className={styles.hero} data-visual="home-gateway" dir="rtl" lang="ar">
         <img className={styles.heroBg} src={art.sceneThreshold} alt="" />
@@ -262,7 +319,7 @@ export function HomePage() {
             </p>
             <SectionHead
               title={lang === "ar" ? "أجنحة المعرفة" : "Knowledge Wings"}
-              en="Eight distinct ways to explore the message"
+              en="Nine distinct ways to explore the message"
             />
           </div>
           <ViewSwitcher value={mode} onChange={setMode} lang={lang} />
@@ -274,7 +331,7 @@ export function HomePage() {
               <Link key={g.to} href={g.to} className={styles.gateCard}>
                 <img src={g.img} alt="" />
                 <div className={styles.gateBody}>
-                  <span className={styles.gateIndex}>{String(i + 1).padStart(2, "0")} / 08</span>
+                  <span className={styles.gateIndex}>{String(i + 1).padStart(2, "0")} / {String(gateways.length).padStart(2, "0")}</span>
                   <h3>{lang === "ar" ? g.title : g.en}</h3>
                   <span className={styles.gateSecondary}>
                     {lang === "ar" ? g.en : g.title}
@@ -298,7 +355,7 @@ export function HomePage() {
               <Link key={g.title} href={g.to} className={styles.gateCard}>
                 <img src={g.img} alt="" />
                 <div className={styles.gateBody}>
-                  <span className={styles.gateIndex}>{String(i + 1).padStart(2, "0")} / 08</span>
+                  <span className={styles.gateIndex}>{String(i + 1).padStart(2, "0")} / {String(gateways.length).padStart(2, "0")}</span>
                   <h3>{lang === "ar" ? g.title : g.en}</h3>
                   <span className={styles.gateSecondary}>
                     {lang === "ar" ? g.en : g.title}
@@ -350,8 +407,8 @@ export function HomePage() {
             <span>عملًا مسجلًا</span>
           </div>
           <div className={styles.fact}>
-            <strong>{facts.versions}</strong>
-            <span>نسخة رقمية فهرسية</span>
+            <strong>{facts.readableVersions}</strong>
+            <span>نسخة قابلة للقراءة</span>
           </div>
           <div className={styles.fact}>
             <strong>{facts.seerahChapters}</strong>
@@ -360,6 +417,10 @@ export function HomePage() {
           <div className={styles.fact}>
             <strong>{facts.hadithSamples}</strong>
             <span>سجلات حديث محلية</span>
+          </div>
+          <div className={styles.fact}>
+            <strong>{reciterCount ?? "—"}</strong>
+            <span>تلاوة متاحة من المزوّد</span>
           </div>
         </div>
       </section>
@@ -480,6 +541,61 @@ export function HomePage() {
         </article>
       </section>
 
+      <section className={styles.section}>
+        <div className={styles.headRow}>
+          <SectionHead
+            title={lang === "ar" ? "أحدث الإضافات الموثقة" : "Latest verified additions"}
+            en="Derived from the digital edition registry — verification dates, not invented publication dates"
+            href="/library"
+          />
+        </div>
+        <ul className={styles.additions} data-visual="home-recent-additions">
+          {recentAdditions.map((item) => (
+            <li key={item.versionId}>
+              <Link href={item.path}>
+                <strong>{lang === "ar" ? item.titleAr : item.titleEn}</strong>
+                <span>{lang === "ar" ? item.authorAr : item.titleEn}</span>
+                <small>
+                  {lang === "ar" ? "توثيق السجل: " : "Registry check: "}
+                  {new Date(item.checkedAt).toLocaleDateString(lang === "ar" ? "ar" : "en-GB", {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </small>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {recentJourney.length > 0 ? (
+        <section className={styles.section}>
+          <SectionHead
+            title={lang === "ar" ? "مسار تعلّمك" : "Your learning journey"}
+            en="Recent activity on this device — private, never a piety score"
+          />
+          <ol className={styles.journeyList} data-visual="home-learning-journey">
+            {recentJourney.map((event) => (
+              <li key={event.id}>
+                {event.path ? (
+                  <Link href={event.path}>{event.label}</Link>
+                ) : (
+                  <span>{event.label}</span>
+                )}
+                <small>
+                  {event.kind === "visit"
+                    ? lang === "ar" ? "زيارة" : "Visit"
+                    : event.kind === "bookmark"
+                      ? lang === "ar" ? "حفظ" : "Saved"
+                      : lang === "ar" ? "ملاحظة" : "Note"}
+                </small>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ) : null}
+
       <footer className={styles.statsBar}>
         <div className={styles.stat}>
           <strong>{Object.keys(visits).length}</strong>
@@ -498,5 +614,6 @@ export function HomePage() {
         </span>
       </footer>
     </div>
+    </SectionEntry3D>
   );
 }
