@@ -140,6 +140,36 @@
   background: radial-gradient(circle at 50% 30%, transparent 35%, rgba(2, 6, 8, 0.35) 90%);
 }
 
+/* --- 3D terrain opt-in entry --- */
+.terrainEnter {
+  position: absolute;
+  inset-inline-start: 0.75rem;
+  top: 0.75rem;
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid rgba(212, 160, 23, 0.5);
+  border-radius: var(--radius-full);
+  background: rgba(6, 12, 16, 0.82);
+  color: #e8c547;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+.terrainEnter:hover {
+  background: rgba(20, 30, 24, 0.92);
+  border-color: rgba(212, 160, 23, 0.8);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .terrainEnter {
+    transition: none;
+  }
+}
+
 /* --- Content surface --- */
 .content {
   position: relative;

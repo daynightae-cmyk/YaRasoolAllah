@@ -122,6 +122,25 @@ function heightFactory(scene: TerrainSceneConfig): (x: number, z: number) => num
       return (x, z) =>
         fbm(x, z) * 1.4 + Math.sin(x * 0.09 + z * 0.05) * 0.55 + Math.max(0, -z - 20) * 0.06;
     }
+    case "settlement": {
+      // Gentle inhabited basin ringed by low rocky rises.
+      return (x, z) => {
+        const rim = Math.max(0, Math.hypot(x, z) - 26) / 12;
+        return fbm(x, z) * 1.5 + rim * rim * 9;
+      };
+    }
+    case "lanes": {
+      // Flat valley floor; the lane walls are geometry, not heightfield.
+      return (x, z) => fbm(x, z) * 0.9 + Math.max(0, Math.abs(x) - 12) * 0.22;
+    }
+    case "mountain-cave": {
+      // Steep massif toward -z with the cave chamber near (10, -18).
+      return (x, z) => {
+        const ridge = Math.max(0, (-z - 2) / 26);
+        const shoulder = Math.exp(-((x - 10) ** 2) / 220) * ridge * 3;
+        return fbm(x, z) * 3 + ridge * ridge * 26 + shoulder;
+      };
+    }
   }
 }
 
@@ -310,6 +329,191 @@ function buildTerrainScene(
     dressingDisposables.push(() => {
       bankGeo.dispose();
       bankMat.dispose();
+    });
+  }
+  if (config.kind === "settlement" || config.kind === "lanes") {
+    // Historically plausible generic dwellings: mud/stone blocks with flat
+    // roofs and timber lintels. No documented house is claimed; no people.
+    const wallMat = new THREE.MeshStandardMaterial({ color: 0x9a7d5c, roughness: 0.97 });
+    const darkMat = new THREE.MeshStandardMaterial({ color: 0x6b5138, roughness: 0.95 });
+    const woodMat = new THREE.MeshStandardMaterial({ color: 0x5a4326, roughness: 1 });
+    const boxGeo = new THREE.BoxGeometry(1, 1, 1);
+    const dwellings: Array<[number, number, number, number, number]> = [];
+    if (config.kind === "settlement") {
+      dwellings.push(
+        [-10, -6, 4, 2.6, 3.4],
+        [-4, -12, 3.4, 2.2, 3],
+        [6, -8, 4.4, 2.8, 3.6],
+        [12, -14, 3.2, 2.2, 2.8],
+        [-14, 6, 3.6, 2.4, 3.2],
+        [8, 4, 3.8, 2.5, 3.4],
+        [0, -18, 5, 3, 4],
+        [-8, 14, 3.2, 2.2, 3],
+      );
+    } else {
+      // Lane walls: two staggered rows forming a narrow winding passage.
+      for (let i = 0; i < 7; i += 1) {
+        const z = 18 - i * 6;
+        const wobble = Math.sin(i * 1.7) * 1.4;
+        dwellings.push([-6 + wobble, z, 3.6, 3.4 + (i % 3) * 0.5, 5.2]);
+        dwellings.push([6 - wobble, z - 2.5, 3.8, 3.1 + ((i + 1) % 3) * 0.6, 5.4]);
+      }
+    }
+    for (const [dx, dz, w, h, d] of dwellings) {
+      const body = new THREE.Mesh(boxGeo, wallMat);
+      body.scale.set(w, h, d);
+      body.position.set(dx, height(dx, dz) + h / 2, dz);
+      const parapet = new THREE.Mesh(boxGeo, darkMat);
+      parapet.scale.set(w + 0.3, 0.35, d + 0.3);
+      parapet.position.set(dx, height(dx, dz) + h + 0.17, dz);
+      const door = new THREE.Mesh(boxGeo, darkMat);
+      door.scale.set(0.9, 1.6, 0.15);
+      door.position.set(dx, height(dx, dz) + 0.8, dz + d / 2 + 0.06);
+      const lintel = new THREE.Mesh(boxGeo, woodMat);
+      lintel.scale.set(1.2, 0.18, 0.25);
+      lintel.position.set(dx, height(dx, dz) + 1.72, dz + d / 2 + 0.1);
+      for (const mesh of [body, parapet, door, lintel]) {
+        mesh.castShadow = context.shadowsEnabled;
+        scene3.add(mesh);
+      }
+    }
+    dressingDisposables.push(() => {
+      boxGeo.dispose();
+      wallMat.dispose();
+      darkMat.dispose();
+      woodMat.dispose();
+    });
+    // Palms around settlements (generic oasis vegetation).
+    const trunkGeo = new THREE.CylinderGeometry(0.14, 0.22, 3.4, 5);
+    const trunkMat = new THREE.MeshStandardMaterial({ color: 0x5a4326, roughness: 1 });
+    const frondGeo = new THREE.ConeGeometry(1.5, 1.1, 6);
+    const frondMat = new THREE.MeshStandardMaterial({ color: 0x2e5d34, roughness: 0.9 });
+    const palmCount = context.graphicsTier === "low" ? 14 : 26;
+    const trunks = new THREE.InstancedMesh(trunkGeo, trunkMat, palmCount);
+    const fronds = new THREE.InstancedMesh(frondGeo, frondMat, palmCount);
+    for (let i = 0; i < palmCount; i += 1) {
+      const angle = random() * Math.PI * 2;
+      const radius = 10 + random() * 18;
+      const x = Math.cos(angle) * radius;
+      const z = Math.sin(angle) * radius;
+      const y = height(x, z);
+      const lean = (random() - 0.5) * 0.16;
+      euler.set(lean, random() * Math.PI, lean);
+      quat.setFromEuler(euler);
+      matrix.compose(new THREE.Vector3(x, y + 1.7, z), quat, new THREE.Vector3(1, 0.85 + random() * 0.4, 1));
+      trunks.setMatrixAt(i, matrix);
+      matrix.compose(new THREE.Vector3(x, y + 3.6, z), quat, new THREE.Vector3(1, 1, 1));
+      fronds.setMatrixAt(i, matrix);
+    }
+    trunks.castShadow = context.shadowsEnabled;
+    scene3.add(trunks, fronds);
+    dressingDisposables.push(() => {
+      trunkGeo.dispose();
+      trunkMat.dispose();
+      frondGeo.dispose();
+      frondMat.dispose();
+    });
+    if (config.kind === "lanes") {
+      // Simple market awnings: timber posts + fabric canopy (generic stalls).
+      const postGeo = new THREE.CylinderGeometry(0.07, 0.09, 2.1, 5);
+      const canopyGeo = new THREE.BoxGeometry(2.6, 0.08, 1.8);
+      const canopyMat = new THREE.MeshStandardMaterial({ color: 0x8a4f2e, roughness: 0.92 });
+      const stalls: Array<[number, number]> = [
+        [3, 2],
+        [-3, -4],
+        [2.5, -9],
+      ];
+      for (const [sx, sz] of stalls) {
+        const y = height(sx, sz);
+        const canopy = new THREE.Mesh(canopyGeo, canopyMat);
+        canopy.position.set(sx, y + 2.1, sz);
+        canopy.rotation.z = 0.06;
+        scene3.add(canopy);
+        for (const ox of [-1.1, 1.1]) {
+          for (const oz of [-0.7, 0.7]) {
+            const post = new THREE.Mesh(postGeo, woodMat);
+            post.position.set(sx + ox, y + 1.05, sz + oz);
+            scene3.add(post);
+          }
+        }
+      }
+      dressingDisposables.push(() => {
+        postGeo.dispose();
+        canopyGeo.dispose();
+        canopyMat.dispose();
+      });
+    }
+    if (config.eventId === "arrival-madinah") {
+      // First-mosque idea: open courtyard with palm-trunk columns and a
+      // frond roof on one side — the sources' description, artistically.
+      const colGeo = new THREE.CylinderGeometry(0.16, 0.2, 2.6, 6);
+      const roofGeo = new THREE.BoxGeometry(8, 0.25, 4);
+      const roofMat = new THREE.MeshStandardMaterial({ color: 0x4c6b35, roughness: 1 });
+      const courtX = -10;
+      const courtZ = -10;
+      const y0 = height(courtX, courtZ);
+      for (let cx = 0; cx < 4; cx += 1) {
+        for (let cz = 0; cz < 2; cz += 1) {
+          const col = new THREE.Mesh(colGeo, trunkMat);
+          col.position.set(courtX - 3 + cx * 2, y0 + 1.3, courtZ - 1.4 + cz * 2.8);
+          col.castShadow = context.shadowsEnabled;
+          scene3.add(col);
+        }
+      }
+      const roof = new THREE.Mesh(roofGeo, roofMat);
+      roof.position.set(courtX, y0 + 2.75, courtZ);
+      roof.castShadow = context.shadowsEnabled;
+      scene3.add(roof);
+      dressingDisposables.push(() => {
+        colGeo.dispose();
+        roofGeo.dispose();
+        roofMat.dispose();
+      });
+    }
+  }
+  if (config.kind === "mountain-cave") {
+    // Cave chamber near (10, -18): rock shell with an opening facing +z.
+    const caveMat = new THREE.MeshStandardMaterial({ color: rockC.clone().multiplyScalar(0.7), roughness: 1, side: THREE.DoubleSide });
+    const chamberGeo = new THREE.SphereGeometry(3.4, 18, 12, 0, Math.PI * 2, 0, Math.PI * 0.62);
+    const cx = 10;
+    const cz = -18;
+    const cy = height(cx, cz);
+    const chamber = new THREE.Mesh(chamberGeo, caveMat);
+    chamber.position.set(cx, cy + 0.4, cz);
+    chamber.scale.set(1.15, 0.85, 1.25);
+    scene3.add(chamber);
+    // Boulder lips framing the mouth (opening toward +z where the lookout is).
+    const lipGeo = new THREE.DodecahedronGeometry(1.4, 0);
+    const lips: Array<[number, number, number]> = [
+      [cx - 2.6, cy + 1, cz + 3.2],
+      [cx + 2.6, cy + 1.2, cz + 3.2],
+      [cx, cy + 3.1, cz + 3.4],
+      [cx - 3.4, cy + 0.6, cz + 1],
+      [cx + 3.4, cy + 0.8, cz + 1],
+    ];
+    for (const [lx, ly, lz] of lips) {
+      const lip = new THREE.Mesh(lipGeo, caveMat);
+      lip.position.set(lx, ly, lz);
+      lip.rotation.set(random() * 3, random() * 3, random() * 3);
+      lip.castShadow = context.shadowsEnabled;
+      scene3.add(lip);
+    }
+    // Stepping stones up the approach path (artistic, not the actual route).
+    const stepGeo = new THREE.BoxGeometry(1.6, 0.22, 1.1);
+    for (let i = 0; i < 9; i += 1) {
+      const t = i / 8;
+      const sx = 1 + t * 8;
+      const sz = 16 - t * 28;
+      const step = new THREE.Mesh(stepGeo, caveMat);
+      step.position.set(sx, height(sx, sz) + 0.12, sz);
+      step.rotation.y = (random() - 0.5) * 0.4;
+      scene3.add(step);
+    }
+    dressingDisposables.push(() => {
+      chamberGeo.dispose();
+      lipGeo.dispose();
+      stepGeo.dispose();
+      caveMat.dispose();
     });
   }
   context.registerDisposable(() => {

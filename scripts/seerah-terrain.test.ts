@@ -16,9 +16,13 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   getTerrainScene,
+  getChapterTerrainScene,
   listTerrainScenes,
+  listBattleTerrainScenes,
+  listChapterTerrainScenes,
 } from "../client/src/visual-golden/services/seerah-terrain";
 import { listGhazawatScenes } from "../client/src/visual-golden/services/seerah-ghazawat";
+import { listSeerahScenes } from "../client/src/visual-golden/services/seerah-scene";
 import { eventWorldPlate } from "../client/src/visual-golden/services/seerah-worlds";
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -29,13 +33,36 @@ describe("seerah terrain registry", () => {
     const plateless = listGhazawatScenes()
       .filter((scene) => eventWorldPlate(scene.eventId) === null)
       .map((scene) => scene.eventId);
-    const terrains = listTerrainScenes().map((scene) => scene.eventId);
+    const terrains = listBattleTerrainScenes().map((scene) => scene.eventId);
     assert.deepEqual([...terrains].sort(), [...plateless].sort());
     // The five known schematic-fallback battles.
     assert.deepEqual(
       [...terrains].sort(),
       ["hunayn", "khandaq", "khaybar", "tabuk", "uhud"],
     );
+  });
+
+  it("opens every canonical chapter with a distinct observer environment", () => {
+    const chapters = listSeerahScenes().map((scene) => scene.chapterId);
+    // Every chapter has an opening terrain; ids are canonical and unique.
+    for (const chapterId of chapters) {
+      const scene = getChapterTerrainScene(chapterId);
+      assert.ok(scene, `chapter ${chapterId} needs an observer environment`);
+      assert.equal(scene.chapterId, chapterId);
+      assert.ok(getTerrainScene(scene.eventId), "chapter scene must resolve by event id too");
+    }
+    const openingIds = chapters.map((chapterId) => getChapterTerrainScene(chapterId)!.eventId);
+    assert.equal(new Set(openingIds).size, chapters.length, "one distinct opening scene per chapter");
+    const eventIds = listChapterTerrainScenes().map((scene) => scene.eventId);
+    assert.equal(new Set(eventIds).size, eventIds.length, "scene event ids must be unique");
+    // Directive destinations: Makkah, Hira cave, Thawr cave, lanes, hijrah
+    // route, Quba, Madinah, Badr, Fath Makkah, Arafat.
+    const kinds = new Set(listChapterTerrainScenes().map((scene) => scene.kind));
+    assert.ok(kinds.has("settlement"));
+    assert.ok(kinds.has("lanes"));
+    assert.ok(kinds.has("mountain-cave"));
+    assert.equal(getChapterTerrainScene("prophethood-beginning")?.kind, "mountain-cave");
+    assert.equal(getChapterTerrainScene("nonexistent"), null);
   });
 
   it("keeps every scene honest, navigable and deterministic", () => {
@@ -59,7 +86,8 @@ describe("seerah terrain registry", () => {
         assert.match(scene[key], /^#[0-9a-fA-F]{6}$/, `${scene.eventId}.${key}`);
       }
     }
-    assert.equal(getTerrainScene("badr"), null, "plated events keep their cinematic plate");
+    // Badr's cinematic plate stays the default; its terrain opens the chapter.
+    assert.equal(getTerrainScene("badr")?.chapterId, "battles-conquests");
     assert.equal(getTerrainScene("nonexistent"), null);
   });
 });
@@ -94,6 +122,10 @@ describe("terrain theatre engine contract", () => {
     assert.match(theatre, /context\.motion === "reduced"/);
     // No people/combat anywhere in the scene builder.
     assert.doesNotMatch(theatre, /soldier|combatant|fighter|avatar/i);
+    // All three new terrain families are built as real geometry.
+    assert.match(theatre, /config\.kind === "settlement"/);
+    assert.match(theatre, /config\.kind === "lanes"/);
+    assert.match(theatre, /config\.kind === "mountain-cave"/);
   });
 
   it("mounts lazily inside GhazawatEnvironment with a plate fallback", () => {
@@ -107,5 +139,16 @@ describe("terrain theatre engine contract", () => {
     assert.match(env, /scene\.disclosureAr/);
     const css = read("client/src/visual-golden/components/seerah/TerrainTheatre3D.module.css");
     assert.match(css, /prefers-reduced-motion/);
+  });
+
+  it("mounts lazily inside ChapterEnvironment with a plate fallback", () => {
+    const env = read("client/src/visual-golden/components/seerah/ChapterEnvironment.tsx");
+    assert.match(env, /lazy\(\(\) =>\s*import\("\.\/TerrainTheatre3D"\)/);
+    assert.match(env, /getChapterTerrainScene\(scene\.chapterId\)/);
+    assert.match(env, /onUnavailable/);
+    assert.match(env, /data-visual="seerah-chapter-terrain-enter"/);
+    // The cinematic/schematic plate path stays intact as default and fallback.
+    assert.match(env, /chapterWorldPlate\(scene\.chapterId\)/);
+    assert.match(env, /scene\.disclosureAr/);
   });
 });
