@@ -1,13 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   BookOpen,
+  Bookmark,
   ChevronLeft,
   ChevronRight,
+  Copy,
   Download,
   ExternalLink,
   FileText,
   Headphones,
   Minus,
+  NotebookPen,
   Plus,
   Search,
   ShieldCheck,
@@ -126,6 +129,9 @@ function normalize(value: string) {
 
 export function CatalogReadingChamber({ work, onClose }: Props) {
   const lang = useInstitution((state) => state.lang);
+  const favorites = useInstitution((state) => state.favorites);
+  const toggleFavorite = useInstitution((state) => state.toggleFavorite);
+  const addNote = useInstitution((state) => state.addNote);
   const title = displayTitle(work, lang);
   const author = displayAuthor(work, lang);
   const governedVersion = getGovernedReaderVersion(work);
@@ -151,8 +157,14 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
   const [hydratedWorkId, setHydratedWorkId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [fontScale, setFontScale] = useState(1);
+  const [noteDraft, setNoteDraft] = useState("");
+  const [noteOpen, setNoteOpen] = useState(false);
+  const [citationCopied, setCitationCopied] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const favoriteId = `library:${work.id}`;
+  const isFavorite = favorites.some((favorite) => favorite.id === favoriteId);
+  const workPath = `/library/work/${encodeURIComponent(work.id)}`;
 
   useEffect(() => {
     // Focus went into the dialog, so it has to come back out. Previously the
@@ -177,6 +189,9 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
     setPage(1);
     setMode("details");
     setReader({ state: "idle" });
+    setNoteDraft("");
+    setNoteOpen(false);
+    setCitationCopied(false);
   }, [work.id]);
 
   useEffect(() => {
@@ -230,6 +245,55 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
   const pageSegments = matchedSegments.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
   const spokenText = pageSegments.map((segment) => segment.text).join("\n\n");
 
+  // Citation is built only from established record fields — never an invented
+  // editor, publisher, or print page number. Digital segment numbering is
+  // labeled as such, matching the reader's own honesty notice.
+  const citationText = useMemo(() => {
+    const versionLine = reader.state === "ready"
+      ? lang === "ar"
+        ? `النسخة الرقمية: ${reader.document.version.versionId} (OpenITI، إصدار مثبت ${reader.document.version.releaseCommit.slice(0, 12)})`
+        : `Digital version: ${reader.document.version.versionId} (OpenITI, pinned release ${reader.document.version.releaseCommit.slice(0, 12)})`
+      : governedVersion
+        ? lang === "ar"
+          ? `النسخة الرقمية: ${governedVersion.versionId} (OpenITI)`
+          : `Digital version: ${governedVersion.versionId} (OpenITI)`
+        : "";
+    const positionLine = reader.state === "ready"
+      ? lang === "ar"
+        ? `الموضع: صفحة رقمية ${currentPage} (ترقيم مقاطع، ليس صفحات طبعة)`
+        : `Position: digital page ${currentPage} (segment numbering, not print pages)`
+      : "";
+    return [
+      `${title}${author ? ` — ${author}` : ""}`,
+      versionLine,
+      positionLine,
+      reader.state === "ready" ? reader.document.version.sourceUrl : work.sourceUrl ?? "",
+    ].filter(Boolean).join("\n");
+  }, [author, currentPage, governedVersion, lang, reader, title, work.sourceUrl]);
+
+  const copyCitation = async () => {
+    try {
+      await navigator.clipboard.writeText(citationText);
+      setCitationCopied(true);
+      window.setTimeout(() => setCitationCopied(false), 2200);
+    } catch {
+      // Clipboard may be unavailable (permissions/insecure context); the
+      // citation remains visible in the note panel for manual copying.
+      setNoteOpen(true);
+    }
+  };
+
+  const saveNote = () => {
+    const body = noteDraft.trim();
+    if (!body) return;
+    const position = reader.state === "ready"
+      ? lang === "ar" ? `صفحة رقمية ${currentPage}` : `digital page ${currentPage}`
+      : lang === "ar" ? "غرفة القراءة" : "reading chamber";
+    addNote(`${title} · ${position}`, `${body}\n\n${citationText}`);
+    setNoteDraft("");
+    setNoteOpen(false);
+  };
+
   const copy = lang === "ar" ? {
     details: "الكتاب",
     text: "قراءة",
@@ -248,6 +312,14 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
     previous: "السابق",
     next: "التالي",
     listen: "استمع إلى النص الحالي",
+    save: "حفظ في المفضلة",
+    saved: "محفوظ في المفضلة",
+    note: "ملاحظة على هذا الموضع",
+    notePlaceholder: "اكتب ملاحظتك… تُحفظ محليًا على هذا الجهاز باسم الكتاب والموضع.",
+    noteSave: "حفظ الملاحظة",
+    noteCancel: "إلغاء",
+    cite: "نسخ الاستشهاد",
+    cited: "نُسخ الاستشهاد",
   } : {
     details: "Book",
     text: "Read",
@@ -266,6 +338,14 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
     previous: "Previous",
     next: "Next",
     listen: "Listen to the current text",
+    save: "Save to favorites",
+    saved: "Saved to favorites",
+    note: "Note on this position",
+    notePlaceholder: "Write your note… stored locally on this device with the book and position.",
+    noteSave: "Save note",
+    noteCancel: "Cancel",
+    cite: "Copy citation",
+    cited: "Citation copied",
   };
 
   return (
@@ -284,9 +364,21 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
             <strong>{title}</strong>
             <small>{author}</small>
           </div>
-          <button ref={closeRef} type="button" onClick={onClose} aria-label={lang === "ar" ? "إغلاق" : "Close"}>
-            <X size={17} />
-          </button>
+          <div className={styles.headerActions}>
+            <button
+              type="button"
+              data-visual="library-reader-favorite"
+              aria-pressed={isFavorite}
+              aria-label={isFavorite ? copy.saved : copy.save}
+              title={isFavorite ? copy.saved : copy.save}
+              onClick={() => toggleFavorite({ id: favoriteId, title, path: workPath })}
+            >
+              <Bookmark size={16} fill={isFavorite ? "currentColor" : "none"} />
+            </button>
+            <button ref={closeRef} type="button" onClick={onClose} aria-label={lang === "ar" ? "إغلاق" : "Close"}>
+              <X size={17} />
+            </button>
+          </div>
         </header>
 
         <nav className={styles.tabs} role="tablist" aria-label={lang === "ar" ? "أوضاع الكتاب" : "Book modes"}>
@@ -369,7 +461,34 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
                     <button type="button" aria-label={lang === "ar" ? "تصغير الخط" : "Decrease text size"} onClick={() => setFontScale((value) => Math.max(.9, value - .05))}><Minus size={14} /></button>
                     <span>{Math.round(fontScale * 100)}%</span>
                     <button type="button" aria-label={lang === "ar" ? "تكبير الخط" : "Increase text size"} onClick={() => setFontScale((value) => Math.min(1.4, value + .05))}><Plus size={14} /></button>
+                    <button
+                      type="button"
+                      data-visual="library-reader-note"
+                      aria-expanded={noteOpen}
+                      onClick={() => setNoteOpen((value) => !value)}
+                    >
+                      <NotebookPen size={14} /> {copy.note}
+                    </button>
+                    <button type="button" data-visual="library-reader-cite" onClick={copyCitation}>
+                      <Copy size={14} /> {citationCopied ? copy.cited : copy.cite}
+                    </button>
                   </div>
+                  {noteOpen ? (
+                    <div className={styles.notePanel} data-visual="library-reader-note-panel">
+                      <textarea
+                        value={noteDraft}
+                        onChange={(event) => setNoteDraft(event.target.value)}
+                        placeholder={copy.notePlaceholder}
+                        aria-label={copy.note}
+                        rows={3}
+                      />
+                      <pre className={styles.citationPreview}>{citationText}</pre>
+                      <div className={styles.noteActions}>
+                        <button type="button" disabled={!noteDraft.trim()} onClick={saveNote}>{copy.noteSave}</button>
+                        <button type="button" onClick={() => setNoteOpen(false)}>{copy.noteCancel}</button>
+                      </div>
+                    </div>
+                  ) : null}
                   <div className={styles.readerIdentity}>
                     <strong>{lang === "ar" ? "قراءة داخلية" : "In-app reading"} · OpenITI</strong>
                     <span>
