@@ -53,6 +53,8 @@ interface InstitutionState {
   notifyPrayers: string[];
   notifySound: boolean;
   ambientEnabled: boolean;
+  /** Persisted tasbih session — private tracking, never a piety score. */
+  tasbih: { count: number; dhikr: string };
   locationId: string;
   customLocation: PrayerLocation | null;
   calc: PrayerCalculationSettings;
@@ -69,6 +71,7 @@ interface InstitutionState {
   recordReadingProgress: (entry: ReadingProgressInput) => void;
   setNotify: (patch: Partial<Pick<InstitutionState, "notifyLeadMin" | "notifyPrayers" | "notifySound">>) => void;
   setAmbientEnabled: (enabled: boolean) => void;
+  setTasbih: (patch: Partial<{ count: number; dhikr: string }> | ((current: { count: number; dhikr: string }) => Partial<{ count: number; dhikr: string }>)) => void;
   setLocation: (loc: PrayerLocation) => void;
   setCalc: (patch: Partial<PrayerCalculationSettings>) => void;
 }
@@ -94,6 +97,8 @@ function save() {
     recordVisit: _recordVisit,
     recordReadingProgress: _recordReadingProgress,
     setNotify: _setNotify,
+    setAmbientEnabled: _setAmbientEnabled,
+    setTasbih: _setTasbih,
     setLocation: _setLocation,
     setCalc: _setCalc,
     ...persisted
@@ -191,6 +196,18 @@ function sanitizeNotifyLead(value: unknown): 5 | 10 | 15 | 30 {
   return value === 5 || value === 10 || value === 15 || value === 30 ? value : 10;
 }
 
+function sanitizeTasbih(value: unknown): { count: number; dhikr: string } {
+  const fallback = { count: 0, dhikr: "سبحان الله" };
+  if (!value || typeof value !== "object" || Array.isArray(value)) return fallback;
+  const raw = value as { count?: unknown; dhikr?: unknown };
+  const count =
+    typeof raw.count === "number" && Number.isFinite(raw.count) && raw.count >= 0
+      ? Math.min(Math.floor(raw.count), 999999)
+      : fallback.count;
+  const dhikr = typeof raw.dhikr === "string" && raw.dhikr.trim().length > 0 ? raw.dhikr.slice(0, 80) : fallback.dhikr;
+  return { count, dhikr };
+}
+
 function hydrateState(raw: string | null): void {
   if (!raw) {
     state = { ...state, hydrated: true };
@@ -235,6 +252,7 @@ function hydrateState(raw: string | null): void {
       notifyPrayers,
       notifySound: typeof parsed.notifySound === "boolean" ? parsed.notifySound : state.notifySound,
       ambientEnabled: typeof parsed.ambientEnabled === "boolean" ? parsed.ambientEnabled : state.ambientEnabled,
+      tasbih: sanitizeTasbih(parsed.tasbih),
       locationId,
       customLocation,
       calc,
@@ -314,6 +332,16 @@ const actions = {
   setAmbientEnabled(enabled: boolean) {
     patch({ ambientEnabled: enabled });
   },
+  setTasbih(
+    tasbihPatch:
+      | Partial<{ count: number; dhikr: string }>
+      | ((current: { count: number; dhikr: string }) => Partial<{ count: number; dhikr: string }>),
+  ) {
+    // Resolve against live state, not the render closure: rapid taps must
+    // accumulate instead of overwriting each other with stale counts.
+    const resolved = typeof tasbihPatch === "function" ? tasbihPatch(state.tasbih) : tasbihPatch;
+    patch({ tasbih: sanitizeTasbih({ ...state.tasbih, ...resolved }) });
+  },
   setLocation(loc: PrayerLocation) {
     const known = findLocation(loc.id);
     const recents = [loc.id, ...state.recentLocationIds.filter((id) => id !== loc.id)].slice(0, 6);
@@ -345,6 +373,7 @@ state = {
   notifyPrayers: ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"],
   notifySound: false,
   ambientEnabled: false,
+  tasbih: { count: 0, dhikr: "سبحان الله" },
   locationId: "ae-auh",
   customLocation: null,
   calc: { method: 8, school: 0, highLatitude: "auto" },

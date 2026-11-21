@@ -25,8 +25,15 @@ const quick = ["سبحان الله", "الحمد لله", "الله أكبر", 
 
 export function DailyPage() {
   const lang = useInstitution((s) => s.lang);
-  const [count, setCount] = useState(33);
-  const [dhikr, setDhikr] = useState("سبحان الله");
+  const tasbih = useInstitution((s) => s.tasbih);
+  const setTasbih = useInstitution((s) => s.setTasbih);
+  const count = tasbih.count;
+  const dhikr = tasbih.dhikr;
+  // Functional updates resolve against live store state so rapid taps
+  // accumulate rather than overwriting each other with a stale render count.
+  const setCount = (next: number | ((c: number) => number)) =>
+    setTasbih(typeof next === "function" ? (current) => ({ count: next(current.count) }) : { count: next });
+  const setDhikr = (next: string) => setTasbih({ dhikr: next });
   const [hour, setHour] = useState(3);
   const wash = hour <= 1 ? p.dawn : hour <= 3 ? p.noon : hour <= 5 ? p.dusk : p.night;
 
