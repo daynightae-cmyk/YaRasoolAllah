@@ -18,9 +18,10 @@ const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (path: string) => readFileSync(join(repoRoot, path), "utf8");
 
 describe("quran sanctuary registry", () => {
-  it("exposes one governed sanctuary scene with four linked stations", () => {
+  it("exposes the governed sanctuary scene with four linked stations", () => {
     const scenes = listInteriorScenes();
-    assert.equal(scenes.length, 1);
+    assert.ok(scenes.length >= 1);
+    assert.ok(scenes.some((entry) => entry.sceneId === "quran-sanctuary"));
     const scene = getInteriorScene("quran-sanctuary");
     assert.ok(scene);
     assert.equal(scene.kind, "sanctuary");

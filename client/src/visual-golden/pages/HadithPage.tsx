@@ -1,12 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
-import { Search, Bookmark, BookmarkCheck, ExternalLink, ShieldCheck, Database, Copy, Link2, Check, ScrollText, NotebookPen } from "lucide-react";
+import { Search, Bookmark, BookmarkCheck, ExternalLink, ShieldCheck, Database, Copy, Link2, Check, ScrollText, NotebookPen, Boxes, Lamp } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
 import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import { IsnadChain } from "@/visual-golden/components/unique/IsnadChain";
+import { getInteriorScene } from "@/visual-golden/services/interior-scenes";
 import p from "@/visual-golden/components/present/present.module.css";
 import {
   COLLECTIONS,
@@ -21,6 +22,14 @@ import {
   type HadithCorpusStatus,
 } from "@/visual-golden/services/hadith";
 import styles from "./HadithPage.module.css";
+
+// Three.js stays out of the initial chunk: the archive loads only when the
+// visitor opts into the immersive study environment (directive §4.F).
+const HadithArchive3D = lazy(() =>
+  import("@/visual-golden/components/hadith/HadithArchive3D").then((module) => ({
+    default: module.HadithArchive3D,
+  })),
+);
 
 type CopyState = "idle" | "copied" | "error";
 type CorpusState =
@@ -114,6 +123,9 @@ export function HadithPage() {
   const [corpusState, setCorpusState] = useState<CorpusState>({ state: "loading" });
   const [noteOpen, setNoteOpen] = useState(false);
   const [noteDraft, setNoteDraft] = useState("");
+  const [archiveOpen, setArchiveOpen] = useState(false);
+  const [archiveFailed, setArchiveFailed] = useState(false);
+  const [archiveLamp, setArchiveLamp] = useState(true);
   const recordReadingProgress = useInstitution((state) => state.recordReadingProgress);
   const addNote = useInstitution((state) => state.addNote);
 
@@ -218,9 +230,88 @@ export function HadithPage() {
     setNoteOpen(false);
   };
 
+  const archiveScene = useMemo(() => getInteriorScene("hadith-archive"), []);
+  const archiveAvailable = !!archiveScene && !archiveFailed;
+  const showArchive = archiveOpen && archiveAvailable;
+
   return (
     <div className={styles.page}>
-      <PageHero
+      {showArchive && archiveScene ? (
+        <Suspense fallback={<div className={styles.archiveLoading} role="status">جارٍ تهيئة دار الحديث ثلاثية الأبعاد…</div>}>
+          <HadithArchive3D
+            scene={archiveScene}
+            lampOn={archiveLamp}
+            onExit={() => setArchiveOpen(false)}
+            onUnavailable={() => {
+              setArchiveFailed(true);
+              setArchiveOpen(false);
+            }}
+            overlay={
+              <div className={styles.archiveCard} data-visual="hadith-archive-record">
+                {active && activeCollection ? (
+                  <>
+                    <div className={styles.archiveCardHead}>
+                      <strong>
+                        {activeCollection.nameAr} · حديث {active.hadithNumber}
+                      </strong>
+                      <span className={styles.archiveSample}>عينة تطوير — قيد المراجعة التحريرية</span>
+                    </div>
+                    <p className={styles.archiveMatn} dir="rtl" lang="ar">
+                      {active.textAr}
+                    </p>
+                    <p className={styles.archiveMeta}>
+                      {active.bookNameAr} · {active.chapterNameAr} · الراوي: {active.narratorAr}
+                    </p>
+                    <p className={styles.archiveMeta}>
+                      الدرجة: {active.gradeAr} · المصدر: {active.gradeSource}
+                    </p>
+                    <div className={styles.archiveRecords} role="tablist" aria-label="السجلات المحلية">
+                      {results.map((sample) => (
+                        <button
+                          key={sample.id}
+                          type="button"
+                          role="tab"
+                          aria-selected={sample.id === active.id}
+                          className={sample.id === active.id ? styles.archiveRecordOn : ""}
+                          onClick={() => setActiveId(sample.id)}
+                        >
+                          {getCollection(sample.collectionId)?.nameAr} · {sample.hadithNumber}
+                        </button>
+                      ))}
+                    </div>
+                    <div className={styles.archiveCardTools}>
+                      <button type="button" className={activeBookmarked ? styles.archiveToolOn : ""} onClick={toggleBookmark}>
+                        {activeBookmarked ? <BookmarkCheck size={13} aria-hidden /> : <Bookmark size={13} aria-hidden />}
+                        {activeBookmarked ? "محفوظ" : "حفظ"}
+                      </button>
+                      <button type="button" onClick={copyMatn} aria-live="polite">
+                        {matnCopy === "copied" ? <Check size={13} aria-hidden /> : <Copy size={13} aria-hidden />}
+                        {matnCopy === "copied" ? "تم النسخ" : "نسخ المتن"}
+                      </button>
+                      <button
+                        type="button"
+                        className={archiveLamp ? styles.archiveToolOn : ""}
+                        onClick={() => setArchiveLamp((value) => !value)}
+                      >
+                        <Lamp size={13} aria-hidden /> {archiveLamp ? "إطفاء المصباح" : "إضاءة المصباح"}
+                      </button>
+                      <a href="https://dorar.net/hadith" target="_blank" rel="noopener noreferrer">
+                        البحث والتحقق <ExternalLink size={12} aria-hidden />
+                      </a>
+                      <button type="button" onClick={() => setArchiveOpen(false)}>
+                        الأرشيف الكامل والفهرس
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <p className={styles.archiveMeta}>لا توجد سجلات محلية مطابقة للبحث الحالي.</p>
+                )}
+              </div>
+            }
+          />
+        </Suspense>
+      ) : (
+        <PageHero
         title="دار الحديث"
         subtitle={`ARCHIVE · ${HADITH_COUNTS.collections} مصنفات ببليوغرافية · ${HADITH_COUNTS.localSamples} سجلات محلية`}
         desc="أرشيف يفرّق بين بيانات المصنفات الببليوغرافية والسجلات التطويرية المحلية — العدد الكلي للمصنف ليس حجم المتن المحلي"
@@ -259,6 +350,19 @@ export function HadithPage() {
           ))}
         </div>
       </PageHero>
+      )}
+
+      {archiveAvailable && !showArchive ? (
+        <button
+          type="button"
+          className={styles.archiveEnter}
+          data-visual="hadith-archive-enter"
+          onClick={() => setArchiveOpen(true)}
+        >
+          <Boxes size={15} aria-hidden />
+          ادخل دار الحديث ثلاثية الأبعاد — دراسة وتخريج
+        </button>
+      ) : null}
 
       {initial.invalidRequestedSample ? (
         <p className="muted" role="status" style={{ margin: "0.8rem 1.3rem 0", fontSize: "0.8rem" }}>
@@ -266,6 +370,9 @@ export function HadithPage() {
         </p>
       ) : null}
 
+      {/* The full archive stays mounted while the 3D study room is open;
+          it is only visually hidden (state, search and notes keep working). */}
+      <div className={showArchive ? styles.archiveHidden : undefined}>
       <section className={styles.pad}>
         <SectionHead title="المصنفات الببليوغرافية" en="Collection Metadata — not local corpus" href="/library" />
         <div className={`${styles.grid} stagger`}>
@@ -475,6 +582,7 @@ export function HadithPage() {
             رابط الدرر السنية يفتح المصدر الخارجي للبحث والتحقق، ولا يعني اعتماد نص العينة المحلية أو درجتها.
           </p>
         </article>
+      </div>
       </div>
     </div>
   );

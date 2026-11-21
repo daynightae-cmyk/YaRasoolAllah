@@ -10,7 +10,7 @@
  * Sanctuary3D is now a thin sanctuary-specific furnishing over this shell.
  */
 
-import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight, Compass, LogOut, RotateCcw } from "lucide-react";
 import { ThreeRuntime } from "@/visual-golden/components/three/three-runtime";
 import {
@@ -70,6 +70,11 @@ export function InteriorScene3D({
   const initialLampRef = useRef(lampOn);
   const furnishRef = useRef(furnish);
   furnishRef.current = furnish;
+  // Authoritative motion for imperative travel calls — React state may lag
+  // a media-query flip by a render, and a stale "full" would start an eased
+  // travel (disabling the rail) right as reduced motion takes effect.
+  const motionRef = useRef(effectiveMotion);
+  motionRef.current = effectiveMotion;
 
   useEffect(() => {
     const host = hostRef.current;
@@ -84,11 +89,15 @@ export function InteriorScene3D({
         build: (context) => {
           const handle = buildInteriorRoom(context, config, initialLampRef.current, {
             onNodeArrive: (nodeId) => {
+              // Bounded diagnostics: station arrivals for browser evidence.
+              host.dataset.arrived = nodeId;
               if (disposed) return;
               const index = config.nodes.findIndex((node) => node.id === nodeId);
               if (index >= 0) setNodeIndex(index);
             },
             onTravelState: (isTraveling) => {
+              host.dataset.traveling = String(isTraveling);
+              host.dataset.travelMotion = context.motion;
               if (!disposed) setTraveling(isTraveling);
             },
           }, furnishRef.current);
@@ -128,16 +137,19 @@ export function InteriorScene3D({
     engineRef.current?.setPlaying(playing);
   }, [playing]);
 
-  const goTo = useCallback(
-    (index: number) => {
-      const engine = engineRef.current;
-      if (!engine) return;
-      const clamped = Math.min(Math.max(0, index), config.nodes.length - 1);
-      setNodeIndex(clamped);
-      engine.goToNode(clamped);
-    },
-    [config.nodes.length],
-  );
+  const goTo = (index: number) => {
+    const engine = engineRef.current;
+    if (!engine) return;
+    const clamped = Math.min(Math.max(0, index), config.nodes.length - 1);
+    if (motionRef.current === "reduced") {
+      // Discrete frames: no eased travel, no disabled rail — jump at once.
+      engine.setMotion?.("reduced");
+      setTraveling(false);
+    }
+    // Only the engine's arrival callback publishes the station — a click
+    // during travel must not claim an arrival that hasn't happened.
+    engine.goToNode(clamped);
+  };
 
   const onKeyDown = (event: React.KeyboardEvent) => {
     // The DOM overlay owns its own keys (buttons, inputs); only the scene

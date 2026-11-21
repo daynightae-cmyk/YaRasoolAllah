@@ -256,6 +256,11 @@ export function buildInteriorRoom(
   addSlab(wallMat, ROOM, WALL_H / 2, 0, 0.5, WALL_H, ROOM * 2); // right
   addSlab(wallMat, 0, WALL_H / 2, ROOM, ROOM * 2, WALL_H, 0.5); // front (entrance)
   addSlab(wallMat, 0, WALL_H + 0.2, 0, ROOM * 2, 0.4, ROOM * 2); // ceiling
+  // Warm bounce fill from the visitor's side so walls facing the entrance
+  // never fall to pure black under the single key light (real rooms bounce).
+  const bounce = new THREE.PointLight(lanternC, 0.85, 30, 1.8);
+  bounce.position.set(0, 3.4, 7.5);
+  scene3.add(bounce);
   // Gold trim line running around the walls.
   for (const [x, z, w, d] of [
     [0, -ROOM + 0.3, ROOM * 2, 0.12],
@@ -485,6 +490,7 @@ export function buildInteriorRoom(
   const applyLamp = () => {
     const lit = 0.12 + lampLevel * 0.88;
     lampLight.intensity = 2.4 * lit;
+    bounce.intensity = 0.85 * lit;
     windowSun.intensity = 0.25 + lampLevel * 1.25;
     glowMat.emissiveIntensity = 0.25 + lampLevel * 1.35;
     windowGlowMat.emissiveIntensity = 0.2 + lampLevel * 1.2;
@@ -530,16 +536,19 @@ export function buildInteriorRoom(
 
   const goTo = (index: number) => {
     const clamped = Math.min(Math.max(0, index), config.nodes.length - 1);
-    if (clamped === currentIndex && !travel) return;
     const node = config.nodes[clamped];
     if (context.motion === "reduced") {
+      // Discrete frames: publish the arrival synchronously — the visitor's
+      // action must never depend on the next (possibly throttled) frame.
       currentIndex = clamped;
       travel = null;
       applyStation(clamped);
+      callbacks.onTravelState(false);
       callbacks.onNodeArrive(node.id);
       context.invalidate();
       return;
     }
+    if (clamped === currentIndex && !travel) return;
     travel = {
       from: eye.clone(),
       to: nodeEye(node),
@@ -664,12 +673,23 @@ export function buildInteriorRoom(
       context.invalidate();
     },
     setMotion(motion) {
-      if (motion === "reduced" && travel) {
-        currentIndex = travel.index;
-        travel = null;
-        applyStation(currentIndex);
-        callbacks.onTravelState(false);
-        callbacks.onNodeArrive(config.nodes[currentIndex].id);
+      if (motion === "reduced") {
+        if (travel) {
+          currentIndex = travel.index;
+          travel = null;
+          applyStation(currentIndex);
+          callbacks.onTravelState(false);
+          callbacks.onNodeArrive(config.nodes[currentIndex].id);
+        } else {
+          // A travel may have been requested while the engine still believed
+          // motion was full (media emulation flips between frames). The
+          // discrete-frame contract must still hold: complete it instantly.
+          callbacks.onTravelState(false);
+        }
+        // Discrete frames: pending eased lamp/playback levels snap at once.
+        lampLevel = lampTarget;
+        applyLamp();
+        playbackLevel = playbackTarget;
       }
       context.invalidate();
     },

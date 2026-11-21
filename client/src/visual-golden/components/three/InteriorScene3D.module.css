@@ -106,11 +106,24 @@
   width: min(680px, 94%);
   max-height: 34%;
   overflow-y: auto;
+  overscroll-behavior: contain;
   pointer-events: auto;
   border: 1px solid rgba(212, 160, 23, 0.45);
   border-radius: var(--radius-md, 10px);
   background: rgba(4, 11, 10, 0.86);
   backdrop-filter: blur(3px);
+}
+
+/* Slim brass scrollbar so visitors can see the card scrolls. */
+.overlaySlot::-webkit-scrollbar {
+  width: 6px;
+}
+.overlaySlot::-webkit-scrollbar-thumb {
+  background: rgba(212, 160, 23, 0.5);
+  border-radius: 3px;
+}
+.overlaySlot::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
 }
 
 /* --- Station note --- */
@@ -228,10 +241,10 @@
 /* --- Responsive --- */
 @media (max-width: 700px) {
   .sanctuary {
-    height: clamp(420px, 74vh, 560px);
+    height: clamp(480px, 82vh, 660px);
   }
   .overlaySlot {
-    max-height: 30%;
+    max-height: 40%;
   }
   .stationNote {
     max-width: 92%;
