@@ -10,8 +10,10 @@ import {
   ChevronLeft,
   StickyNote,
   Headphones,
+  ListMusic,
   Pause,
   Play,
+  Repeat,
   ShieldCheck,
   Search,
   Volume2,
@@ -78,6 +80,7 @@ const BOOKMARK_KEY = "quran-bookmarks";
 const NOTE_KEY = "quran-notes-v1";
 const CONTINUE_KEY = "quran-last-position-v1";
 const READING_SETTINGS_KEY = "quran-reading-settings-v1";
+const LISTENING_KEY = "quran-listening-settings-v1";
 
 function safeReadJson<T>(key: string, fallback: T): T {
   try {
@@ -102,6 +105,31 @@ function safeReadReadingSettings() {
     fontScale: Math.min(1.35, Math.max(0.9, settings.fontScale ?? 1)),
     lineHeight: Math.min(2.8, Math.max(1.8, settings.lineHeight ?? 2.35)),
   };
+}
+
+/**
+ * Listening preferences persist locally. Volume and repeat survive restarts;
+ * the reciter preference is a stable provider identity ("id:moshafId") that
+ * is only honored when that exact reciter/reading is available for the surah.
+ */
+function safeReadListeningSettings() {
+  const settings = safeReadJson<{ volume?: number; repeat?: boolean; reciterKey?: string }>(LISTENING_KEY, {});
+  return {
+    volume: Number.isFinite(settings.volume) ? Math.min(1, Math.max(0, settings.volume!)) : 0.78,
+    repeat: settings.repeat === true,
+    reciterKey: typeof settings.reciterKey === "string" ? settings.reciterKey : null,
+  };
+}
+
+function formatAudioTime(seconds: number): string {
+  if (!Number.isFinite(seconds) || seconds < 0) return "0:00";
+  const total = Math.floor(seconds);
+  const hours = Math.floor(total / 3600);
+  const minutes = Math.floor((total % 3600) / 60);
+  const secs = total % 60;
+  return hours > 0
+    ? `${hours}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`
+    : `${minutes}:${String(secs).padStart(2, "0")}`;
 }
 
 function verseKey(surah: number, ayah: number) {
@@ -163,8 +191,18 @@ export function QuranPage() {
   const [selectedReciterKey, setSelectedReciterKey] = useState<string | null>(null);
   const [audioPlaying, setAudioPlaying] = useState(false);
   const [audioStreamError, setAudioStreamError] = useState<string | null>(null);
-  const [audioVolume, setAudioVolume] = useState(0.78);
+  const [audioVolume, setAudioVolume] = useState(() => safeReadListeningSettings().volume);
+  const [audioRepeat, setAudioRepeat] = useState(() => safeReadListeningSettings().repeat);
+  const [audioTime, setAudioTime] = useState(0);
+  const [audioDuration, setAudioDuration] = useState(0);
+  const [queueOpen, setQueueOpen] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+  // A preferred reciter (stable provider identity) survives surah changes and
+  // reloads, but is honored only when actually available for that surah.
+  const preferredReciterKey = useRef<string | null>(safeReadListeningSettings().reciterKey);
+  // Set only when playback ends naturally with auto-advance active; cleared
+  // on every user-initiated selection so manual browsing never auto-plays.
+  const autoAdvanceRef = useRef(false);
   const [translationKey, setTranslationKey] = useState<QuranEncTranslationKey>("english_rwwad");
   const [quranEncState, setQuranEncState] = useState<QuranEncTranslationState>({ state: "idle" });
   const [fontScale, setFontScale] = useState(() => safeReadReadingSettings().fontScale);
@@ -322,8 +360,11 @@ export function QuranPage() {
       .then((payload) => {
         if (controller.signal.aborted) return;
         setRecitationState({ state: "ready", payload });
-        const first = payload.reciters[0];
-        setSelectedReciterKey(first ? `${first.id}:${first.moshafId}` : null);
+        const preferred = preferredReciterKey.current
+          ? payload.reciters.find((item) => `${item.id}:${item.moshafId}` === preferredReciterKey.current)
+          : null;
+        const chosen = preferred ?? payload.reciters[0];
+        setSelectedReciterKey(chosen ? `${chosen.id}:${chosen.moshafId}` : null);
       })
       .catch((error: unknown) => {
         if (controller.signal.aborted) return;
@@ -337,7 +378,12 @@ export function QuranPage() {
 
   useEffect(() => {
     if (audioRef.current) audioRef.current.volume = audioVolume;
-  }, [audioVolume]);
+    safeWriteJson(LISTENING_KEY, {
+      volume: audioVolume,
+      repeat: audioRepeat,
+      reciterKey: selectedReciterKey ?? preferredReciterKey.current,
+    });
+  }, [audioVolume, audioRepeat, selectedReciterKey]);
 
   useEffect(() => {
     if (readingMode !== "study") {
@@ -399,11 +445,69 @@ export function QuranPage() {
     audio.load();
     setAudioPlaying(false);
     setAudioStreamError(null);
+    setAudioTime(0);
+    setAudioDuration(0);
   }, [selectedReciter?.streamUrl]);
 
   const handleAudioStreamError = () => {
     setAudioPlaying(false);
     setAudioStreamError("تعذر تشغيل البث من MP3Quran لهذه السورة الآن. نص المصحف والترجمة والتفسير ما تزال متاحة.");
+  };
+
+  // Natural playback end with auto-advance active: move to the next surah in
+  // canonical order and continue listening with the same reciter preference.
+  // No auto-play is ever triggered by manual navigation or initial load.
+  useEffect(() => {
+    if (!autoAdvanceRef.current) return;
+    // The next surah's provider response may fail — consume the flag so a
+    // later manual navigation never inherits a stale auto-play intent.
+    if (recitationState.state === "error") {
+      autoAdvanceRef.current = false;
+      return;
+    }
+    if (recitationState.state !== "ready" || !selectedReciter) return;
+    autoAdvanceRef.current = false;
+    const audio = audioRef.current;
+    if (!audio) return;
+    void audio.play().catch((error: unknown) => {
+      if (isPlaybackAbortError(error)) return;
+      handleAudioStreamError();
+    });
+    // Intentionally keyed on the loaded stream only: play once per arrival.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedReciter?.streamUrl, recitationState.state]);
+
+  const chooseReciter = (key: string) => {
+    // Manual reciter choice becomes the persistent preference; it is only
+    // honored on other surahs when that exact reciter/reading is available.
+    preferredReciterKey.current = key;
+    autoAdvanceRef.current = false;
+    setSelectedReciterKey(key);
+  };
+
+  const seekAudio = (seconds: number) => {
+    const audio = audioRef.current;
+    if (!audio || !Number.isFinite(audio.duration) || audio.duration <= 0) return;
+    const target = Math.min(Math.max(0, seconds), audio.duration);
+    audio.currentTime = target;
+    setAudioTime(target);
+  };
+
+  /**
+   * Natural end of a recitation. With auto-advance active and a next surah in
+   * canonical order, the queue continues there with the same reciter
+   * preference; at the end of the Mushaf playback simply stops. Repeat is
+   * handled natively by the audio element and never reaches this path.
+   */
+  const handleAudioEnded = () => {
+    setAudioPlaying(false);
+    if (audioRepeat) return;
+    if (active < 114) {
+      selectSurah(active + 1);
+      // Arm AFTER selectSurah: manual navigation clears the intent, and this
+      // natural-end continuation is the only path that re-arms it.
+      autoAdvanceRef.current = true;
+    }
   };
 
   const toggleAudio = async () => {
@@ -479,6 +583,9 @@ export function QuranPage() {
   const selectedNote = selectedKey ? notes[selectedKey] ?? "" : "";
 
   const selectSurah = (surahNumber: number, targetAyah = 1) => {
+    // Manual navigation cancels any pending auto-play intent; only a natural
+    // playback end (handleAudioEnded) re-arms it immediately before moving.
+    autoAdvanceRef.current = false;
     setActive(surahNumber);
     setAyah(targetAyah);
     setShowNote(false);
@@ -918,15 +1025,21 @@ export function QuranPage() {
             </button>
           </div>
 
-          <div className={styles.player}>
+          <div className={styles.player} data-visual="quran-player">
             <audio
               ref={audioRef}
               src={selectedReciter?.streamUrl}
               preload="metadata"
+              loop={audioRepeat}
               onPlay={() => { setAudioPlaying(true); setAudioStreamError(null); }}
               onPause={() => setAudioPlaying(false)}
-              onEnded={() => setAudioPlaying(false)}
+              onEnded={handleAudioEnded}
               onError={handleAudioStreamError}
+              onTimeUpdate={() => setAudioTime(audioRef.current?.currentTime ?? 0)}
+              onLoadedMetadata={() => {
+                const duration = audioRef.current?.duration ?? 0;
+                setAudioDuration(Number.isFinite(duration) ? duration : 0);
+              }}
             />
             <img src={art.kaaba} alt="" />
             <div className={styles.playerCopy}>
@@ -940,7 +1053,7 @@ export function QuranPage() {
                   <select
                     className={styles.reciterSelect}
                     value={selectedReciterKey ?? ""}
-                    onChange={(event) => setSelectedReciterKey(event.target.value)}
+                    onChange={(event) => chooseReciter(event.target.value)}
                     aria-label="اختيار قارئ السورة"
                   >
                     {recitationState.state === "ready" ? recitationState.payload.reciters.map((item) => (
@@ -966,6 +1079,28 @@ export function QuranPage() {
               >
                 {audioPlaying ? <Pause size={17} /> : <Play size={17} />}
               </button>
+              <button
+                type="button"
+                className={`${styles.audioToggle} ${audioRepeat ? styles.audioToggleOn : ""}`}
+                data-visual="quran-repeat"
+                aria-pressed={audioRepeat}
+                onClick={() => setAudioRepeat((value) => !value)}
+                aria-label={audioRepeat ? "إلغاء تكرار السورة" : "تكرار السورة الحالية"}
+                title={audioRepeat ? "تكرار السورة الحالية مفعّل" : "تكرار السورة الحالية"}
+              >
+                <Repeat size={15} />
+              </button>
+              <button
+                type="button"
+                className={`${styles.audioToggle} ${queueOpen ? styles.audioToggleOn : ""}`}
+                data-visual="quran-queue-toggle"
+                aria-expanded={queueOpen}
+                onClick={() => setQueueOpen((value) => !value)}
+                aria-label="قائمة الاستماع — السور التالية بترتيب المصحف"
+                title="قائمة الاستماع"
+              >
+                <ListMusic size={15} />
+              </button>
               <label className={styles.inlineVolume}>
                 <Volume2 size={14} aria-hidden="true" />
                 <input
@@ -983,6 +1118,45 @@ export function QuranPage() {
                 كل القراء
               </Link>
             </div>
+            <div className={styles.seekRow}>
+              <span className={styles.seekTime} data-visual="quran-audio-time">{formatAudioTime(audioTime)}</span>
+              <input
+                type="range"
+                className={styles.seekBar}
+                data-visual="quran-seek"
+                min={0}
+                max={audioDuration > 0 ? audioDuration : 0}
+                step={1}
+                value={audioDuration > 0 ? Math.min(audioTime, audioDuration) : 0}
+                disabled={!selectedReciter || audioDuration <= 0}
+                onChange={(event) => seekAudio(Number(event.target.value))}
+                aria-label="موضع التلاوة داخل السورة"
+                aria-valuetext={`${formatAudioTime(audioTime)} من ${formatAudioTime(audioDuration)}`}
+              />
+              <span className={styles.seekTime}>{audioDuration > 0 ? formatAudioTime(audioDuration) : "—:—"}</span>
+            </div>
+            {queueOpen ? (
+              <div className={styles.queuePanel} data-visual="quran-queue">
+                <p>
+                  قائمة الاستماع بترتيب المصحف — عند انتهاء السورة تُتلى التالية تلقائيًا بنفس القارئ إن كان متاحًا لها،
+                  ما لم يكن التكرار مفعّلًا. لا تشغيل تلقائي عند التصفح اليدوي.
+                </p>
+                <ol>
+                  {Array.from({ length: Math.min(5, 114 - active) }, (_, index) => active + index + 1).map((surahNumber) => {
+                    const chapter = chapters.find((item) => item.number === surahNumber);
+                    return (
+                      <li key={surahNumber}>
+                        <button type="button" onClick={() => selectSurah(surahNumber)}>
+                          <strong>{surahNumber}. {chapter?.arabicName ?? `سورة ${surahNumber}`}</strong>
+                          <span>{chapter ? `${chapter.ayahCount} آية` : ""}</span>
+                        </button>
+                      </li>
+                    );
+                  })}
+                  {active >= 114 ? <li className={styles.queueEnd}>نهاية المصحف — يتوقف الاستماع بعد الناس.</li> : null}
+                </ol>
+              </div>
+            ) : null}
           </div>
         </section>
 

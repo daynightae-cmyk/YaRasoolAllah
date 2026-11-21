@@ -437,6 +437,7 @@
 /* --- Audio player --- */
 .player {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 0.8rem;
   background: var(--bg-glass-strong);
@@ -524,6 +525,99 @@
 .inlineVolume input {
   width: 76px;
   accent-color: var(--accent-gold);
+}
+
+/* --- Listening controls: repeat / queue toggles --- */
+.audioToggle {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-full);
+  color: var(--text-gold);
+  background: var(--bg-glass);
+  cursor: pointer;
+  transition: background 220ms var(--ease-smooth), color 220ms var(--ease-smooth);
+}
+.audioToggle:hover { border-color: var(--accent-gold); }
+.audioToggleOn {
+  background: var(--accent-gold);
+  color: var(--text-ink-dark);
+  box-shadow: var(--shadow-gold);
+}
+
+/* --- Seek row: real position within the governed stream --- */
+.seekRow {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.seekTime {
+  flex: none;
+  min-width: 3.2rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+.seekBar {
+  flex: 1;
+  accent-color: var(--accent-gold);
+  cursor: pointer;
+}
+.seekBar:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* --- Listening queue: canonical Mushaf order, honest auto-advance rules --- */
+.queuePanel {
+  flex-basis: 100%;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+}
+.queuePanel p {
+  margin: 0 0 0.55rem;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  line-height: 1.7;
+}
+.queuePanel ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.3rem;
+}
+.queuePanel li button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: border-color 220ms var(--ease-smooth);
+}
+.queuePanel li button:hover { border-color: var(--border-gold); }
+.queuePanel li button span {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+}
+.queueEnd {
+  color: var(--text-muted);
+  font-size: 0.74rem;
+  padding: 0.3rem 0.2rem;
 }
 
 /* --- Side panel typography --- */
