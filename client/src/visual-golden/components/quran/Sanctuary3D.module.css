@@ -1,0 +1,259 @@
+/* ==========================================================================
+   QURAN SANCTUARY 3D — genuine interior reading environment.
+   Artistic contemporary space; canonical scripture lives in the DOM overlay.
+   ========================================================================== */
+
+.sanctuary {
+  position: relative;
+  z-index: 0;
+  height: clamp(420px, 62vh, 720px);
+  overflow: hidden;
+  border: 1px solid var(--border-gold, rgba(212, 160, 23, 0.35));
+  border-radius: var(--radius-lg, 14px);
+  background: #050d0c;
+  outline: none;
+}
+
+.sanctuary:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--accent-amber, #d4a017);
+}
+
+.canvasHost {
+  position: absolute;
+  inset: 0;
+}
+
+.canvasHost canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+.canvasHost canvas:active {
+  cursor: grabbing;
+}
+
+/* --- HUD overlay --- */
+.hud {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(3, 9, 10, 0.6) 0%,
+    transparent 18%,
+    transparent 58%,
+    rgba(3, 9, 10, 0.82) 100%
+  );
+}
+
+.hudTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid rgba(212, 160, 23, 0.4);
+  border-radius: var(--radius-full, 999px);
+  background: rgba(5, 13, 12, 0.75);
+  color: #e8c547;
+  font-size: 0.66rem;
+  line-height: 1.5;
+}
+
+.hudActions {
+  display: flex;
+  gap: 0.4rem;
+  pointer-events: auto;
+}
+
+.hudButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 34px;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.16));
+  border-radius: var(--radius-full, 999px);
+  background: rgba(5, 13, 12, 0.8);
+  color: var(--text-primary, #f3e9d2);
+  font: inherit;
+  font-size: 0.68rem;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+.hudButton:hover {
+  background: rgba(18, 32, 30, 0.92);
+  border-color: rgba(212, 160, 23, 0.55);
+}
+
+/* --- Canonical reading overlay (DOM slot, never scene texture) --- */
+.overlaySlot {
+  align-self: center;
+  width: min(680px, 94%);
+  max-height: 34%;
+  overflow-y: auto;
+  pointer-events: auto;
+  border: 1px solid rgba(212, 160, 23, 0.45);
+  border-radius: var(--radius-md, 10px);
+  background: rgba(4, 11, 10, 0.86);
+  backdrop-filter: blur(3px);
+}
+
+/* --- Station note --- */
+.stationNote {
+  align-self: flex-start;
+  max-width: min(430px, 82%);
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.14));
+  border-radius: var(--radius-md, 10px);
+  background: rgba(4, 10, 12, 0.82);
+  color: var(--text-primary, #f3e9d2);
+  pointer-events: auto;
+}
+
+.stationNote strong {
+  display: block;
+  font-size: 0.78rem;
+  color: #e8c547;
+  margin-bottom: 0.2rem;
+}
+
+.stationNote p {
+  margin: 0;
+  font-size: 0.68rem;
+  line-height: 1.75;
+  color: var(--text-muted, #c9bfa8);
+}
+
+/* --- Travel controls --- */
+.travelRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: auto;
+}
+
+.travelButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+  min-height: 36px;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid rgba(212, 160, 23, 0.4);
+  border-radius: var(--radius-full, 999px);
+  background: rgba(5, 13, 12, 0.84);
+  color: #e8c547;
+  font: inherit;
+  font-size: 0.68rem;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.travelButton:hover:not(:disabled) {
+  background: rgba(18, 32, 26, 0.94);
+}
+
+.travelButton:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.nodeRail {
+  display: flex;
+  gap: 0.35rem;
+  flex: 1;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.nodeChip {
+  min-height: 32px;
+  padding: 0.32rem 0.6rem;
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.16));
+  border-radius: var(--radius-full, 999px);
+  background: rgba(5, 13, 12, 0.74);
+  color: var(--text-muted, #c9bfa8);
+  font: inherit;
+  font-size: 0.62rem;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.nodeChip:hover:not(:disabled) {
+  border-color: rgba(212, 160, 23, 0.5);
+}
+
+.nodeChip:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.nodeChipOn {
+  background: rgba(212, 160, 23, 0.18);
+  border-color: rgba(212, 160, 23, 0.65);
+  color: #e8c547;
+}
+
+/* --- Disclosure + hint --- */
+.disclosure {
+  margin: 0.45rem 0 0;
+  font-size: 0.6rem;
+  line-height: 1.7;
+  color: var(--text-muted, #b3a88f);
+  text-align: center;
+}
+
+.hint {
+  margin: 0.15rem 0 0;
+  font-size: 0.58rem;
+  color: rgba(201, 191, 168, 0.7);
+  text-align: center;
+}
+
+/* --- Responsive --- */
+@media (max-width: 700px) {
+  .sanctuary {
+    height: clamp(420px, 74vh, 560px);
+  }
+  .overlaySlot {
+    max-height: 30%;
+  }
+  .stationNote {
+    max-width: 92%;
+  }
+  .stationNote p {
+    font-size: 0.62rem;
+  }
+  .travelRow {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .hint {
+    display: none;
+  }
+}
+
+/* Reduced motion: no decorative transitions; the runtime already renders
+   discrete frames and instant node jumps. */
+@media (prefers-reduced-motion: reduce) {
+  .hudButton,
+  .travelButton,
+  .nodeChip {
+    transition: none;
+  }
+}

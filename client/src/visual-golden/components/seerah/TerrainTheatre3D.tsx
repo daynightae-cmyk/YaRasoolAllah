@@ -616,7 +616,12 @@ function buildTerrainScene(
     dragging = true;
     lastX = event.clientX;
     lastY = event.clientY;
-    canvas.setPointerCapture(event.pointerId);
+    // Synthetic pointers (tests/automation) have no active pointer to capture.
+    try {
+      canvas.setPointerCapture(event.pointerId);
+    } catch {
+      // Drag-look still works without capture.
+    }
   };
   const onPointerMove = (event: PointerEvent) => {
     if (!dragging || travel) return;

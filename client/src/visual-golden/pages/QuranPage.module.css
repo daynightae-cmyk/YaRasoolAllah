@@ -995,3 +995,115 @@
     transform: none !important;
   }
 }
+
+/* ===== Sanctuary 3D entry + reading overlay (directive §4.D) ===== */
+.sanctuaryEnter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  align-self: flex-start;
+  min-height: 44px;
+  margin: 0.6rem clamp(0.8rem, 2vw, 1.6rem) 0;
+  padding: 0.55rem 1.1rem;
+  border: 1px solid var(--border-gold);
+  border-radius: 999px;
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.16), rgba(16, 185, 129, 0.1));
+  color: var(--text-gold);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 200ms ease, border-color 200ms ease;
+}
+.sanctuaryEnter:hover {
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.28), rgba(16, 185, 129, 0.16));
+}
+.sanctuaryEnter:focus-visible {
+  outline: 3px solid var(--border-gold);
+  outline-offset: 2px;
+}
+.sanctuaryLoading {
+  margin: 1rem clamp(0.8rem, 2vw, 1.6rem);
+  padding: 2.4rem 1rem;
+  border: 1px dashed var(--border-gold);
+  border-radius: var(--radius-lg);
+  color: var(--text-muted);
+  text-align: center;
+  font-size: 0.85rem;
+}
+/* The full surface stays mounted (audio continuity) but visually hidden
+   while the sanctuary is open. */
+.sanctuaryHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.sanctuaryCard {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.8rem 1rem 0.9rem;
+}
+.sanctuaryCardHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.sanctuaryCardHead strong {
+  color: var(--text-gold);
+  font-size: 0.9rem;
+}
+.sanctuaryCardHead span {
+  color: var(--text-muted);
+  font-size: 0.66rem;
+}
+.sanctuaryVerse {
+  margin: 0;
+  color: var(--text-primary);
+  font-family: var(--font-quran, "Amiri Quran", "Amiri", serif);
+  font-size: clamp(1.15rem, 2vw, 1.5rem);
+  line-height: 2.1;
+  text-align: center;
+}
+.sanctuaryCardTools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+}
+.sanctuaryCardTools button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 34px;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--border-panel);
+  border-radius: 999px;
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: border-color 180ms ease, color 180ms ease;
+}
+.sanctuaryCardTools button:hover:not(:disabled) {
+  border-color: var(--border-gold);
+  color: var(--text-primary);
+}
+.sanctuaryCardTools button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.sanctuaryToolOn {
+  border-color: var(--border-gold) !important;
+  color: var(--text-gold) !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sanctuaryEnter,
+  .sanctuaryCardTools button {
+    transition: none;
+  }
+}

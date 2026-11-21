@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { Link } from "wouter";
 import {
   Bookmark,
@@ -18,7 +18,9 @@ import {
   Search,
   Volume2,
   Languages,
+  Boxes,
 } from "lucide-react";
+import { getInteriorScene } from "@/visual-golden/services/interior-scenes";
 import { art } from "@/visual-golden/mock/art";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
@@ -56,6 +58,14 @@ import {
   type QuranEncTranslationPayload,
 } from "@/visual-golden/services/quranenc-translations";
 import styles from "./QuranPage.module.css";
+
+// Three.js stays out of the initial chunk: the sanctuary loads only when the
+// visitor opts into the immersive reading environment (directive §4.D).
+const Sanctuary3D = lazy(() =>
+  import("@/visual-golden/components/quran/Sanctuary3D").then((module) => ({
+    default: module.Sanctuary3D,
+  })),
+);
 
 type SidebarTab = "surah" | "marks";
 type ReadingMode = "mushaf" | "study";
@@ -172,6 +182,8 @@ export function QuranPage() {
   const [tab, setTab] = useState<SidebarTab>("surah");
   const [focus, setFocus] = useState(false);
   const [lamp, setLamp] = useState(true);
+  const [sanctuaryOpen, setSanctuaryOpen] = useState(false);
+  const [sanctuaryFailed, setSanctuaryFailed] = useState(false);
   const [query, setQuery] = useState("");
   const [verseQuery, setVerseQuery] = useState(initialQuranSearchQuery);
   const [searchState, setSearchState] = useState<"idle" | "loading" | "ready" | "error">("idle");
@@ -686,9 +698,63 @@ export function QuranPage() {
     selectSurah(next, 1);
   };
 
+  const sanctuaryScene = useMemo(() => getInteriorScene("quran-sanctuary"), []);
+  const sanctuaryAvailable = !!sanctuaryScene && !sanctuaryFailed;
+  const showSanctuary = sanctuaryOpen && sanctuaryAvailable;
+
   return (
     <div className={`${styles.page} ${focus ? styles.focus : ""}`}>
-      {focus ? null : (
+      {showSanctuary && sanctuaryScene ? (
+        <Suspense fallback={<div className={styles.sanctuaryLoading} role="status">جارٍ تهيئة رواق القراءة ثلاثي الأبعاد…</div>}>
+          <Sanctuary3D
+            scene={sanctuaryScene}
+            lampOn={lamp}
+            onExit={() => setSanctuaryOpen(false)}
+            onUnavailable={() => {
+              setSanctuaryFailed(true);
+              setSanctuaryOpen(false);
+            }}
+            overlay={
+              <div className={styles.sanctuaryCard} data-visual="quran-sanctuary-reading">
+                <div className={styles.sanctuaryCardHead}>
+                  <strong>
+                    {currentChapter ? `سورة ${currentChapter.arabicName}` : "القرآن الكريم"}
+                    {selectedVerse ? ` · الآية ${selectedVerse.ayah}` : ""}
+                  </strong>
+                  <span>نص Tanzil الموثق — يُقرأ هنا حرفيًا</span>
+                </div>
+                <p className={styles.sanctuaryVerse} dir="rtl" lang="ar">
+                  {loading
+                    ? "جارٍ فتح السورة…"
+                    : loadError ?? selectedVerse?.arabic ?? "اختر آية من الفهرس."}
+                </p>
+                <div className={styles.sanctuaryCardTools}>
+                  <button type="button" onClick={() => stepAyah(-1)} disabled={active === 1 && (selectedVerse?.ayah ?? 1) === 1}>
+                    <ChevronRight size={13} aria-hidden /> الآية السابقة
+                  </button>
+                  <button type="button" onClick={() => stepAyah(1)} disabled={active === 114 && selectedVerse?.ayah === currentChapter?.ayahCount}>
+                    الآية التالية <ChevronLeft size={13} aria-hidden />
+                  </button>
+                  <button type="button" onClick={copySelectedVerse}>
+                    <Copy size={13} aria-hidden /> {copied ? "تم النسخ" : "نسخ"}
+                  </button>
+                  <button
+                    type="button"
+                    className={selectedBookmarked ? styles.sanctuaryToolOn : ""}
+                    onClick={toggleBookmark}
+                  >
+                    {selectedBookmarked ? <BookmarkCheck size={13} aria-hidden /> : <Bookmark size={13} aria-hidden />}
+                    {selectedBookmarked ? "محفوظة" : "حفظ"}
+                  </button>
+                  <button type="button" onClick={() => setSanctuaryOpen(false)}>
+                    القراءة الكاملة والفهرس
+                  </button>
+                </div>
+              </div>
+            }
+          />
+        </Suspense>
+      ) : focus ? null : (
         <PageHero
           title="رواق القرآن"
           subtitle="المصحف العربي الكامل · نص موثّق"
@@ -709,6 +775,21 @@ export function QuranPage() {
         }}
       />
 
+      {sanctuaryAvailable && !showSanctuary ? (
+        <button
+          type="button"
+          className={styles.sanctuaryEnter}
+          data-visual="quran-sanctuary-enter"
+          onClick={() => setSanctuaryOpen(true)}
+        >
+          <Boxes size={15} aria-hidden />
+          ادخل رواق القراءة ثلاثي الأبعاد — تدبر وقراءة
+        </button>
+      ) : null}
+
+      {/* The full reading surface stays mounted (audio playback continuity)
+          while the sanctuary is open; it is only visually hidden. */}
+      <div className={showSanctuary ? styles.sanctuaryHidden : undefined}>
       <div className={styles.workspace}>
         {focus ? null : (
           <aside id="quran-surah-nav" className={styles.surahNav} aria-label="فهرس القرآن">
@@ -1321,6 +1402,7 @@ export function QuranPage() {
           </span>
         </footer>
       )}
+      </div>
     </div>
   );
 }
