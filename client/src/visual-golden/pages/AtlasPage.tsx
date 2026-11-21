@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, lazy, useEffect, useMemo, useState } from "react";
 import { Link, useSearch } from "wouter";
 import {
   ZoomIn,
@@ -12,8 +12,18 @@ import {
   BookMarked,
   Clock,
   ExternalLink,
+  Boxes,
 } from "lucide-react";
 import { LivingTerrainTheatre } from "@/visual-golden/components/atlas/LivingTerrainTheatre";
+import { atlasCampaignTerrain } from "@/visual-golden/services/atlas-terrain";
+
+// Three.js stays out of the initial chunk: the observer terrain loads only
+// when the visitor opts into the 3D mode.
+const TerrainTheatre3D = lazy(() =>
+  import("@/visual-golden/components/seerah/TerrainTheatre3D").then((module) => ({
+    default: module.TerrainTheatre3D,
+  })),
+);
 import {
   LIVING_CAMPAIGNS,
   CERTAINTY_LABEL,
@@ -58,6 +68,8 @@ export function AtlasPage() {
   const [showOverlays, setShowOverlays] = useState(false);
   const [showMarkers, setShowMarkers] = useState(true);
   const [listMode, setListMode] = useState(false);
+  const [observer3D, setObserver3D] = useState(false);
+  const [observerFailed, setObserverFailed] = useState(false);
   const [placeFilter, setPlaceFilter] = useState<AtlasFilter>("all");
   const [placeId, setPlaceId] = useState(linkedPlace ?? ATLAS_NODES[0]?.id ?? "");
 
@@ -84,7 +96,16 @@ export function AtlasPage() {
   useEffect(() => {
     setPhaseIndex(0);
     setZoom(1);
+    setObserver3D(false);
+    setObserverFailed(false);
   }, [campaignId]);
+
+  const observerTerrain = useMemo(
+    () => (mode === "theatre" ? atlasCampaignTerrain(campaign) : null),
+    [mode, campaign],
+  );
+  const observerAvailable = !!observerTerrain && !observerFailed;
+  const showObserver = observer3D && observerAvailable && !listMode;
 
   useEffect(() => {
     const firstActive = phase.activeMarkerIds[0];
@@ -145,19 +166,32 @@ export function AtlasPage() {
         ) : (
           <div className={styles.frame}>
             {mode === "theatre" ? (
-              <LivingTerrainTheatre
-                plate={campaign.plate}
-                plateAlt={`لوحة فنية لمناخ ${campaign.nameAr} — ليست خريطة مساحية. ${campaign.terrainTeacherAr}`}
-                weather={weather}
-                overlays={campaign.overlays}
-                markers={campaign.markers}
-                selectedId={marker?.id ?? ""}
-                activeIds={phase.activeMarkerIds}
-                showOverlays={showOverlays}
-                showMarkers={showMarkers}
-                zoom={zoom}
-                onSelect={setMarkerId}
-              />
+              showObserver && observerTerrain ? (
+                <Suspense fallback={<div className={styles.observerLoading}>جارٍ تحميل البيئة ثلاثية الأبعاد…</div>}>
+                  <TerrainTheatre3D
+                    scene={observerTerrain}
+                    onExit={() => setObserver3D(false)}
+                    onUnavailable={() => {
+                      setObserverFailed(true);
+                      setObserver3D(false);
+                    }}
+                  />
+                </Suspense>
+              ) : (
+                <LivingTerrainTheatre
+                  plate={campaign.plate}
+                  plateAlt={`لوحة فنية لمناخ ${campaign.nameAr} — ليست خريطة مساحية. ${campaign.terrainTeacherAr}`}
+                  weather={weather}
+                  overlays={campaign.overlays}
+                  markers={campaign.markers}
+                  selectedId={marker?.id ?? ""}
+                  activeIds={phase.activeMarkerIds}
+                  showOverlays={showOverlays}
+                  showMarkers={showMarkers}
+                  zoom={zoom}
+                  onSelect={setMarkerId}
+                />
+              )
             ) : (
               <LivingTerrainTheatre
                 plate={HIJAZ_PLATE}
@@ -240,15 +274,30 @@ export function AtlasPage() {
         </header>
 
         <div className={styles.tools}>
-          <button type="button" onClick={() => setZoom((value) => Math.min(1.7, +(value + 0.15).toFixed(2)))} aria-label="تكبير">
-            <ZoomIn size={16} />
-          </button>
-          <button type="button" onClick={() => setZoom((value) => Math.max(1, +(value - 0.15).toFixed(2)))} aria-label="تصغير">
-            <ZoomOut size={16} />
-          </button>
-          <button type="button" onClick={() => setZoom(1)} aria-label="إعادة الضبط">
-            <Locate size={16} />
-          </button>
+          {mode === "theatre" && observerAvailable && !showObserver ? (
+            <button
+              type="button"
+              className={styles.observerEnter}
+              data-visual="atlas-observer-enter"
+              onClick={() => setObserver3D(true)}
+              aria-label="الدخول إلى بيئة ثلاثية الأبعاد لمراقبة التضاريس"
+            >
+              <Boxes size={15} /> مراقبة ثلاثية الأبعاد
+            </button>
+          ) : null}
+          {!showObserver ? (
+            <>
+              <button type="button" onClick={() => setZoom((value) => Math.min(1.7, +(value + 0.15).toFixed(2)))} aria-label="تكبير">
+                <ZoomIn size={16} />
+              </button>
+              <button type="button" onClick={() => setZoom((value) => Math.max(1, +(value - 0.15).toFixed(2)))} aria-label="تصغير">
+                <ZoomOut size={16} />
+              </button>
+              <button type="button" onClick={() => setZoom(1)} aria-label="إعادة الضبط">
+                <Locate size={16} />
+              </button>
+            </>
+          ) : null}
           <button type="button" onClick={() => setListMode((value) => !value)} aria-label="عرض كقائمة">
             <List size={16} />
           </button>

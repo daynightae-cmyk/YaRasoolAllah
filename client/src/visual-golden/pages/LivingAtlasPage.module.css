@@ -52,6 +52,32 @@
     linear-gradient(180deg, rgba(3, 9, 10, 0.62) 0%, transparent 24%, transparent 70%, rgba(3, 9, 10, 0.72) 100%),
     linear-gradient(90deg, rgba(3, 9, 10, 0.38), transparent 28%, transparent 72%, rgba(3, 9, 10, 0.26));
 }
+/* The 3D observer owns its own HUD gradients; keep the plate grade off it. */
+.frame:has([data-visual="seerah-terrain-theatre"])::after {
+  display: none;
+}
+.frame [data-visual="seerah-terrain-theatre"] {
+  height: 100%;
+  border-radius: 0;
+}
+.observerLoading {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+.observerEnter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: auto !important;
+  padding-inline: 0.7rem !important;
+  border-color: var(--border-gold) !important;
+  color: var(--text-gold) !important;
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
 .top {
   position: absolute;
   z-index: 6;
