@@ -1,11 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "wouter";
 import {
   Archive,
   BookOpen,
+  Boxes,
   ExternalLink,
   FileCheck2,
   KeyRound,
+  Lamp,
   LibraryBig,
   Link2,
   Radio,
@@ -33,6 +35,15 @@ import {
   type EvidenceStatus,
 } from "@shared/evidence-contract";
 import styles from "./SourcesPage.module.css";
+import { getInteriorScene } from "@/visual-golden/services/interior-scenes";
+
+// Three.js stays out of the initial chunk: the treasury loads only when the
+// visitor explicitly opts in (same lazy pattern as the verified wings).
+const SourcesTreasury3D = lazy(() =>
+  import("@/visual-golden/components/sources/SourcesTreasury3D").then((module) => ({
+    default: module.SourcesTreasury3D,
+  })),
+);
 
 /**
  * `RightsDecision` (a decision about a governed source) and
@@ -107,6 +118,9 @@ export default function SourcesPage() {
   const [query, setQuery] = useState(initialSourceQuery);
   const [kindFilter, setKindFilter] = useState<string>("all");
   const [openSourceId, setOpenSourceId] = useState<string>(initialSourceId);
+  const [treasuryOpen, setTreasuryOpen] = useState(false);
+  const [treasuryFailed, setTreasuryFailed] = useState(false);
+  const [treasuryLamp, setTreasuryLamp] = useState(true);
   const drawerRef = useRef<HTMLDivElement>(null);
   const normalizedQuery = query.trim().toLowerCase();
 
@@ -165,9 +179,10 @@ export default function SourcesPage() {
     }
   };
 
-  // Escape closes the inspection drawer; focus enters it on open.
+  // Escape closes the inspection drawer (unless the treasury is open — there
+  // the shared observer shell owns Escape as scene exit); focus enters on open.
   useEffect(() => {
-    if (!openSource) return;
+    if (!openSource || treasuryOpen) return;
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") closeDrawer();
     };
@@ -178,7 +193,7 @@ export default function SourcesPage() {
       window.cancelAnimationFrame(frame);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [openSource]);
+  }, [openSource, treasuryOpen]);
 
   const sources = useMemo(
     () =>
@@ -254,8 +269,147 @@ export default function SourcesPage() {
 
   const availabilityMetrics = getProviderAvailabilityMetrics();
 
+  const treasuryScene = useMemo(() => getInteriorScene("sources-treasury"), []);
+  const treasuryAvailable = !!treasuryScene && !treasuryFailed;
+  const showTreasury = treasuryOpen && treasuryAvailable;
+  // Drawer clicks inside the treasury set the SAME kindFilter the full
+  // registry uses — measured counts from the real registry, never invented.
+  const treasuryRecord = openSource ?? sources[0] ?? null;
+  const treasuryRights = treasuryRecord
+    ? rightsLedger.filter((rights) => rights.sourceId === treasuryRecord.sourceId)
+    : [];
+
   return (
     <div className={styles.page}>
+      {showTreasury && treasuryScene ? (
+        <Suspense fallback={<div className={styles.treasuryLoading} role="status">جارٍ تهيئة خزانة المصادر ثلاثية الأبعاد…</div>}>
+          <SourcesTreasury3D
+            scene={treasuryScene}
+            lampOn={treasuryLamp}
+            onExit={() => setTreasuryOpen(false)}
+            onUnavailable={() => {
+              setTreasuryFailed(true);
+              setTreasuryOpen(false);
+            }}
+            overlay={
+              <div className={styles.treasuryCard} data-visual="sources-treasury-record">
+                <div className={styles.treasuryDrawers} role="tablist" aria-label="أدراج الفهرسة">
+                  <button
+                    type="button"
+                    role="tab"
+                    aria-selected={kindFilter === "all"}
+                    className={kindFilter === "all" ? styles.treasuryDrawerOn : ""}
+                    onClick={() => {
+                      setKindFilter("all");
+                      closeDrawer();
+                    }}
+                  >
+                    كل الأدراج ({sourceRegistry.length})
+                  </button>
+                  {kindCabinets.map(([kind, count]) => (
+                    <button
+                      key={kind}
+                      type="button"
+                      role="tab"
+                      aria-selected={kindFilter === kind}
+                      className={kindFilter === kind ? styles.treasuryDrawerOn : ""}
+                      onClick={() => {
+                        setKindFilter(kind);
+                        closeDrawer();
+                      }}
+                    >
+                      {sourceKindLabel(kind)} ({count})
+                    </button>
+                  ))}
+                </div>
+                {treasuryRecord ? (
+                  <>
+                    <div className={styles.treasuryCardHead}>
+                      <strong>{treasuryRecord.title}</strong>
+                      <span className={styles.treasuryStatus}>{reviewLabel(treasuryRecord.editorialStatus)}</span>
+                    </div>
+                    <p className={styles.treasuryMeta}>
+                      {sourceKindLabel(treasuryRecord.kind)} · المزوّد: {treasuryRecord.provider} · الإصدار:{" "}
+                      {treasuryRecord.version ?? "غير محدد"}
+                    </p>
+                    <p className={styles.treasuryMeta} dir="ltr">
+                      {treasuryRecord.sourceId}
+                    </p>
+                    <p className={styles.treasuryRights}>
+                      {treasuryRights.length > 0
+                        ? `قرار الحقوق: ${rightsDecisionLabel(treasuryRights[0].decision)} — ${treasuryRights[0].reviewNote}`
+                        : "لا يوجد قرار حقوق مسجل لهذا المصدر — يبقى مغلقًا حتى قرار صريح."}
+                    </p>
+                    <div className={styles.treasuryRecords} role="tablist" aria-label="سجلات الدرج">
+                      {sources.slice(0, 8).map((source) => (
+                        <button
+                          key={source.sourceId}
+                          type="button"
+                          role="tab"
+                          aria-selected={source.sourceId === treasuryRecord.sourceId}
+                          className={source.sourceId === treasuryRecord.sourceId ? styles.treasuryRecordOn : ""}
+                          onClick={() => openDrawer(source.sourceId)}
+                        >
+                          {source.title}
+                        </button>
+                      ))}
+                    </div>
+                    <div className={styles.treasuryCardTools}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          openDrawer(treasuryRecord.sourceId);
+                          setTreasuryOpen(false);
+                        }}
+                      >
+                        <FileCheck2 size={13} aria-hidden /> فحص السجل الكامل والعلاقات
+                      </button>
+                      {treasuryRecord.canonicalUrl ? (
+                        <a href={treasuryRecord.canonicalUrl} target="_blank" rel="noopener noreferrer">
+                          المصدر الأصلي <ExternalLink size={12} aria-hidden />
+                        </a>
+                      ) : null}
+                      <button
+                        type="button"
+                        className={treasuryLamp ? styles.treasuryToolOn : ""}
+                        onClick={() => setTreasuryLamp((value) => !value)}
+                      >
+                        <Lamp size={13} aria-hidden /> {treasuryLamp ? "إطفاء المصباح" : "إضاءة المصباح"}
+                      </button>
+                      <button type="button" onClick={() => setTreasuryOpen(false)}>
+                        الخزانة الكاملة
+                      </button>
+                    </div>
+                    <p className={styles.treasuryBoundary}>
+                      العلاقات مراجع مسجلة فقط — لا استنتاج ولا اختراع، والتحقق البرمجي ليس اعتمادًا علميًا شرعيًا.
+                    </p>
+                  </>
+                ) : (
+                  <p className={styles.treasuryMeta}>
+                    لا توجد مصادر مطابقة لهذا البحث في السجل المحلي الحالي — لا تُخترع بدائل.
+                  </p>
+                )}
+              </div>
+            }
+          />
+        </Suspense>
+      ) : null}
+
+      {treasuryAvailable && !showTreasury ? (
+        <button
+          type="button"
+          className={styles.treasuryEnter}
+          data-visual="sources-treasury-enter"
+          onClick={() => setTreasuryOpen(true)}
+        >
+          <Boxes size={15} aria-hidden />
+          ادخل خزانة المصادر ثلاثية الأبعاد — فهرسة وتتبّع وتحقق
+        </button>
+      ) : null}
+
+      {/* The full registry stays mounted while the 3D treasury is open;
+          it is only visually hidden (search, filters and drawer keep state). */}
+      <div className={showTreasury ? styles.treasuryHidden : undefined}>
       <section className={styles.hero} aria-labelledby="sources-title">
         <div className={styles.heroCopy}>
           <div className={styles.eyebrow}>
@@ -554,7 +708,7 @@ export default function SourcesPage() {
         )}
       </section>
 
-      {openSource ? (
+      {openSource && !showTreasury ? (
         <div className={styles.drawerScrim} onClick={closeDrawer}>
           <div
             ref={drawerRef}
@@ -695,6 +849,7 @@ export default function SourcesPage() {
           </div>
         </div>
       ) : null}
+      </div>
     </div>
   );
 }

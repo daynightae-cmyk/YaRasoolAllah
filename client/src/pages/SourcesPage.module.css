@@ -450,3 +450,186 @@
   font-size: .7rem;
   line-height: 1.8;
 }
+
+/* ===== Sources treasury 3D entry + record overlay (directive 4.J) ===== */
+.treasuryEnter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  align-self: flex-start;
+  min-height: 44px;
+  margin: 0.6rem clamp(0.8rem, 2vw, 1.6rem) 0;
+  padding: 0.55rem 1.1rem;
+  border: 1px solid var(--border-gold);
+  border-radius: 999px;
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.16), rgba(90, 61, 34, 0.2));
+  color: var(--text-gold);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 200ms ease, border-color 200ms ease;
+}
+.treasuryEnter:hover {
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.28), rgba(90, 61, 34, 0.3));
+}
+.treasuryEnter:focus-visible {
+  outline: 3px solid var(--border-gold);
+  outline-offset: 2px;
+}
+.treasuryLoading {
+  margin: 1rem clamp(0.8rem, 2vw, 1.6rem);
+  padding: 2.4rem 1rem;
+  border: 1px dashed var(--border-gold);
+  border-radius: var(--radius-lg);
+  color: var(--text-muted);
+  text-align: center;
+  font-size: 0.85rem;
+}
+/* Full registry stays mounted (state continuity) but visually hidden. */
+.treasuryHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.treasuryCard {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.8rem 1rem 0.9rem;
+}
+.treasuryDrawers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: center;
+  max-height: 118px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-gold) transparent;
+}
+.treasuryDrawers button {
+  min-height: 32px;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--border-panel);
+  border-radius: 8px;
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 0.68rem;
+  cursor: pointer;
+}
+.treasuryDrawerOn {
+  border-color: var(--border-gold) !important;
+  color: var(--text-gold) !important;
+}
+.treasuryCardHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.treasuryCardHead strong {
+  color: var(--text-gold);
+  font-size: 0.88rem;
+}
+.treasuryStatus {
+  padding: 0.14rem 0.55rem;
+  border: 1px solid rgba(212, 160, 23, 0.5);
+  border-radius: 999px;
+  color: var(--text-gold);
+  font-size: 0.62rem;
+}
+.treasuryMeta {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  line-height: 1.7;
+  text-align: center;
+}
+.treasuryRights {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.74rem;
+  line-height: 1.8;
+  text-align: center;
+}
+.treasuryRecords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: center;
+  max-height: 76px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-gold) transparent;
+}
+.treasuryRecords button {
+  min-height: 30px;
+  padding: 0.28rem 0.6rem;
+  border: 1px solid var(--border-panel);
+  border-radius: 999px;
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 0.64rem;
+  cursor: pointer;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.treasuryRecordOn {
+  border-color: var(--border-gold) !important;
+  color: var(--text-gold) !important;
+}
+.treasuryCardTools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+}
+.treasuryCardTools button,
+.treasuryCardTools a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 34px;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--border-panel);
+  border-radius: 999px;
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 180ms ease, color 180ms ease;
+}
+.treasuryCardTools button:hover,
+.treasuryCardTools a:hover {
+  border-color: var(--border-gold);
+  color: var(--text-primary);
+}
+.treasuryToolOn {
+  border-color: var(--border-gold) !important;
+  color: var(--text-gold) !important;
+}
+.treasuryBoundary {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.62rem;
+  line-height: 1.7;
+  text-align: center;
+}
+@media (prefers-reduced-motion: reduce) {
+  .treasuryEnter,
+  .treasuryCardTools button,
+  .treasuryCardTools a {
+    transition: none;
+  }
+}
