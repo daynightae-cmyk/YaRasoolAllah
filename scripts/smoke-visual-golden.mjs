@@ -306,7 +306,13 @@ try {
       if (!geometry.search || !geometry.form || !geometry.copy || geometry.documentWidth > geometry.viewport + 1 || geometry.search.width < 32 || geometry.search.left < -1 || geometry.search.right > geometry.viewport + 1 || geometry.form.left < -1 || geometry.form.right > geometry.viewport + 1 || geometry.form.top < geometry.copy.top - 1 || geometry.form.bottom > geometry.copy.bottom + 1) {
         throw new Error(`${item.name} clipped or overlapping shell: ${JSON.stringify(geometry)}`);
       }
-      if (geometry.wings.length !== 8 || geometry.wings.some((wing) => wing.width < 80 || wing.left < -1 || wing.right > geometry.viewport + 1)) {
+      // The Gate of Light home renders nine distinct knowledge wings (the
+      // institution map). Vertical placement below the fold is intended —
+      // the hero is a full doorway entrance; the contract checks presence,
+      // width and horizontal containment, not viewport height.
+      const expectedWings = ["/seerah", "/quran", "/hadith", "/library", "/atlas", "/kids", "/audio", "/daily", "/sources"];
+      const wingHrefs = geometry.wings.map((wing) => wing.href).sort();
+      if (JSON.stringify(wingHrefs) !== JSON.stringify([...expectedWings].sort()) || geometry.wings.some((wing) => wing.width < 80 || wing.left < -1 || wing.right > geometry.viewport + 1)) {
         throw new Error(`${item.name} knowledge wings missing or clipped: ${JSON.stringify(geometry.wings)}`);
       }
       diagnostics.geometry = geometry;

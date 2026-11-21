@@ -768,7 +768,6 @@ export function TerrainTheatre3D({ scene: config, onExit, onUnavailable }: Terra
     };
     // Motion is synced through the effect below; rebuilding on motion change
     // would tear down live geometry for no benefit.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [config.eventId]);
 
   useEffect(() => {

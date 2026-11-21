@@ -192,7 +192,6 @@ export default function SourcesPage() {
       window.removeEventListener("keydown", onKey);
       window.cancelAnimationFrame(frame);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openSource, treasuryOpen]);
 
   const sources = useMemo(

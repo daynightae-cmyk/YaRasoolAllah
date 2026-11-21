@@ -486,7 +486,6 @@ export function QuranPage() {
       handleAudioStreamError();
     });
     // Intentionally keyed on the loaded stream only: play once per arrival.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedReciter?.streamUrl, recitationState.state]);
 
   const chooseReciter = (key: string) => {

@@ -121,7 +121,6 @@ export function InteriorScene3D({
     };
     // Motion, lamp and playback sync through the effects below; rebuilding on
     // those changes would tear down live geometry for no benefit.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [config.sceneId]);
 
   useEffect(() => {

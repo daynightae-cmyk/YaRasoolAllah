@@ -150,15 +150,16 @@ export class ThreeRuntime {
       this.installContextHandlers(renderer);
       this.installObservers();
 
-      const self = this;
+      // Live view of the runtime's motion — a plain snapshot would freeze
+      // the adapter's reduced-motion branches at build time, so later
+      // setMotion flips would never reach scene travel/lamp decisions.
+      // The arrow captures this runtime instance without a `self` alias.
+      const readMotion = () => this.motion;
       const context: ThreeRuntimeContext = {
         renderer,
         host: this.options.host,
-        // Live view of the runtime's motion — a plain snapshot would freeze
-        // the adapter's reduced-motion branches at build time, so later
-        // setMotion flips would never reach scene travel/lamp decisions.
         get motion() {
-          return self.motion;
+          return readMotion();
         },
         graphicsTier: this.graphicsTier,
         shadowsEnabled: this.shadowsEnabled(),

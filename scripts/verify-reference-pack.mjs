@@ -148,7 +148,7 @@ if (existsSync(worldsManifestPath)) {
       fail(
         `plate ${plate.plate ?? "?"} source hash drifted: recorded ${plate.sourceSha256}, pack now ${sourceHash}`,
       );
-      plateMismatch += 1;
+      problems.plateMismatch += 1;
       continue;
     }
 
