@@ -1,0 +1,235 @@
+/* ==========================================================================
+   TERRAIN THEATRE 3D — genuine observer terrain for Seerah battle events.
+   Educational, respectful: no people, no combat, no gameplay.
+   ========================================================================== */
+
+.theatre {
+  position: relative;
+  z-index: 0;
+  height: clamp(340px, 46vw, 520px);
+  overflow: hidden;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  background: #0a0d12;
+  outline: none;
+}
+
+.theatre:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--accent-amber, #d4a017);
+}
+
+.canvasHost {
+  position: absolute;
+  inset: 0;
+}
+
+.canvasHost canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+
+.canvasHost canvas:active {
+  cursor: grabbing;
+}
+
+/* --- HUD overlay --- */
+.hud {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.75rem;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(2, 8, 12, 0.55) 0%,
+    transparent 22%,
+    transparent 62%,
+    rgba(2, 8, 12, 0.78) 100%
+  );
+}
+
+.hudTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid rgba(212, 160, 23, 0.4);
+  border-radius: var(--radius-full);
+  background: rgba(6, 12, 16, 0.72);
+  color: #e8c547;
+  font-size: 0.66rem;
+  line-height: 1.5;
+}
+
+.hudActions {
+  display: flex;
+  gap: 0.4rem;
+  pointer-events: auto;
+}
+
+.hudButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.16));
+  border-radius: var(--radius-full);
+  background: rgba(6, 12, 16, 0.78);
+  color: var(--text-primary, #f3e9d2);
+  font-size: 0.68rem;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+.hudButton:hover {
+  background: rgba(20, 30, 36, 0.9);
+  border-color: rgba(212, 160, 23, 0.55);
+}
+
+/* --- Station note --- */
+.stationNote {
+  align-self: flex-start;
+  max-width: min(430px, 82%);
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.14));
+  border-radius: var(--radius-md, 10px);
+  background: rgba(4, 10, 14, 0.82);
+  color: var(--text-primary, #f3e9d2);
+  pointer-events: auto;
+}
+
+.stationNote strong {
+  display: block;
+  font-size: 0.78rem;
+  color: #e8c547;
+  margin-bottom: 0.2rem;
+}
+
+.stationNote p {
+  margin: 0;
+  font-size: 0.68rem;
+  line-height: 1.75;
+  color: var(--text-muted, #c9bfa8);
+}
+
+/* --- Travel controls --- */
+.travelRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: auto;
+}
+
+.travelButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+  padding: 0.4rem 0.7rem;
+  border: 1px solid rgba(212, 160, 23, 0.4);
+  border-radius: var(--radius-full);
+  background: rgba(6, 12, 16, 0.82);
+  color: #e8c547;
+  font-size: 0.68rem;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.travelButton:hover:not(:disabled) {
+  background: rgba(24, 32, 24, 0.92);
+}
+
+.travelButton:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.nodeRail {
+  display: flex;
+  gap: 0.35rem;
+  flex: 1;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.nodeChip {
+  padding: 0.32rem 0.6rem;
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.16));
+  border-radius: var(--radius-full);
+  background: rgba(6, 12, 16, 0.72);
+  color: var(--text-muted, #c9bfa8);
+  font-size: 0.62rem;
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.nodeChip:hover:not(:disabled) {
+  border-color: rgba(212, 160, 23, 0.5);
+}
+
+.nodeChip:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.nodeChipOn {
+  background: rgba(212, 160, 23, 0.18);
+  border-color: rgba(212, 160, 23, 0.65);
+  color: #e8c547;
+}
+
+/* --- Disclosure + hint --- */
+.disclosure {
+  margin: 0.45rem 0 0;
+  font-size: 0.6rem;
+  line-height: 1.7;
+  color: var(--text-muted, #b3a88f);
+  text-align: center;
+}
+
+.hint {
+  margin: 0.15rem 0 0;
+  font-size: 0.58rem;
+  color: rgba(201, 191, 168, 0.7);
+  text-align: center;
+}
+
+/* --- Responsive --- */
+@media (max-width: 700px) {
+  .theatre {
+    height: clamp(300px, 62vw, 420px);
+  }
+  .stationNote {
+    max-width: 92%;
+  }
+  .stationNote p {
+    font-size: 0.62rem;
+  }
+  .travelRow {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .hint {
+    display: none;
+  }
+}
+
+/* Reduced motion: no decorative transitions; the runtime already renders
+   discrete frames and instant node jumps. */
+@media (prefers-reduced-motion: reduce) {
+  .hudButton,
+  .travelButton,
+  .nodeChip {
+    transition: none;
+  }
+}
