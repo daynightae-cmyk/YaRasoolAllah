@@ -295,3 +295,113 @@
     animation: none;
   }
 }
+
+/* --- Kids quiz garden (§4.H optional educational activity) --- */
+.quizBoard {
+  background: linear-gradient(180deg, #1d4a3a, #0d241d);
+}
+.quizStatus {
+  margin: 0 0 0.7rem;
+  color: var(--gold-300, #f3dd9a);
+  font-size: 0.8rem;
+  line-height: 1.7;
+}
+.quizError {
+  display: grid;
+  gap: 0.6rem;
+  justify-items: start;
+  padding: 0.8rem;
+  border: 1px solid rgba(220, 90, 90, 0.5);
+  border-radius: 12px;
+  color: #ffd9d9;
+  font-size: 0.85rem;
+  line-height: 1.7;
+}
+.quizRound {
+  display: grid;
+  gap: 0.7rem;
+}
+.quizPrompt {
+  margin: 0;
+  color: #fdfaf0;
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.9;
+}
+.quizOptions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+.quizOption,
+.quizOptionCorrect,
+.quizOptionWrong {
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.6rem 0.7rem;
+  border-radius: 12px;
+  border: 1px solid rgba(232, 197, 71, 0.35);
+  background: rgba(255, 253, 243, 0.06);
+  color: #fdfaf0;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 200ms ease, background 200ms ease;
+}
+.quizOption:not(:disabled):hover {
+  border-color: var(--gold-400, #e8c547);
+  background: rgba(232, 197, 71, 0.14);
+}
+.quizOption:disabled {
+  cursor: default;
+  opacity: 0.75;
+}
+.quizOptionCorrect {
+  border-color: #6fce8f;
+  background: rgba(64, 160, 96, 0.28);
+  color: #d9ffe6;
+  opacity: 1;
+}
+.quizOptionWrong {
+  border-color: #d98a8a;
+  background: rgba(190, 70, 70, 0.24);
+  color: #ffd9d9;
+  opacity: 1;
+}
+.quizFeedback {
+  display: grid;
+  gap: 0.45rem;
+  justify-items: start;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid rgba(232, 197, 71, 0.3);
+  border-radius: 12px;
+  background: rgba(255, 253, 243, 0.05);
+}
+.quizFeedback p {
+  margin: 0;
+  color: #fdfaf0;
+  font-size: 0.88rem;
+  line-height: 1.8;
+}
+.quizReference {
+  color: #bcd6c4 !important;
+  font-size: 0.75rem !important;
+}
+.quizDone {
+  display: grid;
+  gap: 0.6rem;
+  justify-items: start;
+}
+.quizFootnote {
+  margin: 0.9rem 0 0;
+  color: #9fbfae;
+  font-size: 0.7rem;
+  line-height: 1.7;
+}
+@media (max-width: 480px) {
+  .quizOptions {
+    grid-template-columns: 1fr;
+  }
+}

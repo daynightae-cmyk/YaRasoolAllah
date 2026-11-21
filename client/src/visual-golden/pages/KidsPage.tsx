@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "wouter";
 import { Puzzle, Palette, Lightbulb, Star, BookOpen, Users, FileText, ExternalLink, Film, Heart, Leaf } from "lucide-react";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
 import { ColoringStudio } from "@/visual-golden/components/unique/ColoringStudio";
+import { KidsQuizGarden } from "@/visual-golden/components/unique/KidsQuizGarden";
 import { StoryTheatre } from "@/visual-golden/components/present/StoryTheatre";
 import { KidsTVRoom } from "@/visual-golden/components/kids-tv/KidsTVRoom";
 import { MediaLibrarySection } from "@/visual-golden/components/media/MediaLibrarySection";
@@ -21,6 +23,9 @@ import styles from "./KidsPage.module.css";
 import { PARENT_DISCOVERY_SOURCES } from "@shared/kids-media-governance";
 
 const SEEN_KEY = "kids-seen-adaptations-v1";
+const QUIZ_KEY = "kids-quiz-sessions-v1";
+const AGE_BANDS = ["6-8", "9-12", "13-15"] as const;
+type AgeBandFilter = "all" | (typeof AGE_BANDS)[number];
 
 function safeReadSeen(): string[] {
   try {
@@ -34,13 +39,29 @@ function safeReadSeen(): string[] {
   }
 }
 
+/** Fail-closed: only a non-negative integer count survives storage. */
+function safeReadQuizSessions(): number {
+  try {
+    const raw = localStorage.getItem(QUIZ_KEY);
+    if (!raw) return 0;
+    const parsed: unknown = Number(raw);
+    if (typeof parsed !== "number" || !Number.isInteger(parsed) || parsed < 0) return 0;
+    return parsed;
+  } catch {
+    return 0;
+  }
+}
+
 export function KidsPage() {
   const [theatre, setTheatre] = useState(false);
   const [coloring, setColoring] = useState(false);
+  const [quizOpen, setQuizOpen] = useState(false);
+  const [quizSessions, setQuizSessions] = useState(() => safeReadQuizSessions());
   const [seen, setSeen] = useState<string[]>(() => safeReadSeen());
   const [colorSessions, setColorSessions] = useState(0);
   const [activeRoom, setActiveRoom] = useState<"stories" | "parents">("stories");
   const [activeAdaptationId, setActiveAdaptationId] = useState("");
+  const [ageFilter, setAgeFilter] = useState<AgeBandFilter>("all");
   const recordReadingProgress = useInstitution((state) => state.recordReadingProgress);
 
   const current = KIDS_STORIES.find((story) => story.adaptationId === activeAdaptationId) ?? null;
@@ -51,6 +72,17 @@ export function KidsPage() {
   );
   const seenCount = useMemo(() => countDistinctSeenKidsAdaptations(seen), [seen]);
   const threeStoryEarned = useMemo(() => hasThreeStoryKidsBadge(seen), [seen]);
+  // Age-appropriate navigation: the visible list narrows, the full registry
+  // remains available through "الكل" and the theatre's prev/next rail.
+  const visibleStories = useMemo(
+    () => (ageFilter === "all" ? KIDS_STORIES : KIDS_STORIES.filter((story) => story.ageBand === ageFilter)),
+    [ageFilter],
+  );
+  const ageCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const story of KIDS_STORIES) counts.set(story.ageBand, (counts.get(story.ageBand) ?? 0) + 1);
+    return counts;
+  }, []);
 
   useEffect(() => {
     if (!current) return;
@@ -78,6 +110,18 @@ export function KidsPage() {
         localStorage.setItem(SEEN_KEY, JSON.stringify(next));
       } catch {
         // seen remains in-memory
+      }
+      return next;
+    });
+  };
+
+  const recordQuizSession = () => {
+    setQuizSessions((count) => {
+      const next = count + 1;
+      try {
+        localStorage.setItem(QUIZ_KEY, String(next));
+      } catch {
+        // count remains in-memory
       }
       return next;
     });
@@ -120,11 +164,11 @@ export function KidsPage() {
       },
       {
         title: "رفيق التعلّم",
-        en: "تقدّم محلي على هذا الجهاز فقط",
-        earned: false,
+        en: quizSessions >= 1 ? `جولة ألغاز مكتملة محليًا ✓ (${quizSessions})` : "أكمل جولة في حديقة الألغاز",
+        earned: quizSessions >= 1,
       },
     ],
-    [seenCount, threeStoryEarned, colorSessions],
+    [seenCount, threeStoryEarned, colorSessions, quizSessions],
   );
 
   return (
@@ -144,9 +188,9 @@ export function KidsPage() {
           <p>شاهدوا الحلقات التعليمية داخل مسرح النور، ثم انتقلوا للقصص والأنشطة ومعلومات المصادر عند الحاجة.</p>
         </div>
         <div className={styles.gardenPaths} role="list" aria-label="مسارات التعلم">
-          <span role="listitem"><Heart size={17} aria-hidden="true" /> سيرة النبي ﷺ</span>
+          <Link role="listitem" href="/seerah"><Heart size={17} aria-hidden="true" /> سيرة النبي ﷺ</Link>
           <span role="listitem"><Leaf size={17} aria-hidden="true" /> الأخلاق والآداب</span>
-          <span role="listitem"><BookOpen size={17} aria-hidden="true" /> القرآن الكريم</span>
+          <Link role="listitem" href="/quran"><BookOpen size={17} aria-hidden="true" /> القرآن الكريم</Link>
           <span role="listitem"><Star size={17} aria-hidden="true" /> قصص الأنبياء</span>
         </div>
         <div className={styles.roomTabs} role="group" aria-label="اختر قسم الأطفال">
@@ -233,8 +277,30 @@ export function KidsPage() {
             <p id="kids-adaptation-help" className="muted" style={{ margin: "0.55rem 0 0.6rem", fontSize: "0.76rem" }}>
               الاختيار وحده لا يُحتسب فتحًا؛ تُحتسب القصة عند فتحها فعليًا من القائمة أدناه.
             </p>
+            <div className={styles.ageFilter} role="group" aria-label="تصفية حسب الفئة العمرية" data-visual="kids-age-filter">
+              <span className={styles.ageFilterLabel}>الفئة العمرية:</span>
+              <button
+                type="button"
+                className={ageFilter === "all" ? styles.ageChipActive : styles.ageChip}
+                aria-pressed={ageFilter === "all"}
+                onClick={() => setAgeFilter("all")}
+              >
+                الكل ({KIDS_STORIES.length})
+              </button>
+              {AGE_BANDS.map((band) => (
+                <button
+                  key={band}
+                  type="button"
+                  className={ageFilter === band ? styles.ageChipActive : styles.ageChip}
+                  aria-pressed={ageFilter === band}
+                  onClick={() => setAgeFilter(band)}
+                >
+                  {ageBandLabel(band)} ({ageCounts.get(band) ?? 0})
+                </button>
+              ))}
+            </div>
             <ul className={styles.adaptGrid} aria-label="قائمة التكييفات المحلية">
-              {KIDS_STORIES.map((story, index) => {
+              {visibleStories.map((story, index) => {
                 const isSeen = seen.includes(story.adaptationId);
                 const isCurrent = story.adaptationId === activeAdaptationId;
                 return (
@@ -268,8 +334,10 @@ export function KidsPage() {
                 );
               })}
             </ul>
-            {!KIDS_STORIES.length && (
-              <p className="muted" style={{ fontSize: "0.8rem" }}>لا توجد تكييفات مسجلة بعد.</p>
+            {!visibleStories.length && (
+              <p className="muted" style={{ fontSize: "0.8rem" }}>
+                {KIDS_STORIES.length === 0 ? "لا توجد تكييفات مسجلة بعد." : "لا توجد تكييفات في هذه الفئة العمرية بعد."}
+              </p>
             )}
           </section>
           <KidsTVRoom onReadStory={current ? openCurrentStory : undefined} />
@@ -286,10 +354,10 @@ export function KidsPage() {
         <section className={styles.panel}>
           <SectionHead title="أنشطة وتحديات" en="Activities — local tools only" />
           <div className={styles.actGrid}>
-            <button type="button" disabled title="الألغاز قيد الإعداد — غير متاحة بعد" style={{ opacity: 0.6 }}>
+            <button type="button" onClick={() => setQuizOpen(true)} data-visual="kids-quiz-open">
               <Puzzle size={18} />
-              <strong>ألغاز إسلامية</strong>
-              <span>قيد الإعداد</span>
+              <strong>ألغاز المصحف</strong>
+              <span>أسئلة من بيانات السور الحقيقية</span>
             </button>
             <button type="button" onClick={() => setColoring(true)}>
               <Palette size={18} />
@@ -343,6 +411,11 @@ export function KidsPage() {
             {KIDS_COUNTS.adaptations} تكييفات أصلية مسجلة · المراجعة العلمية معلقة للجميع · لا تجسيد
             للنبي ﷺ
           </p>
+          <p className="muted" style={{ fontSize: "0.73rem", marginTop: "0.35rem", lineHeight: 1.8 }}>
+            القصص تكييفات تعليمية أصلية وليست نصوصًا منقولة، والشخصيات التعليمية افتراضية لا تُنسب
+            إلى وقائع دينية. القراءة الصوتية بصوت الجهاز اختيارية ولا تعمل تلقائيًا. لا ندّعي اعتمادًا
+            علميًا أو شهادة سلامة محتوى؛ راجعوا كل مادة قبل مشاركتها مع أطفالكم.
+          </p>
         </section>
       </div>
 
@@ -358,6 +431,9 @@ export function KidsPage() {
         </span>
         <span>
           <b>{colorSessions}</b> جلسات تلوين محلية
+        </span>
+        <span>
+          <b>{quizSessions}</b> جولات ألغاز مكتملة محليًا
         </span>
       </footer>
       {theatre && current ? (
@@ -382,6 +458,12 @@ export function KidsPage() {
         <ColoringStudio
           onClose={() => setColoring(false)}
           onSessionComplete={() => setColorSessions((count) => count + 1)}
+        />
+      ) : null}
+      {quizOpen ? (
+        <KidsQuizGarden
+          onClose={() => setQuizOpen(false)}
+          onSessionComplete={recordQuizSession}
         />
       ) : null}
     </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { X, ShieldCheck, ArrowLeft, ArrowRight, Link2 } from "lucide-react";
+import { X, ShieldCheck, ArrowLeft, ArrowRight, Link2, Volume2, VolumeX } from "lucide-react";
 import type { KidsAdaptationSource } from "@/visual-golden/services/kids";
 import { kidsReviewStatusLabel } from "@/visual-golden/services/kids";
 import styles from "./present.module.css";
@@ -40,6 +40,10 @@ export function StoryTheatre({
   onClose,
 }: Props) {
   const [open, setOpen] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
+  const [speechSupported, setSpeechSupported] = useState(false);
+  const [arabicVoiceReady, setArabicVoiceReady] = useState(false);
+  const [speechError, setSpeechError] = useState(false);
 
   useEffect(() => {
     const t = requestAnimationFrame(() => setOpen(true));
@@ -52,6 +56,67 @@ export function StoryTheatre({
       window.removeEventListener("keydown", onKey);
     };
   }, [onClose]);
+
+  // Accessible read-aloud: the device's own speech engine reads the SAME
+  // governed text shown on screen — never a generated recording. Strictly
+  // opt-in (no autoplay), stops on close, and degrades to a visible note when
+  // the device offers no Arabic-capable voice. Some engines load voices
+  // asynchronously, so we watch voiceschanged too.
+  useEffect(() => {
+    if (!("speechSynthesis" in window)) {
+      setSpeechSupported(false);
+      return;
+    }
+    setSpeechSupported(true);
+    const synth = window.speechSynthesis;
+    const detect = () => {
+      setArabicVoiceReady(synth.getVoices().some((voice) => voice.lang.toLowerCase().startsWith("ar")));
+    };
+    detect();
+    synth.addEventListener?.("voiceschanged", detect);
+    return () => {
+      synth.removeEventListener?.("voiceschanged", detect);
+      synth.cancel();
+      setSpeaking(false);
+    };
+  }, []);
+
+  // A different story stops any ongoing reading — voice never bleeds across items.
+  useEffect(() => {
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    setSpeaking(false);
+    setSpeechError(false);
+  }, [title]);
+
+  const readAloudText = [title, summary].filter(Boolean).join(". ");
+
+  const toggleReadAloud = () => {
+    if (!speechSupported || !arabicVoiceReady) return;
+    const synth = window.speechSynthesis;
+    if (speaking) {
+      synth.cancel();
+      setSpeaking(false);
+      return;
+    }
+    setSpeechError(false);
+    const utterance = new SpeechSynthesisUtterance(readAloudText);
+    utterance.lang = "ar";
+    const arabicVoice = synth.getVoices().find((voice) => voice.lang.toLowerCase().startsWith("ar"));
+    if (!arabicVoice) {
+      // The voice list changed under us — stay honest rather than mispronounce.
+      setArabicVoiceReady(false);
+      return;
+    }
+    utterance.voice = arabicVoice;
+    utterance.onend = () => setSpeaking(false);
+    utterance.onerror = () => {
+      setSpeaking(false);
+      setSpeechError(true);
+    };
+    synth.cancel();
+    synth.speak(utterance);
+    setSpeaking(true);
+  };
 
   return (
     <div className={`${styles.theatre} ${open ? styles.theatreOpen : ""}`} role="dialog" aria-label={title}>
@@ -72,6 +137,31 @@ export function StoryTheatre({
           {en ? <p className="muted">{en}</p> : null}
           {ageBand ? <p className="muted">الفئة العمرية: {ageBand}</p> : null}
           {summary ? <p style={{ lineHeight: 1.9 }}>{summary}</p> : null}
+          <div className={styles.readAloud} data-visual="kids-read-aloud">
+            {speechSupported && arabicVoiceReady ? (
+              <button
+                type="button"
+                onClick={toggleReadAloud}
+                aria-pressed={speaking}
+                aria-label={speaking ? "إيقاف القراءة الصوتية" : "استمع إلى النص بصوت الجهاز"}
+              >
+                {speaking ? <VolumeX size={15} aria-hidden="true" /> : <Volume2 size={15} aria-hidden="true" />}
+                {speaking ? "إيقاف القراءة" : "استمع للنص"}
+              </button>
+            ) : (
+              <span className={styles.readAloudNote}>
+                {speechSupported
+                  ? "لا يوجد صوت عربي في محرك النطق بجهازك — النص كامل أعلاه للقراءة."
+                  : "القراءة الصوتية غير مدعومة على هذا الجهاز — النص كامل أعلاه."}
+              </span>
+            )}
+            <span className={styles.readAloudNote}>
+              الصوت من محرك النطق في جهازك، وليس تسجيلًا معتمدًا. لا تشغيل تلقائي.
+            </span>
+            {speechError ? (
+              <span role="alert" className={styles.readAloudNote}>تعذر النطق على هذا الجهاز — يمكنك قراءة النص أعلاه.</span>
+            ) : null}
+          </div>
           <p className="muted" style={{ fontSize: "0.8rem" }}>
             الوسائط المعتمدة (فيديو/صوت) غير متوفرة بعد — هذا وضع معاينة وقراءة فقط.
           </p>

@@ -304,7 +304,9 @@ export function KidsTVRoom({ videos = KIDS_VIDEO_CATALOG, onReadStory }: Props) 
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      const target = event.target as HTMLElement | null;
+      // Events dispatched at window/document carry a non-Element target;
+      // only real element targets can match form controls or card scopes.
+      const target = event.target instanceof Element ? event.target : null;
       if (target?.matches("input, textarea, select")) return;
       if (target?.closest("[data-video-card]") && ["ArrowLeft", "ArrowRight", "Enter", " "].includes(event.key)) return;
       if (target?.closest("button, a") && ["Enter", " "].includes(event.key)) return;
