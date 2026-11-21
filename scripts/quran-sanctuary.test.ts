@@ -49,72 +49,87 @@ describe("quran sanctuary registry", () => {
   });
 });
 
-describe("quran sanctuary engine", () => {
+describe("quran sanctuary engine (shared interior engine + shell)", () => {
   const component = read("client/src/visual-golden/components/quran/Sanctuary3D.tsx");
-  const css = read("client/src/visual-golden/components/quran/Sanctuary3D.module.css");
+  const engine = read("client/src/visual-golden/components/three/interior-engine.ts");
+  const shell = read("client/src/visual-golden/components/three/InteriorScene3D.tsx");
+  const css = read("client/src/visual-golden/components/three/InteriorScene3D.module.css");
+
+  it("sanctuary is a furnishing over the shared verified shell", () => {
+    assert.match(component, /InteriorScene3D/);
+    assert.match(component, /furnish=\{furnishSanctuary\}/);
+    assert.match(component, /visualId="quran-sanctuary"/);
+  });
 
   it("runs on the bounded ThreeRuntime — no rogue renderer or rAF", () => {
-    assert.match(component, /new ThreeRuntime\(\{/);
-    assert.match(component, /runtime\.stop\(\)/);
-    assert.doesNotMatch(component, /new THREE\.WebGLRenderer/);
-    assert.doesNotMatch(component, /requestAnimationFrame\(/);
-    assert.doesNotMatch(component, /matchMedia\(/);
+    assert.match(shell, /new ThreeRuntime\(\{/);
+    assert.match(shell, /runtime\.stop\(\)/);
+    for (const source of [component, engine, shell]) {
+      assert.doesNotMatch(source, /new THREE\.WebGLRenderer/);
+      assert.doesNotMatch(source, /requestAnimationFrame\(/);
+      assert.doesNotMatch(source, /matchMedia\(/);
+    }
     // Every geometry/material allocated through the tracker is disposed.
-    assert.match(component, /registerDisposable/);
-    assert.match(component, /scene3\.clear\(\)/);
+    assert.match(engine, /registerDisposable/);
+    assert.match(engine, /scene3\.clear\(\)/);
   });
 
   it("builds real architecture, not a background swap", () => {
     // Pointed arches are extruded shape geometry with a cut opening.
-    assert.match(component, /THREE\.ExtrudeGeometry/);
-    assert.match(component, /outer\.holes\.push\(hole\)/);
-    // Columns, lattice bars, instanced book bindings, lanterns, rug, rehal.
-    assert.match(component, /CylinderGeometry\(0\.42, 0\.5, 4\.4, 12\)/);
+    assert.match(engine, /THREE\.ExtrudeGeometry/);
+    assert.match(engine, /outer\.holes\.push\(hole\)/);
+    // Columns, lanterns and beacons in the shared shell; rug/rehal/books here.
+    assert.match(engine, /CylinderGeometry\(0\.42, 0\.5, 4\.4, 12\)/);
     assert.match(component, /InstancedMesh\(bookGeo, bookMat, bookCount\)/);
-    assert.match(component, /TorusGeometry/); // station beacons
-    assert.match(component, /THREE\.PointLight/);
-    assert.match(component, /THREE\.DirectionalLight/);
+    assert.match(engine, /TorusGeometry/); // station beacons
+    assert.match(engine, /THREE\.PointLight/);
+    assert.match(engine, /THREE\.DirectionalLight/);
   });
 
   it("never renders scripture into scene textures", () => {
-    // No canvas-texture text pipeline exists in the scene builder at all.
-    assert.doesNotMatch(component, /CanvasTexture/);
-    assert.doesNotMatch(component, /fillText/);
-    assert.doesNotMatch(component, /createElement\("canvas"\)/);
+    // No canvas-texture text pipeline exists in any scene builder at all.
+    for (const source of [component, engine, shell]) {
+      assert.doesNotMatch(source, /CanvasTexture/);
+      assert.doesNotMatch(source, /fillText/);
+      assert.doesNotMatch(source, /createElement\("canvas"\)/);
+    }
     assert.match(component, /scripture is never painted into the scene/);
     // The mushaf pages are deliberately blank ivory geometry.
     assert.match(component, /Deliberately blank/);
   });
 
   it("supports node travel, drag-look, reset, exit and reduced motion", () => {
-    assert.match(component, /goToNode/);
-    assert.match(component, /pointerdown/);
-    assert.match(component, /setPointerCapture/);
-    assert.match(component, /event\.key === "Escape"/);
-    assert.match(component, /event\.key === "ArrowLeft"/);
-    assert.match(component, /event\.key === "Home"/);
-    assert.match(component, /context\.motion === "reduced"/);
-    assert.match(component, /resetView/);
+    assert.match(engine, /goToNode/);
+    assert.match(engine, /pointerdown/);
+    assert.match(engine, /setPointerCapture/);
+    assert.match(shell, /event\.key === "Escape"/);
+    assert.match(shell, /event\.key === "ArrowLeft"/);
+    assert.match(shell, /event\.key === "Home"/);
+    assert.match(engine, /context\.motion === "reduced"/);
+    assert.match(engine, /resetView/);
     // Travel is eased movement between stations, not teleport slides.
-    assert.match(component, /eye\.lerpVectors\(travel\.from, travel\.to, k\)/);
+    assert.match(engine, /eye\.lerpVectors\(travel\.from, travel\.to, k\)/);
     // Beacon click raycast targets stations by recorded node id.
-    assert.match(component, /userData\.nodeId = node\.id/);
+    assert.match(engine, /userData\.nodeId = node\.id/);
     // Bounded look diagnostics for browser evidence.
-    assert.match(component, /dataset\.look/);
+    assert.match(engine, /dataset\.look/);
   });
 
   it("the reading lamp drives real light levels", () => {
-    assert.match(component, /setLamp\(on: boolean\)/);
-    assert.match(component, /lampLight\.intensity = 2\.4 \* lit/);
-    assert.match(component, /windowSun\.intensity = 0\.25 \+ lampLevel \* 1\.25/);
-    assert.match(component, /glowMat\.emissiveIntensity/);
+    assert.match(engine, /setLamp\(on: boolean\)/);
+    assert.match(engine, /lampLight\.intensity = 2\.4 \* lit/);
+    assert.match(engine, /windowSun\.intensity = 0\.25 \+ lampLevel \* 1\.25/);
+    assert.match(engine, /glowMat\.emissiveIntensity/);
     // Reduced motion applies lamp state instantly (discrete frames).
-    assert.match(component, /if \(context\.motion === "reduced"\) \{\s*lampLevel = lampTarget;/);
+    assert.match(engine, /if \(context\.motion === "reduced"\) \{\s*lampLevel = lampTarget;/);
+    // Playback level is eased and exposed to wing furnishings.
+    assert.match(engine, /setPlaying\(on: boolean\)/);
+    assert.match(engine, /playbackLevel/);
   });
 
   it("fails closed to the caller's reading surface", () => {
-    assert.match(component, /onFallback/);
-    assert.match(component, /if \(failed\) return null/);
+    assert.match(shell, /onFallback/);
+    assert.match(shell, /if \(failed\) return null/);
     assert.match(css, /\.overlaySlot/);
     assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
   });

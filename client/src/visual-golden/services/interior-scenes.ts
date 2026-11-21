@@ -16,7 +16,17 @@
  */
 
 /** Interior families the procedural builder understands. */
-export type InteriorKind = "sanctuary";
+export type InteriorKind = "sanctuary" | "archive" | "treasury" | "studio" | "garden";
+
+/** Optional architectural shell features; unset flags default to true. */
+export interface InteriorShellConfig {
+  colonnade?: boolean;
+  mashrabiyaWindow?: boolean;
+  mihrab?: boolean;
+  entranceArch?: boolean;
+  ceilingBeams?: boolean;
+  dustMotes?: boolean;
+}
 
 /** One observer station inside an interior scene. Positions are scene-local. */
 export interface InteriorNode {
@@ -43,6 +53,12 @@ export interface InteriorSceneConfig {
   accent: string;
   /** Warm lantern light color (hex). */
   lantern: string;
+  /** Background/fog ink (hex); defaults to deep emerald-black. */
+  ink?: string;
+  /** Hemisphere sky tint (hex); defaults to institutional emerald. */
+  ambient?: string;
+  /** Architectural shell feature flags (see interior-engine). */
+  shell?: InteriorShellConfig;
   /** Ordered observer stations; travel is node-to-node, never free-fly. */
   nodes: InteriorNode[];
   /** Always-visible Arabic artistic-space disclosure. */
