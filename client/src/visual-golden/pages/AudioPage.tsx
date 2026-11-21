@@ -1,10 +1,12 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type SyntheticEvent } from "react";
 import { Link } from "wouter";
 import {
   ExternalLink,
   Headphones,
+  Heart,
   Pause,
   Play,
+  Repeat,
   ShieldCheck,
   SkipBack,
   SkipForward,
@@ -13,6 +15,7 @@ import {
 import { art } from "@/visual-golden/mock/art";
 import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
 import { apiUrl } from "@/lib/api-origin";
+import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import {
   getQuranChapters,
@@ -48,18 +51,88 @@ function formatTime(seconds: number) {
   return `${minutes}:${String(remainder).padStart(2, "0")}`;
 }
 
+const STUDIO_SETTINGS_KEY = "audio-studio-settings-v1";
+const STUDIO_RESUME_KEY = "audio-studio-resume-v1";
+
+function safeReadJson<T>(key: string, fallback: T): T {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? (JSON.parse(raw) as T) : fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function safeWriteJson(key: string, value: unknown) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // Listening remains usable when storage is unavailable.
+  }
+}
+
+/** Fail-closed listening preferences: volume, repeat, stable reciter identity. */
+function readStudioSettings() {
+  const settings = safeReadJson<{ volume?: number; repeat?: boolean; reciterKey?: string }>(STUDIO_SETTINGS_KEY, {});
+  return {
+    volume: Number.isFinite(settings.volume) ? Math.min(1, Math.max(0, settings.volume!)) : 0.78,
+    repeat: settings.repeat === true,
+    reciterKey: typeof settings.reciterKey === "string" ? settings.reciterKey : null,
+  };
+}
+
+interface StudioResume {
+  surah: number;
+  reciterKey: string;
+  position: number;
+}
+
+/**
+ * Resume is only honored for the exact same surah AND reciter/reading — a
+ * position from another recording is never applied to a different stream.
+ */
+function readStudioResume(): StudioResume | null {
+  const saved = safeReadJson<Partial<StudioResume> | null>(STUDIO_RESUME_KEY, null);
+  if (!saved) return null;
+  if (!Number.isInteger(saved.surah) || saved.surah! < 1 || saved.surah! > 114) return null;
+  if (typeof saved.reciterKey !== "string" || !/^\d+:\d+$/.test(saved.reciterKey)) return null;
+  if (!Number.isFinite(saved.position) || saved.position! < 0) return null;
+  return { surah: saved.surah!, reciterKey: saved.reciterKey, position: saved.position! };
+}
+
 export function AudioPage() {
+  const initialResume = useMemo(readStudioResume, []);
+  const initialSettings = useMemo(readStudioSettings, []);
   const [chapters, setChapters] = useState<QuranChapter[]>([]);
-  const [active, setActive] = useState(1);
+  const [active, setActive] = useState(() => {
+    // Deep link ?surah= wins; otherwise resume the last listening session.
+    try {
+      const requested = Number(new URLSearchParams(window.location.search).get("surah"));
+      if (Number.isInteger(requested) && requested >= 1 && requested <= 114) return requested;
+    } catch {
+      // URL parsing is a convenience; listening must still work.
+    }
+    return initialResume?.surah ?? 1;
+  });
   const [reciters, setReciters] = useState<ReciterState>({ state: "idle" });
   const [selectedReciterId, setSelectedReciterId] = useState<number | null>(null);
   const [playing, setPlaying] = useState(false);
   const [streamError, setStreamError] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(0.78);
+  const [volume, setVolume] = useState(initialSettings.volume);
+  const [repeat, setRepeat] = useState(initialSettings.repeat);
   const requestRef = useRef<AbortController | null>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
+  // Stable provider identity ("id:moshafId") preferred across surahs/reloads,
+  // honored only when that exact reciter/reading is available.
+  const preferredReciterKey = useRef<string | null>(initialResume?.reciterKey ?? initialSettings.reciterKey);
+  // One-shot resume: applied only when the saved surah+reciter stream loads.
+  const pendingResume = useRef<StudioResume | null>(initialResume);
+  // Natural-end continuation only; manual navigation always clears it.
+  const autoAdvanceRef = useRef(false);
+  const favorites = useInstitution((state) => state.favorites);
+  const toggleFavorite = useInstitution((state) => state.toggleFavorite);
 
   useEffect(() => {
     let cancelled = false;
@@ -113,7 +186,10 @@ export function AudioPage() {
           items,
           rightsUrl: data.rightsUrl,
         });
-        setSelectedReciterId(items[0]?.id ?? null);
+        const preferred = preferredReciterKey.current
+          ? items.find((item) => `${item.id}:${item.moshafId}` === preferredReciterKey.current)
+          : null;
+        setSelectedReciterId((preferred ?? items[0])?.id ?? null);
       })
       .catch((error: unknown) => {
         if (controller.signal.aborted) return;
@@ -145,7 +221,106 @@ export function AudioPage() {
 
   useEffect(() => {
     if (audioRef.current) audioRef.current.volume = volume;
-  }, [volume]);
+    safeWriteJson(STUDIO_SETTINGS_KEY, {
+      volume,
+      repeat,
+      reciterKey: selectedReciter
+        ? `${selectedReciter.id}:${selectedReciter.moshafId}`
+        : preferredReciterKey.current,
+    });
+  }, [volume, repeat, selectedReciter]);
+
+  // Persist the listening position (throttled by timeupdate ~4Hz) so a
+  // restart resumes the exact same surah + reciter + position.
+  useEffect(() => {
+    if (!selectedReciter || currentTime <= 0) return;
+    safeWriteJson(STUDIO_RESUME_KEY, {
+      surah: active,
+      reciterKey: `${selectedReciter.id}:${selectedReciter.moshafId}`,
+      position: currentTime,
+    });
+  }, [active, currentTime, selectedReciter]);
+
+  // Apply the saved position once, only when the exact saved stream loads.
+  const handleLoadedMetadata = (event: SyntheticEvent<HTMLAudioElement>) => {
+    const audio = event.currentTarget;
+    setDuration(Number.isFinite(audio.duration) ? audio.duration : 0);
+    const resume = pendingResume.current;
+    if (
+      resume
+      && selectedReciter
+      && resume.surah === active
+      && resume.reciterKey === `${selectedReciter.id}:${selectedReciter.moshafId}`
+      && Number.isFinite(audio.duration)
+      && audio.duration > 0
+    ) {
+      const target = Math.min(resume.position, Math.max(0, audio.duration - 1));
+      audio.currentTime = target;
+      setCurrentTime(target);
+      pendingResume.current = null;
+    }
+  };
+
+  // Natural-end continuation in canonical order with the same reciter
+  // preference. Never auto-plays on manual navigation or initial load.
+  useEffect(() => {
+    if (!autoAdvanceRef.current) return;
+    if (reciters.state === "error") {
+      autoAdvanceRef.current = false;
+      return;
+    }
+    if (reciters.state !== "ready" || !selectedReciter) return;
+    autoAdvanceRef.current = false;
+    const audio = audioRef.current;
+    if (!audio) return;
+    void audio.play().catch((error: unknown) => {
+      if (isPlaybackAbortError(error)) return;
+      handleStreamError();
+    });
+    // Intentionally keyed on the loaded stream only: play once per arrival.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedReciter?.streamUrl, reciters.state]);
+
+  // Browser / OS media-session controls reflect the real governed stream.
+  useEffect(() => {
+    if (!("mediaSession" in navigator) || !selectedReciter || !current) return;
+    try {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: `سورة ${current.arabicName}`,
+        artist: `${selectedReciter.name} · ${selectedReciter.reading}`,
+        album: "يا رسول الله ﷺ — تلاوات MP3Quran",
+      });
+      navigator.mediaSession.setActionHandler("play", () => { void audioRef.current?.play().catch(() => handleStreamError()); });
+      navigator.mediaSession.setActionHandler("pause", () => audioRef.current?.pause());
+      navigator.mediaSession.setActionHandler("previoustrack", () => changeSurah(active - 1));
+      navigator.mediaSession.setActionHandler("nexttrack", () => changeSurah(active + 1));
+      navigator.mediaSession.setActionHandler("seekto", (details) => {
+        const audio = audioRef.current;
+        if (!audio || !Number.isFinite(audio.duration) || details.seekTime == null) return;
+        audio.currentTime = Math.min(Math.max(0, details.seekTime), audio.duration);
+        setCurrentTime(audio.currentTime);
+      });
+    } catch {
+      // Media Session is progressive enhancement; the in-page player governs.
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedReciter?.streamUrl, current?.number]);
+
+  useEffect(() => {
+    if (!("mediaSession" in navigator)) return;
+    try {
+      navigator.mediaSession.playbackState = playing ? "playing" : "paused";
+      if (Number.isFinite(duration) && duration > 0 && "setPositionState" in navigator.mediaSession) {
+        navigator.mediaSession.setPositionState({
+          duration,
+          playbackRate: 1,
+          position: Math.min(currentTime, duration),
+        });
+      }
+    } catch {
+      // Position state is best-effort; some browsers reject invalid values.
+    }
+  }, [playing, currentTime, duration]);
 
   useEffect(() => () => requestRef.current?.abort(), []);
 
@@ -177,7 +352,38 @@ export function AudioPage() {
 
   const changeSurah = (next: number) => {
     if (next < 1 || next > 114) return;
+    // Manual navigation cancels any pending auto-play intent.
+    autoAdvanceRef.current = false;
     setActive(next);
+  };
+
+  const chooseReciter = (item: StreamReciter) => {
+    preferredReciterKey.current = `${item.id}:${item.moshafId}`;
+    autoAdvanceRef.current = false;
+    setSelectedReciterId(item.id);
+  };
+
+  const handleEnded = () => {
+    setPlaying(false);
+    if (repeat) return;
+    if (active < 114) {
+      changeSurah(active + 1);
+      // Arm AFTER changeSurah clears manual intent — natural end only.
+      autoAdvanceRef.current = true;
+    }
+  };
+
+  const favoriteId = selectedReciter
+    ? `audio:${selectedReciter.id}:${selectedReciter.moshafId}:surah-${active}`
+    : null;
+  const isFavorite = favoriteId ? favorites.some((favorite) => favorite.id === favoriteId) : false;
+  const toggleTrackFavorite = () => {
+    if (!favoriteId || !selectedReciter || !current) return;
+    toggleFavorite({
+      id: favoriteId,
+      title: `سورة ${current.arabicName} · ${selectedReciter.name}`,
+      path: `/audio?surah=${active}`,
+    });
   };
 
   return (
@@ -236,16 +442,17 @@ export function AudioPage() {
           </ul>
         </aside>
 
-        <div className={styles.player}>
+        <div className={styles.player} data-visual="audio-studio-player">
           <audio
             ref={audioRef}
             src={selectedReciter?.streamUrl}
             preload="metadata"
+            loop={repeat}
             onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)}
-            onLoadedMetadata={(event) => setDuration(event.currentTarget.duration)}
+            onLoadedMetadata={handleLoadedMetadata}
             onPause={() => setPlaying(false)}
             onPlay={() => { setPlaying(true); setStreamError(null); }}
-            onEnded={() => setPlaying(false)}
+            onEnded={handleEnded}
             onError={handleStreamError}
           />
 
@@ -261,6 +468,31 @@ export function AudioPage() {
 
           <button type="button" className={styles.playerIconButton} onClick={() => changeSurah(active - 1)} disabled={active <= 1} aria-label="السورة السابقة">
             <SkipBack size={18} />
+          </button>
+
+          <button
+            type="button"
+            className={`${styles.playerIconButton} ${repeat ? styles.playerIconButtonOn : ""}`}
+            data-visual="audio-repeat"
+            aria-pressed={repeat}
+            onClick={() => setRepeat((value) => !value)}
+            aria-label={repeat ? "إلغاء تكرار السورة" : "تكرار السورة الحالية"}
+            title={repeat ? "تكرار السورة الحالية مفعّل" : "تكرار السورة الحالية"}
+          >
+            <Repeat size={17} />
+          </button>
+
+          <button
+            type="button"
+            className={`${styles.playerIconButton} ${isFavorite ? styles.playerIconButtonOn : ""}`}
+            data-visual="audio-favorite"
+            aria-pressed={isFavorite}
+            disabled={!selectedReciter}
+            onClick={toggleTrackFavorite}
+            aria-label={isFavorite ? "إزالة التلاوة من المفضلة" : "حفظ التلاوة في المفضلة"}
+            title={isFavorite ? "محفوظة في المفضلة" : "حفظ في المفضلة"}
+          >
+            <Heart size={17} fill={isFavorite ? "currentColor" : "none"} />
           </button>
 
           <div className={styles.playerCenter}>
@@ -285,6 +517,9 @@ export function AudioPage() {
             </div>
             <strong>{selectedReciter?.name ?? (reciters.state === "loading" ? "جارٍ جلب القراء…" : "لا توجد تلاوة متاحة")}</strong>
             {streamError ? <span role="alert" className={styles.streamError}>{streamError}</span> : null}
+            <span className={styles.resumeNote}>
+              يُحفظ موضع الاستماع محليًا ويُستأنف عند العودة لنفس السورة والقارئ. عند انتهاء السورة تُتلى التالية تلقائيًا ما لم يكن التكرار مفعّلًا — لا تشغيل تلقائي عند التصفح اليدوي.
+            </span>
           </div>
 
           <button type="button" className={styles.playerIconButton} onClick={() => changeSurah(active + 1)} disabled={active >= 114} aria-label="السورة التالية">
@@ -331,7 +566,7 @@ export function AudioPage() {
                   key={`${item.id}-${item.moshafId}`}
                   type="button"
                   className={item.id === selectedReciter?.id && item.moshafId === selectedReciter.moshafId ? styles.streamReciterOn : ""}
-                  onClick={() => setSelectedReciterId(item.id)}
+                  onClick={() => chooseReciter(item)}
                 >
                   <Headphones size={16} aria-hidden="true" />
                   <span><strong>{item.name}</strong><small>{item.reading}</small></span>

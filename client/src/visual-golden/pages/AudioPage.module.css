@@ -443,6 +443,12 @@
   opacity: 0.4;
   cursor: not-allowed;
 }
+.playerIconButtonOn {
+  background: var(--accent-gold);
+  color: var(--text-ink-dark);
+  border-color: var(--accent-gold);
+  box-shadow: var(--shadow-gold);
+}
 
 .playerCenter {
   flex: 1 1 340px;
@@ -458,6 +464,12 @@
 .streamError {
   color: var(--destructive);
   font-size: 0.74rem;
+  text-align: center;
+  line-height: 1.7;
+}
+.resumeNote {
+  color: var(--text-muted);
+  font-size: 0.68rem;
   text-align: center;
   line-height: 1.7;
 }
