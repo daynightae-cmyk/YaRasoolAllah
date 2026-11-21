@@ -45,8 +45,8 @@ describe("Hadith local search accessibility", () => {
     );
     assert.match(
       searchForm,
-      /placeholder="ابحث في السجلات المحلية: النص، الراوي، الكتاب، الباب\.\.\."/,
-      "the visible placeholder must remain useful",
+      /placeholder="ابحث في السجلات المحلية: النص، الراوي، الكتاب، الباب، أو رقم الحديث\.\.\."/,
+      "the visible placeholder must remain useful (incl. reference-number search)",
     );
   });
 });

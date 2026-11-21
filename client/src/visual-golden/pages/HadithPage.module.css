@@ -218,6 +218,99 @@
   color: #ffe9a8 !important;
 }
 
+/* --- Established cross-links (governed data relationships only) --- */
+.crossLinks {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 0.9rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+}
+.crossLinksTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--text-gold);
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+.crossLink {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  background: var(--bg-elevated);
+  transition: border-color 220ms var(--ease-smooth);
+}
+.crossLink:hover { border-color: var(--border-gold); }
+.crossLink strong {
+  color: var(--text-primary);
+  font-size: 0.8rem;
+}
+.crossLink small {
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  line-height: 1.6;
+}
+.crossTopic {
+  color: var(--text-secondary);
+  font-size: 0.74rem;
+  line-height: 1.7;
+}
+
+/* --- Personal record note (local, never a grading) --- */
+.notePanel {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+}
+.notePanel label {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  line-height: 1.6;
+}
+.notePanel textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 4rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+  font: inherit;
+  font-size: 0.85rem;
+}
+.noteActions {
+  display: flex;
+  gap: 0.5rem;
+}
+.noteActions button {
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-sm);
+  color: var(--text-gold);
+  background: var(--bg-glass);
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+.noteActions button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.noteActions button:not(:disabled):hover {
+  background: var(--accent-gold);
+  color: var(--text-ink-dark);
+}
+
 /* --- Records list --- */
 .topics {
   display: grid;

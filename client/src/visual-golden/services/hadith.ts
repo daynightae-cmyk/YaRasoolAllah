@@ -4,6 +4,7 @@ import {
   type HadithCollection,
   type HadithRecord,
 } from "@/data/hadithData";
+import { SEERAH_EVENTS } from "@/data/seerah";
 import type { HadithCorpusStatus } from "@shared/hadith";
 import { apiUrl } from "@/lib/api-origin";
 
@@ -51,7 +52,10 @@ export function searchSamples(query: string, collectionId: string | "all"): Hadi
       sample.narratorAr.includes(q) ||
       sample.bookNameAr.includes(q) ||
       sample.chapterNameAr.includes(q) ||
-      sample.textEn.toLowerCase().includes(lowered),
+      sample.textEn.toLowerCase().includes(lowered) ||
+      // Reference search: a bare number matches the recorded hadith number
+      // or book number — real registry fields, never invented references.
+      (/^\d+$/.test(q) && (sample.hadithNumber === Number(q) || sample.bookNumber === Number(q))),
   );
 }
 
@@ -89,4 +93,37 @@ export function buildHadithDeepLink(sampleId: string, collectionId: string): str
     params.set("collection", collectionId);
   }
   return `/hadith?${params.toString()}`;
+}
+
+export interface EstablishedSeerahLink {
+  eventId: string;
+  chapterId: string;
+  titleAr: string;
+  noteAr: string;
+  href: string;
+}
+
+/**
+ * Reverse cross-links: Seerah events whose recorded hadithRefs explicitly
+ * cite this local sample. These are ESTABLISHED data relationships — the
+ * link exists because the governed Seerah database records it, never
+ * inferred from topic similarity or invented. Links target the Seerah
+ * database record view, which resolves governed events by id directly.
+ */
+export function establishedSeerahLinks(sampleId: string): EstablishedSeerahLink[] {
+  const links: EstablishedSeerahLink[] = [];
+  for (const event of SEERAH_EVENTS) {
+    for (const ref of event.hadithRefs) {
+      if (ref.kind === "local_sample" && ref.sampleId === sampleId) {
+        links.push({
+          eventId: event.id,
+          chapterId: event.chapterId,
+          titleAr: event.titleAr,
+          noteAr: ref.noteAr,
+          href: `/seerah/database?event=${encodeURIComponent(event.id)}`,
+        });
+      }
+    }
+  }
+  return links;
 }

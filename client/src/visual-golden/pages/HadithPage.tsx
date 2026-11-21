@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Search, Bookmark, BookmarkCheck, ExternalLink, ShieldCheck, Database, Copy, Link2, Check } from "lucide-react";
+import { Link } from "wouter";
+import { Search, Bookmark, BookmarkCheck, ExternalLink, ShieldCheck, Database, Copy, Link2, Check, ScrollText, NotebookPen } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
@@ -13,6 +14,7 @@ import {
   LOCAL_SAMPLES,
   buildHadithDeepLink,
   buildHadithShareText,
+  establishedSeerahLinks,
   getCollection,
   getHadithCorpusStatus,
   searchSamples,
@@ -110,12 +112,22 @@ export function HadithPage() {
   const [matnCopy, setMatnCopy] = useState<CopyState>("idle");
   const [linkCopy, setLinkCopy] = useState<CopyState>("idle");
   const [corpusState, setCorpusState] = useState<CorpusState>({ state: "loading" });
+  const [noteOpen, setNoteOpen] = useState(false);
+  const [noteDraft, setNoteDraft] = useState("");
   const recordReadingProgress = useInstitution((state) => state.recordReadingProgress);
+  const addNote = useInstitution((state) => state.addNote);
 
   const results = useMemo(() => searchSamples(q, collectionId), [q, collectionId]);
   const active = results.find((sample) => sample.id === activeId) ?? results[0] ?? null;
   const activeCollection = active ? getCollection(active.collectionId) : null;
   const activeBookmarked = active ? bookmarks.includes(active.id) : false;
+  const seerahLinks = useMemo(() => active ? establishedSeerahLinks(active.id) : [], [active]);
+
+  // A different record closes any open note draft — notes belong to a record.
+  useEffect(() => {
+    setNoteOpen(false);
+    setNoteDraft("");
+  }, [active?.id]);
 
   useEffect(() => {
     if (!active) return;
@@ -192,6 +204,20 @@ export function HadithPage() {
     setLinkCopy(ok ? "copied" : "error");
   };
 
+  const saveRecordNote = () => {
+    if (!active || !activeCollection) return;
+    const body = noteDraft.trim();
+    if (!body) return;
+    // The note carries the governed share text so the saved note keeps the
+    // record's identity, grading attribution and development-sample label.
+    addNote(
+      `${activeCollection.nameAr} · حديث ${active.hadithNumber}`,
+      `${body}\n\n${buildHadithShareText(active, activeCollection.nameAr)}`,
+    );
+    setNoteDraft("");
+    setNoteOpen(false);
+  };
+
   return (
     <div className={styles.page}>
       <PageHero
@@ -211,7 +237,7 @@ export function HadithPage() {
             aria-label="البحث في السجلات المحلية"
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="ابحث في السجلات المحلية: النص، الراوي، الكتاب، الباب..."
+            placeholder="ابحث في السجلات المحلية: النص، الراوي، الكتاب، الباب، أو رقم الحديث..."
           />
           <button className="btn-gold" type="submit" aria-label="ابحث في السجلات المحلية">
             بحث
@@ -344,10 +370,44 @@ export function HadithPage() {
                 الراوي المسجل — السلسلة الكاملة غير متوفرة كبنية بيانات
               </p>
               <IsnadChain narrator={active.narratorAr} collection={activeCollection.nameAr} />
+
+              {seerahLinks.length > 0 || active.relatedSeerahTopic || active.relatedQuranAyah ? (
+                <div className={styles.crossLinks} data-visual="hadith-cross-links">
+                  <span className={styles.crossLinksTitle}>
+                    <ScrollText size={13} aria-hidden="true" /> روابط مثبتة في البيانات
+                  </span>
+                  {seerahLinks.map((link) => (
+                    <Link key={link.eventId} href={link.href} className={styles.crossLink}>
+                      <strong>السيرة: {link.titleAr}</strong>
+                      <small>{link.noteAr}</small>
+                    </Link>
+                  ))}
+                  {active.relatedSeerahTopic ? (
+                    <span className={styles.crossTopic}>
+                      موضوع سيري مسجل: {active.relatedSeerahTopic}
+                    </span>
+                  ) : null}
+                  {active.relatedQuranAyah ? (
+                    <span className={styles.crossTopic}>
+                      صلة قرآنية مسجلة: {active.relatedQuranAyah}
+                    </span>
+                  ) : null}
+                </div>
+              ) : null}
+
               <div className={styles.actions}>
                 <button type="button" className={activeBookmarked ? styles.on : ""} onClick={toggleBookmark}>
                   {activeBookmarked ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}{" "}
                   {activeBookmarked ? "محفوظ محليًا" : "حفظ محلي"}
+                </button>
+                <button
+                  type="button"
+                  data-visual="hadith-note"
+                  className={noteOpen ? styles.on : ""}
+                  aria-expanded={noteOpen}
+                  onClick={() => setNoteOpen((value) => !value)}
+                >
+                  <NotebookPen size={14} /> ملاحظة على السجل
                 </button>
                 <button type="button" onClick={copyMatn} aria-live="polite">
                   {matnCopy === "copied" ? <Check size={14} /> : <Copy size={14} />}{" "}
@@ -361,6 +421,22 @@ export function HadithPage() {
                   ابحث في الموسوعة الحديثية لدى الدرر السنية <ExternalLink size={14} aria-hidden="true" />
                 </a>
               </div>
+              {noteOpen ? (
+                <div className={styles.notePanel} data-visual="hadith-note-panel">
+                  <label htmlFor="hadith-record-note">ملاحظة شخصية على هذا السجل — تُحفظ محليًا وليست تخريجًا أو حكمًا</label>
+                  <textarea
+                    id="hadith-record-note"
+                    value={noteDraft}
+                    onChange={(event) => setNoteDraft(event.target.value)}
+                    placeholder="اكتب ملاحظتك… يُرفق بها نص السجل وبيانات درجته كما هي."
+                    rows={3}
+                  />
+                  <div className={styles.noteActions}>
+                    <button type="button" disabled={!noteDraft.trim()} onClick={saveRecordNote}>حفظ الملاحظة</button>
+                    <button type="button" onClick={() => setNoteOpen(false)}>إلغاء</button>
+                  </div>
+                </div>
+              ) : null}
             </>
           ) : (
             <p className="muted">لا توجد سجلات محلية مطابقة للبحث الحالي.</p>
