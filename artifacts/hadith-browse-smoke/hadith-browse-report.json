@@ -1,0 +1,23 @@
+{
+  "origin": "http://127.0.0.1:5000",
+  "baseline": [
+    "bukhari-1",
+    "bukhari-13",
+    "muslim-2577",
+    "tirmidhi-1924"
+  ],
+  "sahihIds": [
+    "bukhari-1",
+    "bukhari-13",
+    "muslim-2577",
+    "tirmidhi-1924"
+  ],
+  "savedIds": true,
+  "study": {
+    "hasSampleLabel": true,
+    "hasGrade": true,
+    "hasIsnadHonesty": true
+  },
+  "overflow": false,
+  "runtimeErrors": []
+}
