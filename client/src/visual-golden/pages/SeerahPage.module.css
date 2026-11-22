@@ -1015,3 +1015,295 @@
   .eventButton:hover { transform: none; }
   [dir="rtl"] .eventButton:hover { transform: none; }
 }
+
+/* ==========================================================================
+   FULL-PAGE COMPOSITION — approved reference 07_seerah.png
+   Hero plate + service row + CTAs + measured ledger · journey band ·
+   chapter rail index chips · explore rail.
+   ========================================================================== */
+.heroPlate {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+.heroShade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(90deg, rgba(2, 10, 14, 0.92) 0%, rgba(2, 10, 14, 0.72) 46%, rgba(2, 10, 14, 0.34) 100%),
+    linear-gradient(0deg, rgba(2, 8, 12, 0.86), transparent 55%);
+  pointer-events: none;
+}
+.journeyHead {
+  min-height: clamp(320px, 42vh, 460px);
+}
+.heroServices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.9rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+.heroServices a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 30px;
+  color: var(--gold-100);
+  font-size: 0.74rem;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(232, 197, 71, 0.28);
+}
+.heroServices a:hover,
+.heroServices a:focus-visible {
+  color: #ffe9a8;
+  border-bottom-color: var(--gold-200);
+}
+.heroCtas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+.heroPrimary,
+.heroGhost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 46px;
+  padding: 0.6rem 1.35rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: transform 220ms var(--ease-smooth), background 220ms var(--ease-smooth);
+}
+.heroPrimary {
+  border: 1px solid var(--border-gold);
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.5), rgba(90, 61, 34, 0.4));
+  color: #fff3cf;
+}
+.heroGhost {
+  border: 1px solid rgba(232, 197, 71, 0.45);
+  background: rgba(3, 16, 20, 0.55);
+  color: var(--gold-100);
+}
+.heroPrimary:hover,
+.heroPrimary:focus-visible,
+.heroGhost:hover,
+.heroGhost:focus-visible {
+  transform: translateY(-2px);
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.6), rgba(90, 61, 34, 0.48));
+  color: #fff3cf;
+}
+.heroPrimary:focus-visible,
+.heroGhost:focus-visible {
+  outline: 3px solid var(--border-gold);
+  outline-offset: 2px;
+}
+.heroLedger {
+  display: grid;
+  gap: 0.7rem;
+  align-content: end;
+}
+.journeyStats div {
+  border-color: rgba(232, 197, 71, 0.38);
+  background: rgba(2, 12, 16, 0.72);
+  box-shadow: 0 14px 34px -20px rgba(0, 0, 0, 0.9);
+}
+.heroNote {
+  margin: 0;
+  color: rgba(245, 237, 216, 0.66);
+  font-size: 0.64rem;
+  line-height: 1.8;
+}
+
+/* Journey band: title + CTA above the interactive path. */
+.journeyBand {
+  margin: 1.2rem clamp(0.9rem, 2.6vw, 2.4rem) 0;
+}
+.bandHead {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.8rem;
+}
+.bandKicker {
+  margin: 0 0 0.3rem;
+  color: var(--text-gold);
+  font-family: var(--font-latin);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.bandHead h2,
+.exploreHead h2 {
+  margin: 0 0 0.35rem;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.2vw, 1.7rem);
+}
+.bandHead p {
+  margin: 0;
+  max-width: 62ch;
+  color: var(--text-secondary);
+  font-size: 0.84rem;
+  line-height: 1.9;
+}
+.bandCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  padding: 0.5rem 1.1rem;
+  border: 1px solid var(--border-gold);
+  border-radius: 999px;
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.24), rgba(212, 160, 23, 0.08));
+  color: var(--text-gold);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.bandCta:hover,
+.bandCta:focus-visible {
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.38), rgba(212, 160, 23, 0.16));
+}
+
+/* Chapter rail: index chip + "all chapters" gateway. */
+.stageIndex {
+  position: absolute;
+  z-index: 4;
+  inset-inline-start: 0.5rem;
+  top: 0.5rem;
+  display: grid;
+  place-items: center;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 0.35rem;
+  border: 1px solid rgba(232, 197, 71, 0.5);
+  border-radius: 999px;
+  background: rgba(3, 14, 18, 0.82);
+  color: var(--gold-100);
+  font-family: var(--font-latin);
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 700;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.allChapters {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  width: 158px;
+  padding: 0.8rem 0.6rem;
+  border: 1px dashed var(--border-gold);
+  border-radius: var(--radius-lg);
+  background: rgba(212, 160, 23, 0.08);
+  color: var(--text-gold);
+  text-decoration: none;
+  text-align: center;
+  scroll-snap-align: center;
+}
+.allChapters b {
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 0.86rem;
+}
+.allChapters span {
+  color: var(--text-muted);
+  font-size: 0.66rem;
+}
+.allChapters:hover,
+.allChapters:focus-visible {
+  border-style: solid;
+  background: rgba(212, 160, 23, 0.18);
+}
+
+/* Explore rail: gateways from the journey to the governed surfaces. */
+.exploreRail {
+  margin: 1.2rem clamp(0.9rem, 2.6vw, 2.4rem) 0;
+  padding: clamp(1rem, 2.4vw, 1.6rem);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-lg);
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.exploreHead {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.9rem;
+}
+.exploreNav button {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-gold);
+  border-radius: 999px;
+  background: var(--bg-glass);
+  color: var(--text-gold);
+  cursor: pointer;
+}
+.exploreNav button:hover,
+.exploreNav button:focus-visible {
+  background: rgba(212, 160, 23, 0.16);
+}
+.exploreGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+.exploreCard {
+  display: grid;
+  gap: 0.25rem;
+  align-content: start;
+  justify-items: start;
+  min-height: 112px;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  font: inherit;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 200ms var(--ease-smooth), transform 200ms var(--ease-smooth);
+}
+.exploreCard svg { color: var(--text-gold); }
+.exploreCard strong { color: var(--text-primary); font-size: 0.84rem; }
+.exploreCard small { color: var(--text-muted); font-size: 0.66rem; line-height: 1.7; }
+.exploreCard:hover,
+.exploreCard:focus-visible {
+  border-color: var(--border-gold);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 1000px) {
+  .exploreGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .journeyHead { min-height: 0; }
+  .exploreGrid { grid-template-columns: minmax(0, 1fr); }
+  .bandHead { align-items: start; }
+}

@@ -1,0 +1,38 @@
+{
+  "origin": "http://127.0.0.1:5000",
+  "composition": {
+    "ledger": [
+      "8",
+      "26",
+      "10",
+      "3"
+    ],
+    "services": 4,
+    "chapters": 8,
+    "allChapters": true,
+    "exploreCards": 7,
+    "exploreHrefs": [
+      "/sources",
+      "/atlas",
+      "/seerah/database",
+      "/basirah",
+      "/audio"
+    ],
+    "h1Count": 1,
+    "heroPlate": true
+  },
+  "scrolled": {
+    "scrollY": 11,
+    "top": 661
+  },
+  "battles": {
+    "search": "?chapter=battles-conquests",
+    "title": "الغزوات والمعارك"
+  },
+  "database": true,
+  "journey": {
+    "ok": true
+  },
+  "overflow": false,
+  "runtimeErrors": []
+}

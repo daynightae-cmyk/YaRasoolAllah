@@ -28,7 +28,8 @@ import {
   type SeerahSelection,
 } from "@/visual-golden/services/seerah";
 import { getSeerahScene } from "@/visual-golden/services/seerah-scene";
-import { getGhazawatScene } from "@/visual-golden/services/seerah-ghazawat";
+import { getGhazawatScene, listGhazawatScenes } from "@/visual-golden/services/seerah-ghazawat";
+import { ATLAS_COUNTS } from "@/visual-golden/services/atlas";
 import { chapterWorldPlate, eventWorldPlate } from "@/visual-golden/services/seerah-worlds";
 import { ChapterEnvironment } from "@/visual-golden/components/seerah/ChapterEnvironment";
 import { GhazawatEnvironment } from "@/visual-golden/components/seerah/GhazawatEnvironment";
@@ -202,69 +203,122 @@ export function SeerahPage() {
 
   return (
     <div className={styles.page} dir="rtl" lang="ar">
-      <header className={styles.journeyHead} data-visual="seerah-journey-head">
+      {/* Full-page hero, as in the approved composition: a cinematic world
+          plate behind the identity, a service row to real surfaces, two
+          entry CTAs, and a ledger whose numbers are measured from the local
+          editorial structure — never from the reference's ambition figures. */}
+      <header className={styles.journeyHead} data-visual="seerah-hero">
+        <img
+          className={styles.heroPlate}
+          src="/visual-golden/art/worlds/seerah.webp"
+          alt=""
+          aria-hidden="true"
+        />
+        <div className={styles.heroShade} aria-hidden="true" />
         <div className={styles.journeyCopy}>
           <p className={styles.journeyKicker}>
             <span className={styles.journeyRule} aria-hidden />
-            الموسوعة الحية للسيرة النبوية
+            رحلة تفاعلية في
           </p>
-          <h1 className={styles.journeyTitle}>درب السيرة</h1>
+          <h1 className={styles.journeyTitle}>السيرة النبوية</h1>
           <p className={styles.journeyLead}>
             رحلة سردية في المكان والزمان: من مكة إلى المدينة، ومن الغار إلى الفتح.
             كل فصلٍ مسرحٌ قائم بذاته، وكل محطةٍ تعود إلى قاعدتها الزمنية وموضعها في الأطلس.
           </p>
-          <div className={styles.journeyActions}>
-            <Link href="/seerah/database" className="btn-gold">
-              <Database size={14} /> قاعدة السيرة الزمنية
-            </Link>
-            <Link href="/atlas" className="btn-outline">
-              <Map size={14} /> الأطلس التاريخي
-            </Link>
+          <ul className={styles.heroServices}>
+            <li>
+              <Link href="/seerah/database">
+                <Database size={14} aria-hidden /> قاعدة السيرة الزمنية
+              </Link>
+            </li>
+            <li>
+              <Link href="/atlas">
+                <Map size={14} aria-hidden /> خرائط المسار والمواضع
+              </Link>
+            </li>
+            <li>
+              <Link href="/sources">
+                <ScrollText size={14} aria-hidden /> مصادر ومراجع محكومة
+              </Link>
+            </li>
+            <li>
+              <Link href="/basirah">
+                <BookOpenCheck size={14} aria-hidden /> مقالات ودراسات
+              </Link>
+            </li>
+          </ul>
+          <div className={styles.heroCtas}>
             <button
               type="button"
-              className="btn-outline"
+              className={styles.heroPrimary}
               onClick={() => document.getElementById("chapter-reading")?.scrollIntoView({ behavior: "smooth" })}
             >
-              <ScrollText size={14} /> اقرأ الفصل الحالي
+              <ScrollText size={15} aria-hidden /> ابدأ رحلة السيرة
             </button>
             <button
               type="button"
-              className="btn-outline"
+              className={styles.heroGhost}
               onClick={() =>
                 document.getElementById("seerah-journey-theatre")?.scrollIntoView({
                   behavior: effectiveMotion === "reduced" ? "auto" : "smooth",
                 })
               }
             >
-              <Compass size={14} /> الرحلة السينمائية
+              <Compass size={15} aria-hidden /> نبذة عن الرحلة السينمائية
             </button>
           </div>
         </div>
-        <dl className={styles.journeyStats} aria-label="إحصاءات السيرة">
-          <div>
-            <dt>فصول</dt>
-            <dd>{SEERAH_COUNTS.chapters}</dd>
-          </div>
-          <div>
-            <dt>محطات</dt>
-            <dd>{SEERAH_COUNTS.timelineEvents}</dd>
-          </div>
-          <div>
-            <dt>مراحل</dt>
-            <dd>{SEERAH_COUNTS.categories}</dd>
-          </div>
-          <div>
-            <dt>مقروء</dt>
-            <dd>{readCount}</dd>
-          </div>
-        </dl>
+        <div className={styles.heroLedger}>
+          <dl className={styles.journeyStats} aria-label="إحصاءات البنية المحلية للسيرة">
+            <div>
+              <dt>فصول السيرة</dt>
+              <dd>{SEERAH_COUNTS.chapters}</dd>
+            </div>
+            <div>
+              <dt>محطات مسجّلة</dt>
+              <dd>{SEERAH_COUNTS.timelineEvents}</dd>
+            </div>
+            <div>
+              <dt>محطات الرحلة</dt>
+              <dd>{SEERAH_JOURNEY_STOPS.length}</dd>
+            </div>
+            <div>
+              <dt>مراحل سردية</dt>
+              <dd>{SEERAH_COUNTS.categories}</dd>
+            </div>
+          </dl>
+          <p className={styles.heroNote}>
+            الأعداد من البنية التحريرية المحلية ({readCount} من {CHAPTERS.length} فصول مقروءة على هذا الجهاز)،
+            لا من تقويم تاريخي محسوب ولا حكم علمي على المادة.
+          </p>
+        </div>
       </header>
 
-      <div id="seerah-journey-theatre">
-        <SeerahJourneyTheatre initialIndex={journeyInitialIndex} />
-      </div>
+      {/* Journey band: the interactive path through the recorded stops. */}
+      <section className={styles.journeyBand} data-visual="seerah-journey-band" aria-label="مسار الرحلة">
+        <div className={styles.bandHead}>
+          <div>
+            <p className={styles.bandKicker}>مسار الرحلة</p>
+            <h2>من مكة قبل البعثة إلى اكتمال الرسالة</h2>
+            <p>
+              {SEERAH_JOURNEY_STOPS.length} محطات رحلة مسجّلة على لوحات فنية — كل محطة تفتح فصلها
+              وموضعها، والمسارات تخطيطية لا مساحية.
+            </p>
+          </div>
+          <button
+            type="button"
+            className={styles.bandCta}
+            onClick={() => document.getElementById("seerah-journey-theatre")?.scrollIntoView({ behavior: effectiveMotion === "reduced" ? "auto" : "smooth" })}
+          >
+            <Compass size={15} aria-hidden /> عرض الخريطة التفاعلية
+          </button>
+        </div>
+        <div id="seerah-journey-theatre">
+          <SeerahJourneyTheatre initialIndex={journeyInitialIndex} />
+        </div>
+      </section>
 
-      <section className={styles.timelineWrap} id="seerah-journey" aria-label="فصول السيرة بالترتيب السردي">
+      <section className={styles.timelineWrap} id="seerah-chapters" aria-label="فصول السيرة بالترتيب السردي">
         <button type="button" className={styles.arrow} onClick={() => step(-1)} aria-label="الفصل السابق">
           <ChevronRight size={17} />
         </button>
@@ -279,10 +333,16 @@ export function SeerahPage() {
               data-chapter-id={c.id}
             >
               <img src={chapterThumb(c.id, i)} alt="" loading="lazy" />
+              <i className={styles.stageIndex} aria-hidden>{String(c.order).padStart(2, "0")}</i>
               <b>{c.title}</b>
               <span>مرحلة {c.order} · ترتيب سردي</span>
             </button>
           ))}
+          <Link href="/seerah/database" className={styles.allChapters}>
+            <Database size={14} aria-hidden />
+            <b>جميع الفصول</b>
+            <span>{SEERAH_COUNTS.timelineEvents} محطة في القاعدة</span>
+          </Link>
         </div>
         <button
           type="button"
@@ -616,6 +676,66 @@ export function SeerahPage() {
         title="مسرح السيرة والميديا"
         subtitle="سلاسل سيرة ومحاضرات وخطب من صفحات الفيديو العامة، مع اسم القناة والناشر ورابط المصدر تحت كل بطاقة."
       />
+
+      {/* Explore rail, as in the approved composition: gateways from the
+          journey into the real governed surfaces behind it. */}
+      <section className={styles.exploreRail} data-visual="seerah-explore-rail" aria-label="استكشف مع الرحلة">
+        <header className={styles.exploreHead}>
+          <div>
+            <p className={styles.bandKicker}>استكشف مع الرحلة</p>
+            <h2>من السرد إلى المصدر والمكان</h2>
+          </div>
+          <div className={styles.exploreNav}>
+            <button
+              type="button"
+              onClick={() => document.getElementById("seerah-chapters")?.scrollIntoView({ behavior: effectiveMotion === "reduced" ? "auto" : "smooth" })}
+              aria-label="عرض الفصول"
+            >
+              <ChevronRight size={16} aria-hidden />
+            </button>
+          </div>
+        </header>
+        <div className={styles.exploreGrid}>
+          <Link href="/sources" className={styles.exploreCard}>
+            <ScrollText size={17} aria-hidden />
+            <strong>المصادر والمراجع</strong>
+            <small>فهارس محكومة بقرارات حقوق وحالة تحريرية مسجّلة</small>
+          </Link>
+          <Link href="/atlas" className={styles.exploreCard}>
+            <Map size={17} aria-hidden />
+            <strong>الخرائط والمسارات</strong>
+            <small>{ATLAS_COUNTS.nodes} موضعًا تخطيطيًا على لوحات — بلا إحداثيات</small>
+          </Link>
+          <button
+            type="button"
+            className={styles.exploreCard}
+            onClick={() => selectChapter("battles-conquests")}
+          >
+            <Compass size={17} aria-hidden />
+            <strong>الرحلات والغزوات</strong>
+            <small>
+              {listGhazawatScenes().length} مشهدًا في الفصل
+              {" "}
+              {CHAPTERS.find((item) => item.id === "battles-conquests")?.order ?? 6}
+            </small>
+          </button>
+          <Link href="/seerah/database" className={styles.exploreCard}>
+            <Database size={17} aria-hidden />
+            <strong>قاعدة السيرة الزمنية</strong>
+            <small>{SEERAH_COUNTS.timelineEvents} محطة مسجّلة بإحالاتها</small>
+          </Link>
+          <Link href="/basirah" className={styles.exploreCard}>
+            <BookOpenCheck size={17} aria-hidden />
+            <strong>مقالات ودراسات</strong>
+            <small>منصة البحث والمعرفة — ليست مفتيًا ولا تُصدر أحكامًا</small>
+          </Link>
+          <Link href="/audio" className={styles.exploreCard}>
+            <Compass size={17} aria-hidden />
+            <strong>الصوت والتلاوات</strong>
+            <small>استماع وتلاوة من روافد الصوت المسجّلة</small>
+          </Link>
+        </div>
+      </section>
 
       <section className={styles.closing} aria-label="متابعة الرحلة">
         <div>
