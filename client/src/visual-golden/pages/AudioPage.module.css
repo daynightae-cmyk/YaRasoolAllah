@@ -76,7 +76,8 @@
   color: var(--gold-300);
   font-size: 0.78rem;
 }
-.nowPlaying h1 {
+.nowPlaying h1,
+.nowPlaying h2 {
   margin: 0.15rem 0;
   font-size: clamp(1.6rem, 3vw, 2.4rem);
   color: #f8efc2;
@@ -758,4 +759,193 @@
   }
   .studioCatalog { max-height: 76px; }
   .studioVolume input { width: 100px; }
+}
+
+/* ==========================================================================
+   FULL-PAGE COMPOSITION — approved reference 10_audio.png
+   Hero (plate · identity · services · CTAs · measured ledger) above the
+   real now-playing section and player. Audio wing palette (deep gold / ink)
+   is kept; every number is measured from real registries.
+   ========================================================================== */
+.hero {
+  position: relative;
+  min-height: clamp(340px, 44vh, 520px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.42fr);
+  gap: clamp(1rem, 3vw, 2.4rem);
+  padding: clamp(1.4rem, 3vw, 2.6rem) clamp(1.2rem, 3vw, 2.4rem) clamp(1rem, 2vw, 2rem);
+  isolation: isolate;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border-gold);
+  background: linear-gradient(90deg, rgba(2, 8, 12, 0.96) 0%, rgba(2, 8, 12, 0.55) 60%, rgba(2, 8, 12, 0.2) 100%), #040a0d;
+}
+.heroPlate {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+.heroShade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, rgba(2, 10, 14, 0.94) 0%, rgba(2, 10, 14, 0.62) 48%, rgba(2, 10, 14, 0.3) 100%), linear-gradient(0deg, rgba(2, 8, 12, 0.9), transparent 55%);
+  pointer-events: none;
+}
+.heroCopy {
+  position: relative;
+  z-index: 2;
+  max-width: 56ch;
+}
+.heroKicker {
+  margin: 0 0 0.45rem;
+  color: var(--text-gold);
+  font-family: var(--font-latin);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.heroTitle {
+  margin: 0 0 0.7rem;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  line-height: 1.2;
+}
+.heroLead {
+  margin: 0 0 1rem;
+  color: var(--text-secondary);
+  font-size: clamp(0.9rem, 1.4vw, 1rem);
+  line-height: 1.95;
+}
+.heroServices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin: 0 0 1.1rem;
+  padding: 0;
+  list-style: none;
+}
+.heroServices li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+.heroServices svg { color: var(--gold-300); }
+.heroCtas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+.heroPrimary,
+.heroGhost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 46px;
+  padding: 0.6rem 1.3rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 220ms var(--ease-smooth), background 220ms var(--ease-smooth);
+}
+.heroPrimary {
+  border: 1px solid var(--border-gold);
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.5), rgba(90, 61, 34, 0.4));
+  color: #fff3cf;
+}
+.heroGhost {
+  border: 1px solid rgba(232, 197, 71, 0.45);
+  background: rgba(3, 16, 20, 0.55);
+  color: var(--gold-100);
+}
+.heroPrimary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  background: rgba(10, 20, 18, 0.5);
+  border-color: rgba(232, 197, 71, 0.25);
+  color: rgba(255, 243, 207, 0.5);
+}
+.heroPrimary:hover:not(:disabled),
+.heroPrimary:focus-visible:not(:disabled),
+.heroGhost:hover,
+.heroGhost:focus-visible { transform: translateY(-2px); }
+.heroPrimary:focus-visible:not(:disabled),
+.heroGhost:focus-visible { outline: 3px solid var(--border-gold); outline-offset: 2px; }
+
+/* Measured ledger (right side of hero). */
+.heroLedger {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 0.6rem;
+  align-content: start;
+}
+.heroStats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin: 0;
+}
+.heroStats div {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.55rem 0.6rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+  box-shadow: var(--shadow-card);
+}
+.heroStats dt {
+  color: var(--text-gold);
+  font-family: var(--font-latin);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+.heroStats dd {
+  margin: 0;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+.heroNote {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.64rem;
+  line-height: 1.85;
+}
+
+/* Keep the existing now-playing + player visually inside the composition. */
+.nowPlaying { margin-top: 1rem; }
+.player { margin-top: 1rem; }
+
+@media (max-width: 1024px) {
+  .hero { grid-template-columns: minmax(0, 1fr); padding: clamp(1rem, 3vw, 1.8rem) clamp(1rem, 3vw, 1.6rem) clamp(0.8rem, 2vw, 1.4rem); }
+  .heroLedger { order: -1; }
+  .heroStats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .hero { padding: clamp(0.8rem, 3vw, 1.4rem) clamp(1rem, 3vw, 1.4rem) clamp(0.6rem, 2vw, 1rem); min-height: auto; }
+  .heroTitle { font-size: clamp(1.3rem, 8vw, 1.9rem); }
+  .heroStats { grid-template-columns: 1fr; }
+  .heroCtas button { flex: 1 1 auto; justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .heroPrimary:hover:not(:disabled), .heroGhost:hover { transform: none !important; }
 }

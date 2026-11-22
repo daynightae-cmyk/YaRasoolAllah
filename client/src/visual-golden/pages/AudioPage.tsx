@@ -11,6 +11,10 @@ import {
   ShieldCheck,
   SkipBack,
   SkipForward,
+  Sparkles,
+  BookOpen,
+  ScrollText,
+  Target,
   Volume2,
 } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
@@ -565,15 +569,73 @@ export function AudioPage() {
         </button>
       ) : null}
 
-      <header className={`${styles.hero} ${showStudio ? styles.studioHidden : ""}`}>
-        <img className={styles.bg} src={worldPlateForWing("audio").plate} alt="" />
+      <header className={`${styles.hero} ${showStudio ? styles.studioHidden : ""}`} data-visual="audio-hero" aria-labelledby="audio-hero-title">
+        <img className={styles.heroPlate} src={worldPlateForWing("audio").plate} alt="" aria-hidden="true" />
+        <div className={styles.heroShade} aria-hidden="true" />
+        <div className={styles.heroCopy}>
+          <p className={styles.heroKicker}>
+            <Sparkles size={15} aria-hidden="true" /> عالم الصوت والتلاوات
+          </p>
+          <h1 id="audio-hero-title" className={styles.heroTitle}>عالم من التلاوة والصوت</h1>
+          <p className={styles.heroLead}>
+            مسرح استماع مباشر داخل المنصة: تلاوة حقيقية من MP3Quran، وقراءات حقيقية، وموضع استماع يُحفظ ويُستأنف عند العودة، واستوديو listening ثلاثي الأبعاد اختياري — بلا أصوات مولدة ولا صور قراء مختلقة.
+          </p>
+          <ul className={styles.heroServices} data-visual="audio-hero-services">
+            <li><Headphones size={14} aria-hidden="true" /> قارئ مباشرة من MP3Quran</li>
+            <li><BookOpen size={14} aria-hidden="true" /> {chapters.length} سورة من المصحف الموثق</li>
+            <li><ScrollText size={14} aria-hidden="true" /> الموضع يُحفظ ويُستأنف عند العودة</li>
+            <li><Target size={14} aria-hidden="true" /> استوديو listening ثلاثي الأبعاد (اختياري)</li>
+          </ul>
+          <div className={styles.heroCtas}>
+            <button
+              type="button"
+              className={styles.heroPrimary}
+              disabled={!studioAvailable}
+              onClick={() => setStudioOpen(true)}
+              aria-label={studioAvailable ? "دخول استوديو الاستماع ثلاثي الأبعاد" : "الاستوديو غير متاح على هذا الجهاز"}
+            >
+              {studioAvailable ? <Target size={15} aria-hidden="true" /> : null} دخول الاستوديو
+            </button>
+            <button
+              type="button"
+              className={styles.heroGhost}
+              onClick={() => document.getElementById("audio-player")?.scrollIntoView({ behavior: "smooth" })}
+            >
+              <ScrollText size={15} aria-hidden="true" /> افتح المشغل الكامل
+            </button>
+          </div>
+        </div>
+        <div className={styles.heroLedger}>
+          <dl className={styles.heroStats} aria-label="إحصاءات سطح الصوت المسجلة">
+            <div>
+              <dt>سورًا مسجلة</dt>
+              <dd>{chapters.length}</dd>
+            </div>
+            <div>
+              <dt>مزوّد تشغيل مُجاز</dt>
+              <dd>{AUDIO_COUNTS.streamingProviders}</dd>
+            </div>
+            <div>
+              <dt>قراءات مباشرة</dt>
+              <dd>{reciters.state === "ready" ? reciters.items.length : 0}</dd>
+            </div>
+            <div>
+              <dt>استوديو ثلاثي الأبعاد</dt>
+              <dd>{studioAvailable ? "متاح" : "غير متاح"}</dd>
+            </div>
+          </dl>
+          <p className={styles.heroNote}>
+            الأعداد من فهرس السور المحلي ومن استجابة المزوّع الفعلية — لا من أرقام طموحة في المرجع.
+            البث من خوادم MP3Quran.net فقط؛ لا إعادة استضافة ولا أصوات اصطناعية.
+          </p>
+        </div>
         <div className={styles.nowPlaying}>
           <div className={`${styles.coverWrap} ${playing ? styles.coverPlaying : ""}`} aria-hidden="true">
             <img className={styles.cover} src={art.mushaf} alt="" />
           </div>
           <div>
             <span className={styles.label}>مسرح الاستماع · تلاوة داخل المنصة</span>
-            <h1>{current ? `سورة ${current.arabicName}` : "التلاوات الصوتية"}</h1>
+            <h2 className={styles.nowTitle}>{current ? `سورة ${current.arabicName}` : "التلاوات الصوتية"}</h2>
             <p>
               {selectedReciter
                 ? `${selectedReciter.name} · ${selectedReciter.reading}`
@@ -619,7 +681,7 @@ export function AudioPage() {
           </ul>
         </aside>
 
-        <div className={styles.player} data-visual="audio-player">
+        <div id="audio-player" className={styles.player} data-visual="audio-player">
           <audio
             ref={audioRef}
             src={selectedReciter?.streamUrl}

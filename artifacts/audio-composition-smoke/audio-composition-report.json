@@ -1,0 +1,34 @@
+{
+  "origin": "http://127.0.0.1:5000",
+  "composition": {
+    "h1Count": 1,
+    "ledger": [
+      "114",
+      "1",
+      "40",
+      "متاح"
+    ],
+    "services": 4,
+    "ctas": 2,
+    "studioEnter": true,
+    "audio": true,
+    "heroPlate": true
+  },
+  "scrolled": {
+    "scrollY": 58,
+    "top": 815
+  },
+  "studioButton": {
+    "disabled": false,
+    "text": "ادخل استوديو الاستماع ثلاثي الأبعاد — رحل وسماعات وبث حقيقي"
+  },
+  "transports": {
+    "play": true,
+    "previous": true,
+    "next": true,
+    "favorite": true,
+    "repeat": true
+  },
+  "overflow": false,
+  "runtimeErrors": []
+}
