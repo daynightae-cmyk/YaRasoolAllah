@@ -277,7 +277,591 @@
   border-color: var(--accent-gold);
 }
 
-/* ===== Responsive ===== */
+/* ==========================================================================
+   FULL-PAGE COMPOSITION — approved reference 09_daily.png
+   Hero (identity · features · CTA · today's guidance card) · prayer observatory ·
+   rhythm rhythm · calendar/werd · tasbih · routine checklist · lessons ·
+   progress ring · quick tools. The deep-night palette of this wing is kept.
+   ========================================================================== */
+
+/* --- Hero --- */
+.hero {
+  position: relative;
+  min-height: clamp(340px, 44vh, 520px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(270px, 0.44fr);
+  gap: clamp(1rem, 3vw, 2.4rem);
+  padding: clamp(1.4rem, 3vw, 2.6rem) clamp(1.2rem, 3vw, 2.4rem) clamp(1rem, 2vw, 2rem);
+  isolation: isolate;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border-gold);
+  background: linear-gradient(90deg, rgba(2, 8, 12, 0.96) 0%, rgba(2, 8, 12, 0.55) 60%, rgba(2, 8, 12, 0.2) 100%), #040a0d;
+}
+.heroPlate {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+.heroShade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, rgba(2, 10, 14, 0.94) 0%, rgba(2, 10, 14, 0.62) 48%, rgba(2, 10, 14, 0.3) 100%), linear-gradient(0deg, rgba(2, 8, 12, 0.9), transparent 55%);
+  pointer-events: none;
+}
+.heroCopy {
+  position: relative;
+  z-index: 2;
+  max-width: 56ch;
+}
+.heroKicker {
+  margin: 0 0 0.45rem;
+  color: var(--text-gold);
+  font-family: var(--font-latin);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.heroTitle {
+  margin: 0 0 0.7rem;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  line-height: 1.2;
+}
+.heroLead {
+  margin: 0 0 1rem;
+  color: var(--text-secondary);
+  font-size: clamp(0.9rem, 1.4vw, 1rem);
+  line-height: 1.95;
+}
+.heroFeatures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin: 0 0 1.1rem;
+  padding: 0;
+  list-style: none;
+}
+.heroFeatures li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+.heroFeatures svg { color: var(--gold-300); }
+.heroCtas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+.heroPrimary,
+.heroGhost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 46px;
+  padding: 0.6rem 1.3rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 220ms var(--ease-smooth), background 220ms var(--ease-smooth);
+}
+.heroPrimary {
+  border: 1px solid var(--border-gold);
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.5), rgba(90, 61, 34, 0.4));
+  color: #fff3cf;
+}
+.heroGhost {
+  border: 1px solid rgba(232, 197, 71, 0.45);
+  background: rgba(3, 16, 20, 0.55);
+  color: var(--gold-100);
+}
+.heroPrimary:hover,
+.heroPrimary:focus-visible,
+.heroGhost:hover,
+.heroGhost:focus-visible { transform: translateY(-2px); }
+.heroPrimary:focus-visible,
+.heroGhost:focus-visible { outline: 3px solid var(--border-gold); outline-offset: 2px; }
+
+/* Today's guidance card (inside hero) — honest, corpus-sourced verse. */
+.heroCard {
+  position: relative;
+  z-index: 2;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-lg);
+  background: var(--bg-glass);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: clamp(1rem, 2vw, 1.4rem);
+}
+.heroCardKicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0 0 0.4rem;
+  color: var(--gold-200);
+  font-family: var(--font-latin);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.heroCardTitle {
+  margin: 0 0 0.6rem;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+}
+.heroVerse {
+  margin: 0 0 0.7rem;
+  color: #f5ede3;
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  line-height: 2;
+  font-family: var(--font-quran);
+}
+.heroRef {
+  margin: 0 0 0.55rem;
+  color: rgba(245, 237, 227, 0.66);
+  font-size: 0.78rem;
+  line-height: 1.7;
+}
+.heroCardLink {
+  color: var(--gold-300);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.heroCardLink:hover { color: #ffe9a8; }
+.heroCardNote {
+  margin: 0;
+  color: rgba(245, 237, 227, 0.5);
+  font-size: 0.66rem;
+  line-height: 1.8;
+}
+
+/* --- Spiritual rhythm --- */
+.rhythm {
+  margin: 1rem clamp(0.9rem, 2.6vw, 2.4rem) 0;
+  padding: clamp(1rem, 2.4vw, 1.6rem);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-lg);
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.rhythmHead {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.9rem;
+}
+.rhythmHead h2 {
+  margin: 0 0 0.35rem;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.2vw, 1.6rem);
+}
+.rhythmHint {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.74rem;
+  line-height: 1.8;
+}
+.rhythmList {
+  display: grid;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.rhythmItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+  cursor: pointer;
+  transition: border-color 200ms var(--ease-smooth), background 200ms var(--ease-smooth), color 200ms var(--ease-smooth);
+}
+.rhythmItem:hover, .rhythmItem:focus-visible { border-color: var(--border-gold); }
+.rhythmItemOn { border-color: var(--border-gold); background: rgba(212, 160, 23, 0.1); color: var(--text-primary); }
+.rhythmNode {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  flex: none;
+}
+.rhythmItemOn .rhythmNode { background: var(--gold-300); box-shadow: 0 0 0 6px rgba(212, 160, 23, 0.3); }
+.rhythmItem b {
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+}
+.rhythmItem span { color: var(--text-gold); font-size: 0.78rem; white-space: nowrap; }
+.rhythmItem small { color: var(--text-secondary); font-size: 0.7rem; }
+
+/* --- Calendar / wird side cards --- */
+.calendarCard, .wirdCard {
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+  box-shadow: var(--shadow-card);
+  padding: 0.9rem;
+}
+.calHead {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.6rem;
+  color: var(--text-gold);
+  font-family: var(--font-latin);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.calHead h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+}
+.calRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--border-panel);
+}
+.calBlock { text-align: center; }
+.calBlock b {
+  display: block;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+}
+.calBlock span { color: var(--text-secondary); font-size: 0.72rem; }
+.calBlock small { color: var(--text-gold); font-size: 0.68rem; font-weight: 700; }
+.calDivider {
+  width: 1px;
+  background: var(--border-panel);
+  color: var(--border-panel);
+}
+.calNote {
+  margin: 0.5rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  line-height: 1.8;
+}
+.wirdGrid {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.5rem 0;
+  border-top: 1px solid var(--border-panel);
+  border-bottom: 1px solid var(--border-panel);
+}
+.wirdGrid > div { display: flex; justify-content: space-between; }
+.wirdGrid b { color: var(--text-primary); font-size: 0.8rem; }
+.wirdGrid span { color: var(--text-secondary); font-size: 0.72rem; }
+.wirdActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+}
+
+/* --- Tasbih + quick dhikr --- */
+.tasbihHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.quickDhikr {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.8rem;
+}
+.quickDhikr button {
+  min-height: 38px;
+  padding: 0 0.8rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-gold);
+  background: var(--bg-glass);
+  color: var(--text-gold);
+  font: inherit;
+  font-size: 0.76rem;
+  cursor: pointer;
+  transition: background 200ms var(--ease-smooth), color 200ms var(--ease-smooth);
+}
+.quickDhikr button:hover { background: var(--accent-gold); color: var(--text-ink-dark); }
+.quickDhikr button.on { background: var(--accent-gold); color: var(--text-ink-dark); border-color: var(--accent-gold); }
+
+/* --- Routine checklist --- */
+.routine {
+  margin: 1rem clamp(0.9rem, 2.6vw, 2.4rem) 0;
+  padding: clamp(1rem, 2.4vw, 1.6rem);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-lg);
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.routineHead {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.8rem;
+}
+.routineHead h2 {
+  margin: 0 0 0.35rem;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.2vw, 1.6rem);
+}
+.routineHead p {
+  margin: 0;
+  max-width: 42ch;
+  color: var(--text-secondary);
+  font-size: 0.82rem;
+  line-height: 1.85;
+}
+.routineProgress {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  color: var(--text-gold);
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  font-weight: 800;
+}
+.routineProgress small { color: var(--text-muted); font-weight: 600; font-size: 0.7rem; }
+.routineList {
+  display: grid;
+  gap: 0.45rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.routineItem {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+}
+.routineItemOn { border-color: var(--border-gold); background: rgba(212, 160, 23, 0.08); }
+.routineCheck {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid var(--border-gold);
+  background: var(--bg-glass-strong);
+  color: var(--text-gold);
+  cursor: pointer;
+  flex: none;
+  transition: background 200ms var(--ease-smooth), color 200ms var(--ease-smooth);
+}
+.routineCheck[aria-pressed="true"] { background: var(--accent-gold); color: var(--text-ink-dark); }
+.routineCheck:focus-visible { outline: 3px solid var(--border-gold); outline-offset: 2px; }
+.routineBody b { color: var(--text-primary); font-size: 0.88rem; }
+.routineBody span { color: var(--text-muted); font-size: 0.7rem; line-height: 1.6; }
+.routineLink {
+  min-height: 30px;
+  padding: 0 0.75rem;
+  border: 1px solid var(--border-panel);
+  border-radius: 999px;
+  background: var(--bg-glass-strong);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 0.7rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+.routineLink:hover { border-color: var(--border-gold); color: var(--text-primary); }
+
+/* --- Daily lessons --- */
+.lessons {
+  margin: 1rem clamp(0.9rem, 2.6vw, 2.4rem) 0;
+}
+.lessonsHead {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.8rem;
+}
+.lessonsHead h2 {
+  margin: 0 0 0.35rem;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.2vw, 1.6rem);
+}
+.lessonsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+.lessonCard {
+  display: grid;
+  gap: 0.35rem;
+  align-content: start;
+  justify-items: start;
+  min-height: 128px;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: border-color 200ms var(--ease-smooth), transform 200ms var(--ease-smooth);
+}
+.lessonCard:hover, .lessonCard:focus-visible { border-color: var(--border-gold); transform: translateY(-2px); }
+.lessonKind {
+  color: var(--text-gold);
+  font-family: var(--font-latin);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.lessonCard strong { color: var(--text-primary); font-size: 0.92rem; }
+.lessonCard small { color: var(--text-muted); font-size: 0.68rem; line-height: 1.75; }
+.lessonGo {
+  margin-top: auto;
+  color: var(--gold-300);
+}
+
+/* --- Lower row: progress + tools + duas quick --- */
+.lower {
+  display: grid;
+  grid-template-columns: 1fr 0.72fr;
+  gap: 0.9rem;
+  margin: 1rem clamp(0.9rem, 2.6vw, 2.4rem) 1.6rem;
+}
+.progressCard, .toolsCard {
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-lg);
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: clamp(1rem, 2.4vw, 1.6rem);
+}
+.progressCard { grid-column: 1 / -1; }
+.ringWrap {
+  display: grid;
+  place-items: center;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 0.6rem;
+  position: relative;
+}
+.ring {
+  transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
+}
+.ringTrack {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 8;
+}
+.ringBar {
+  fill: none;
+  stroke: linear-gradient(135deg, var(--accent-gold), var(--accent-emerald));
+  stroke-width: 8;
+  stroke-linecap: round;
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset 700ms var(--ease-deep);
+}
+.ringValue {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+.ringNote {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.66rem;
+  line-height: 1.85;
+}
+.toolsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin-top: 0.6rem;
+}
+.toolItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 72px;
+  padding: 0.6rem 0.45rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  font-size: 0.72rem;
+  text-align: center;
+  text-decoration: none;
+  transition: border-color 200ms var(--ease-smooth), transform 200ms var(--ease-smooth);
+}
+.toolItem svg { color: var(--text-gold); flex: none; margin-bottom: 0.15rem; }
+.toolItem:hover, .toolItem:focus-visible { border-color: var(--border-gold); transform: translateY(-2px); color: var(--text-primary); }
+
+/* --- Lower-right panels keep existing .panel styles --- */
+.dhikrCards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+.dhikrCards span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--border-panel);
+  border-radius: 999px;
+  background: var(--bg-glass-strong);
+  color: var(--text-secondary);
+  font-size: 0.68rem;
+  line-height: 1.5;
+}
+
+/* --- Responsive --- */
 @media (max-width: 1024px) {
   .grid,
   .lower,
@@ -287,6 +871,11 @@
   .mihrab {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
+  .hero { grid-template-columns: minmax(0, 1fr); }
+  .heroCard { order: -1; }
+  .lessonsGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .toolsGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .progressCard { grid-column: 1 / -1; }
 }
 @media (max-width: 700px) {
   .mihrab,
@@ -295,10 +884,12 @@
   .adhkarBtns {
     grid-template-columns: 1fr 1fr;
   }
-  .counter span {
-    font-size: 2.4rem;
-    min-width: 3.2rem;
-  }
+  .counter span { font-size: 2.4rem; min-width: 3.2rem; }
+  .hero { padding: clamp(1rem, 3vw, 1.6rem) clamp(1rem, 3vw, 1.6rem) clamp(0.8rem, 2vw, 1.2rem); }
+  .heroTitle { font-size: clamp(1.3rem, 8vw, 1.9rem); }
+  .lessonsGrid { grid-template-columns: 1fr; }
+  .toolsGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .heroCard { padding: clamp(0.8rem, 2vw, 1rem); }
 }
 
 /* --- Reduced motion --- */
@@ -308,4 +899,8 @@
     transform: none !important;
     transition: none !important;
   }
+  .heroPrimary:hover, .heroGhost:hover,
+  .lessonCard:hover, .toolItem:hover,
+  .routineItem:hover, .rhythmItem:hover,
+  .progressCard:hover { transform: none !important; }
 }

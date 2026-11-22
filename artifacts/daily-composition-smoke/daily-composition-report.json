@@ -1,0 +1,37 @@
+{
+  "origin": "http://127.0.0.1:5000",
+  "composition": {
+    "h1Count": 1,
+    "stations": 5,
+    "calendarBlocks": 2,
+    "routineItems": 7,
+    "lessons": 3,
+    "tools": 8,
+    "ringValue": "",
+    "toolHrefs": [
+      "/calendar",
+      "/prayer-guide",
+      "/qibla-compass",
+      "/digital-tasbih",
+      "/daily-verse",
+      "/five-pillars",
+      "/islamic-knowledge",
+      "/prophetic-day"
+    ]
+  },
+  "scrolled": {
+    "scrollY": 2391,
+    "top": 540
+  },
+  "pressed": {
+    "pressed": true
+  },
+  "calendarRendered": {
+    "ok": true
+  },
+  "ring": {
+    "value": "14%"
+  },
+  "overflow": false,
+  "runtimeErrors": []
+}
