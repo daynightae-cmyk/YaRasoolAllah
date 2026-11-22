@@ -128,17 +128,49 @@ describe("terrain theatre engine contract", () => {
     assert.match(theatre, /config\.kind === "mountain-cave"/);
   });
 
-  it("mounts lazily inside GhazawatEnvironment with a plate fallback", () => {
+  it("routes the 3D observer into a full-screen studio instead of the reading column", () => {
     const env = read("client/src/visual-golden/components/seerah/GhazawatEnvironment.tsx");
-    assert.match(env, /lazy\(\(\) =>\s*import\("\.\/TerrainTheatre3D"\)/);
     assert.match(env, /getTerrainScene\(scene\.eventId\)/);
-    assert.match(env, /onUnavailable/);
     assert.match(env, /data-visual="seerah-terrain-enter"/);
+    assert.match(env, /studioHref/);
+    assert.match(env, /plateOnly/);
+    // The entry is a navigation link, not an inline mount: inside the ~479px
+    // reading column the heightfield read as a corrupted postage stamp.
+    assert.doesNotMatch(env, /lazy\(\(\) =>\s*import\("\.\/TerrainTheatre3D"\)/);
+    assert.match(env, /data-terrain-mode="plate"/);
     // The cinematic/schematic plate path stays intact as default and fallback.
     assert.match(env, /eventWorldPlate\(scene\.eventId\)/);
     assert.match(env, /scene\.disclosureAr/);
     const css = read("client/src/visual-golden/components/seerah/TerrainTheatre3D.module.css");
     assert.match(css, /prefers-reduced-motion/);
+  });
+
+  it("gives the studio a real full-viewport route page", () => {
+    const page = read("client/src/visual-golden/pages/SeerahTerrainStudio.tsx");
+    assert.match(page, /lazy\(/);
+    assert.match(page, /TerrainTheatre3D/);
+    assert.match(page, /immersive/);
+    assert.match(page, /getTerrainScene/);
+    assert.match(page, /listBattleTerrainScenes/);
+    assert.match(page, /data-visual="seerah-terrain-studio"/);
+    assert.match(page, /onUnavailable=\{backToReading\}/);
+    // Heavy 3D lives only in the studio so the reading column never pays for WebGL.
+    assert.match(page, /data-visual="seerah-terrain-loading"/);
+    // The station HUD is rendered as DOM, never painted into the canvas.
+    const theatre = read("client/src/visual-golden/components/seerah/TerrainTheatre3D.tsx");
+    assert.match(theatre, /immersive/);
+    // Global Escape so the key closes the studio even when focus sits on a HUD chip.
+    assert.match(theatre, /window\.addEventListener\("keydown"/);
+    // CSS gives the studio the whole viewport.
+    const css = read("client/src/visual-golden/pages/SeerahTerrainStudio.module.css");
+    assert.match(css, /100svh/);
+    assert.match(css, /min-height: 520px/);
+  });
+
+  it("registers the studio route in the shell", () => {
+    const app = read("client/src/App.tsx");
+    assert.match(app, /path="\/seerah\/terrain"/);
+    assert.match(app, /SeerahTerrainStudio/);
   });
 
   it("mounts lazily inside ChapterEnvironment with a plate fallback", () => {

@@ -176,11 +176,49 @@
 }
 
 @media (max-width: 820px) {
+  /* The paging arrows were eating 88px of a 372px card (24%), leaving two
+     117px columns. On a phone they become translucent pucks that float over
+     the row's edges instead, so the shelf itself owns the full width. */
+  .stage {
+    position: relative;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
   .row {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
   }
+  /* Five works on a two-column row leaves the last one alone. It keeps its
+     own column and its own width instead of stretching to a full-width
+     outlier — the ledge reads as a shelf of equal volumes, not a billboard. */
   .row > li:last-child:nth-child(odd) {
-    grid-column: span 2;
+    grid-column: auto;
+  }
+  .arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    width: 32px;
+    height: 32px;
+    transform: translateY(-50%);
+    background: rgba(5, 16, 13, 0.78);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+  }
+  .arrow:first-of-type {
+    inset-inline-start: -4px;
+  }
+  .arrow:last-of-type {
+    inset-inline-end: -4px;
+  }
+  .book {
+    min-height: 150px;
+  }
+  .book strong {
+    font-size: 0.82rem;
+    line-height: 1.45;
+    /* Two readable lines at 390px; the rest stays in the title tooltip. */
+    -webkit-line-clamp: 3;
   }
 }
 

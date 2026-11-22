@@ -1307,3 +1307,39 @@
     animation: none !important;
   }
 }
+
+/* --- Cinema surface: a full-viewport experience owns the layout. ---
+   Used by /seerah/terrain (observer studio). Navigation chrome collapses but
+   stays mounted for a11y; a slim exit bar inside the page returns the reader. */
+.shell[data-surface="cinema"] > :is(aside, nav, header, [class*="sidebar"], [class*="activityRail"]) {
+  display: none !important;
+}
+
+.shell[data-surface="cinema"] .mainArea {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  width: 100vw;
+  max-width: 100vw;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.shell[data-surface="cinema"] .content {
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.shell[data-surface="cinema"] .content > *,
+.shell[data-surface="cinema"] .vg-page-enter {
+  flex: 1;
+  min-height: 0;
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shell[data-surface="cinema"] .content > * {
+    animation: none;
+  }
+}

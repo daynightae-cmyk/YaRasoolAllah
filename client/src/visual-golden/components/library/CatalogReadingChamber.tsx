@@ -240,6 +240,14 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
   }, [onClose]);
 
   useEffect(() => {
+    // A different work is a different study session: a note drafted on one
+    // book must never follow the reader into the next.
+    setNoteDraft("");
+    setNoteOpen(false);
+    setCitationCopied(false);
+  }, [work.id]);
+
+  useEffect(() => {
     // A new work starts uninitialized. No page write is permitted until the
     // new work's stored position has been read and clamped.
     setHydratedWorkId(null);
@@ -249,17 +257,11 @@ export function CatalogReadingChamber({ work, onClose }: Props) {
     if (stillMotion) {
       setOpening(false);
       setTurning(false);
-      setNoteDraft("");
-      setNoteOpen(false);
-      setCitationCopied(false);
       return;
     }
     setOpening(true);
     setTurning(false);
     setTurnKey((key) => key + 1);
-    setNoteDraft("");
-    setNoteOpen(false);
-    setCitationCopied(false);
     const turn = window.setTimeout(() => setTurning(true), TURN_AT_MS);
     const done = window.setTimeout(() => setOpening(false), OPEN_MS);
     return () => {

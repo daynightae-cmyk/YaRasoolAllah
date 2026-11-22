@@ -359,7 +359,12 @@ export function SeerahPage() {
 
             {selectedEvent ? (
               <div className={styles.eventStage} data-visual="seerah-event-stage">
-                <GhazawatEnvironment scene={ghazawatScene}>
+                <GhazawatEnvironment
+                  key={selectedEvent.id}
+                  scene={ghazawatScene}
+                  studioHref={`/seerah/terrain?event=${encodeURIComponent(selectedEvent.id)}`}
+                  plateOnly
+                >
                   <header className={styles.eventHead}>
                     <div>
                       <span className={styles.eventLabel}>بيئة المكان — مشهد توضيحي غير تاريخي</span>
