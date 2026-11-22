@@ -9,12 +9,186 @@
 }
 
 /* --- Hero search + collection chips --- */
+/* Full-page archive hero: plate art behind a two-column composition —
+   copy + services on the start side, honest ledger on the end side. */
+.archiveHero {
+  position: relative;
+  margin: 0.8rem clamp(0.6rem, 1.6vw, 1.4rem) 0;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  isolation: isolate;
+  min-height: 300px;
+  box-shadow: var(--shadow-panel);
+}
+.heroImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.heroShade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(90deg, rgba(3, 14, 11, 0.36), rgba(3, 14, 11, 0.82) 58%),
+    linear-gradient(0deg, rgba(2, 10, 8, 0.78), transparent 42%);
+}
+.heroBody {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(220px, 0.8fr);
+  gap: clamp(1rem, 3vw, 2.4rem);
+  align-items: center;
+  padding: clamp(1.2rem, 3vw, 2.2rem);
+}
+.heroCopy { display: grid; gap: 0.7rem; justify-items: start; }
+.heroEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-gold);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+.heroCopy h1 {
+  margin: 0;
+  color: var(--ivory-50);
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3.4vw, 2.6rem);
+  letter-spacing: 0.03em;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6);
+}
+.heroDesc {
+  margin: 0;
+  max-width: 56ch;
+  color: rgba(248, 243, 228, 0.88);
+  font-size: 0.88rem;
+  line-height: 1.95;
+}
+.heroServices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.1rem;
+}
+.heroServices span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--gold-100);
+  font-size: 0.74rem;
+}
+.heroCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding: 0.55rem 1.3rem;
+  border: 1px solid var(--border-gold);
+  border-radius: 999px;
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.32), rgba(90, 61, 34, 0.32));
+  color: #ffe9a8;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background 220ms var(--ease-smooth), transform 220ms var(--ease-smooth);
+}
+.heroCta:hover, .heroCta:focus-visible {
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.46), rgba(90, 61, 34, 0.4));
+  transform: translateY(-2px);
+}
+.heroCta:focus-visible { outline: 3px solid var(--border-gold); outline-offset: 2px; }
+.heroLedger {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  border: 1px solid rgba(232, 197, 71, 0.4);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: rgba(232, 197, 71, 0.28);
+  box-shadow: 0 18px 44px -18px rgba(0, 0, 0, 0.7);
+}
+.heroLedger > div {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.9rem 1rem;
+  background: rgba(4, 20, 16, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.heroLedger strong {
+  color: var(--text-gold);
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2vw, 1.6rem);
+  line-height: 1.2;
+}
+.heroLedger span {
+  color: rgba(245, 237, 216, 0.72);
+  font-size: 0.66rem;
+  line-height: 1.5;
+}
+
+/* Search deck — scope tabs above the full-width search bar. */
+.searchDeck {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0.9rem clamp(0.6rem, 1.6vw, 1.4rem) 0;
+  padding: 0.8rem clamp(0.7rem, 1.6vw, 1.1rem);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-lg);
+  background: var(--bg-glass-strong);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.scopeTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.scopeTabs button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 38px;
+  padding: 0.4rem 0.95rem;
+  border: 1px solid rgba(232, 197, 71, 0.3);
+  border-radius: 999px;
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: border-color 200ms var(--ease-smooth), background 200ms var(--ease-smooth), color 200ms var(--ease-smooth);
+}
+.scopeTabs button:hover, .scopeTabs button:focus-visible {
+  border-color: rgba(232, 197, 71, 0.7);
+  color: var(--text-primary);
+}
+.scopeOn {
+  border-color: rgba(232, 197, 71, 0.85) !important;
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.34), rgba(212, 160, 23, 0.16)) !important;
+  color: #ffe9a8 !important;
+}
+.resetChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border-style: dashed !important;
+}
 .search {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-top: 1rem;
-  width: min(600px, 100%);
+  width: 100%;
   background: var(--bg-elevated);
   border: 1px solid var(--border-gold);
   border-radius: var(--radius-full);
@@ -41,7 +215,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem;
-  margin-top: 0.8rem;
 }
 .chips button {
   padding: 0.32rem 0.8rem;
@@ -78,10 +251,38 @@
   isolation: isolate;
   display: flex;
   align-items: flex-end;
+  padding: 0;
+  text-align: start;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
   background: var(--bg-card);
   box-shadow: var(--shadow-card);
   transform-style: preserve-3d;
   transition: transform 350ms var(--ease-smooth), border-color 350ms var(--ease-smooth), box-shadow 350ms var(--ease-smooth);
+}
+.cardOn {
+  border-color: rgba(232, 197, 71, 0.85);
+  box-shadow: var(--shadow-card), 0 0 24px rgba(212, 160, 23, 0.22);
+}
+.card:focus-visible {
+  outline: 3px solid var(--border-gold);
+  outline-offset: 2px;
+}
+.countBadge {
+  position: absolute;
+  top: 0.7rem;
+  inset-inline-start: 0.7rem;
+  z-index: 4;
+  padding: 0.28rem 0.65rem;
+  border: 1px solid rgba(232, 197, 71, 0.6);
+  border-radius: 999px;
+  background: rgba(4, 20, 16, 0.85);
+  color: var(--text-gold) !important;
+  font-size: 0.68rem !important;
+  font-weight: 700;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 .card::before {
   content: "";
@@ -131,6 +332,268 @@
   transform: translateY(-5px);
 }
 .card:hover img { transform: scale(1.1); }
+
+/* --- Three-column browse deck: subjects rail · feed · books rail --- */
+.browseDeck {
+  display: grid;
+  grid-template-columns: minmax(200px, 0.72fr) minmax(0, 1.7fr) minmax(200px, 0.72fr);
+  gap: 1rem;
+  padding: 1rem 1.4rem 0.4rem;
+  align-items: start;
+}
+.railPanel {
+  position: relative;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.railPanel::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-gold), transparent);
+  opacity: 0.6;
+}
+.railList {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 0.6rem;
+}
+.railList button {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.62rem 0.7rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 0.78rem;
+  text-align: start;
+  cursor: pointer;
+  transition: border-color 200ms var(--ease-smooth), background 200ms var(--ease-smooth), color 200ms var(--ease-smooth);
+}
+.railList button:hover, .railList button:focus-visible {
+  border-color: var(--border-gold);
+  background: rgba(212, 160, 23, 0.09);
+  color: var(--text-primary);
+}
+.railList button strong {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+.railList button small {
+  color: var(--text-gold);
+  font-size: 0.68rem;
+  white-space: nowrap;
+}
+.railOn {
+  border-color: rgba(232, 197, 71, 0.8) !important;
+  background: rgba(212, 160, 23, 0.16) !important;
+  color: #ffe9a8 !important;
+}
+.railAll {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 100%;
+  min-height: 40px;
+  margin-top: 0.6rem;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.18), rgba(212, 160, 23, 0.06));
+  color: var(--text-gold);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background 200ms var(--ease-smooth);
+}
+.railAll:hover, .railAll:focus-visible {
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.3), rgba(212, 160, 23, 0.12));
+}
+.railNote {
+  margin: 0.7rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  line-height: 1.75;
+}
+
+/* The feed — every card is a real governed local record. */
+.feed {
+  display: grid;
+  gap: 0.8rem;
+  min-width: 0;
+}
+.feedTabs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.feedTab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 36px;
+  padding: 0.42rem 1rem;
+  border: 1px solid var(--border-panel);
+  border-radius: 999px;
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: border-color 200ms var(--ease-smooth), color 200ms var(--ease-smooth);
+}
+.feedTab:hover, .feedTab:focus-visible {
+  border-color: var(--border-gold);
+  color: var(--text-primary);
+}
+.feedTabOn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 36px;
+  padding: 0.42rem 1rem;
+  border: 1px solid rgba(232, 197, 71, 0.75);
+  border-radius: 999px;
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.3), rgba(212, 160, 23, 0.12));
+  color: #ffe9a8;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.feedTabNote {
+  color: var(--text-gold);
+  font-size: 0.68rem;
+  padding: 0.2rem 0.6rem;
+  border: 1px dashed rgba(212, 160, 23, 0.45);
+  border-radius: 999px;
+}
+.feedCard {
+  position: relative;
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-lg);
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: border-color 220ms var(--ease-smooth), box-shadow 220ms var(--ease-smooth);
+}
+.feedCard::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 8%; right: 8%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(232, 197, 71, 0.55), transparent);
+}
+.feedCardOn {
+  border-color: rgba(232, 197, 71, 0.7);
+  box-shadow: var(--shadow-card), 0 0 22px rgba(212, 160, 23, 0.14);
+}
+.feedCard header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.feedCollection {
+  padding: 0.22rem 0.65rem;
+  border: 1px solid rgba(232, 197, 71, 0.55);
+  border-radius: 999px;
+  color: var(--text-gold);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.feedBook {
+  min-width: 0;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  line-height: 1.6;
+}
+.feedSave, .feedSaveOn {
+  margin-inline-start: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border-panel);
+  border-radius: 999px;
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: border-color 180ms var(--ease-smooth), color 180ms var(--ease-smooth);
+}
+.feedSave:hover, .feedSaveOn {
+  border-color: var(--border-gold);
+  color: var(--text-gold);
+}
+.feedMatn {
+  margin: 0;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: clamp(0.95rem, 1.5vw, 1.12rem);
+  line-height: 2.05;
+}
+.feedCard footer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border-panel);
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+}
+.feedCard footer span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.feedOpen {
+  margin-inline-start: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 34px;
+  padding: 0.32rem 0.8rem;
+  border: 1px solid var(--border-gold);
+  border-radius: 999px;
+  background: var(--bg-glass);
+  color: var(--text-gold);
+  font: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: background 180ms var(--ease-smooth);
+}
+.feedOpen:hover, .feedOpen:focus-visible {
+  background: rgba(212, 160, 23, 0.16);
+}
+.feedEmpty {
+  margin: 0;
+  padding: 1.4rem 1rem;
+  border: 1px dashed var(--border-panel);
+  border-radius: var(--radius-lg);
+  color: var(--text-muted);
+  text-align: center;
+  font-size: 0.82rem;
+}
 
 /* --- Main row: hadith detail + records + archive honesty --- */
 .row {
@@ -404,8 +867,13 @@
 .providerList a:focus-visible { outline: 2px solid var(--border-gold); outline-offset: 3px; }
 
 /* ===== Responsive ===== */
+@media (max-width: 1280px) {
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
 @media (max-width: 1100px) {
-  .grid,
+  .heroBody { grid-template-columns: 1fr; }
+  .heroLedger { max-width: 480px; }
+  .browseDeck { grid-template-columns: 1fr; }
   .row {
     grid-template-columns: 1fr;
   }
@@ -418,10 +886,22 @@
   }
   .providerList a { justify-self: start; }
 }
+@media (max-width: 720px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .card { min-height: 200px; }
+}
+@media (max-width: 460px) {
+  .grid { grid-template-columns: 1fr; }
+  .heroLedger { grid-template-columns: 1fr 1fr; }
+  .scopeTabs button { font-size: 0.7rem; padding: 0.35rem 0.7rem; }
+}
 
 /* --- Reduced motion --- */
 @media (prefers-reduced-motion: reduce) {
-  .card img, .card:hover {
+  .card img, .card:hover,
+  .heroCta, .heroCta:hover,
+  .feedCard, .railList button, .scopeTabs button,
+  .feedOpen, .railAll, .feedSave, .feedSaveOn {
     transition: none !important;
     transform: none !important;
   }

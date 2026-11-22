@@ -80,6 +80,8 @@ export const cases = [
   { name: "tafsir-1440-light-rtl", path: "/tafsir", width: 1440, height: 1000, theme: "light", language: "ar", readySelector: '[data-visual="tafsir-study"][data-tafsir-state="ready"]' },
   { name: "library-1440-light-rtl", path: "/library", search: "?view=shelves&ceremony=0&door=0", width: 1440, height: 1000, theme: "light", language: "ar", readySelector: '[data-visual="library-living-shelf"]' },
   { name: "hadith-1440-light-rtl", path: "/hadith", width: 1440, height: 1000, theme: "light", language: "ar", readySelector: '[data-visual="hadith-corpus-scope"]' },
+  { name: "hadith-browse-deck-1440-dark-rtl", path: "/hadith", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-visual="hadith-browse-deck"]', scrollSelector: '[data-visual="hadith-browse-deck"]', scrollOffset: -20 },
+  { name: "hadith-browse-deck-390-dark-rtl", path: "/hadith", width: 390, height: 844, theme: "dark", language: "ar", readySelector: '[data-visual="hadith-browse-deck"]', scrollSelector: '[data-visual="hadith-browse-deck"]', scrollOffset: -20 },
   // Post-consolidation evidence: the unified media shelf, the parent source
   // panel, and the two legacy-baseline routes that were empty before.
   { name: "kids-media-shelf-1440-dark-rtl", path: "/kids", width: 1440, height: 1000, theme: "dark", language: "ar", scrollSelector: '[data-visual="media-library"]', scrollOffset: -80 },

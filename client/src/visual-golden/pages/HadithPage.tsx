@@ -1,9 +1,8 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "wouter";
-import { Search, Bookmark, BookmarkCheck, ExternalLink, ShieldCheck, Database, Copy, Link2, Check, ScrollText, NotebookPen, Boxes, Lamp } from "lucide-react";
+import { Search, Bookmark, BookmarkCheck, ExternalLink, ShieldCheck, Database, Copy, Link2, Check, ScrollText, NotebookPen, Boxes, Lamp, LibraryBig, Users, Tags, ArrowLeft, RotateCcw, BookOpen } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
-import { PageHero } from "@/visual-golden/components/shared/PageHero";
 import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import { IsnadChain } from "@/visual-golden/components/unique/IsnadChain";
@@ -134,6 +133,40 @@ export function HadithPage() {
   const activeCollection = active ? getCollection(active.collectionId) : null;
   const activeBookmarked = active ? bookmarks.includes(active.id) : false;
   const seerahLinks = useMemo(() => active ? establishedSeerahLinks(active.id) : [], [active]);
+
+  // Honest ledger numbers: the bibliographic sum is a sum of published
+  // counts, never presented as local corpus size. Narrator count is derived
+  // from the actual local registry — nothing typed by hand.
+  const bibliographicTotal = useMemo(
+    () => COLLECTIONS.reduce((sum, collection) => sum + collection.totalHadithCount, 0),
+    [],
+  );
+  const narratorCount = useMemo(
+    () => new Set(LOCAL_SAMPLES.map((sample) => sample.narratorAr)).size,
+    [],
+  );
+  // Local records grouped by their real recorded book (باب/كتاب) — the
+  // "browse by subject" rail shows only what the registry actually holds.
+  const chapterGroups = useMemo(() => {
+    const map = new Map<string, { book: string; count: number; firstId: string }>();
+    for (const sample of results) {
+      const entry = map.get(sample.bookNameAr);
+      if (entry) entry.count += 1;
+      else map.set(sample.bookNameAr, { book: sample.bookNameAr, count: 1, firstId: sample.id });
+    }
+    return [...map.values()];
+  }, [results]);
+  const recordListRef = useRef<HTMLElement | null>(null);
+  const chapterListRef = useRef<HTMLElement | null>(null);
+  const studyRef = useRef<HTMLDivElement | null>(null);
+  // Feed filters are derived from real record fields and real local state —
+  // "sahih" reads the recorded grade, "saved" reads the bookmark registry.
+  const [feedFilter, setFeedFilter] = useState<"all" | "sahih" | "saved">("all");
+  const feedResults = useMemo(() => {
+    if (feedFilter === "sahih") return results.filter((sample) => sample.gradeAr.includes("صحيح"));
+    if (feedFilter === "saved") return results.filter((sample) => bookmarks.includes(sample.id));
+    return results;
+  }, [results, feedFilter, bookmarks]);
 
   // A different record closes any open note draft — notes belong to a record.
   useEffect(() => {
@@ -311,13 +344,89 @@ export function HadithPage() {
           />
         </Suspense>
       ) : (
-        <PageHero
-        title="دار الحديث"
-        subtitle={`ARCHIVE · ${HADITH_COUNTS.collections} مصنفات ببليوغرافية · ${HADITH_COUNTS.localSamples} سجلات محلية`}
-        desc="أرشيف يفرّق بين بيانات المصنفات الببليوغرافية والسجلات التطويرية المحلية — العدد الكلي للمصنف ليس حجم المتن المحلي"
-        image={worldPlateForWing("hadith").plate}
-        wing="hadith"
-      >
+        <section className={styles.archiveHero} data-visual="hadith-archive-hero">
+          <img className={styles.heroImg} src={worldPlateForWing("hadith").plate} alt="" />
+          <div className={styles.heroShade} aria-hidden="true" />
+          <div className={styles.heroBody}>
+            <div className={styles.heroCopy}>
+              <span className={styles.heroEyebrow}><LibraryBig size={15} aria-hidden="true" /> دار الحديث النبوي</span>
+              <h1>أرشيف الحديث الشريف</h1>
+              <p className={styles.heroDesc}>
+                موسوعة رقمية تجمع كتب السنة المعتمدة وشروحها، مع أدوات بحث ودراسة —
+                وعدد صادق: {HADITH_COUNTS.collections} مصنفات ببليوغرافية و{HADITH_COUNTS.localSamples} سجلات
+                محلية قيد المراجعة. العدد الكلي للمصنف ليس حجم المتن المحلي.
+              </p>
+              <div className={styles.heroServices}>
+                <span><ShieldCheck size={15} aria-hidden="true" /> كتب السنة المعتمدة بتحقاقات موثقة</span>
+                <span><Users size={15} aria-hidden="true" /> أسانيد ورواة بخرائط مختصرة</span>
+                <span><Search size={15} aria-hidden="true" /> بحث متقدم وفهرسة موضوعية</span>
+              </div>
+              {archiveAvailable ? (
+                <button type="button" className={styles.heroCta} onClick={() => setArchiveOpen(true)}>
+                  <Boxes size={16} aria-hidden="true" /> ادخل دار الحديث ثلاثية الأبعاد
+                </button>
+              ) : null}
+            </div>
+            <div className={styles.heroLedger} aria-label="أعداد الأرشيف">
+              <div>
+                <strong>{bibliographicTotal.toLocaleString("ar-EG")}</strong>
+                <span>حديثًا — عدد ببليوغرافي مجموع</span>
+              </div>
+              <div>
+                <strong>{HADITH_COUNTS.collections.toLocaleString("ar-EG")}</strong>
+                <span>كتب رئيسة</span>
+              </div>
+              <div>
+                <strong>{narratorCount.toLocaleString("ar-EG")}</strong>
+                <span>رواة في السجلات المحلية</span>
+              </div>
+              <div>
+                <strong>{HADITH_COUNTS.localSamples.toLocaleString("ar-EG")}</strong>
+                <span>سجلات محلية قيد المراجعة</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Full-width search bar + scope tabs, as in the approved composition. */}
+      <div className={styles.searchDeck} data-visual="hadith-search-deck">
+        <div className={styles.scopeTabs} role="tablist" aria-label="نطاق البحث">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={collectionId === "all"}
+            className={collectionId === "all" ? styles.scopeOn : ""}
+            onClick={() => setCollectionId("all")}
+          >
+            <Search size={14} aria-hidden="true" /> بحث شامل
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={collectionId !== "all"}
+            className={collectionId !== "all" ? styles.scopeOn : ""}
+            onClick={() => setCollectionId(collectionId === "all" ? COLLECTIONS[0].id : collectionId)}
+          >
+            <BookOpen size={14} aria-hidden="true" /> حسب الكتاب
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={false}
+            onClick={() => { setCollectionId("all"); setQ(""); recordListRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
+          >
+            <Users size={14} aria-hidden="true" /> حسب الراوي
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={false}
+            onClick={() => { setCollectionId("all"); setQ(""); chapterListRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
+          >
+            <Tags size={14} aria-hidden="true" /> حسب الموضوع
+          </button>
+        </div>
         <form className={styles.search} onSubmit={(e) => e.preventDefault()}>
           <Search size={16} aria-hidden="true" />
           <label htmlFor="hadith-local-search" style={VISUALLY_HIDDEN_LABEL_STYLE}>
@@ -348,9 +457,13 @@ export function HadithPage() {
               {collection.nameAr}
             </button>
           ))}
+          {(q || collectionId !== "all") ? (
+            <button type="button" className={styles.resetChip} onClick={() => { setQ(""); setCollectionId("all"); }}>
+              <RotateCcw size={13} aria-hidden="true" /> إعادة تعيين
+            </button>
+          ) : null}
         </div>
-      </PageHero>
-      )}
+      </div>
 
       {archiveAvailable && !showArchive ? (
         <button
@@ -373,24 +486,173 @@ export function HadithPage() {
       {/* The full archive stays mounted while the 3D study room is open;
           it is only visually hidden (state, search and notes keep working). */}
       <div className={showArchive ? styles.archiveHidden : undefined}>
-      <section className={styles.pad}>
-        <SectionHead title="المصنفات الببليوغرافية" en="Collection Metadata — not local corpus" href="/library" />
+      <section className={styles.pad} data-visual="hadith-collection-shelf">
+        <SectionHead title="أبرز كتب الحديث" en="Collection Metadata — not local corpus" href="/library" />
         <div className={`${styles.grid} stagger`}>
-          {COLLECTIONS.map((collection, i) => (
-            <article key={collection.id} className={styles.card}>
-              <img src={COLLECTION_ART[i % COLLECTION_ART.length]} alt="" />
-              <div>
-                <h3>{collection.nameAr}</h3>
-                <p>{collection.compiler} (ت {collection.deathHijri}هـ)</p>
-                <span>
-                  العدد الببليوغرافي المعروف: {collection.totalHadithCount.toLocaleString("ar-EG")} حديث · غير
-                  متاح محليًا
-                </span>
-              </div>
-            </article>
-          ))}
+          {COLLECTIONS.map((collection, i) => {
+            const localCount = LOCAL_SAMPLES.filter((sample) => sample.collectionId === collection.id).length;
+            return (
+              <button
+                key={collection.id}
+                type="button"
+                className={`${styles.card} ${collectionId === collection.id ? styles.cardOn : ""}`}
+                onClick={() => setCollectionId(collection.id)}
+                aria-pressed={collectionId === collection.id}
+                aria-label={`تصفح السجلات المحلية من ${collection.nameAr}`}
+              >
+                <img src={COLLECTION_ART[i % COLLECTION_ART.length]} alt="" />
+                <div>
+                  <span className={styles.countBadge}>
+                    {collection.totalHadithCount.toLocaleString("ar-EG")} أحاديث
+                  </span>
+                  <h3>{collection.nameAr}</h3>
+                  <p>{collection.compiler} (ت {collection.deathHijri}هـ)</p>
+                  <span>
+                    {localCount > 0
+                      ? `${localCount.toLocaleString("ar-EG")} سجلات محلية من هذا المصنف · المتن الكامل غير متاح محليًا`
+                      : "العدد ببليوغرافي معروف · لا سجلات محلية بعد"}
+                  </span>
+                </div>
+              </button>
+            );
+          })}
         </div>
       </section>
+
+      {/* Three-column browsing deck, as in the approved composition:
+          subjects rail · hadith feed · books rail. Every card is a real
+          local record; nothing is padded with invented ahadith. */}
+      <div className={styles.browseDeck} data-visual="hadith-browse-deck">
+        <aside className={styles.railPanel} ref={chapterListRef} aria-label="تصفح الأحاديث حسب الموضوع">
+          <SectionHead title="تصفح حسب كتب الأبواب" en="By recorded book" />
+          <div className={styles.railList}>
+            {chapterGroups.map((group) => (
+              <button
+                key={group.book}
+                type="button"
+                onClick={() => { setActiveId(group.firstId); studyRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
+              >
+                <Tags size={14} aria-hidden="true" />
+                <strong>{group.book}</strong>
+                <small>({group.count.toLocaleString("ar-EG")} سجلات)</small>
+              </button>
+            ))}
+            {chapterGroups.length === 0 ? <p className="muted">لا أبواب مطابقة للبحث الحالي.</p> : null}
+          </div>
+          <p className={styles.railNote}>
+            الأعداد هنا للسجلات المحلية فقط — الأبواب الكاملة للمصنفات غير محمّلة بعد.
+          </p>
+        </aside>
+
+        <section className={styles.feed} aria-label="السجلات المحلية" ref={recordListRef}>
+          <div className={styles.feedTabs} role="tablist" aria-label="تصفية السجلات">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={feedFilter === "all"}
+              className={feedFilter === "all" ? styles.feedTabOn : styles.feedTab}
+              onClick={() => setFeedFilter("all")}
+            >
+              <BookOpen size={14} aria-hidden="true" /> كل السجلات ({results.length.toLocaleString("ar-EG")})
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={feedFilter === "sahih"}
+              className={feedFilter === "sahih" ? styles.feedTabOn : styles.feedTab}
+              onClick={() => setFeedFilter("sahih")}
+            >
+              <ShieldCheck size={14} aria-hidden="true" /> أحاديث صحيحة
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={feedFilter === "saved"}
+              className={feedFilter === "saved" ? styles.feedTabOn : styles.feedTab}
+              onClick={() => setFeedFilter("saved")}
+            >
+              <Bookmark size={14} aria-hidden="true" /> المحفوظة ({results.filter((s) => bookmarks.includes(s.id)).length.toLocaleString("ar-EG")})
+            </button>
+            <span className={styles.feedTabNote}>عينة تطوير — قيد المراجعة التحريرية</span>
+          </div>
+          {feedResults.map((sample) => {
+            const collection = getCollection(sample.collectionId);
+            const saved = bookmarks.includes(sample.id);
+            return (
+              <article
+                key={sample.id}
+                className={`${styles.feedCard} ${active?.id === sample.id ? styles.feedCardOn : ""}`}
+                data-hadith-card={sample.id}
+              >
+                <header>
+                  <span className={styles.feedCollection}>{collection?.nameAr}</span>
+                  <span className={styles.feedBook}>{sample.bookNameAr} · {sample.chapterNameAr}</span>
+                  <button
+                    type="button"
+                    className={saved ? styles.feedSaveOn : styles.feedSave}
+                    aria-label={saved ? `إزالة حفظ حديث ${sample.hadithNumber}` : `حفظ حديث ${sample.hadithNumber} محليًا`}
+                    aria-pressed={saved}
+                    onClick={() => {
+                      setActiveId(sample.id);
+                      setBookmarks((current) =>
+                        current.includes(sample.id)
+                          ? current.filter((id) => id !== sample.id)
+                          : [...current, sample.id],
+                      );
+                    }}
+                  >
+                    {saved ? <BookmarkCheck size={15} aria-hidden="true" /> : <Bookmark size={15} aria-hidden="true" />}
+                  </button>
+                </header>
+                <p className={styles.feedMatn} dir="rtl" lang="ar">{sample.textAr}</p>
+                <footer>
+                  <span><Users size={13} aria-hidden="true" /> الراوي: {sample.narratorAr}</span>
+                  <span><ShieldCheck size={13} aria-hidden="true" /> درجة الحديث: {sample.gradeAr}</span>
+                  <span># رقم الحديث: {sample.hadithNumber.toLocaleString("ar-EG")}</span>
+                  <button
+                    type="button"
+                    className={styles.feedOpen}
+                    onClick={() => { setActiveId(sample.id); studyRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }); }}
+                  >
+                    عرض التفاصيل <ArrowLeft size={13} aria-hidden="true" />
+                  </button>
+                </footer>
+              </article>
+            );
+          })}
+          {feedResults.length === 0 ? (
+            <p className={styles.feedEmpty} role="status">
+              {feedFilter === "saved"
+                ? "لا سجلات محفوظة ضمن هذا النطاق بعد — احفظ حديثًا من زر العلامة ليظهر هنا."
+                : "لا نتائج محلية لهذا البحث — جرّب نصًا آخر أو أعد تعيين النطاق."}
+            </p>
+          ) : null}
+        </section>
+
+        <aside className={styles.railPanel} aria-label="تصفح حسب كتب السنة">
+          <SectionHead title="تصفح حسب كتب السنة" en="The six books" />
+          <div className={styles.railList}>
+            {COLLECTIONS.map((collection) => (
+              <button
+                key={collection.id}
+                type="button"
+                className={collectionId === collection.id ? styles.railOn : ""}
+                onClick={() => setCollectionId(collection.id)}
+              >
+                <BookOpen size={14} aria-hidden="true" />
+                <strong>{collection.nameAr}</strong>
+                <small>({collection.totalHadithCount.toLocaleString("ar-EG")})</small>
+              </button>
+            ))}
+          </div>
+          <button type="button" className={styles.railAll} onClick={() => setCollectionId("all")}>
+            عرض كل السجلات <ArrowLeft size={13} aria-hidden="true" />
+          </button>
+          <p className={styles.railNote}>
+            الأعداد ببليوغرافية معروفة للمصنفات — المتن الكامل غير متاح محليًا.
+          </p>
+        </aside>
+      </div>
 
       <section className={styles.scopeSection}>
         <article className={styles.scopePanel} data-visual="hadith-corpus-scope">
@@ -432,7 +694,7 @@ export function HadithPage() {
         </article>
       </section>
 
-      <div className={styles.row}>
+      <div className={styles.row} ref={studyRef}>
         <article className={styles.hotd}>
           <SectionHead
             title={active ? `السجل المحلي: ${activeCollection?.nameAr ?? ""}` : "السجل المحلي"}
