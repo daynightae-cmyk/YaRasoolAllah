@@ -322,25 +322,21 @@ try {
       // registry enums (CLEARED_WITH_ATTRIBUTION, TXT_MARKDOWN) straight into
       // the metadata. Opening it and reading what is actually on screen is the
       // only way that claim can be checked.
-      // The hall lists domains first; spines only exist once a hall is entered.
-      // The domains list comes first; the hall bar and its spines only exist
-      // after a hall is entered.
-      // The route may auto-open the 3D arcade on a capable device, so select
-      // the complete shelves explicitly before looking for a hall.
+      // The page now mounts the domain gateway shelves itself, and the hall
+      // shows the complete run of spines directly. Older layouts needed an
+      // "enter hall" click first; support both without requiring the click.
       await evaluate(session, `(() => {
         document.querySelector('[data-visual="library-mode-shelves"]')?.click();
         return true;
       })()`);
-      await waitFor(
+      await evaluate(
         session,
         `(() => {
           const enter = [...document.querySelectorAll("button")].find((button) =>
             /ادخل القاعة|Enter hall/.test(button.textContent || ""));
           if (enter) enter.click();
-          return Boolean(enter);
+          return true;
         })()`,
-        `${item.name} library domain`,
-        500,
       );
 
       await waitFor(session, 'document.querySelectorAll("[data-book-spine]").length > 0', `${item.name} library spines`, 400);

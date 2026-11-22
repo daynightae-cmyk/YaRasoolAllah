@@ -1,12 +1,10 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import {
-  ArrowUpRight,
   BookOpen,
   LibraryBig,
   LoaderCircle,
   Search,
 } from "lucide-react";
-import { art } from "@/visual-golden/mock/art";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
 import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
@@ -14,6 +12,10 @@ import { CatalogShelfHall } from "@/visual-golden/components/library/CatalogShel
 import { LibraryCatalog } from "@/visual-golden/components/library/LibraryCatalog";
 import { CatalogReadingChamber } from "@/visual-golden/components/library/CatalogReadingChamber";
 import { LibraryLivingShelf } from "@/visual-golden/components/library/LibraryLivingShelf";
+import {
+  LibraryDomainShelves,
+  type DomainGateway,
+} from "@/visual-golden/components/library/LibraryDomainShelves";
 import { SectionEntry3D } from "@/visual-golden/components/entry/SectionEntry3D";
 import { useEffectiveMotion } from "@/visual-golden/lib/institution/effective-motion";
 import {
@@ -38,15 +40,6 @@ const Library3D = lazy(() =>
 );
 
 type LibraryView = "library3d" | "shelves" | "catalog";
-
-interface DomainGateway {
-  category: string;
-  titleAr: string;
-  titleEn: string;
-  hintAr: string;
-  hintEn: string;
-  mark: string;
-}
 
 const DOMAIN_GATEWAYS: DomainGateway[] = [
   {
@@ -177,15 +170,6 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
     [payload],
   );
 
-  const categoryCounts = useMemo(() => {
-    const counts = new Map<string, number>();
-    for (const work of payload?.works ?? []) {
-      if (!work.category) continue;
-      counts.set(work.category, (counts.get(work.category) ?? 0) + 1);
-    }
-    return counts;
-  }, [payload]);
-
   // Entering through the hall's own exit (`?view=shelves`) is a deliberate
   // request for the shelf surface; honour it once the catalog has loaded so
   // the reader is never bounced back into the arcade they just left.
@@ -217,21 +201,13 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
         catalog: "الفهرس العلمي",
         catalogHint: "العرض الجدولي المتخصص للباحثين",
         modesLabel: "طرق استكشاف المكتبة",
-        gatewaysEyebrow: "أبواب المعرفة",
-        gatewaysTitle: "ابدأ من العلم الذي تطلبه",
-        gatewaysHint:
-          "ثمانية أبواب تقود إلى قاعات المكتبة. الأعداد من الفهرس المحمّل، لا من تقدير مكتوب بيد.",
-        works: "عمل",
-        openDomain: "افتح القاعة",
         loading: "يُوقِد سراج المكتبة ويُفتح الرواق…",
         loadingHint:
           "يُحمّل الفهرس الكامل مرة واحدة، ثم يبقى في الذاكرة أثناء التنقل.",
         error: "تعذر تحميل فهرس المكتبة.",
         retry: "إعادة المحاولة",
-        enable3d: "إظهار المكتبة الثلاثية الأبعاد",
         auto2d:
           "فُتحت الرفوف الكاملة لأن جهازك أو إعداد تقليل الحركة يفضّل عرضًا أخف. يمكنك اختيار المشهد ثلاثي الأبعاد يدويًا في أي وقت.",
-        domainNote: "يعمل الرف والبحث والفهرس في كل الأحوال.",
       }
     : {
         title: "The Grand Library",
@@ -250,21 +226,13 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
         catalog: "Scholarly Catalog",
         catalogHint: "Specialist tabular view for researchers",
         modesLabel: "Ways to explore the Library",
-        gatewaysEyebrow: "Doors of Knowledge",
-        gatewaysTitle: "Begin with the science you seek",
-        gatewaysHint:
-          "Eight doors lead into the Library halls. Counts come from the loaded catalog, not from a hand-written estimate.",
-        works: "works",
-        openDomain: "Open the hall",
         loading: "Lighting the Library lamp and opening the arcade…",
         loadingHint:
           "The complete catalog is fetched once, then kept in memory while you move.",
         error: "The Library catalog could not be loaded.",
         retry: "Try again",
-        enable3d: "Show the 3D Library",
         auto2d:
           "The complete shelves opened because this device or your reduced-motion setting prefers a lighter view. You can still choose the 3D arcade explicitly at any time.",
-        domainNote: "The shelf, search, and catalog remain available regardless.",
       };
 
   const enterDomain = (category: string) => {
@@ -303,44 +271,14 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
     if (value.trim().length > 1 && view === "library3d") setViewChoice("shelves");
   };
 
-  const gateways = (
-    <section
-      className={styles.gateways}
-      data-visual={payload ? "library-gateways" : undefined}
-      aria-labelledby="library-gateways-title"
-    >
-      <header className={styles.gatewayHeading}>
-        <span>{labels.gatewaysEyebrow}</span>
-        <h2 id="library-gateways-title">{labels.gatewaysTitle}</h2>
-        <p>{labels.gatewaysHint}</p>
-      </header>
-      <div className={styles.gatewayGrid}>
-        {DOMAIN_GATEWAYS.map((domain) => {
-          const count = categoryCounts.get(domain.category);
-          return (
-            <button
-              key={domain.category}
-              type="button"
-              className={styles.gateway}
-              onClick={() => enterDomain(domain.category)}
-            >
-              <em className={styles.gatewayMark} aria-hidden="true">
-                {domain.mark}
-              </em>
-              <strong>{lang === "ar" ? domain.titleAr : domain.titleEn}</strong>
-              <span>{lang === "ar" ? domain.hintAr : domain.hintEn}</span>
-              <small>
-                {count === undefined
-                  ? labels.works
-                  : `${lang === "ar" ? arNumber.format(count) : enNumber.format(count)} ${labels.works}`}
-                <ArrowUpRight size={13} aria-hidden="true" />
-              </small>
-            </button>
-          );
-        })}
-      </div>
-    </section>
-  );
+  const gateways = payload ? (
+    <LibraryDomainShelves
+      domains={DOMAIN_GATEWAYS}
+      works={payload.works}
+      onOpen={openReader}
+      onEnterDomain={enterDomain}
+    />
+  ) : null;
 
   const scenePanel = (() => {
     if (view !== "library3d" || initialWorkId) return null;
@@ -484,6 +422,7 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
                   query={query}
                   initialCategory={shelfDomain}
                   onOpen={openReader}
+                  hideDomainGrid
                 />
               )}
             </>

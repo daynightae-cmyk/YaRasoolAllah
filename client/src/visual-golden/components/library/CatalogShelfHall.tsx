@@ -17,6 +17,12 @@ interface Props {
   query: string;
   initialCategory?: string;
   onOpen: (work: CatalogWork) => void;
+  /**
+   * The page renders the domain gateway shelves itself (LibraryDomainShelves),
+   * so the hall suppresses its own flat gateway grid and shows the complete
+   * shelves directly — one set of doors, not two.
+   */
+  hideDomainGrid?: boolean;
 }
 
 const PAGE_SIZE = 96;
@@ -47,7 +53,7 @@ function workMatches(work: CatalogWork, query: string) {
   ].some((value) => value && normalized(value).includes(q));
 }
 
-export function CatalogShelfHall({ query, initialCategory, onOpen }: Props) {
+export function CatalogShelfHall({ query, initialCategory, onOpen, hideDomainGrid = false }: Props) {
   const lang = useInstitution((state) => state.lang);
   const [payload, setPayload] = useState<CatalogPayload | null>(null);
   const [error, setError] = useState("");
@@ -93,8 +99,10 @@ export function CatalogShelfHall({ query, initialCategory, onOpen }: Props) {
   const categoryWorks = useMemo(
     () => category
       ? filteredByQuery.filter((work) => (work.category || "UNCLASSIFIED") === category)
-      : [],
-    [category, filteredByQuery],
+      // With the page-level domain shelves mounted, "no category" means the
+      // complete hall: every classified work on one continuous run of shelves.
+      : hideDomainGrid ? filteredByQuery : [],
+    [category, filteredByQuery, hideDomainGrid],
   );
 
   const subcategoryCounts = useMemo(() => {
@@ -181,7 +189,7 @@ export function CatalogShelfHall({ query, initialCategory, onOpen }: Props) {
         </div>
       </header>
 
-      {!category ? (
+      {!category && !hideDomainGrid ? (
         <>
           <div className={styles.domainTitle}>
             <LibraryBig size={19} />
@@ -212,17 +220,22 @@ export function CatalogShelfHall({ query, initialCategory, onOpen }: Props) {
       ) : (
         <>
           <div className={styles.hallBar} data-shelf-plate>
-            <button type="button" onClick={() => { setCategory(null); setSubcategory(null); }}>
-              {lang === "ar" ? <ArrowRight size={16} /> : <ArrowLeft size={16} />}
-              {labels.back}
-            </button>
+            {category ? (
+              <button type="button" onClick={() => { setCategory(null); setSubcategory(null); }}>
+                {lang === "ar" ? <ArrowRight size={16} /> : <ArrowLeft size={16} />}
+                {labels.back}
+              </button>
+            ) : null}
             <div>
               <span>{labels.shelves}</span>
-              <strong>{category.startsWith("UNCLASSIFIED") ? labels.unclassified : categoryLabel(category, lang)}</strong>
+              <strong>{!category
+                ? (lang === "ar" ? "قاعة المكتبة الكاملة" : "The complete Library hall")
+                : category.startsWith("UNCLASSIFIED") ? labels.unclassified : categoryLabel(category, lang)}</strong>
               <small>{visibleWorks.length.toLocaleString(lang)} {labels.results}</small>
             </div>
           </div>
 
+          {category ? (
           <nav className={styles.subcategories} aria-label={labels.shelves}>
             <button
               type="button"
@@ -244,6 +257,7 @@ export function CatalogShelfHall({ query, initialCategory, onOpen }: Props) {
               </button>
             ))}
           </nav>
+          ) : null}
 
           <div className={styles.shelfCase}>
             <div className={styles.books} role="list">
@@ -281,6 +295,7 @@ export function CatalogShelfHall({ query, initialCategory, onOpen }: Props) {
               <button
                 type="button"
                 disabled={currentPage <= 1}
+                aria-label={lang === "ar" ? "الصفحة السابقة" : "Previous page"}
                 onClick={() => setPage((value) => Math.max(1, value - 1))}
               >
                 {lang === "ar" ? <ArrowRight size={15} /> : <ArrowLeft size={15} />}
@@ -289,6 +304,7 @@ export function CatalogShelfHall({ query, initialCategory, onOpen }: Props) {
               <button
                 type="button"
                 disabled={currentPage >= totalPages}
+                aria-label={lang === "ar" ? "الصفحة التالية" : "Next page"}
                 onClick={() => setPage((value) => Math.min(totalPages, value + 1))}
               >
                 {lang === "ar" ? <ArrowLeft size={15} /> : <ArrowRight size={15} />}

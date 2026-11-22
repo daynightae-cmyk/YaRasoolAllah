@@ -11,19 +11,19 @@ import {
 import styles from "./LibraryLivingShelf.module.css";
 
 /**
- * The Library Living Shelf — the wing's front door.
+ * The Library Living Shelf — the wing's full facade.
  *
- * The shelves should not go quiet behind a catalog table. This is the honest
- * answer: not invented shelf decoration, but real catalogued works, five at a
- * time, turning with the day, each one openable.
- *
- * Nothing here is hand-written. Every book is a work the catalog can actually
- * open (`canReadTextInside`), and the order is a stable hash of the work id
- * against the local date — so the shelf is curated, not random, and it will
- * not shuffle under the reader's hand on a re-render.
+ * Two wooden rows of real catalogued volumes, ten at a time, turning with the
+ * day. This is the front of the Library the reference depicts: a bookcase
+ * wall, not a banner. Nothing here is hand-written — every book is a work the
+ * catalog can actually open (`canReadTextInside`), and the order is a stable
+ * hash of the work id against the local date, so the shelf is curated, not
+ * random, and it will not shuffle under the reader's hand on a re-render.
  */
 
 const SHELF_SIZE = 5;
+const SHELF_ROWS = 2;
+const PAGE_SIZE = SHELF_SIZE * SHELF_ROWS;
 
 function hash(value: string): number {
   let h = 2166136261;
@@ -53,7 +53,7 @@ export function LibraryLivingShelf({ works, onOpen }: Props) {
     [works],
   );
 
-  const shelf = useMemo(() => {
+  const rows = useMemo(() => {
     if (!readable.length) return [];
     const day = dayIndex();
     const ranked = readable
@@ -62,37 +62,46 @@ export function LibraryLivingShelf({ works, onOpen }: Props) {
         rank: (hash(work.id) + index * 7919 + day * 104729) % 1000003,
       }))
       .sort((a, b) => a.rank - b.rank)
-      .slice(0, Math.min(SHELF_SIZE * 4, readable.length));
+      .slice(0, Math.min(PAGE_SIZE * 2, readable.length));
 
-    return Array.from(
-      { length: Math.min(SHELF_SIZE, ranked.length) },
-      (_, slot) => ranked[(slot + rotation * SHELF_SIZE) % ranked.length].work,
+    const page = Array.from(
+      { length: Math.min(PAGE_SIZE, ranked.length) },
+      (_, slot) => ranked[(slot + rotation * PAGE_SIZE) % ranked.length].work,
     );
+    const result: CatalogWork[][] = [];
+    for (let row = 0; row < SHELF_ROWS; row += 1) {
+      const slice = page.slice(row * SHELF_SIZE, (row + 1) * SHELF_SIZE);
+      if (slice.length) result.push(slice);
+    }
+    return result;
   }, [readable, rotation]);
 
-  if (!shelf.length) return null;
+  if (!rows.length) return null;
 
   const copy =
     lang === "ar"
       ? {
-          eyebrow: "رفّ اليوم",
+          eyebrow: "واجهة الرفوف",
           title: "كتبٌ من فهرس المؤسسة، كلٌّ منها بنسخة موثقة تُفتح الآن",
           prev: "الكتب السابقة",
           next: "كتب أخرى",
-          note: "ترتيب الرفّ يتغيّر مع كل يوم، والأعمال كلها من فهرس المؤسسة المحمّل: لا عنوان ولا غلاف من عندنا.",
+          note: "ترتيب الواجهة يتغيّر مع كل يوم، والأعمال كلها من فهرس المؤسسة المحمّل: لا عنوان ولا غلاف من عندنا.",
         }
       : {
-          eyebrow: "Shelf of the day",
+          eyebrow: "The shelf facade",
           title: "Catalogued works, each opened from a governed version",
           prev: "Previous works",
           next: "More works",
-          note: "The shelf order turns with the day. Every work comes from the loaded catalog: no invented title, no invented cover.",
+          note: "The facade order turns with the day. Every work comes from the loaded catalog: no invented title, no invented cover.",
         };
 
   // `readable` is the honest inventory: works whose governed version the reader
   // can actually open. Rotation only turns when there is another page to turn to.
-  const canTurn = readable.length > SHELF_SIZE;
-  const pageCount = Math.max(1, Math.ceil(Math.min(readable.length, SHELF_SIZE * 4) / SHELF_SIZE));
+  const canTurn = readable.length > PAGE_SIZE;
+  const pageCount = Math.max(
+    1,
+    Math.ceil(Math.min(readable.length, PAGE_SIZE * 2) / PAGE_SIZE),
+  );
 
   return (
     <section
@@ -100,6 +109,7 @@ export function LibraryLivingShelf({ works, onOpen }: Props) {
       aria-labelledby="living-shelf-title"
       data-visual="library-living-shelf"
       data-readable={readable.length}
+      data-rows={rows.length}
     >
       <header className={styles.head}>
         <p className={styles.eyebrow}>
@@ -121,26 +131,33 @@ export function LibraryLivingShelf({ works, onOpen }: Props) {
           </button>
         ) : null}
 
-        <ol className={styles.row}>
-          {shelf.map((work) => (
-            <li key={work.id}>
-              <button
-                type="button"
-                className={styles.book}
-                onClick={() => onOpen(work)}
-                title={`${displayTitle(work, lang)} — ${displayAuthor(work, lang)}`}
-              >
-                <span className={styles.band} aria-hidden="true" />
-                <strong>{displayTitle(work, lang)}</strong>
-                <span>{displayAuthor(work, lang)}</span>
-                <small>
-                  {categoryLabel(work.category, lang)}
-                  {work.deathHijri ? ` · ${work.deathHijri} ھ` : ""}
-                </small>
-              </button>
-            </li>
+        <div className={styles.facade}>
+          {rows.map((row, rowIndex) => (
+            <div className={styles.shelfUnit} key={rowIndex} data-shelf-row={rowIndex}>
+              <ol className={styles.row}>
+                {row.map((work) => (
+                  <li key={work.id}>
+                    <button
+                      type="button"
+                      className={styles.book}
+                      onClick={() => onOpen(work)}
+                      title={`${displayTitle(work, lang)} — ${displayAuthor(work, lang)}`}
+                    >
+                      <span className={styles.band} aria-hidden="true" />
+                      <strong>{displayTitle(work, lang)}</strong>
+                      <span>{displayAuthor(work, lang)}</span>
+                      <small>
+                        {categoryLabel(work.category, lang)}
+                        {work.deathHijri ? ` · ${work.deathHijri} ھ` : ""}
+                      </small>
+                    </button>
+                  </li>
+                ))}
+              </ol>
+              <div className={styles.ledge} aria-hidden="true" />
+            </div>
           ))}
-        </ol>
+        </div>
 
         {canTurn ? (
           <button

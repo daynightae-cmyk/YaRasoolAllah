@@ -23,8 +23,11 @@ export const cases = [
   { name: "gate-1440-light-rtl", path: "/", width: 1440, height: 1000, theme: "light", language: "ar" },
   { name: "gate-360-dark-ltr", path: "/", width: 360, height: 900, theme: "dark", language: "en" },
   { name: "gate-768-dark-rtl", path: "/home", width: 768, height: 1024, theme: "dark", language: "ur" },
-  { name: "library-1440-dark-rtl", path: "/library", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-visual="library-domains"]' },
-  { name: "library-360-light-ltr", path: "/library", width: 360, height: 900, theme: "light", language: "en", readySelector: '[data-visual="library-domains"]' },
+  { name: "library-1440-dark-rtl", path: "/library", search: "?view=shelves&ceremony=0&door=0", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-visual="library-living-shelf"]' },
+  { name: "library-360-light-ltr", path: "/library", search: "?view=shelves&ceremony=0&door=0", width: 360, height: 900, theme: "light", language: "en", readySelector: '[data-visual="library-living-shelf"]' },
+  { name: "library-facade-1440-dark-rtl", path: "/library", search: "?view=shelves&ceremony=0&door=0", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-visual="library-living-shelf"]', scrollSelector: '[data-visual="library-living-shelf"]', scrollOffset: -20 },
+  { name: "library-facade-390-dark-rtl", path: "/library", search: "?view=shelves&ceremony=0&door=0", width: 390, height: 844, theme: "dark", language: "ar", readySelector: '[data-visual="library-living-shelf"]', scrollSelector: '[data-visual="library-living-shelf"]', scrollOffset: -20 },
+  { name: "library-domain-shelves-1440-dark-rtl", path: "/library", search: "?view=shelves&ceremony=0&door=0", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-visual="library-gateways"]', scrollSelector: '[data-visual="library-gateways"]', scrollOffset: -20 },
   { name: "quran-1440-light-rtl", path: "/quran", width: 1440, height: 1000, theme: "light", language: "ar", readySelector: '[data-visual="quran-sheet"][data-quran-state="ready"]' },
   { name: "quran-360-dark-ltr", path: "/quran", width: 360, height: 900, theme: "dark", language: "en", readySelector: '[data-visual="quran-sheet"][data-quran-state="ready"]' },
   { name: "audio-1440-dark-rtl", path: "/audio", width: 1440, height: 1000, theme: "dark", language: "ar" },
@@ -75,7 +78,7 @@ export const cases = [
   { name: "who-is-muhammad-1440-light-rtl", path: "/who-is-muhammad", width: 1440, height: 1000, theme: "light", language: "ar" },
   { name: "who-is-muhammad-360-dark-ltr", path: "/who-is-muhammad", width: 360, height: 900, theme: "dark", language: "en" },
   { name: "tafsir-1440-light-rtl", path: "/tafsir", width: 1440, height: 1000, theme: "light", language: "ar", readySelector: '[data-visual="tafsir-study"][data-tafsir-state="ready"]' },
-  { name: "library-1440-light-rtl", path: "/library", width: 1440, height: 1000, theme: "light", language: "ar", readySelector: '[data-visual="library-domains"]' },
+  { name: "library-1440-light-rtl", path: "/library", search: "?view=shelves&ceremony=0&door=0", width: 1440, height: 1000, theme: "light", language: "ar", readySelector: '[data-visual="library-living-shelf"]' },
   { name: "hadith-1440-light-rtl", path: "/hadith", width: 1440, height: 1000, theme: "light", language: "ar", readySelector: '[data-visual="hadith-corpus-scope"]' },
   // Post-consolidation evidence: the unified media shelf, the parent source
   // panel, and the two legacy-baseline routes that were empty before.

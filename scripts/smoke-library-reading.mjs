@@ -147,7 +147,7 @@ try {
   await waitFor(session, "document.readyState === 'complete' && location.pathname === '/library'", "library route");
   await waitFor(
     session,
-    `[...document.querySelectorAll("button")].some((button) =>
+    `[...document.querySelectorAll("[data-domain-gateway], button")].some((button) =>
       button.textContent?.includes("السيرة النبوية")
     )`,
     "Seerah library gateway",
@@ -155,9 +155,17 @@ try {
   await evaluate(
     session,
     `(() => {
-      const gateway = [...document.querySelectorAll("button")].find((button) =>
-        button.textContent?.includes("السيرة النبوية")
-      );
+      // The domain plate is the door into the hall. Facade spines also carry
+      // the Seerah title, so prefer the explicit gateway attribute when the
+      // page mounts the shelved doors.
+      const gateway =
+        document.querySelector('[data-domain-gateway]') &&
+        [...document.querySelectorAll("[data-domain-gateway]")].find((button) =>
+          button.textContent?.includes("السيرة النبوية")
+        ) ||
+        [...document.querySelectorAll("button")].find((button) =>
+          button.textContent?.includes("السيرة النبوية")
+        );
       if (!gateway) throw new Error("Seerah gateway missing");
       gateway.click();
       return true;
