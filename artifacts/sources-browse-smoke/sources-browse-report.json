@@ -1,0 +1,50 @@
+{
+  "origin": "http://127.0.0.1:5000",
+  "firstPage": [
+    "src-quran-development-sample",
+    "src-tanzil-uthmani-1-1-candidate",
+    "src-library-development-catalog",
+    "src-openiti-metadata-candidate",
+    "src-openiti-release-pinned",
+    "src-openiti-historical-texts-pinned",
+    "src-library-bibliographic-registry",
+    "src-dorar-reference",
+    "src-map-provider-registry",
+    "src-audio-provider-registry"
+  ],
+  "secondPage": [
+    "src-mp3quran-streaming",
+    "src-librivox-audiobooks-candidate",
+    "src-aladhan-api",
+    "src-media-institution-registry",
+    "src-children-original-adaptations",
+    "src-alquran-cloud-translations",
+    "src-quranenc-muyassar-tafsir",
+    "src-quranenc-translations",
+    "src-quran-foundation-api",
+    "src-sunnah-api"
+  ],
+  "verifiedIds": [
+    "src-openiti-release-pinned",
+    "src-openiti-historical-texts-pinned",
+    "src-library-bibliographic-registry",
+    "src-mp3quran-streaming",
+    "src-aladhan-api",
+    "src-alquran-cloud-translations",
+    "src-quranenc-muyassar-tafsir",
+    "src-quranenc-translations",
+    "src-tanzil-uthmani-min-1-1-acquired"
+  ],
+  "panels": {
+    "detailHasTimeline": true,
+    "governHasRights": true,
+    "governHasHonesty": true
+  },
+  "drawer": {
+    "hasId": true,
+    "hasBoundary": true,
+    "deepLinked": true
+  },
+  "overflow": false,
+  "runtimeErrors": []
+}

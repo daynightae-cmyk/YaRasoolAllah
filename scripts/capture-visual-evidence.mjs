@@ -67,6 +67,8 @@ export const cases = [
   { name: "hadith-archive-1440-dark-rtl", path: "/hadith", width: 1440, height: 1000, theme: "dark", language: "ar", scrollSelector: '[data-visual="hadith-corpus-scope"]', scrollOffset: -80 },
   { name: "hadith-archive-360-light-ltr", path: "/hadith", width: 360, height: 900, theme: "light", language: "en", scrollSelector: '[data-visual="hadith-corpus-scope"]', scrollOffset: -80 },
   { name: "sources-1440-light-ltr", path: "/sources", width: 1440, height: 1000, theme: "light", language: "en" },
+  { name: "sources-deck-1440-dark-rtl", path: "/sources", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-visual="sources-browse-deck"]', scrollSelector: '[data-visual="sources-stats"]', scrollOffset: -20 },
+  { name: "sources-deck-390-dark-rtl", path: "/sources", width: 390, height: 844, theme: "dark", language: "ar", readySelector: '[data-visual="sources-browse-deck"]', scrollSelector: '[data-visual="sources-browse-deck"]', scrollOffset: -20 },
   { name: "sources-360-dark-rtl", path: "/sources", width: 360, height: 900, theme: "dark", language: "ar" },
   { name: "daily-768-light-rtl", path: "/daily", width: 768, height: 1024, theme: "light", language: "ar", readySelector: '[data-visual="prayer-observatory"]:not([data-prayer-state="loading"])' },
   { name: "daily-360-dark-ltr", path: "/daily", width: 360, height: 900, theme: "dark", language: "en", readySelector: '[data-visual="prayer-observatory"]:not([data-prayer-state="loading"])' },
