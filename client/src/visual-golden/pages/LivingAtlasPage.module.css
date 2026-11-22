@@ -109,7 +109,8 @@
   letter-spacing: 0.08em;
   opacity: 0.8;
 }
-.top h1 {
+.top h1,
+.stageTitle {
   margin: 0.7rem 0 0.2rem;
   font-size: clamp(2.1rem, 5vw, 4.6rem);
   font-family: var(--font-display);
@@ -570,7 +571,8 @@
     transform: none;
     text-align: start;
   }
-  .top h1 {
+  .top h1,
+  .stageTitle {
     font-size: 2.15rem;
   }
   .lede {
@@ -790,4 +792,437 @@
   .placeCounts {
     grid-column: 2 / -1;
   }
+}
+
+/* ===== Full-page composition (approved reference 06_atlas.png) ===== */
+/* Hero: world plate behind identity copy + honest registry ledger. */
+.atlasHero {
+  position: relative;
+  z-index: 1;
+  margin: 0.8rem clamp(0.6rem, 1.6vw, 1.4rem) 0;
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  isolation: isolate;
+  min-height: 300px;
+  box-shadow: var(--shadow-panel);
+}
+.atlasHeroPlate {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+.atlasHeroShade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(270deg, rgba(3, 14, 11, 0.34), rgba(3, 14, 11, 0.84) 58%),
+    linear-gradient(0deg, rgba(2, 10, 8, 0.78), transparent 42%);
+}
+.atlasHeroBody {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(220px, 0.8fr);
+  gap: clamp(1rem, 3vw, 2.4rem);
+  align-items: center;
+  padding: clamp(1.2rem, 3vw, 2.2rem);
+}
+.atlasHeroCopy { display: grid; gap: 0.7rem; justify-items: start; }
+.atlasEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-gold);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+.atlasHeroCopy h1 {
+  margin: 0;
+  color: var(--ivory-50);
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3.4vw, 2.7rem);
+  letter-spacing: 0.03em;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6);
+}
+.atlasHeroCopy > p {
+  margin: 0;
+  max-width: 58ch;
+  color: rgba(248, 243, 228, 0.88);
+  font-size: 0.88rem;
+  line-height: 1.95;
+}
+.atlasServices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.1rem;
+}
+.atlasServices span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--gold-100);
+  font-size: 0.74rem;
+}
+.atlasHeroCtas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.atlasCtaPrimary,
+.atlasCtaGhost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding: 0.55rem 1.3rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background 220ms var(--ease-smooth), transform 220ms var(--ease-smooth);
+}
+.atlasCtaPrimary {
+  border: 1px solid var(--border-gold);
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.4), rgba(90, 61, 34, 0.34));
+  color: #ffe9a8;
+}
+.atlasCtaGhost {
+  border: 1px solid rgba(232, 197, 71, 0.45);
+  background: rgba(4, 20, 16, 0.5);
+  color: var(--gold-100);
+}
+.atlasCtaPrimary:hover, .atlasCtaPrimary:focus-visible,
+.atlasCtaGhost:hover, .atlasCtaGhost:focus-visible {
+  transform: translateY(-2px);
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.5), rgba(90, 61, 34, 0.42));
+  color: #ffe9a8;
+}
+.atlasCtaPrimary:focus-visible, .atlasCtaGhost:focus-visible {
+  outline: 3px solid var(--border-gold);
+  outline-offset: 2px;
+}
+.atlasLedger {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  border: 1px solid rgba(232, 197, 71, 0.4);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: rgba(232, 197, 71, 0.28);
+  box-shadow: 0 18px 44px -18px rgba(0, 0, 0, 0.7);
+}
+.atlasLedger > div {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.9rem 1rem;
+  background: rgba(4, 20, 16, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.atlasLedger strong {
+  color: var(--text-gold);
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2vw, 1.6rem);
+  line-height: 1.2;
+}
+.atlasLedger span {
+  color: rgba(245, 237, 216, 0.72);
+  font-size: 0.66rem;
+  line-height: 1.5;
+}
+
+/* Era rail: the ten recorded Seerah eras with playback controls. */
+.eraRailWrap {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0.9rem clamp(0.6rem, 1.6vw, 1.4rem) 0;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-lg);
+  background: var(--bg-glass-strong);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.eraRailTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-gold);
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.eraRailControls button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border-gold);
+  border-radius: 999px;
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.24), rgba(212, 160, 23, 0.08));
+  color: var(--text-gold);
+  cursor: pointer;
+}
+.eraRail {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding-bottom: 0.2rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-gold) transparent;
+}
+.eraRail button {
+  flex: 0 0 auto;
+  display: grid;
+  gap: 0.1rem;
+  min-height: 44px;
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  transition: border-color 200ms var(--ease-smooth), background 200ms var(--ease-smooth);
+}
+.eraRail button:hover { border-color: var(--border-gold); }
+.eraRail button strong { font-size: 0.74rem; color: var(--text-primary); white-space: nowrap; }
+.eraRail button span { font-size: 0.62rem; color: var(--text-muted); white-space: nowrap; }
+.eraOn {
+  border-color: rgba(232, 197, 71, 0.85) !important;
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.3), rgba(212, 160, 23, 0.12)) !important;
+}
+.eraOn strong { color: #ffe9a8 !important; }
+.eraSummary {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.74rem;
+  line-height: 1.85;
+}
+.eraSummary a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--text-gold);
+  text-decoration: none;
+}
+.eraSummary a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Lower deck: latest events · featured maps · specialized atlases. */
+.lowerDeck {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(240px, 0.9fr) minmax(0, 1.5fr) minmax(240px, 1fr);
+  gap: 0.9rem;
+  margin: 1rem clamp(0.6rem, 1.6vw, 1.4rem) 0;
+  align-items: start;
+}
+.lowerPanel {
+  position: relative;
+  display: grid;
+  gap: 0.7rem;
+  align-content: start;
+  padding: 1rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-lg);
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.lowerPanel::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 10%; right: 10%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-gold), transparent);
+  opacity: 0.6;
+}
+.lowerPanel > header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--text-gold);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+.latestList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.latestList a {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: border-color 200ms var(--ease-smooth), background 200ms var(--ease-smooth);
+}
+.latestList a:hover, .latestList a:focus-visible {
+  border-color: var(--border-gold);
+  background: rgba(212, 160, 23, 0.08);
+}
+.latestList img {
+  width: 64px;
+  height: 46px;
+  object-fit: cover;
+  border-radius: var(--radius-sm, 6px);
+  border: 1px solid var(--border-panel);
+}
+.latestList span { display: grid; gap: 0.1rem; min-width: 0; }
+.latestList strong {
+  color: var(--text-primary);
+  font-size: 0.78rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.latestList small { color: var(--text-muted); font-size: 0.64rem; }
+.latestList svg { color: var(--text-gold); }
+.lowerAll {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 40px;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--border-gold);
+  border-radius: 999px;
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.18), rgba(212, 160, 23, 0.06));
+  color: var(--text-gold);
+  font-size: 0.76rem;
+  text-decoration: none;
+}
+.lowerAll:hover { background: rgba(212, 160, 23, 0.28); }
+.featuredGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+.featuredGrid button {
+  position: relative;
+  display: grid;
+  min-height: 120px;
+  padding: 0;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg-card);
+  cursor: pointer;
+  text-align: start;
+  font: inherit;
+  transition: border-color 220ms var(--ease-smooth), transform 220ms var(--ease-smooth);
+}
+.featuredGrid button:hover, .featuredGrid button:focus-visible {
+  border-color: var(--border-gold);
+  transform: translateY(-2px);
+}
+.featuredGrid img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.featuredGrid span {
+  position: relative;
+  z-index: 1;
+  align-self: end;
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.55rem 0.7rem;
+  background: linear-gradient(0deg, rgba(2, 10, 8, 0.88), transparent);
+}
+.featuredGrid strong { color: var(--ivory-50); font-size: 0.8rem; }
+.featuredGrid small { color: var(--gold-100); font-size: 0.64rem; }
+.featuredOn {
+  border-color: rgba(232, 197, 71, 0.9) !important;
+  box-shadow: 0 0 22px rgba(212, 160, 23, 0.25);
+}
+.lowerNote {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.66rem;
+  line-height: 1.75;
+}
+.specialGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.specialGrid button,
+.specialLink {
+  display: grid;
+  gap: 0.2rem;
+  justify-items: start;
+  min-height: 84px;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  font: inherit;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 200ms var(--ease-smooth), background 200ms var(--ease-smooth);
+}
+.specialGrid button:hover, .specialGrid button:focus-visible,
+.specialLink:hover, .specialLink:focus-visible {
+  border-color: var(--border-gold);
+  background: rgba(212, 160, 23, 0.08);
+}
+.specialGrid svg { color: var(--text-gold); }
+.specialGrid strong { color: var(--text-primary); font-size: 0.76rem; }
+.specialGrid small { color: var(--text-muted); font-size: 0.62rem; line-height: 1.6; }
+.atlasBoundary {
+  position: relative;
+  z-index: 1;
+  margin: 1rem clamp(0.6rem, 1.6vw, 1.4rem) 2.5rem;
+  padding: 0.8rem 1rem;
+  border: 1px dashed var(--border-panel);
+  border-radius: var(--radius-lg);
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  line-height: 1.9;
+}
+
+@media (max-width: 1100px) {
+  .atlasHeroBody { grid-template-columns: 1fr; }
+  .atlasLedger { max-width: 480px; }
+  .lowerDeck { grid-template-columns: 1fr; }
+  .eraRailWrap { grid-template-columns: auto auto minmax(0, 1fr); }
+}
+@media (max-width: 720px) {
+  .eraRailWrap { grid-template-columns: 1fr auto; }
+  .eraRail { grid-column: 1 / -1; }
+  .featuredGrid { grid-template-columns: 1fr 1fr; }
+  .specialGrid { grid-template-columns: 1fr 1fr; }
+  .atlasHero { min-height: 0; }
 }

@@ -290,6 +290,7 @@ export function SeerahDatabasePage() {
   const params = useMemo(() => new URLSearchParams(search), [search]);
   const requestedEventId = params.get("event") ?? "";
   const requestedPlaceId = params.get("place") ?? "";
+  const requestedEraId = params.get("era") ?? "";
 
   const [query, setQuery] = useState("");
   const [eraId, setEraId] = useState<SeerahEraId | "all">("all");
@@ -335,6 +336,13 @@ export function SeerahDatabasePage() {
     if (!SEERAH_DATABASE.places.some((place) => place.id === requestedPlaceId)) return;
     setPlaceId(requestedPlaceId);
   }, [requestedPlaceId]);
+
+  // Era deep links (from the atlas era rail) fail closed on unknown ids.
+  useEffect(() => {
+    if (!requestedEraId) return;
+    if (!SEERAH_DATABASE.eras.some((era) => era.id === requestedEraId)) return;
+    setEraId(requestedEraId as SeerahEraId);
+  }, [requestedEraId]);
 
   useLayoutEffect(() => {
     // Direct links from a Seerah station open the database page; bring the

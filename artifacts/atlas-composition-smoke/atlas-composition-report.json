@@ -1,0 +1,29 @@
+{
+  "origin": "http://127.0.0.1:5000",
+  "hero": {
+    "ledger": [
+      "٩",
+      "٤",
+      "١٠١",
+      "١٠"
+    ],
+    "eraTabs": 11
+  },
+  "eraState": {
+    "selected": "الدفاع والغزوات2 — 8 هـ · ٢٥",
+    "href": "/seerah/database?era=madinah-defense"
+  },
+  "eraFiltered": {
+    "active": "الدفاع والغزوات 25",
+    "results": "25 نتيجة من 101 حدثًا"
+  },
+  "theatre": {
+    "stage": "غزوة أحد"
+  },
+  "placesMode": {
+    "mode": "places"
+  },
+  "latestHref": "/seerah/database?event=usamah-army",
+  "overflow": false,
+  "runtimeErrors": []
+}

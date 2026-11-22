@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useMemo, useState } from "react";
+import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearch } from "wouter";
 import {
   ZoomIn,
@@ -13,9 +13,22 @@ import {
   Clock,
   ExternalLink,
   Boxes,
+  Compass,
+  Map as MapIcon,
+  Layers,
+  Play,
+  Pause,
+  Star,
+  Landmark,
+  ArrowLeft,
+  Globe2,
+  Route,
 } from "lucide-react";
 import { LivingTerrainTheatre } from "@/visual-golden/components/atlas/LivingTerrainTheatre";
 import { atlasCampaignTerrain } from "@/visual-golden/services/atlas-terrain";
+import { art } from "@/visual-golden/mock/art";
+import { SEERAH_DATABASE, SEERAH_DATABASE_COUNTS, getEventsForEra } from "@/data/seerah";
+import { listGhazawatScenes } from "@/visual-golden/services/seerah-ghazawat";
 
 // Three.js stays out of the initial chunk: the observer terrain loads only
 // when the visitor opts into the 3D mode.
@@ -50,6 +63,19 @@ import {
 import styles from "./LivingAtlasPage.module.css";
 
 const HIJAZ_PLATE = "/visual-golden/art/atlas-hero.webp";
+const ATLAS_WORLD_PLATE = "/visual-golden/art/worlds/atlas.webp";
+
+// Specialized atlases map to real registry views. Counts are measured.
+const ghazawatScenes = listGhazawatScenes();
+
+// Featured maps are the real campaign theatres — each card opens the same
+// documented campaign inside the living theatre, never a static picture.
+// Card art comes from the distinct ghazawat scene plates (the theatre's own
+// climate plate is reused across campaigns and would look identical).
+const FEATURED_CAMPAIGNS = LIVING_CAMPAIGNS.map((campaign) => {
+  const scene = ghazawatScenes.find((item) => item.atlasCampaignId === campaign.id);
+  return { campaign, plate: scene ? art[scene.plate] : campaign.plate };
+});
 
 function initialPlace() {
   const requested = new URLSearchParams(window.location.search).get("place");
@@ -72,6 +98,10 @@ export function AtlasPage() {
   const [observerFailed, setObserverFailed] = useState(false);
   const [placeFilter, setPlaceFilter] = useState<AtlasFilter>("all");
   const [placeId, setPlaceId] = useState(linkedPlace ?? ATLAS_NODES[0]?.id ?? "");
+  // Era rail + timeline playback over the real Seerah eras.
+  const [eraId, setEraId] = useState<string>("all");
+  const [eraPlaying, setEraPlaying] = useState(false);
+  const stageRef = useRef<HTMLDivElement | null>(null);
 
   const campaign = campaignById(campaignId);
   const phase = campaign.phases[Math.min(phaseIndex, campaign.phases.length - 1)];
@@ -138,9 +168,140 @@ export function AtlasPage() {
   const witnessKind =
     phase.witness.kind === "quran" ? "قرآن" : phase.witness.kind === "hadith" ? "حديث" : "سيرة";
 
+  // Era rail: the ten recorded Seerah eras with measured event counts.
+  // Selecting an era opens its events in the chronological database —
+  // the atlas never invents polities or borders beyond the registry.
+  const eraRail = useMemo(
+    () => SEERAH_DATABASE.eras.map((era) => ({ era, count: getEventsForEra(era.id).length })),
+    [],
+  );
+  const activeEra = eraRail.find((entry) => entry.era.id === eraId)?.era ?? null;
+
+  // Timeline playback walks the recorded eras in order; reduced-motion
+  // visitors keep manual control (the interval simply never starts).
+  useEffect(() => {
+    if (!eraPlaying) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      setEraPlaying(false);
+      return;
+    }
+    const timer = window.setInterval(() => {
+      setEraId((current) => {
+        const index = SEERAH_DATABASE.eras.findIndex((era) => era.id === current);
+        const next = SEERAH_DATABASE.eras[(index + 1) % SEERAH_DATABASE.eras.length];
+        return next.id;
+      });
+    }, 4000);
+    return () => window.clearInterval(timer);
+  }, [eraPlaying]);
+
+  // Latest recorded events for the "أحدث الأحداث" rail — real registry rows.
+  const latestEvents = useMemo(
+    () => [...SEERAH_DATABASE.events].sort((a, b) => b.order - a.order).slice(0, 4),
+    [],
+  );
+
   return (
     <div className={styles.page} data-climate={mode === "theatre" ? weather : "places"}>
-      <div className={styles.stageWrap}>
+      {/* Full-page hero, as in the approved composition: plate art with the
+          atlas identity, service row and honest registry counts. */}
+      <section className={styles.atlasHero} aria-labelledby="atlas-title" data-visual="atlas-hero">
+        <img className={styles.atlasHeroPlate} src={ATLAS_WORLD_PLATE} alt="" />
+        <div className={styles.atlasHeroShade} aria-hidden="true" />
+        <div className={styles.atlasHeroBody}>
+          <div className={styles.atlasHeroCopy}>
+            <span className={styles.atlasEyebrow}><Compass size={15} aria-hidden="true" /> الأطلس التاريخي الإسلامي</span>
+            <h1 id="atlas-title">أطلس الحضارة الإسلامية</h1>
+            <p>
+              رحلة بصرية عبر الزمن والمكان: مسارح الغزوات الموثقة ومواضع السيرة التخطيطية
+              على لوحات فنية — بلا تجسيد للنبي ﷺ ولا محاكاة قتال، وبلا إحداثيات مساحية.
+            </p>
+            <div className={styles.atlasServices}>
+              <span><Globe2 size={14} aria-hidden="true" /> مواضع السيرة من الفصول المسجلة</span>
+              <span><Clock size={14} aria-hidden="true" /> خط زمني بعصور السيرة العشرة</span>
+              <span><Route size={14} aria-hidden="true" /> مسارح غزوات بطبقات ومراحل</span>
+              <span><Layers size={14} aria-hidden="true" /> مراقبة ثلاثية الأبعاد اختيارية</span>
+            </div>
+            <div className={styles.atlasHeroCtas}>
+              <button type="button" className={styles.atlasCtaPrimary} onClick={() => stageRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}>
+                <MapIcon size={15} aria-hidden="true" /> استكشف الأطلس التفاعلي
+              </button>
+              <Link href="/seerah/database" className={styles.atlasCtaGhost}>
+                <BookMarked size={15} aria-hidden="true" /> تصفح قاعدة السيرة الزمنية
+              </Link>
+            </div>
+          </div>
+          <div className={styles.atlasLedger} aria-label="أعداد الأطلس المسجلة">
+            <div>
+              <strong>{ATLAS_COUNTS.nodes.toLocaleString("ar-EG")}</strong>
+              <span>مواضع تخطيطية</span>
+            </div>
+            <div>
+              <strong>{LIVING_CAMPAIGNS.length.toLocaleString("ar-EG")}</strong>
+              <span>مسارح غزوات موثقة</span>
+            </div>
+            <div>
+              <strong>{SEERAH_DATABASE_COUNTS.events.toLocaleString("ar-EG")}</strong>
+              <span>حدثًا في قاعدة السيرة</span>
+            </div>
+            <div>
+              <strong>{SEERAH_DATABASE_COUNTS.eras.toLocaleString("ar-EG")}</strong>
+              <span>عصور زمنية مسجلة</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Era timeline rail — the ten recorded Seerah eras, with playback. */}
+      <div className={styles.eraRailWrap} data-visual="atlas-era-rail">
+        <span className={styles.eraRailTitle}><Clock size={15} aria-hidden="true" /> الخط الزمني للسيرة النبوية</span>
+        <div className={styles.eraRailControls}>
+          <button
+            type="button"
+            onClick={() => setEraPlaying((value) => !value)}
+            aria-label={eraPlaying ? "إيقاف التشغيل التلقائي للعصور" : "تشغيل تلقائي للعصور"}
+            aria-pressed={eraPlaying}
+          >
+            {eraPlaying ? <Pause size={14} aria-hidden="true" /> : <Play size={14} aria-hidden="true" />}
+          </button>
+        </div>
+        <div className={styles.eraRail} role="tablist" aria-label="عصور السيرة">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={eraId === "all"}
+            className={eraId === "all" ? styles.eraOn : undefined}
+            onClick={() => { setEraId("all"); setEraPlaying(false); }}
+          >
+            <strong>كل العصور</strong>
+            <span>{SEERAH_DATABASE_COUNTS.events.toLocaleString("ar-EG")} حدثًا</span>
+          </button>
+          {eraRail.map(({ era, count }) => (
+            <button
+              key={era.id}
+              type="button"
+              role="tab"
+              aria-selected={eraId === era.id}
+              className={eraId === era.id ? styles.eraOn : undefined}
+              onClick={() => { setEraId(era.id); setEraPlaying(false); }}
+            >
+              <strong>{era.titleAr}</strong>
+              <span>{era.rangeAr} · {count.toLocaleString("ar-EG")}</span>
+            </button>
+          ))}
+        </div>
+        {activeEra ? (
+          <p className={styles.eraSummary} role="status">
+            {activeEra.summaryAr}{" "}
+            <Link href={`/seerah/database?era=${encodeURIComponent(activeEra.id)}`}>
+              عرض أحداث هذا العصر في القاعدة <ArrowLeft size={12} aria-hidden="true" />
+            </Link>
+          </p>
+        ) : null}
+      </div>
+
+      <div className={styles.stageWrap} ref={stageRef}>
         {listMode ? (
           <ol className={styles.listEq}>
             {(mode === "theatre" ? campaign.markers : places).map((item) => {
@@ -225,7 +386,8 @@ export function AtlasPage() {
             <span>الأطلس الجبلي الحي</span>
             <em>SCHEMATIC · بلا تجسيد · بلا إحداثيات</em>
           </div>
-          <h1>{mode === "theatre" ? campaign.nameAr : "مواضع السيرة التخطيطية"}</h1>
+          {/* The page keeps a single h1 in the hero; the stage title is h2. */}
+          <h2 className={styles.stageTitle}>{mode === "theatre" ? campaign.nameAr : "مواضع السيرة التخطيطية"}</h2>
           <p className={styles.lede}>
             {mode === "theatre"
               ? `${campaign.questionAr} · ${phase.hourLabel} · ${WEATHER_LABEL[weather]}`
@@ -528,6 +690,121 @@ export function AtlasPage() {
           </p>
         </section>
       ) : null}
+
+      {/* Lower deck, as in the approved composition: latest recorded events ·
+          featured campaign maps · specialized atlas gateways. Every card is
+          a real registry entry opening a real view. */}
+      <div className={styles.lowerDeck} data-visual="atlas-lower-deck">
+        <section className={styles.lowerPanel} aria-label="أحدث الأحداث في الأطلس">
+          <header><Clock size={15} aria-hidden="true" /> أحدث الأحداث في السجل</header>
+          <ul className={styles.latestList}>
+            {latestEvents.map((event) => (
+              <li key={event.id}>
+                <Link href={`/seerah/database?event=${encodeURIComponent(event.id)}`}>
+                  <img src={art[event.visualKey as keyof typeof art] ?? art.atlas} alt="" />
+                  <span>
+                    <strong>{event.titleAr}</strong>
+                    <small>{event.dateTextAr}</small>
+                  </span>
+                  <ArrowLeft size={13} aria-hidden="true" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <Link href="/seerah/database" className={styles.lowerAll}>
+            عرض جميع الأحداث ({SEERAH_DATABASE_COUNTS.events.toLocaleString("ar-EG")}) <ArrowLeft size={13} aria-hidden="true" />
+          </Link>
+        </section>
+
+        <section className={styles.lowerPanel} aria-label="خرائط مميزة">
+          <header><Star size={15} aria-hidden="true" /> خرائط مميزة — مسارح الغزوات</header>
+          <div className={styles.featuredGrid}>
+            {FEATURED_CAMPAIGNS.map(({ campaign: item, plate }) => (
+              <button
+                key={item.id}
+                type="button"
+                className={campaign.id === item.id && mode === "theatre" ? styles.featuredOn : undefined}
+                onClick={() => {
+                  setMode("theatre");
+                  setCampaignId(item.id);
+                  stageRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+                aria-label={`فتح مسرح ${item.nameAr}`}
+              >
+                <img src={plate} alt="" />
+                <span>
+                  <strong>{item.nameAr}</strong>
+                  <small>{item.dateAr}</small>
+                </span>
+              </button>
+            ))}
+          </div>
+          <p className={styles.lowerNote}>
+            كل خريطة مسرح حي بطبقات ومراحل وشاهد نصي — وليست صورة ثابتة.
+          </p>
+        </section>
+
+        <section className={styles.lowerPanel} aria-label="أطالس متخصصة">
+          <header><Landmark size={15} aria-hidden="true" /> أطالس متخصصة</header>
+          <div className={styles.specialGrid}>
+            <button
+              type="button"
+              onClick={() => {
+                setMode("theatre");
+                stageRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+            >
+              <Mountain size={16} aria-hidden="true" />
+              <strong>أطلس الغزوات</strong>
+              <small>{LIVING_CAMPAIGNS.length.toLocaleString("ar-EG")} مسارح موثقة</small>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setMode("places");
+                setPlaceFilter("battles");
+                stageRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+            >
+              <MapIcon size={16} aria-hidden="true" />
+              <strong>مواضع الغزوات</strong>
+              <small>{filterNodes("battles").length.toLocaleString("ar-EG")} مواضع تخطيطية</small>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setMode("places");
+                setPlaceFilter("journey");
+                stageRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+            >
+              <Route size={16} aria-hidden="true" />
+              <strong>مواضع الرحلة</strong>
+              <small>{filterNodes("journey").length.toLocaleString("ar-EG")} مواضع تخطيطية</small>
+            </button>
+            <Link href="/seerah/database" className={styles.specialLink}>
+              <BookMarked size={16} aria-hidden="true" />
+              <strong>القاعدة الزمنية</strong>
+              <small>{SEERAH_DATABASE_COUNTS.events.toLocaleString("ar-EG")} حدثًا مسجلًا</small>
+            </Link>
+            <Link href="/seerah" className={styles.specialLink}>
+              <BookOpen size={16} aria-hidden="true" />
+              <strong>فصول السيرة</strong>
+              <small>{ghazawatScenes.length.toLocaleString("ar-EG")} مشاهد غزوات</small>
+            </Link>
+            <Link href="/library" className={styles.specialLink}>
+              <Layers size={16} aria-hidden="true" />
+              <strong>مصادر الأطلس</strong>
+              <small>المصنفات الجغرافية والتاريخية</small>
+            </Link>
+          </div>
+        </section>
+      </div>
+
+      <p className={styles.atlasBoundary}>
+        الأطلس إعادة بناء فنية تعليمية: المواضع تخطيطية على لوحات، لا خرائط مساحية ولا إحداثيات
+        قياس، ولا تجسيد للنبي ﷺ ولا محاكاة قتال. العلاقات والأحداث من قاعدة السيرة المحكومة فقط.
+      </p>
     </div>
   );
 }
