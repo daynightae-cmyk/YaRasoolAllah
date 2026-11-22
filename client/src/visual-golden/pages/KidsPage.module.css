@@ -415,3 +415,341 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================================
+   FULL-PAGE COMPOSITION — approved reference 08_children.png
+   Hero (identity · commitments · CTAs · measured ledger) · interest rail ·
+   safety band · explore rail. The light oasis palette of this wing is kept.
+   ========================================================================== */
+.garden {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(240px, 0.62fr);
+  grid-template-areas:
+    "intro ledger"
+    "paths ledger"
+    "ctas ledger"
+    "tabs tabs";
+  align-items: start;
+  column-gap: clamp(1rem, 3vw, 2.4rem);
+}
+.gardenIntro { grid-area: intro; position: relative; z-index: 1; }
+.gardenPaths { grid-area: paths; position: relative; z-index: 1; }
+.heroCtas { grid-area: ctas; position: relative; z-index: 1; }
+.heroLedger { grid-area: ledger; position: relative; z-index: 1; }
+.roomTabs { grid-area: tabs; position: relative; z-index: 1; }
+.gardenIntro h1 {
+  margin: 0.4rem 0;
+  color: #153c32;
+  font-size: clamp(1.55rem, 3.6vw, 2.7rem);
+  line-height: 1.25;
+}
+.heroShade {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    270deg,
+    rgba(255, 253, 243, 0.94) 0%,
+    rgba(255, 253, 243, 0.66) 52%,
+    rgba(255, 253, 243, 0.22) 100%
+  );
+  pointer-events: none;
+}
+.heroLead {
+  margin: 0;
+  max-width: 62ch;
+  color: #2f5346;
+  font-size: clamp(0.9rem, 1.3vw, 1rem);
+  line-height: 1.9;
+}
+.heroPledge {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.1rem;
+  margin: 0.9rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.heroPledge li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #1d5544;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+.heroCtas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 1.1rem;
+}
+.heroPrimary,
+.heroGhost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 46px;
+  padding: 0.6rem 1.3rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 200ms var(--ease-smooth), background 200ms var(--ease-smooth);
+}
+.heroPrimary {
+  border: 1px solid #14503f;
+  background: linear-gradient(140deg, #176b56, #10493a);
+  color: #fdfaf0;
+  box-shadow: 0 12px 26px -14px rgba(14, 60, 46, 0.7);
+}
+.heroGhost {
+  border: 1px solid #a7cbbb;
+  background: rgba(255, 255, 255, 0.78);
+  color: #1d5544;
+}
+.heroPrimary:hover,
+.heroPrimary:focus-visible { transform: translateY(-2px); background: linear-gradient(140deg, #1a7a62, #125340); }
+.heroGhost:hover,
+.heroGhost:focus-visible { transform: translateY(-2px); border-color: #976c18; background: #fff8e3; }
+.heroPrimary:focus-visible,
+.heroGhost:focus-visible { outline: 3px solid #976c18; outline-offset: 3px; }
+.heroLedger {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.9rem;
+  border: 1px solid #cfe0d2;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 18px 38px -24px rgba(14, 60, 46, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.heroStats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin: 0;
+}
+.heroStats div {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.55rem 0.6rem;
+  border: 1px solid #dbe8dd;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.72);
+}
+.heroStats dt {
+  color: #3d6355;
+  font-size: 0.66rem;
+  line-height: 1.5;
+}
+.heroStats dd {
+  margin: 0;
+  color: #14503f;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.15;
+}
+.heroNote {
+  margin: 0;
+  color: #456a5c;
+  font-size: 0.64rem;
+  line-height: 1.85;
+}
+
+/* Interest rail — chips that open real wings or real in-page sections. */
+.interestRail {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.7rem;
+  margin: 0.9rem 1.3rem 0;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-lg);
+  background: var(--bg-glass-strong);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.interestLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--text-gold);
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.interestChips { display: flex; flex-wrap: wrap; gap: 0.45rem; flex: 1; }
+.interestChips button,
+.interestChips a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 40px;
+  padding: 0.35rem 0.9rem;
+  border: 1px solid var(--border-panel);
+  border-radius: 999px;
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 180ms var(--ease-smooth), background 180ms var(--ease-smooth);
+}
+.interestChips button:hover,
+.interestChips button:focus-visible,
+.interestChips a:hover,
+.interestChips a:focus-visible {
+  border-color: var(--border-gold);
+  background: rgba(212, 160, 23, 0.12);
+  color: var(--text-primary);
+}
+
+/* Safety band — declared commitments, never a certificate. */
+.safetyBand {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(140px, 0.5fr);
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2rem);
+  margin: 1rem 1.3rem 0;
+  padding: clamp(1.1rem, 2.6vw, 1.8rem);
+  border: 1px solid #cfe0d2;
+  border-radius: var(--radius-lg);
+  background:
+    radial-gradient(circle at 90% 12%, rgba(255, 214, 120, 0.22), transparent 46%),
+    linear-gradient(140deg, #fffdf3, #eef6e8);
+  color: #173c32;
+  box-shadow: 0 18px 40px -26px rgba(14, 60, 46, 0.45);
+}
+.safetyKicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.35rem;
+  color: #176b56;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+.safetyBand h2 {
+  margin: 0 0 0.6rem;
+  color: #153c32;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.2vw, 1.6rem);
+}
+.safetyList {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0 0 0.7rem;
+  padding: 0;
+  list-style: none;
+}
+.safetyList li {
+  display: flex;
+  align-items: start;
+  gap: 0.45rem;
+  color: #2f5346;
+  font-size: 0.8rem;
+  line-height: 1.75;
+}
+.safetyList svg { flex: none; margin-top: 0.2rem; color: #1d7a5f; }
+.safetyNote { margin: 0; color: #55705f; font-size: 0.66rem; line-height: 1.8; }
+.safetyArt {
+  display: grid;
+  place-items: center;
+  min-height: 130px;
+  border: 1px solid #cfe0d2;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  color: #176b56;
+}
+
+/* Explore rail — internal governed surfaces only. */
+.exploreRail {
+  margin: 1rem 1.3rem 1.6rem;
+  padding: clamp(1rem, 2.4vw, 1.6rem);
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-lg);
+  background: var(--bg-panel);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.exploreHead { margin-bottom: 0.85rem; }
+.exploreKicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0 0 0.3rem;
+  color: var(--text-gold);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+.exploreRail h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.2vw, 1.6rem);
+}
+.exploreGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+.exploreCard {
+  display: grid;
+  gap: 0.25rem;
+  align-content: start;
+  justify-items: start;
+  min-height: 110px;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--border-panel);
+  border-radius: var(--radius-md);
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: border-color 200ms var(--ease-smooth), transform 200ms var(--ease-smooth);
+}
+.exploreCard svg { color: var(--text-gold); }
+.exploreCard strong { color: var(--text-primary); font-size: 0.84rem; }
+.exploreCard small { color: var(--text-muted); font-size: 0.66rem; line-height: 1.7; }
+.exploreCard:hover,
+.exploreCard:focus-visible { border-color: var(--border-gold); transform: translateY(-2px); }
+.exploreNote {
+  margin: 0.8rem 0 0;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  line-height: 1.85;
+}
+
+@media (max-width: 1000px) {
+  .garden {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "intro"
+      "paths"
+      "ctas"
+      "ledger"
+      "tabs";
+  }
+  .exploreGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .safetyBand { grid-template-columns: minmax(0, 1fr); }
+  .safetyArt { display: none; }
+}
+@media (max-width: 700px) {
+  .exploreGrid { grid-template-columns: 1fr; }
+  .heroCtas button { flex: 1 1 auto; justify-content: center; }
+  .interestRail { margin-inline: 0.7rem; }
+  .safetyBand { margin-inline: 0.7rem; }
+  .exploreRail { margin-inline: 0.7rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .heroPrimary:hover, .heroGhost:hover,
+  .exploreCard:hover { transform: none; }
+}

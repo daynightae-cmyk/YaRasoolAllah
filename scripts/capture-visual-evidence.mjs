@@ -94,6 +94,11 @@ export const cases = [
   { name: "hadith-browse-deck-390-dark-rtl", path: "/hadith", width: 390, height: 844, theme: "dark", language: "ar", readySelector: '[data-visual="hadith-browse-deck"]', scrollSelector: '[data-visual="hadith-browse-deck"]', scrollOffset: -20 },
   // Post-consolidation evidence: the unified media shelf, the parent source
   // panel, and the two legacy-baseline routes that were empty before.
+  { name: "kids-hero-1440-dark-rtl", path: "/kids", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-visual="kids-hero"]', scrollSelector: '[data-visual="kids-hero"]', scrollOffset: -70 },
+  { name: "kids-interest-rail-1440-dark-rtl", path: "/kids", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-visual="kids-interest-rail"]', scrollSelector: '[data-visual="kids-interest-rail"]', scrollOffset: -120 },
+  { name: "kids-safety-band-1440-dark-rtl", path: "/kids", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-visual="kids-safety-band"]', scrollSelector: '[data-visual="kids-safety-band"]', scrollOffset: -80 },
+  { name: "kids-explore-rail-1440-dark-rtl", path: "/kids", width: 1440, height: 1000, theme: "dark", language: "ar", readySelector: '[data-visual="kids-explore-rail"]', scrollSelector: '[data-visual="kids-explore-rail"]', scrollOffset: -80 },
+  { name: "kids-hero-390-dark-rtl", path: "/kids", width: 390, height: 844, theme: "dark", language: "ar", readySelector: '[data-visual="kids-hero"]', scrollSelector: '[data-visual="kids-hero"]', scrollOffset: -70 },
   { name: "kids-media-shelf-1440-dark-rtl", path: "/kids", width: 1440, height: 1000, theme: "dark", language: "ar", scrollSelector: '[data-visual="media-library"]', scrollOffset: -80 },
   { name: "kids-source-panel-1440-dark-rtl", path: "/kids", width: 1440, height: 1000, theme: "dark", language: "ar", clickText: "افتح القصة", scrollSelector: '[data-visual="kids-source-panel"]', scrollOffset: -140 },
   { name: "seerah-media-shelf-768-dark-rtl", path: "/seerah", width: 768, height: 1024, theme: "dark", language: "ar", scrollSelector: '[data-visual="media-library"]', scrollOffset: -80 },

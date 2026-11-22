@@ -1,0 +1,42 @@
+{
+  "origin": "http://127.0.0.1:5000",
+  "composition": {
+    "ledger": [
+      "5",
+      "0",
+      "3",
+      "5"
+    ],
+    "pledges": 3,
+    "ctas": 2,
+    "h1Count": 1,
+    "interestChips": 7,
+    "safetyItems": 4,
+    "exploreHrefs": [
+      "/seerah",
+      "/quran",
+      "/hadith",
+      "/daily",
+      "/audio",
+      "/sources"
+    ],
+    "adaptGrid": true,
+    "activities": true
+  },
+  "seriesRevealed": {
+    "scrollY": 697,
+    "options": 6,
+    "visible": true
+  },
+  "parentRoom": {
+    "heading": "مصادر الرسوم من الناشرين"
+  },
+  "stillParents": {
+    "ok": true
+  },
+  "backToStories": {
+    "allSelected": true
+  },
+  "overflow": false,
+  "runtimeErrors": []
+}

@@ -1,6 +1,24 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "wouter";
-import { Puzzle, Palette, Lightbulb, Star, BookOpen, Users, FileText, ExternalLink, Film, Heart, Leaf } from "lucide-react";
+import {
+  Puzzle,
+  Palette,
+  Lightbulb,
+  Star,
+  BookOpen,
+  Users,
+  FileText,
+  ExternalLink,
+  Film,
+  Heart,
+  Leaf,
+  ShieldCheck,
+  BadgeCheck,
+  ArrowLeft,
+  GraduationCap,
+  ScrollText,
+  Sparkles,
+} from "lucide-react";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
@@ -173,25 +191,80 @@ export function KidsPage() {
 
   return (
     <div className={styles.page}>
-      <section className={styles.garden} aria-label="مسارات واحة الأطفال">
+      <section className={styles.garden} data-visual="kids-hero" aria-labelledby="kids-hero-title">
         <img
-          className={styles.gardenWorld}
+          className={`${styles.gardenWorld} ${styles.heroPlate}`}
           src={worldPlateForWing("kids").plate}
           alt=""
           loading="eager"
           decoding="async"
           aria-hidden
         />
+        <div className={styles.heroShade} aria-hidden="true" />
         <div className={styles.gardenIntro}>
-          <span className={styles.gardenMark}><Leaf size={18} aria-hidden="true" /> واحة الأطفال</span>
-          <h2>كل حكاية تفتح بابًا للخير</h2>
-          <p>شاهدوا الحلقات التعليمية داخل مسرح النور، ثم انتقلوا للقصص والأنشطة ومعلومات المصادر عند الحاجة.</p>
+          <span className={styles.gardenMark}><Leaf size={18} aria-hidden="true" /> واحة الأطفال والأسرة</span>
+          <h1 id="kids-hero-title">عالم مُلهم للأطفال والأسرة</h1>
+          <p className={styles.heroLead}>
+            كل حكاية تفتح بابًا للخير: تكييفات تعليمية أصلية، وأنشطة محلية، ومسرح نور للحلقات التعليمية
+            — بلا تجسيد، وبلا اعتماد علمي مزعوم.
+          </p>
+          <ul className={styles.heroPledge} aria-label="التزامات واحة الأطفال">
+            <li><ShieldCheck size={15} aria-hidden="true" /> بلا تجسيد للنبي صلى الله عليه وسلم ولا للصحابة</li>
+            <li><BadgeCheck size={15} aria-hidden="true" /> لا إعلانات ولا تتبّع داخل مسرح الأطفال</li>
+            <li><Sparkles size={15} aria-hidden="true" /> المراجعة العلمية معلّقة على كل تكييف قبل النشر</li>
+          </ul>
         </div>
         <div className={styles.gardenPaths} role="list" aria-label="مسارات التعلم">
           <Link role="listitem" href="/seerah"><Heart size={17} aria-hidden="true" /> سيرة النبي ﷺ</Link>
           <span role="listitem"><Leaf size={17} aria-hidden="true" /> الأخلاق والآداب</span>
           <Link role="listitem" href="/quran"><BookOpen size={17} aria-hidden="true" /> القرآن الكريم</Link>
           <span role="listitem"><Star size={17} aria-hidden="true" /> قصص الأنبياء</span>
+        </div>
+        <div className={styles.heroCtas}>
+          <button
+            type="button"
+            className={styles.heroPrimary}
+            onClick={() => {
+              setActiveRoom("stories");
+              document.getElementById("kids-adapt-grid")?.scrollIntoView({ behavior: "smooth" });
+            }}
+          >
+            <GraduationCap size={16} aria-hidden="true" /> ابدأ الرحلة العائلية
+          </button>
+          <button
+            type="button"
+            className={styles.heroGhost}
+            onClick={() => {
+              setActiveRoom("parents");
+              document.getElementById("parent-sources-title")?.scrollIntoView({ behavior: "smooth" });
+            }}
+          >
+            <Users size={16} aria-hidden="true" /> دليل ولي الأمر
+          </button>
+        </div>
+        <div className={styles.heroLedger}>
+          <dl className={styles.heroStats} aria-label="أعداد واحة الأطفال المسجلة">
+            <div>
+              <dt>تكييفات أصلية مسجلة</dt>
+              <dd>{KIDS_COUNTS.adaptations}</dd>
+            </div>
+            <div>
+              <dt>وسائط معتمدة (فيديو/صوت)</dt>
+              <dd>{KIDS_COUNTS.clearedMedia}</dd>
+            </div>
+            <div>
+              <dt>فئات عمرية مسجلة</dt>
+              <dd>{AGE_BANDS.length}</dd>
+            </div>
+            <div>
+              <dt>موارد استكشاف للأهل</dt>
+              <dd>{PARENT_DISCOVERY_SOURCES.length}</dd>
+            </div>
+          </dl>
+          <p className={styles.heroNote}>
+            الأعداد من الفهرس المحكوم وهذا الجهاز فقط ({seenCount} قصة فُتحت · {quizSessions} جولة ألغاز).
+            «موارد الاستكشاف» صفحات ناشرين ليراجعها الأهل، وليست حلقات معتمدة أو تشغيلًا داخل المنصة.
+          </p>
         </div>
         <div className={styles.roomTabs} role="group" aria-label="اختر قسم الأطفال">
           <button type="button" className={activeRoom === "stories" ? styles.roomActive : styles.roomTab}
@@ -200,6 +273,59 @@ export function KidsPage() {
             aria-pressed={activeRoom === "parents"} onClick={() => setActiveRoom("parents")}>دليل الوالدين للرسوم</button>
         </div>
       </section>
+
+      {/* Interest rail, as in the approved composition: every chip opens a
+          real wing or scrolls to a real in-page section — nothing invented. */}
+      <nav className={styles.interestRail} data-visual="kids-interest-rail" aria-label="تصفح حسب الاهتمام">
+        <span className={styles.interestLabel}><Star size={15} aria-hidden="true" /> تصفح حسب الاهتمام:</span>
+        <div className={styles.interestChips}>
+          <button
+            type="button"
+            onClick={() => {
+              setActiveRoom("stories");
+              setAgeFilter("all");
+              document.getElementById("kids-adapt-grid")?.scrollIntoView({ behavior: "smooth" });
+            }}
+          >
+            القصص الإسلامية
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setActiveRoom("stories");
+              document.getElementById("kids-adapt-grid")?.scrollIntoView({ behavior: "smooth" });
+            }}
+          >
+            القيم والسلوك
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setActiveRoom("stories");
+              document.getElementById("kids-tv-room")?.scrollIntoView({ behavior: "smooth" });
+            }}
+          >
+            الحلقات التعليمية
+          </button>
+          <Link href="/seerah">سيرة النبي صلى الله عليه وسلم</Link>
+          <button
+            type="button"
+            onClick={() => {
+              setActiveRoom("parents");
+              document.getElementById("parent-sources-title")?.scrollIntoView({ behavior: "smooth" });
+            }}
+          >
+            الأسرة والتربية
+          </button>
+          <button
+            type="button"
+            onClick={() => document.getElementById("kids-activities")?.scrollIntoView({ behavior: "smooth" })}
+          >
+            أنشطة وتطبيقات
+          </button>
+          <Link href="/quran">لكل الأعمار</Link>
+        </div>
+      </nav>
       {activeRoom === "parents" ? (
         <section className={styles.parentSources} aria-labelledby="parent-sources-title">
           <div className={styles.sourcesHead}>
@@ -227,8 +353,16 @@ export function KidsPage() {
         </section>
       ) : (
         <>
-          <section className={styles.panel} aria-label="اختيار التكييف المحلي" style={{ margin: "0 1.3rem 1rem" }}>
-            <SectionHead title="التكييفات المسجلة" en="Registered local adaptations" />
+          <section
+            className={styles.panel}
+            id="kids-adapt-grid"
+            aria-label="اختيار التكييف المحلي"
+            style={{ margin: "0 1.3rem 1rem" }}
+          >
+            <SectionHead
+              title="سلسلة تكييفات الأطفال"
+              en={`Registered original adaptations · ${KIDS_COUNTS.adaptations} recorded`}
+            />
             <label
               htmlFor="kids-adaptation-select"
               style={{ display: "block", marginBottom: "0.45rem", color: "var(--text-secondary)", fontSize: "0.82rem" }}
@@ -340,7 +474,9 @@ export function KidsPage() {
               </p>
             )}
           </section>
-          <KidsTVRoom onReadStory={current ? openCurrentStory : undefined} />
+          <div id="kids-tv-room">
+            <KidsTVRoom onReadStory={current ? openCurrentStory : undefined} />
+          </div>
         </>
       )}
 
@@ -350,8 +486,29 @@ export function KidsPage() {
         subtitle="فيديوهات وقنوات أطفال من كتالوج المصادر، مع رابط الصفحة الأصلية وحالة المراجعة أسفل كل مادة."
       />
 
+      {/* Safety band, as in the approved composition: declared design
+          commitments — never a safety certificate or scholarly approval. */}
+      <section className={styles.safetyBand} data-visual="kids-safety-band" aria-label="التزامات واحة الأطفال">
+        <div className={styles.safetyCopy}>
+          <p className={styles.safetyKicker}><ShieldCheck size={16} aria-hidden="true" /> محتوى آمن للأطفال</p>
+          <h2>التزاماتنا قبل أن يبدأ طفلك</h2>
+          <ul className={styles.safetyList}>
+            <li><BadgeCheck size={16} aria-hidden="true" /> تكييفات تعليمية أصلية، وشخصيات افتراضية لا تُنسب إلى وقائع دينية</li>
+            <li><BadgeCheck size={16} aria-hidden="true" /> لا تجسيد للنبي صلى الله عليه وسلم ولا للصحابة في أي رسم</li>
+            <li><BadgeCheck size={16} aria-hidden="true" /> لا تشغيل تلقائي: الصوت والقراءة الصوتية اختياريان وبصوت الجهاز</li>
+            <li><BadgeCheck size={16} aria-hidden="true" /> لا إعلانات ولا تتبّع داخل مسرح الأطفال، وكل مادة تُعرض بحالة مراجعتها</li>
+          </ul>
+          <p className={styles.safetyNote}>
+            هذه التزامات تصميمية معلنة، وليست شهادة سلامة محتوى. راجعوا كل مادة قبل مشاركتها مع أطفالكم.
+          </p>
+        </div>
+        <div className={styles.safetyArt} aria-hidden="true">
+          <ShieldCheck size={58} />
+        </div>
+      </section>
+
       <div className={styles.row}>
-        <section className={styles.panel}>
+        <section className={styles.panel} id="kids-activities">
           <SectionHead title="أنشطة وتحديات" en="Activities — local tools only" />
           <div className={styles.actGrid}>
             <button type="button" onClick={() => setQuizOpen(true)} data-visual="kids-quiz-open">
@@ -436,6 +593,52 @@ export function KidsPage() {
           <b>{quizSessions}</b> جولات ألغاز مكتملة محليًا
         </span>
       </footer>
+
+      {/* Explore rail, as in the approved composition: internal governed
+          surfaces only — publisher discovery links stay in the parents guide. */}
+      <section className={styles.exploreRail} data-visual="kids-explore-rail" aria-label="استكشف مع الأطفال">
+        <header className={styles.exploreHead}>
+          <div>
+            <p className={styles.exploreKicker}><Sparkles size={15} aria-hidden="true" /> سلاسل مفضلة ومصادر</p>
+            <h2>استكشف مع الأطفال</h2>
+          </div>
+        </header>
+        <div className={styles.exploreGrid}>
+          <Link href="/seerah" className={styles.exploreCard}>
+            <Heart size={17} aria-hidden="true" />
+            <strong>سيرة النبي صلى الله عليه وسلم</strong>
+            <small>فصول ومحطات مسجّلة، بلا مواضع مساحية</small>
+          </Link>
+          <Link href="/quran" className={styles.exploreCard}>
+            <BookOpen size={17} aria-hidden="true" />
+            <strong>القرآن الكريم</strong>
+            <small>قراءة وسور من الفهارس المحكومة</small>
+          </Link>
+          <Link href="/hadith" className={styles.exploreCard}>
+            <ScrollText size={17} aria-hidden="true" />
+            <strong>الحديث الشريف</strong>
+            <small>نطاق المحتوى الحالي معلن صراحة</small>
+          </Link>
+          <Link href="/daily" className={styles.exploreCard}>
+            <Users size={17} aria-hidden="true" />
+            <strong>اليوم والعبادة</strong>
+            <small>تذكيرات محلية بلا أجر مزعوم</small>
+          </Link>
+          <Link href="/audio" className={styles.exploreCard}>
+            <Film size={17} aria-hidden="true" />
+            <strong>الصوت والتلاوات</strong>
+            <small>استماع وتلاوة من الروافد المسجّلة</small>
+          </Link>
+          <Link href="/sources" className={styles.exploreCard}>
+            <ShieldCheck size={17} aria-hidden="true" />
+            <strong>خزانة المصادر</strong>
+            <small>فهارس محكومة بقرارات حقوق وحالة تحريرية</small>
+          </Link>
+        </div>
+        <p className={styles.exploreNote}>
+          كل رابط يفتح سطحًا محكومًا داخل المنصة. موارد الناشرين تبقى في «دليل الوالدين» كصفحات استكشاف لا تشغيل.
+        </p>
+      </section>
       {theatre && current ? (
         <StoryTheatre
           title={current.titleAr}
