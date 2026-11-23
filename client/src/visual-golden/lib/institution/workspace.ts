@@ -8,6 +8,7 @@ export type InstitutionWingId =
   | "kids"
   | "daily"
   | "audio"
+  | "media"
   | "basirah"
   | "sources"
   | "practice"
@@ -135,6 +136,18 @@ export const INSTITUTION_WINGS: Record<InstitutionWingId, InstitutionWingDefinit
     stateLabelAr: "يتاح التشغيل حيث يسمح المزود بإسناد rights",
     stateLabelEn: "Playback appears only where provider rights allow",
   },
+  media: {
+    id: "media",
+    path: "/noor",
+    labelAr: "مسرح النور",
+    labelEn: "Noor Media Theatre",
+    shortLabelAr: "المسرح",
+    roomAr: "قاعة المعرفة المرئية",
+    roomEn: "Visual Knowledge Hall",
+    state: "review",
+    stateLabelAr: "التشغيل بعد اكتمال بوابات الحقوق والمراجعة",
+    stateLabelEn: "Playback follows rights and editorial clearance",
+  },
   basirah: {
     id: "basirah",
     path: "/basirah",
@@ -195,6 +208,7 @@ export const INSTITUTION_NAVIGATION_WINGS: readonly InstitutionWingId[] = [
   "kids",
   "daily",
   "audio",
+  "media",
   "basirah",
   "sources",
 ];
@@ -254,6 +268,7 @@ const ROUTE_WORKSPACES: Record<string, RouteWorkspaceDefinition> = {
   "/kids": { wing: "kids", titleAr: "الأطفال والعائلة", titleEn: "Children and Family", roomAr: "واحة الأسرة", roomEn: "Family Oasis" },
   "/children-tv": { wing: "kids", titleAr: "الأطفال والعائلة", titleEn: "Children and Family", roomAr: "واحة الأسرة", roomEn: "Family Oasis" },
   "/media-review": { wing: "kids", titleAr: "مراجعة الوسائط", titleEn: "Media Review", roomAr: "غرفة المراجعة التحريرية", roomEn: "Editorial Review Room" },
+  "/noor": { wing: "media", titleAr: "مسرح النور", titleEn: "Noor Media Theatre", roomAr: "قاعة المعرفة المرئية", roomEn: "Visual Knowledge Hall" },
   "/quran-audio": { wing: "audio", titleAr: "التلاوات الصوتية", titleEn: "Qur'an Recitations", roomAr: "غرفة التلاوة", roomEn: "Recitation Room" },
   "/audio": { wing: "audio", titleAr: "الصوت والتلاوات", titleEn: "Audio and Recitations", roomAr: "غرفة التلاوة", roomEn: "Recitation Room" },
   "/basirah": { wing: "basirah", titleAr: "بصيرة البحث", titleEn: "Basirah Research", roomAr: "مكتب البحث", roomEn: "Research Desk" },

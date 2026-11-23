@@ -54,7 +54,7 @@ test("kids governance exposes the pending cleared-media state", () => {
 test("preview route manifest is valid and includes core wings", () => {
   const manifest = JSON.parse(fs.readFileSync(path.join(root, "client/public/manus-routes.json"), "utf8"));
   const paths = new Set(manifest.routes.map((route: { path: string }) => route.path));
-  for (const route of ["/library", "/kids", "/quran", "/hadith", "/seerah", "/basirah"]) {
+  for (const route of ["/library", "/kids", "/quran", "/hadith", "/seerah", "/basirah", "/noor"]) {
     assert.ok(paths.has(route), `missing preview route ${route}`);
   }
 });

@@ -111,6 +111,11 @@
   background:
     radial-gradient(ellipse at 70% 0%, rgba(212, 160, 23, 0.12), transparent 46%);
 }
+.shell[data-wing="media"] .content {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(212, 160, 23, 0.13), transparent 44%),
+    radial-gradient(ellipse at 100% 55%, rgba(15, 76, 92, 0.16), transparent 46%);
+}
 
 .sidebar {
   position: fixed;

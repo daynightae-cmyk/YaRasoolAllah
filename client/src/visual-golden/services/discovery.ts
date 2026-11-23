@@ -20,6 +20,7 @@ export type WingPath =
   | "/kids"
   | "/daily"
   | "/audio"
+  | "/noor"
   | "/seerah"
   | "/basirah"
   | "/sources";
@@ -40,6 +41,7 @@ export const discoveryWings: {
   { path: "/kids", ar: "الأطفال والعائلة", en: "Kids & Family", hint: "تكييفات تعليمية ووضع قراءة" },
   { path: "/daily", ar: "مرصد الصلاة", en: "Prayer Observatory", hint: "مواقيت حية حسب المدينة والقبلة" },
   { path: "/audio", ar: "التلاوات الصوتية", en: "Qur’an Audio", hint: "سجل المزوّدين — تشغيل مباشر حيث يتاح المزود" },
+  { path: "/noor", ar: "مسرح النور", en: "Noor Media Theatre", hint: "فهرس مرئي موثق — التشغيل بعد الاعتماد" },
   { path: "/basirah", ar: "بصيرة", en: "Basirah", hint: "اكتشاف المصادر المحلية" },
   { path: "/sources", ar: "خزانة المصادر", en: "Sources Vault", hint: "المصادر والحقوق والمزوّدون والنسخ" },
 ];

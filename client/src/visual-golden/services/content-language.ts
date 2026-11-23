@@ -242,6 +242,11 @@ export const ROUTE_CONTENT_DECLARATIONS: readonly RouteContentDeclaration[] = [
     "The media review queue shows imported discovery records in Arabic; status tokens such as DRAFT and PENDING_REVIEW are system UI chrome, not recorded knowledge.",
     ["client/src/visual-golden/pages/MediaReviewPage.tsx", "client/src/visual-golden/data/media-discovery.generated.ts"],
   ),
+  arabicOnly(
+    "/noor",
+    "The public theatre reads the same Arabic discovery catalog as the editorial queue; English room names are interface chrome, not translated media content.",
+    ["client/src/visual-golden/pages/NoorPage.tsx", "client/src/visual-golden/services/media/noor-theatre.ts"],
+  ),
   {
     path: "/library",
     kind: "knowledge",

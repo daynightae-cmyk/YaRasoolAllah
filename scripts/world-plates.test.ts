@@ -67,11 +67,11 @@ describe("wing world plates", () => {
       assert.ok(existsSync(publicPath(world.plate)), `missing plate for ${wingId}: ${world.plate}`);
       assert.match(world.reference, /^02_ENVIRONMENT_ART\//, wingId);
     }
-    // All 13 workspace wings (including practice/reference aliases) resolve.
+    // Every registered workspace wing (including media and alias wings) resolves.
     for (const wingId of Object.keys(INSTITUTION_WINGS)) {
       assert.ok(worldPlateForWing(wingId as never).plate.length > 0, wingId);
     }
-    assert.equal(listWorldPlates().length, 13);
+    assert.equal(listWorldPlates().length, Object.keys(INSTITUTION_WINGS).length);
   });
 
   it("records pipeline provenance with a verifiable output hash per plate", () => {

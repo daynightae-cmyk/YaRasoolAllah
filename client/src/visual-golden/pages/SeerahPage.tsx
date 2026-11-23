@@ -9,6 +9,7 @@ import {
   ScrollText,
   Compass,
   ArrowLeft,
+  Clapperboard,
 } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
@@ -46,7 +47,6 @@ import {
   type SeerahGraphEventNode,
 } from "@/visual-golden/services/seerah-graph";
 import styles from "./SeerahPage.module.css";
-import { MediaLibrarySection } from "@/visual-golden/components/media/MediaLibrarySection";
 
 const READ_KEY = "seerah-read-chapters-v1";
 
@@ -677,11 +677,6 @@ export function SeerahPage() {
         </div>
       </ChapterEnvironment>
 
-      <MediaLibrarySection
-        kind="seerah"
-        title="مسرح السيرة والميديا"
-        subtitle="سلاسل سيرة ومحاضرات وخطب من صفحات الفيديو العامة، مع اسم القناة والناشر ورابط المصدر تحت كل بطاقة."
-      />
 
       {/* Explore rail, as in the approved composition: gateways from the
           journey into the real governed surfaces behind it. */}
@@ -711,6 +706,11 @@ export function SeerahPage() {
             <Map size={17} aria-hidden />
             <strong>الخرائط والمسارات</strong>
             <small>{ATLAS_COUNTS.nodes} موضعًا تخطيطيًا على لوحات — بلا إحداثيات</small>
+          </Link>
+          <Link href="/noor" className={styles.exploreCard}>
+            <Clapperboard size={17} aria-hidden />
+            <strong>مسرح النور</strong>
+            <small>قاعة مستقلة للمواد المرئية الموثقة وحالة حقوقها ومراجعتها</small>
           </Link>
           <button
             type="button"

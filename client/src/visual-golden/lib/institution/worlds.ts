@@ -73,6 +73,13 @@ const WORLD_PLATES: Record<InstitutionWingId, WorldPlateDefinition> = {
     plate: "/visual-golden/art/worlds/audio.webp",
     reference: "02_ENVIRONMENT_ART/03_audio.png",
   },
+  media: {
+    wing: "media",
+    // No dedicated approved theatre plate exists; the Seerah environment is
+    // atmosphere only and is never presented as a media-theatre reference.
+    plate: "/visual-golden/art/worlds/seerah.webp",
+    reference: "02_ENVIRONMENT_ART/09_seerah.png",
+  },
   basirah: {
     wing: "basirah",
     // The research desk lives inside the sources vault world until the pack

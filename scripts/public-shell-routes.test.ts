@@ -18,6 +18,7 @@ test("public knowledge routes belong to the canonical visual shell", () => {
     "/kids",
     "/daily",
     "/audio",
+    "/noor",
     "/basirah",
     "/sources",
     "/who-is-muhammad",

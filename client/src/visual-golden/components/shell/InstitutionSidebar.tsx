@@ -16,6 +16,7 @@ import {
   Route,
   Search,
   Archive,
+  Clapperboard,
   type LucideIcon,
 } from "lucide-react";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
@@ -40,6 +41,7 @@ const WING_ICONS: Record<InstitutionWingId, LucideIcon> = {
   kids: Users,
   daily: Moon,
   audio: Headphones,
+  media: Clapperboard,
   basirah: Search,
   sources: Archive,
   practice: ScrollText,
