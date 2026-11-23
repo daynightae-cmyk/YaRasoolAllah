@@ -1319,9 +1319,24 @@
    returns the reader. The header lives inside .mainArea, so it is selected
    explicitly — the direct-child selector alone never reached it. */
 .shell[data-surface="cinema"] > :is(aside, nav, header, [class*="sidebar"], [class*="activityRail"]),
-.shell[data-surface="cinema"] .mainArea > header,
-.shell[data-surface="cinema"] .mainArea > [class*="contentLanguage"] {
+.shell[data-surface="cinema"] .mainArea > header {
   display: none !important;
+}
+
+/* Immersive reading hides navigation chrome, never the reader's disclosure.
+   Keep translated-content caveats visible and scrollable above the stage. */
+.shell[data-surface="cinema"] .mainArea > [class*="contentLanguage"] {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 0;
+  max-height: 7.5rem;
+  margin: .45rem .75rem 0;
+  overflow: auto;
+  position: relative;
+  z-index: 4;
+}
+.shell[data-surface="cinema"] .content {
+  min-height: 0;
 }
 
 .shell[data-surface="cinema"] .mainArea {
