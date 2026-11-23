@@ -12,6 +12,9 @@ import { CatalogShelfHall } from "@/visual-golden/components/library/CatalogShel
 import { LibraryCatalog } from "@/visual-golden/components/library/LibraryCatalog";
 import { CatalogReadingChamber } from "@/visual-golden/components/library/CatalogReadingChamber";
 import { LibraryLivingShelf } from "@/visual-golden/components/library/LibraryLivingShelf";
+import { ManuscriptGallery } from "@/visual-golden/components/library/ManuscriptGallery";
+import { ManuscriptReader } from "@/visual-golden/components/library/ManuscriptReader";
+import type { ManuscriptSource } from "@/visual-golden/services/iiif";
 import {
   LibraryDomainShelves,
   type DomainGateway,
@@ -128,6 +131,7 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
   const [shelfDomain, setShelfDomain] = useState<string | undefined>();
   const [catalogCategory, setCatalogCategory] = useState<string | undefined>();
   const [openWork, setOpenWork] = useState<CatalogWork | null>(null);
+  const [manuscript, setManuscript] = useState<ManuscriptSource | null>(null);
   const [payload, setPayload] = useState<CatalogPayload | null>(null);
   const [catalogError, setCatalogError] = useState("");
   const recordReadingProgress = useInstitution((state) => state.recordReadingProgress);
@@ -429,6 +433,7 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
           )}
 
           {gateways}
+          <ManuscriptGallery onOpen={setManuscript} />
         </>
       ) : (
         catalogContent
@@ -439,6 +444,9 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
           work={openWork}
           onClose={() => setOpenWork(null)}
         />
+      ) : null}
+      {manuscript ? (
+        <ManuscriptReader source={manuscript} onClose={() => setManuscript(null)} />
       ) : null}
     </div>
   );
