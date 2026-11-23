@@ -1108,6 +1108,37 @@
   outline: 3px solid var(--border-gold);
   outline-offset: 2px;
 }
+
+.heroWorld {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 46px;
+  padding: 0.6rem 1.35rem;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  text-decoration: none;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: transform 220ms var(--ease-smooth), background 220ms var(--ease-smooth);
+  border: 1px solid var(--accent-emerald);
+  background: linear-gradient(145deg, rgba(16, 185, 129, 0.2), rgba(6, 78, 59, 0.3));
+  color: var(--text-emerald);
+}
+
+.heroWorld:hover,
+.heroWorld:focus-visible {
+  transform: translateY(-2px);
+  background: linear-gradient(145deg, rgba(16, 185, 129, 0.3), rgba(6, 78, 59, 0.4));
+  color: #a7f3d0;
+}
+
+.heroWorld:focus-visible {
+  outline: 3px solid var(--accent-emerald);
+  outline-offset: 2px;
+}
 .heroLedger {
   display: grid;
   gap: 0.7rem;

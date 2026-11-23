@@ -397,11 +397,14 @@
 
 /* --- Entrance & Motion --- */
 .vg-page-enter {
-  animation: vg-enter var(--duration-base) var(--ease-deep) both;
+  animation: vg-enter var(--duration-base) var(--ease-deep) backwards;
 }
+/* End at `transform: none` (not scale(1)): an identity transform left behind
+   by fill-mode would turn this wrapper into a containing block and trap
+   every position:fixed overlay (immersive atlas, expanded stage) inside it. */
 @keyframes vg-enter {
   from { opacity: 0; transform: translateY(12px) scale(0.995); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 1; transform: none; }
 }
 .rosette-turn {
   animation: rosette-turn 20s linear infinite;

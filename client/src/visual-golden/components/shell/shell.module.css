@@ -1309,9 +1309,13 @@
 }
 
 /* --- Cinema surface: a full-viewport experience owns the layout. ---
-   Used by /seerah/terrain (observer studio). Navigation chrome collapses but
-   stays mounted for a11y; a slim exit bar inside the page returns the reader. */
-.shell[data-surface="cinema"] > :is(aside, nav, header, [class*="sidebar"], [class*="activityRail"]) {
+   Used by /seerah/terrain, /seerah/world and the Library. Navigation chrome
+   collapses but stays mounted for a11y; a slim exit bar inside the page
+   returns the reader. The header lives inside .mainArea, so it is selected
+   explicitly — the direct-child selector alone never reached it. */
+.shell[data-surface="cinema"] > :is(aside, nav, header, [class*="sidebar"], [class*="activityRail"]),
+.shell[data-surface="cinema"] .mainArea > header,
+.shell[data-surface="cinema"] .mainArea > [class*="contentLanguage"] {
   display: none !important;
 }
 

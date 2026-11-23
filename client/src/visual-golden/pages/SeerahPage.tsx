@@ -266,6 +266,12 @@ export function SeerahPage() {
             >
               <Compass size={15} aria-hidden /> نبذة عن الرحلة السينمائية
             </button>
+            <a
+              href="/seerah/world"
+              className={styles.heroWorld}
+            >
+              <Compass size={15} aria-hidden /> ادخل العالم الحي
+            </a>
           </div>
         </div>
         <div className={styles.heroLedger}>

@@ -1213,6 +1213,345 @@
   line-height: 1.9;
 }
 
+/* ================= Immersive place view + expanded stage ================= */
+
+/* Expanded stage: StagePortal moves .stageContent into a body-level fixed
+   layer, so no page-entrance transform can trap or shrink it. */
+.stageHome,
+.stageContent {
+  position: absolute;
+  inset: 0;
+}
+/* In-flow placeholder keeps page height while the stage is expanded. */
+.stagePlaceholder {
+  position: absolute;
+  inset: 0;
+}
+
+.watchBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  margin-top: 0.6rem;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-full);
+  background: linear-gradient(145deg, rgba(212, 160, 23, 0.2), rgba(212, 160, 23, 0.06));
+  color: var(--text-gold);
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: box-shadow 240ms var(--ease-smooth), transform 240ms var(--ease-smooth);
+}
+.watchBtn:hover,
+.watchBtn:focus-visible {
+  box-shadow: 0 0 24px rgba(212, 160, 23, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Full-screen immersive dialog. */
+.immersive {
+  --par-x: 0;
+  --par-y: 0;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #070503;
+  animation: immersiveIn 620ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes immersiveIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Living plate: slow breathing zoom + pointer parallax via CSS variables. */
+.immersivePlateWrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.immersivePlate {
+  position: absolute;
+  inset: -4%;
+  width: 108%;
+  height: 108%;
+  object-fit: cover;
+  transform:
+    translate3d(calc(var(--par-x) * -14px), calc(var(--par-y) * -10px), 0)
+    scale(1.06);
+  transition: transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
+  animation: plateBreathe 22s ease-in-out infinite alternate;
+  filter: saturate(1.02) contrast(1.05);
+}
+@keyframes plateBreathe {
+  from { scale: 1; }
+  to { scale: 1.045; }
+}
+.immersiveGrade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 90% at 50% 108%, rgba(6, 4, 2, 0.78), transparent 52%),
+    linear-gradient(180deg, rgba(4, 6, 10, 0.62), transparent 30%, transparent 55%, rgba(4, 3, 2, 0.82) 100%);
+}
+/* Warm wandering light — a lantern glow drifting over the plate. */
+.immersiveGlow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background:
+    radial-gradient(38% 30% at calc(62% + var(--par-x) * 4%) calc(26% + var(--par-y) * 3%), rgba(255, 208, 130, 0.28), transparent 70%),
+    radial-gradient(26% 22% at 22% 74%, rgba(255, 176, 72, 0.14), transparent 70%);
+  animation: glowDrift 14s ease-in-out infinite alternate;
+}
+@keyframes glowDrift {
+  from { opacity: 0.75; }
+  to { opacity: 1; }
+}
+.immersiveVignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 180px rgba(0, 0, 0, 0.62);
+}
+
+/* Floating dust motes in the light — pure CSS, cheap. */
+.immersiveDust {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.immersiveDust i {
+  --i: 0;
+  position: absolute;
+  left: calc(6% + (var(--i) * 6.7%));
+  top: calc(14% + (var(--i) * 5.4%));
+  width: calc(2px + (var(--i) * 0.22px));
+  height: calc(2px + (var(--i) * 0.22px));
+  border-radius: 50%;
+  background: rgba(255, 226, 160, 0.75);
+  box-shadow: 0 0 8px rgba(255, 214, 140, 0.6);
+  opacity: 0;
+  animation: moteFloat calc(9s + var(--i) * 0.9s) ease-in-out calc(var(--i) * -1.3s) infinite;
+}
+@keyframes moteFloat {
+  0% { opacity: 0; transform: translate3d(0, 12px, 0); }
+  18% { opacity: 0.8; }
+  55% { opacity: 0.5; transform: translate3d(-26px, -30px, 0); }
+  82% { opacity: 0.75; }
+  100% { opacity: 0; transform: translate3d(-48px, -64px, 0); }
+}
+
+/* Top bar: disclosure badge + sound and close controls. */
+.immersiveBar {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.9rem clamp(0.8rem, 2.4vw, 1.6rem);
+}
+.immersiveActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.immersiveSoundBtn,
+.immersiveClose {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  min-width: 44px;
+  justify-content: center;
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-full);
+  background: var(--bg-glass-strong);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: var(--text-gold);
+  font: inherit;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: border-color 220ms var(--ease-smooth), box-shadow 220ms var(--ease-smooth);
+}
+.immersiveSoundBtn:hover, .immersiveSoundBtn:focus-visible,
+.immersiveClose:hover, .immersiveClose:focus-visible {
+  border-color: rgba(232, 197, 71, 0.9);
+  box-shadow: 0 0 20px rgba(212, 160, 23, 0.3);
+}
+
+/* Body: glass place card + governed timeline over the living plate. */
+.immersiveBody {
+  position: relative;
+  z-index: 4;
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 clamp(0.8rem, 2.4vw, 1.6rem) 0.6rem;
+  min-height: 0;
+  pointer-events: none;
+}
+.immersiveBody > * { pointer-events: auto; }
+.immersiveCard {
+  width: min(430px, 100%);
+  max-height: min(62vh, 560px);
+  overflow-y: auto;
+  padding: 1.1rem 1.2rem 1.2rem;
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(160deg, rgba(14, 11, 7, 0.82), rgba(8, 6, 4, 0.88));
+  backdrop-filter: blur(20px) saturate(1.1);
+  -webkit-backdrop-filter: blur(20px) saturate(1.1);
+  box-shadow: var(--shadow-panel), 0 0 42px rgba(212, 160, 23, 0.14), inset 0 1px 0 rgba(255, 240, 200, 0.1);
+  animation: cardRise 720ms cubic-bezier(0.16, 1, 0.3, 1) 140ms both;
+}
+@keyframes cardRise {
+  from { opacity: 0; transform: translateY(26px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.immersiveKicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--text-gold);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+}
+.immersiveCard h2 {
+  margin: 0.35rem 0 0.4rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3.4vw, 2.5rem);
+  color: var(--text-primary);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6);
+}
+.immersiveNote {
+  margin: 0 0 0.6rem;
+  font-size: 0.74rem;
+  line-height: 1.85;
+  color: var(--text-secondary);
+}
+.immersiveLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.9rem;
+}
+
+.immersiveTimeline {
+  width: min(340px, 34vw);
+  max-height: min(56vh, 480px);
+  overflow-y: auto;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(232, 197, 71, 0.28);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(160deg, rgba(10, 9, 6, 0.78), rgba(6, 5, 3, 0.85));
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-panel);
+  animation: cardRise 720ms cubic-bezier(0.16, 1, 0.3, 1) 260ms both;
+}
+.immersiveTimeline header {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-gold);
+  font-size: 0.74rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.immersiveTimeline ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+.immersiveTimeline a {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.5rem 0.55rem;
+  border: 1px solid rgba(236, 211, 139, 0.14);
+  border-radius: var(--radius-md);
+  background: rgba(212, 160, 23, 0.05);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: border-color 200ms var(--ease-smooth), background 200ms var(--ease-smooth);
+}
+.immersiveTimeline a:hover, .immersiveTimeline a:focus-visible {
+  border-color: var(--border-gold);
+  background: rgba(212, 160, 23, 0.12);
+}
+.immersiveTimeline strong { display: block; color: var(--text-primary); font-size: 0.78rem; }
+.immersiveTimeline small { color: var(--text-muted); font-size: 0.64rem; }
+.immersiveTimeline svg { margin-inline-start: auto; color: var(--text-gold); flex-shrink: 0; }
+
+.immersiveFoot {
+  position: relative;
+  z-index: 4;
+  margin: 0;
+  padding: 0.55rem clamp(0.8rem, 2.4vw, 1.6rem) 0.9rem;
+  text-align: center;
+  color: rgba(245, 239, 230, 0.6);
+  font-size: 0.66rem;
+  letter-spacing: 0.02em;
+}
+
+/* Reduced motion: no parallax, breathing, drift or entrance animations. */
+.immersiveStill .immersivePlate,
+.immersiveStill .immersiveGlow,
+.immersiveStill .immersiveDust i,
+.immersiveStill .immersiveCard,
+.immersiveStill .immersiveTimeline,
+.immersiveStill {
+  animation: none !important;
+}
+.immersiveStill .immersivePlate {
+  transform: none;
+  transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .immersive,
+  .immersivePlate,
+  .immersiveGlow,
+  .immersiveDust i,
+  .immersiveCard,
+  .immersiveTimeline {
+    animation: none !important;
+  }
+  .immersivePlate { transform: none; transition: none; }
+}
+
+/* Narrow screens: cards stack, timeline scrolls under the place card. */
+@media (max-width: 860px) {
+  .immersiveBody {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-end;
+    overflow-y: auto;
+    gap: 0.6rem;
+  }
+  .immersiveCard,
+  .immersiveTimeline {
+    width: 100%;
+    max-height: none;
+  }
+  .immersiveTimeline { max-height: 34vh; }
+  .immersiveSoundBtn span { display: none; }
+}
+
 @media (max-width: 1100px) {
   .atlasHeroBody { grid-template-columns: 1fr; }
   .atlasLedger { max-width: 480px; }

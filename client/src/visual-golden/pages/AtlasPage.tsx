@@ -1,4 +1,5 @@
-import { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { Link, useSearch } from "wouter";
 import {
   ZoomIn,
@@ -23,6 +24,10 @@ import {
   ArrowLeft,
   Globe2,
   Route,
+  X,
+  Maximize,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import { LivingTerrainTheatre } from "@/visual-golden/components/atlas/LivingTerrainTheatre";
 import { atlasCampaignTerrain } from "@/visual-golden/services/atlas-terrain";
@@ -82,6 +87,54 @@ function initialPlace() {
   return findAtlasNodeByQuery(requested)?.id ?? null;
 }
 
+/**
+ * StagePortal — renders children through a React portal into one stable
+ * container element. While `active`, that container is physically moved
+ * into a <body>-level fixed layer, escaping any transformed ancestor (page
+ * entrance animation). The portal target never changes identity, so React
+ * keeps its event listeners on the container and the theatre is never
+ * remounted (zoom, marker selection and 3D context all survive).
+ */
+function StagePortal({ active, children }: { active: boolean; children: ReactNode }) {
+  const homeRef = useRef<HTMLDivElement | null>(null);
+  const [host] = useState(() => document.createElement("div"));
+
+  useEffect(() => {
+    host.className = styles.stageContent;
+    homeRef.current?.appendChild(host);
+    return () => {
+      host.remove();
+    };
+  }, [host]);
+
+  useEffect(() => {
+    const home = homeRef.current;
+    if (!home) return;
+    if (!active) return;
+    const layer = document.createElement("div");
+    layer.setAttribute("data-visual", "atlas-stage-expanded");
+    layer.style.position = "fixed";
+    layer.style.inset = "0";
+    layer.style.zIndex = "900";
+    layer.style.background = "#060a09";
+    document.body.appendChild(layer);
+    layer.appendChild(host);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      home.appendChild(host);
+      layer.remove();
+    };
+  }, [active, host]);
+
+  return (
+    <div ref={homeRef} className={styles.stageHome}>
+      {createPortal(children, host)}
+    </div>
+  );
+}
+
 export function AtlasPage() {
   const search = useSearch();
   const requestedPlace = useMemo(() => new URLSearchParams(search).get("place"), [search]);
@@ -98,6 +151,10 @@ export function AtlasPage() {
   const [observerFailed, setObserverFailed] = useState(false);
   const [placeFilter, setPlaceFilter] = useState<AtlasFilter>("all");
   const [placeId, setPlaceId] = useState(linkedPlace ?? ATLAS_NODES[0]?.id ?? "");
+  const [immersivePlaceId, setImmersivePlaceId] = useState<string | null>(null);
+  // Parallax is written straight to CSS variables on the overlay element —
+  // no React re-render per pointermove.
+  const immersiveRef = useRef<HTMLDivElement | null>(null);
   // Era rail + timeline playback over the real Seerah eras.
   const [eraId, setEraId] = useState<string>("all");
   const [eraPlaying, setEraPlaying] = useState(false);
@@ -114,6 +171,176 @@ export function AtlasPage() {
   const campaignEvent = seerahEventForCampaign(campaign.id);
   const campaignRecordHref = campaignSeerahHref(campaign.id);
   const campaignChapterLink = campaignChapterHref(campaign.id);
+
+  // ---------------- Immersive place view (full-screen on tap) ----------------
+  // One lazily-created AudioContext per page visit: a soft synthesized desert
+  // wind bed while the immersive view is open, plus a short open/close chime.
+  // No external audio files; everything is generated with Web Audio.
+  const audioRef = useRef<{
+    ctx: AudioContext;
+    master: GainNode;
+    windGain: GainNode;
+    wind: AudioBufferSourceNode;
+    lfo: OscillatorNode;
+  } | null>(null);
+  const [immersiveSound, setImmersiveSound] = useState(true);
+  const [stageExpanded, setStageExpanded] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(query.matches);
+    const onChange = (event: MediaQueryListEvent) => setReducedMotion(event.matches);
+    query.addEventListener("change", onChange);
+    return () => query.removeEventListener("change", onChange);
+  }, []);
+
+  const ensureAudio = useCallback(() => {
+    if (audioRef.current && audioRef.current.ctx.state !== "closed") return audioRef.current;
+    audioRef.current = null;
+    try {
+      const Ctor: typeof AudioContext | undefined =
+        window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
+      if (!Ctor) return null;
+      const ctx = new Ctor();
+      const master = ctx.createGain();
+      master.gain.value = 0.9;
+      master.connect(ctx.destination);
+      // Wind bed: looped brown-ish noise through a slowly wandering lowpass.
+      const buffer = ctx.createBuffer(1, ctx.sampleRate * 4, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      let last = 0;
+      for (let i = 0; i < data.length; i++) {
+        const white = Math.random() * 2 - 1;
+        last = (last + 0.02 * white) / 1.02;
+        data[i] = last * 3.5;
+      }
+      const wind = ctx.createBufferSource();
+      wind.buffer = buffer;
+      wind.loop = true;
+      const filter = ctx.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.value = 420;
+      filter.Q.value = 0.6;
+      const windGain = ctx.createGain();
+      windGain.gain.value = 0;
+      const lfo = ctx.createOscillator();
+      lfo.frequency.value = 0.07;
+      const lfoGain = ctx.createGain();
+      lfoGain.gain.value = 160;
+      lfo.connect(lfoGain);
+      lfoGain.connect(filter.frequency);
+      wind.connect(filter);
+      filter.connect(windGain);
+      windGain.connect(master);
+      wind.start();
+      lfo.start();
+      audioRef.current = { ctx, master, windGain, wind, lfo };
+      return audioRef.current;
+    } catch {
+      // Ambience is optional — silent failure is acceptable.
+      return null;
+    }
+  }, []);
+
+  const playPlaceChime = useCallback((open: boolean) => {
+    const engine = ensureAudio();
+    if (!engine || engine.ctx.state === "closed") return;
+    try {
+      void engine.ctx.resume().catch(() => undefined);
+      const now = engine.ctx.currentTime;
+      const osc = engine.ctx.createOscillator();
+      const gain = engine.ctx.createGain();
+      osc.type = open ? "sine" : "triangle";
+      osc.frequency.setValueAtTime(open ? 660 : 520, now);
+      osc.frequency.exponentialRampToValueAtTime(open ? 990 : 390, now + 0.35);
+      gain.gain.setValueAtTime(0.06, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+      osc.connect(gain);
+      gain.connect(engine.master);
+      osc.start(now);
+      osc.stop(now + 0.55);
+    } catch {
+      // ignore
+    }
+  }, [ensureAudio]);
+
+  const setWind = useCallback((on: boolean) => {
+    const engine = audioRef.current;
+    if (!engine || engine.ctx.state === "closed") return;
+    try {
+      void engine.ctx.resume().catch(() => undefined);
+      const now = engine.ctx.currentTime;
+      engine.windGain.gain.cancelScheduledValues(now);
+      engine.windGain.gain.setTargetAtTime(on ? 0.055 : 0, now, on ? 0.9 : 0.35);
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const openImmersive = useCallback((id: string) => {
+    setPlaceId(id);
+    setImmersivePlaceId(id);
+    playPlaceChime(true);
+    if (immersiveSound) {
+      ensureAudio();
+      setWind(true);
+    }
+  }, [playPlaceChime, immersiveSound, ensureAudio, setWind]);
+
+  const closeImmersive = useCallback(() => {
+    playPlaceChime(false);
+    setWind(false);
+    setImmersivePlaceId(null);
+  }, [playPlaceChime, setWind]);
+
+  // Full audio teardown when the page unmounts.
+  useEffect(() => () => {
+    const engine = audioRef.current;
+    audioRef.current = null;
+    if (!engine) return;
+    try {
+      engine.wind.stop();
+      engine.lfo.stop();
+      void engine.ctx.close().catch(() => undefined);
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  const immersivePlace = useMemo(
+    () => (immersivePlaceId ? ATLAS_NODES.find((node) => node.id === immersivePlaceId) ?? null : null),
+    [immersivePlaceId],
+  );
+  const immersiveSeerah = immersivePlace ? seerahPlaceForAtlasNode(immersivePlace) : null;
+  const immersiveEvents = useMemo(
+    () => (immersivePlace ? seerahEventsForAtlasNode(immersivePlace) : []),
+    [immersivePlace],
+  );
+
+  // While the immersive dialog is open: lock page scroll and move focus in.
+  const immersiveCloseRef = useRef<HTMLButtonElement | null>(null);
+  useEffect(() => {
+    if (!immersivePlaceId) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    immersiveCloseRef.current?.focus({ preventScroll: true });
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [immersivePlaceId]);
+
+  // Parallax writes CSS variables directly — no React re-render per move.
+  const handleImmersivePointer = useCallback((event: ReactPointerEvent<HTMLDivElement>) => {
+    const el = immersiveRef.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const rect = el.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
+    const y = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+    el.style.setProperty("--par-x", x.toFixed(3));
+    el.style.setProperty("--par-y", y.toFixed(3));
+  }, []);
 
   useEffect(() => {
     const requested = findAtlasNodeByQuery(requestedPlace);
@@ -151,7 +378,17 @@ export function AtlasPage() {
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) return;
-      if (mode !== "theatre") return;
+    if (immersivePlaceId && event.key === "Escape") {
+        event.preventDefault();
+        closeImmersive();
+        return;
+      }
+      if (!immersivePlaceId && stageExpanded && event.key === "Escape") {
+        event.preventDefault();
+        setStageExpanded(false);
+        return;
+      }
+      if (mode !== "theatre" || immersivePlaceId) return;
       if (event.key === "ArrowLeft") {
         event.preventDefault();
         setPhaseIndex((index) => Math.min(campaign.phases.length - 1, index + 1));
@@ -163,7 +400,7 @@ export function AtlasPage() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [mode, campaign.phases.length]);
+  }, [mode, campaign.phases.length, immersivePlaceId, stageExpanded, closeImmersive]);
 
   const witnessKind =
     phase.witness.kind === "quran" ? "قرآن" : phase.witness.kind === "hadith" ? "حديث" : "سيرة";
@@ -302,6 +539,7 @@ export function AtlasPage() {
       </div>
 
       <div className={styles.stageWrap} ref={stageRef}>
+        <StagePortal active={stageExpanded}>
         {listMode ? (
           <ol className={styles.listEq}>
             {(mode === "theatre" ? campaign.markers : places).map((item) => {
@@ -312,9 +550,13 @@ export function AtlasPage() {
                   <button
                     type="button"
                     onClick={() => {
-                      if (mode === "theatre") setMarkerId(id);
-                      else setPlaceId(id);
-                      setListMode(false);
+                      if (mode === "theatre") {
+                        setMarkerId(id);
+                        setListMode(false);
+                      } else {
+                        setListMode(false);
+                        openImmersive(id);
+                      }
                     }}
                   >
                     <strong>{name}</strong>
@@ -374,7 +616,7 @@ export function AtlasPage() {
                 showOverlays={false}
                 showMarkers={showMarkers}
                 zoom={zoom}
-                onSelect={setPlaceId}
+                onSelect={openImmersive}
               />
             )}
           </div>
@@ -463,6 +705,15 @@ export function AtlasPage() {
           <button type="button" onClick={() => setListMode((value) => !value)} aria-label="عرض كقائمة">
             <List size={16} />
           </button>
+          <button
+            type="button"
+            onClick={() => setStageExpanded((value) => !value)}
+            aria-label={stageExpanded ? "إغلاق العرض الموسّع" : "تكبير الشاشة — عرض ملء الصفحة"}
+            aria-pressed={stageExpanded}
+            data-visual="atlas-stage-expand"
+          >
+            {stageExpanded ? <X size={16} /> : <Maximize size={16} />}
+          </button>
         </div>
 
         <aside className={styles.layers}>
@@ -522,6 +773,14 @@ export function AtlasPage() {
                 </li>
               ))}
             </ul>
+            <button
+              type="button"
+              className={styles.watchBtn}
+              data-visual="atlas-place-watch"
+              onClick={() => openImmersive(place.id)}
+            >
+              <Maximize size={14} /> مشاهدة الموضع بالحجم الكامل
+            </button>
             {placeSeerah ? (
               <Link href={atlasPlaceDatabaseHref(placeSeerah)} className={styles.seerahLink}>
                 <BookMarked size={14} /> السجل الزمني للموضع ({placeEvents.length})
@@ -567,6 +826,7 @@ export function AtlasPage() {
             </button>
           </div>
         ) : null}
+        </StagePortal>
       </div>
 
       {mode === "theatre" ? (
@@ -800,6 +1060,135 @@ export function AtlasPage() {
           </div>
         </section>
       </div>
+
+      {/* Immersive place view — opens automatically on marker tap or «مشاهدة».
+          Full-screen glass dialog: living plate with parallax, atmosphere
+          particles, synthesized desert wind and the governed record links. */}
+      {immersivePlace ? createPortal(
+        <div
+          className={`${styles.immersive} ${reducedMotion ? styles.immersiveStill : ""}`}
+          ref={immersiveRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`مشاهدة موضع ${immersivePlace.name} بالحجم الكامل`}
+          data-visual="atlas-immersive-place"
+          onPointerMove={handleImmersivePointer}
+        >
+          <div className={styles.immersivePlateWrap} aria-hidden="true">
+            <img className={styles.immersivePlate} src={HIJAZ_PLATE} alt="" />
+            <div className={styles.immersiveGrade} />
+            <div className={styles.immersiveGlow} />
+            <div className={styles.immersiveDust}>
+              {Array.from({ length: 14 }, (_, index) => (
+                <i key={index} style={{ "--i": index } as CSSProperties} />
+              ))}
+            </div>
+            <div className={styles.immersiveVignette} />
+          </div>
+
+          <div className={styles.immersiveBar}>
+            <span className={styles.badge}>إعادة بناء فنية — موضع تخطيطي، ليس إحداثيات</span>
+            <div className={styles.immersiveActions}>
+              <button
+                type="button"
+                className={styles.immersiveSoundBtn}
+                aria-pressed={immersiveSound}
+                aria-label={immersiveSound ? "كتم أجواء الصحراء" : "تشغيل أجواء الصحراء"}
+                onClick={() => {
+                  setImmersiveSound((value) => {
+                    const next = !value;
+                    if (next) {
+                      ensureAudio();
+                      setWind(true);
+                    } else {
+                      setWind(false);
+                    }
+                    return next;
+                  });
+                }}
+              >
+                {immersiveSound ? <Volume2 size={16} /> : <VolumeX size={16} />}
+                <span>{immersiveSound ? "الأجواء تعمل" : "الأجواء مكتومة"}</span>
+              </button>
+              <button
+                type="button"
+                ref={immersiveCloseRef}
+                className={styles.immersiveClose}
+                onClick={closeImmersive}
+                aria-label="إغلاق المشاهدة (Escape)"
+              >
+                <X size={18} />
+              </button>
+            </div>
+          </div>
+
+          <div className={styles.immersiveBody}>
+            <aside className={styles.immersiveCard}>
+              <span className={styles.immersiveKicker}>
+                <Compass size={14} aria-hidden="true" /> من فصول السيرة المسجلة
+              </span>
+              <h2>{immersivePlace.name}</h2>
+              <p className={styles.immersiveNote}>
+                يُعرض الموضع على لوحة فنية بروح المكان — بلا تجسيد للنبي ﷺ ولا لأصحابه،
+                وبلا إحداثيات مساحية. العلاقات والأحداث من قاعدة السيرة المحكومة فقط.
+              </p>
+              {immersivePlace.mentions.length > 0 ? (
+                <ul className={styles.mentions}>
+                  {immersivePlace.mentions.slice(0, 5).map((mention) => (
+                    <li key={`${mention.chapterId}-${mention.eventId}`}>
+                      <Link href={`/seerah?chapter=${encodeURIComponent(mention.chapterId)}&event=${encodeURIComponent(mention.eventId)}`}>
+                        <strong>{mention.eventTitle}</strong>
+                      </Link>
+                      <span>
+                        {mention.chapterTitle} · {mention.eventDate}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+              <div className={styles.immersiveLinks}>
+                {immersiveSeerah ? (
+                  <Link href={atlasPlaceDatabaseHref(immersiveSeerah)} className={styles.seerahLink}>
+                    <BookMarked size={14} /> السجل الزمني للموضع ({immersiveEvents.length})
+                  </Link>
+                ) : null}
+                <Link href="/seerah" className={styles.seerahLink}>
+                  <BookOpen size={14} /> فتح فصول السيرة
+                </Link>
+              </div>
+            </aside>
+
+            {immersiveEvents.length > 0 ? (
+              <aside className={styles.immersiveTimeline} aria-label={`أحداث مسجلة عند ${immersivePlace.name}`}>
+                <header>
+                  <Clock size={14} aria-hidden="true" /> الخط الزمني المسجل
+                </header>
+                <ol>
+                  {immersiveEvents.slice(0, 6).map((event) => (
+                    <li key={event.id}>
+                      <Link href={event.href}>
+                        <span className={styles.placeOrder}>{event.order}</span>
+                        <span>
+                          <strong>{event.titleAr}</strong>
+                          <small>
+                            {event.yearAH === null ? "قبل الهجرة" : `${event.yearAH} هـ`} · {event.eraTitleAr}
+                          </small>
+                        </span>
+                        <ArrowLeft size={13} aria-hidden="true" />
+                      </Link>
+                    </li>
+                  ))}
+                </ol>
+              </aside>
+            ) : null}
+          </div>
+
+          <p className={styles.immersiveFoot}>
+            حرّك المؤشر لتتنفس اللوحة · Esc للإغلاق · الصوت مُولّد لحظيًا (رياح صحراوية) ولا يعمل إلا باختيارك
+          </p>
+        </div>,
+        document.body,
+      ) : null}
 
       <p className={styles.atlasBoundary}>
         الأطلس إعادة بناء فنية تعليمية: المواضع تخطيطية على لوحات، لا خرائط مساحية ولا إحداثيات

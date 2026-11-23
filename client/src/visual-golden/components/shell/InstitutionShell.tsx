@@ -144,7 +144,7 @@ export function InstitutionShell({ children }: { children: ReactNode }) {
   // shell, theme, motion and a11y landmarks stay mounted, so the reader is
   // never trapped. The Library keeps its door because the door is also the
   // entrance to this wing.
-  const cinema = /^\/(seerah\/terrain|library)(\/|$)/.test(pathname);
+  const cinema = /^\/(seerah\/terrain|seerah\/world|library)(\/|$)/.test(pathname);
 
   return (
     <div
