@@ -37,6 +37,7 @@ import { GhazawatEnvironment } from "@/visual-golden/components/seerah/GhazawatE
 import { SeerahChapterStage } from "@/visual-golden/components/seerah/SeerahChapterStage";
 import { ChapterGateway } from "@/visual-golden/components/seerah/ChapterGateway";
 import { SeerahJourneyTheatre } from "@/visual-golden/components/seerah/SeerahJourneyTheatre";
+import { SeerahPortalCrossroads } from "@/visual-golden/components/seerah/SeerahPortalCrossroads";
 import { SEERAH_JOURNEY_STOPS } from "@/visual-golden/services/seerah-journey";
 import {
   SEERAH_GRAPH,
@@ -299,6 +300,9 @@ export function SeerahPage() {
           </p>
         </div>
       </header>
+
+      {/* Destination portals — every arch a real link to a real route. */}
+      <SeerahPortalCrossroads />
 
       {/* Journey band: the interactive path through the recorded stops. */}
       <section className={styles.journeyBand} data-visual="seerah-journey-band" aria-label="مسار الرحلة">

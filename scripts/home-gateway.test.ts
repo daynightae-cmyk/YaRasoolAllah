@@ -23,7 +23,7 @@ describe("home gateway wing", () => {
   const entry = read("client/src/visual-golden/components/entry/SectionEntry3D.tsx");
 
   it("opens through the genuine doorway, never a generic spinner", () => {
-    assert.match(home, /<SectionEntry3D wing="home">/);
+    assert.match(home, /<SectionEntry3D wing="home" variant="threshold">/);
     assert.match(home, /<\/SectionEntry3D>/);
     // The doorway defers to the shell splash ceremony — no double gate.
     assert.match(entry, /splashCeremonyActive/);

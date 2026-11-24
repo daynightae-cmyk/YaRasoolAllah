@@ -243,7 +243,7 @@ export function HomePage() {
   };
 
   return (
-    <SectionEntry3D wing="home">
+    <SectionEntry3D wing="home" variant="threshold">
     <div className={styles.page}>
       <section className={styles.hero} data-visual="home-gateway" dir="rtl" lang="ar">
         <img className={styles.heroBg} src={art.sceneThreshold} alt="" />

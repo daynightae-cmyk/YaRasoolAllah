@@ -1,0 +1,791 @@
+[
+    {
+        "id":  1,
+        "canonical_id":  1,
+        "route":  "/library",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/library/REF-01-grand-library-hub.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  2,
+        "canonical_id":  2,
+        "route":  "/sources",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/archive/REF-02-digital-repository-hub.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  3,
+        "canonical_id":  3,
+        "route":  "/noor",
+        "reference":  "artifacts/visual-references/candidates/04_noor_media_theatre.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  4,
+        "canonical_id":  4,
+        "route":  "/library; /noor",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/library/REF-04-scholars-speakers-catalog.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  5,
+        "canonical_id":  5,
+        "route":  "/kids",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/kids/REF-05-islamic-kids-world.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  6,
+        "canonical_id":  6,
+        "route":  "/quran",
+        "reference":  "artifacts/visual-references/approved/03_quran_chamber.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  7,
+        "canonical_id":  7,
+        "route":  "/hadith; /sunnah",
+        "reference":  "artifacts/visual-references/approved/04_hadith_hall.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  8,
+        "canonical_id":  8,
+        "route":  "/atlas",
+        "reference":  "artifacts/visual-references/approved/08_interactive_atlas.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  9,
+        "canonical_id":  9,
+        "route":  "/seerah; /seerah/world; /atlas",
+        "reference":  "artifacts/visual-references/approved/06_seerah_hijrah.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  10,
+        "canonical_id":  10,
+        "route":  "/sources",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/assets-rooms/REF-10-manuscript-restoration-diorama.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  11,
+        "canonical_id":  11,
+        "route":  "/sources",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/archive/REF-11-reference-library-interface.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  12,
+        "canonical_id":  12,
+        "route":  "/",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/entrance/REF-12-cinematic-door-threshold.png",
+        "status":  "VERIFIED",
+        "evidence":  [
+          "client/src/visual-golden/components/entry/LivingThreshold.tsx + LivingThreshold.module.css — full-screen cinematic threshold at /: SVG night sky with moon/stars/mountains/distant town, stone arch with arabesque band, two independently swinging CSS-3D wooden door leaves with studs/ring handles/star medallion, warm seam light + floor pool, flickering lanterns, Arabic/English title block (يا رسول الله ﷺ / YA RASOOL ALLAH / The Living Seerah), top nav as real Links (JOURNEY→/seerah, PLACES→/atlas, PEOPLE→/seerah/database, EVENTS→/seerah/world, LESSONS→/library, THE LIBRARY→/library), foreground props ledge, ornate ENTER THE SEERAH button",
+          "SectionEntry3D extended with variant=\"threshold\"; HomePage passes variant=\"threshold\" so the generic 3D door no longer stacks; entry index exports LivingThreshold",
+          "Before screenshots: artifacts/visual-golden-smoke/home-1440-rtl.jpg & home-390-rtl.jpg (generic dark door). After screenshots: artifacts/evidence/ref12/after-1440-rtl.jpg & after-390-rtl.jpg (cinematic threshold at 1440x900 RTL + 390x844 mobile)",
+          "Runtime DevTools probe: [data-visual=living-threshold] mounted with door leaves + enter button, overlay opacity 1 after splash ceremony; skip via Esc / ?door=0 / reduced-motion via existing SectionEntry3D gating",
+          "npm run check (tsc) clean; eslint clean; npm run build exit 0; scripts/home-gateway.test.ts + scripts/institution-shell-contract.test.ts + scripts/public-shell-routes.test.ts 28/28 pass; full npm run test:p0 711/711 pass"
+        ],
+        "blocker":  null
+    },
+    {
+        "id":  13,
+        "canonical_id":  13,
+        "route":  "/seerah/world; /seerah/terrain",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/seerah/REF-13-hijrah-landscape-journey.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  14,
+        "canonical_id":  14,
+        "route":  "/seerah/world; /seerah",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/seerah/REF-14-madinah-courtyard-gate.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  15,
+        "canonical_id":  15,
+        "route":  "/seerah; /seerah/terrain",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/seerah/REF-15-ghazawat-landscape-gate.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  16,
+        "canonical_id":  16,
+        "route":  "/atlas; /seerah/terrain",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/atlas/REF-16-relief-table-atlas.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  17,
+        "canonical_id":  17,
+        "route":  "/seerah",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/seerah/REF-17-timeline-walkthrough-gallery.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  18,
+        "canonical_id":  18,
+        "route":  "/quran; /hadith",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/quran/REF-18-quran-hadith-study-desk.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  19,
+        "canonical_id":  19,
+        "route":  "/seerah; /seerah/database",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/seerah/REF-19-personality-relations-parchment.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  20,
+        "canonical_id":  19,
+        "route":  "/seerah; /seerah/database",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/seerah/REF-19-personality-relations-parchment.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  21,
+        "canonical_id":  21,
+        "route":  "/sources",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/archive/REF-21-source-verification-desk.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  22,
+        "canonical_id":  21,
+        "route":  "/sources",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/archive/REF-21-source-verification-desk.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  23,
+        "canonical_id":  23,
+        "route":  "/seerah; /seerah/world",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/entrance/REF-23-living-seerah-portal-crossroads.png",
+        "status":  "VERIFIED",
+        "evidence":  [
+          "client/src/visual-golden/components/seerah/SeerahPortalCrossroads.tsx + SeerahPortalCrossroads.module.css — /seerah crossroads: central luminous arch → /seerah/world (The Living Seerah world), six independent arched portals as real wouter Links → /atlas (Atlas), /seerah (Timeline), /seerah?chapter=badr (Ghazawat), /quran (Qur'an), /hadith (Hadith), /seerah?chapter=hijra-to-madinah (Madinah & Hijrah); responsive 3×3 arcade on desktop, single column on mobile; focus-visible rings and aria labels",
+          "Inserted after the existing hero in SeerahPage.tsx; all test-locked hero markup (seerah-hero, heroPlate worlds/seerah.webp, SEERAH_COUNTS, service row, CTAs, journey band) untouched",
+          "scripts/seerah-page-composition.test.ts 9/9 pass; npm run check (tsc) clean; eslint clean; npm run build exit 0"
+        ],
+        "blocker":  null
+    },
+    {
+        "id":  24,
+        "canonical_id":  24,
+        "route":  "/",
+        "reference":  "artifacts/visual-references/approved/01_home_living_seerah.png",
+        "status":  "CURRENT_MATCH",
+        "evidence":  [
+          "Existing HomePage at / is the approved reference (emerald/gold shell, Medina-vista arch, eight portal cards to real routes /seerah /quran /hadith /library /atlas /kids /audio /daily /sources, live registry-derived stats, RTL/LTR); now reached through the REF-12 threshold instead of the generic dark door",
+          "After-entry screenshot: artifacts/evidence/ref12/after-1440-rtl.jpg shows home hub post-threshold at 1440x900 RTL; artifacts/evidence/ref12/after-390-rtl.jpg at 390x844 mobile",
+          "scripts/home-gateway.test.ts asserts genuine doorway + registry-derived statistics (passes as part of 28/28 entry-flow tests)"
+        ],
+        "blocker":  null
+    },
+    {
+        "id":  25,
+        "canonical_id":  25,
+        "route":  "/sources",
+        "reference":  "artifacts/visual-references/approved/02_sources_archive.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  26,
+        "canonical_id":  6,
+        "route":  "/quran",
+        "reference":  "artifacts/visual-references/approved/03_quran_chamber.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  27,
+        "canonical_id":  7,
+        "route":  "/hadith; /sunnah",
+        "reference":  "artifacts/visual-references/approved/04_hadith_hall.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  28,
+        "canonical_id":  28,
+        "route":  "/seerah; /seerah/world",
+        "reference":  "artifacts/visual-references/approved/05_seerah_madinah.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  29,
+        "canonical_id":  9,
+        "route":  "/seerah; /seerah/world; /atlas",
+        "reference":  "artifacts/visual-references/approved/06_seerah_hijrah.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  30,
+        "canonical_id":  30,
+        "route":  "/seerah; /seerah/terrain",
+        "reference":  "artifacts/visual-references/approved/07_seerah_ghazawat.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  31,
+        "canonical_id":  8,
+        "route":  "/atlas",
+        "reference":  "artifacts/visual-references/approved/08_interactive_atlas.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  32,
+        "canonical_id":  32,
+        "route":  "/seerah",
+        "reference":  "artifacts/visual-references/approved/09_seerah_timeline.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  33,
+        "canonical_id":  33,
+        "route":  "/seerah; /seerah/database",
+        "reference":  "artifacts/visual-references/approved/10_seerah_personalities.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  34,
+        "canonical_id":  24,
+        "route":  "/",
+        "reference":  "artifacts/visual-references/approved/01_home_living_seerah.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  35,
+        "canonical_id":  25,
+        "route":  "/sources",
+        "reference":  "artifacts/visual-references/approved/02_sources_archive.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  36,
+        "canonical_id":  6,
+        "route":  "/quran",
+        "reference":  "artifacts/visual-references/approved/03_quran_chamber.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  37,
+        "canonical_id":  7,
+        "route":  "/hadith; /sunnah",
+        "reference":  "artifacts/visual-references/approved/04_hadith_hall.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  38,
+        "canonical_id":  28,
+        "route":  "/seerah; /seerah/world",
+        "reference":  "artifacts/visual-references/approved/05_seerah_madinah.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  39,
+        "canonical_id":  9,
+        "route":  "/seerah; /seerah/world; /atlas",
+        "reference":  "artifacts/visual-references/approved/06_seerah_hijrah.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  40,
+        "canonical_id":  30,
+        "route":  "/seerah; /seerah/terrain",
+        "reference":  "artifacts/visual-references/approved/07_seerah_ghazawat.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  41,
+        "canonical_id":  8,
+        "route":  "/atlas",
+        "reference":  "artifacts/visual-references/approved/08_interactive_atlas.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  42,
+        "canonical_id":  32,
+        "route":  "/seerah",
+        "reference":  "artifacts/visual-references/approved/09_seerah_timeline.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  43,
+        "canonical_id":  33,
+        "route":  "/seerah; /seerah/database",
+        "reference":  "artifacts/visual-references/approved/10_seerah_personalities.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  44,
+        "canonical_id":  44,
+        "route":  "/kids",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/assets-kids/REF-44-camel-mascot.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  45,
+        "canonical_id":  45,
+        "route":  "/kids",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/assets-kids/REF-45-fennec-fox-mascot.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  46,
+        "canonical_id":  46,
+        "route":  "/kids; /library; /seerah/world",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/assets-kids/REF-46-golden-lantern.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  47,
+        "canonical_id":  47,
+        "route":  "/kids; /seerah/world",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/assets-kids/REF-47-date-palm.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  48,
+        "canonical_id":  48,
+        "route":  "/kids; /seerah/world",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/assets-kids/REF-48-stone-water-well.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  49,
+        "canonical_id":  49,
+        "route":  "/kids; /seerah/world",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/assets-kids/REF-49-desert-tent.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  50,
+        "canonical_id":  50,
+        "route":  "/kids; /seerah/world",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/assets-kids/REF-50-clay-jug-bowl.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  51,
+        "canonical_id":  51,
+        "route":  "/kids",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/assets-kids/REF-51-owl-mascot.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  52,
+        "canonical_id":  52,
+        "route":  "/daily; /library",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/library/REF-52-daily-learning-lounge.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  53,
+        "canonical_id":  53,
+        "route":  "/kids",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/kids/REF-53-childrens-learning-corner.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  54,
+        "canonical_id":  54,
+        "route":  "/quran; /tafsir",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/assets-rooms/REF-54-digital-quran-learning-studio.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  55,
+        "canonical_id":  55,
+        "route":  "/sources",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/assets-rooms/REF-55-archive-diorama.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  56,
+        "canonical_id":  56,
+        "route":  "/sources",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/assets-rooms/REF-56-archive-office.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  57,
+        "canonical_id":  57,
+        "route":  "/library",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/assets-rooms/REF-57-library-sunset-hall.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  58,
+        "canonical_id":  58,
+        "route":  "/library",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/assets-rooms/REF-58-library-courtyard-diorama.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  59,
+        "canonical_id":  59,
+        "route":  "/sources",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/assets-rooms/REF-59-manuscript-workshop.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  60,
+        "canonical_id":  60,
+        "route":  "/audio",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/assets-rooms/REF-60-quran-recording-console.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  61,
+        "canonical_id":  61,
+        "route":  "/quran; /tafsir; /library",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/assets-rooms/REF-61-quran-research-library.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  62,
+        "canonical_id":  62,
+        "route":  "/audio",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/assets-rooms/REF-62-recitation-studio-set.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  63,
+        "canonical_id":  63,
+        "route":  "/quran; /audio",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/quran/REF-63-quran-studio-reader-dashboard.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  64,
+        "canonical_id":  64,
+        "route":  "/quran; /tafsir",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/quran/REF-64-surah-fatiha-dashboard.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  65,
+        "canonical_id":  65,
+        "route":  "/sources; /library",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/archive/REF-65-digital-heritage-collection.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  66,
+        "canonical_id":  66,
+        "route":  "/library; /audio",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/library/REF-66-grand-recitation-library-interior.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  67,
+        "canonical_id":  67,
+        "route":  "/library",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/library/REF-67-digital-library-dashboard.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  68,
+        "canonical_id":  68,
+        "route":  "/library/work/:workId",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/library/REF-68-living-seerah-library-work-detail.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  69,
+        "canonical_id":  69,
+        "route":  "/",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/entrance/REF-69-living-seerah-home-alternative.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  70,
+        "canonical_id":  69,
+        "route":  "/",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/entrance/REF-69-living-seerah-home-alternative.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    },
+    {
+        "id":  71,
+        "canonical_id":  71,
+        "route":  "/audio",
+        "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/audio/REF-71-noble-quran-recitation-studio.png",
+        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "evidence":  [
+
+                     ],
+        "blocker":  null
+    }
+]

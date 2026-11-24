@@ -1,5 +1,6 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useState, type ComponentType } from "react";
 import { useEffectiveMotion } from "@/visual-golden/lib/institution/effective-motion";
+import { LivingThreshold } from "./LivingThreshold";
 
 type Wing =
   | "library"
@@ -21,6 +22,7 @@ interface SectionEntry3DProps {
   children: React.ReactNode;
   active?: boolean;
   onEntered?: () => void;
+  variant?: "door3d" | "threshold";
 }
 
 const WING_LABELS: Record<Wing, { ar: string; en: string }> = {
@@ -152,13 +154,17 @@ export function SectionEntry3D({
   children,
   active = true,
   onEntered,
+  variant = "door3d",
 }: SectionEntry3DProps) {
   const effectiveMotion = useEffectiveMotion();
   const reducedMotion = effectiveMotion === "reduced";
   const [showDoor, setShowDoor] = useState(() =>
     shouldShowDoor(active, wing, reducedMotion),
   );
-  const label = WING_LABELS[wing] ?? WING_LABELS.home;
+  const label =
+    variant === "threshold"
+      ? { ar: "يا رسول الله", en: "YA RASOOL ALLAH" }
+      : WING_LABELS[wing] ?? WING_LABELS.home;
 
   // The shell splash may still be up at mount (or forced via ?ceremony=1).
   // Poll lightly until it closes, then re-evaluate the doorway once — the
@@ -215,10 +221,14 @@ export function SectionEntry3D({
 
   const doorLabels = useMemo(
     () => ({
-      openLabelAr: "افتح الباب",
-      openLabelEn: "Open the Door",
+      openLabelAr:
+        variant === "threshold"
+          ? "ادخل إلى السيرة"
+          : "افتح الباب",
+      openLabelEn:
+        variant === "threshold" ? "ENTER THE SEERAH" : "Open the Door",
     }),
-    [],
+    [variant],
   );
 
   return (
@@ -238,8 +248,8 @@ export function SectionEntry3D({
         {children}
       </div>
       {showDoor ? (
-        <Suspense fallback={null}>
-          <DoorSimulation3D
+        variant === "threshold" ? (
+          <LivingThreshold
             siteNameAr={label.ar}
             siteNameEn={label.en}
             active
@@ -248,7 +258,19 @@ export function SectionEntry3D({
             openLabelAr={doorLabels.openLabelAr}
             openLabelEn={doorLabels.openLabelEn}
           />
-        </Suspense>
+        ) : (
+          <Suspense fallback={null}>
+            <DoorSimulation3D
+              siteNameAr={label.ar}
+              siteNameEn={label.en}
+              active
+              onEntered={handleEntered}
+              onCancel={handleCancel}
+              openLabelAr={doorLabels.openLabelAr}
+              openLabelEn={doorLabels.openLabelEn}
+            />
+          </Suspense>
+        )
       ) : null}
     </div>
   );

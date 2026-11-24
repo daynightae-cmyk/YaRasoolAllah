@@ -1,0 +1,164 @@
+.crossroads {
+  padding: clamp(24px, 3vw, 48px) clamp(16px, 3vw, 32px);
+  outline: none;
+}
+.crossroadsHead {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+.crossroadsTitle {
+  font-family: var(--font-display, serif);
+  font-size: clamp(26px, 3.4vw, 40px);
+  letter-spacing: 1px;
+  color: #f3e3a8;
+  margin: 0;
+}
+.crossroadsHome {
+  margin-inline-start: auto;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #b9c6d9;
+  text-decoration: none;
+  border: 1px solid rgba(201, 162, 39, 0.45);
+  padding: 6px 14px;
+  border-radius: 999px;
+  transition: all 180ms;
+}
+.crossroadsHome:focus-visible {
+  outline: 2px solid #f3e3a8;
+  outline-offset: 3px;
+}
+.crossroadsHome:hover {
+  border-color: #e8d9a4;
+  color: #f3e3a8;
+}
+
+.arcade {
+  position: relative;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-auto-rows: minmax(210px, auto);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.arcade .center {
+  grid-column: 2;
+  grid-row: 2;
+}
+.arcade .atlas { grid-column: 1; grid-row: 1; }
+.arcade .timeline { grid-column: 2; grid-row: 1; }
+.arcade .ghazawat { grid-column: 3; grid-row: 1; }
+.arcade .quran { grid-column: 1; grid-row: 2; }
+.arcade .hadith { grid-column: 3; grid-row: 2; }
+.arcade .madinah { grid-column: 2; grid-row: 3; }
+
+.portal {
+  position: relative;
+  border: 1px solid rgba(120, 98, 70, 0.45);
+  border-radius: 14px;
+  background: radial-gradient(ellipse at 50% 0%, #2d251c 0%, #1b1410 55%, #100c08 100%);
+  box-shadow: 0 0 0 1px rgba(201, 162, 39, 0.12) inset, 0 20px 40px -12px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 18px 10px 20px;
+  transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+  text-decoration: none;
+  color: inherit;
+}
+.portal:focus-visible {
+  outline: 3px solid #f3e3a8;
+  outline-offset: 3px;
+  z-index: 2;
+}
+.portal:hover, .portal:focus-visible {
+  transform: translatey(-4px);
+  border-color: #c9a227;
+  box-shadow: 0 0 0 1px #c9a227 inset, 0 24px 48px -10px rgba(201, 162, 39, 0.35);
+}
+.center {
+  grid-column: 2;
+  grid-row: 2;
+  border-color: rgba(201, 162, 39, 0.55);
+  box-shadow: 0 0 0 1px rgba(201, 162, 39, 0.25) inset, 0 24px 50px -10px rgba(0, 0, 0, 0.7);
+}
+.center:hover, .center:focus-visible {
+  border-color: #f3e3a8;
+  box-shadow: 0 0 0 1px #f3e3a8 inset, 0 30px 60px -8px rgba(212, 175, 55, 0.5);
+}
+
+.portalArch {
+  width: clamp(150px, 26vw, 210px);
+  height: clamp(170px, 28vw, 250px);
+  display: block;
+  margin-bottom: 14px;
+}
+.portalGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, rgba(201, 162, 39, 0.25), transparent 55%);
+  opacity: 0;
+  transition: opacity 220ms ease;
+  pointer-events: none;
+}
+.portal:hover .portalGlow, .portal:focus-visible .portalGlow {
+  opacity: 1;
+}
+.center .portalGlow {
+  opacity: 0.35;
+}
+
+.portalLabel {
+  font-size: clamp(15px, 1.7vw, 18px);
+  letter-spacing: 0.14px;
+  color: #e8eef7;
+  font-weight: 600;
+  line-height: 1.25;
+}
+.portalEn {
+  font-size: clamp(10px, 1.2vw, 13px);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #c9a227;
+  margin-top: 6px;
+}
+.center .portalLabel { color: #f3e3a8; font-size: clamp(18px, 2vw, 22px); }
+.center .portalEn { color: #e8d9a4; }
+
+.portalNote {
+  margin-top: 22px;
+  font-size: clamp(12px, 1.4vw, 14px);
+  color: #9aa3ad;
+  line-height: 1.55;
+  text-align: center;
+}
+.center .portalNote {
+  color: #d4af37;
+  font-size: clamp(13px, 1.5vw, 15px);
+}
+
+@media (max-width: 700px) {
+  .crossroads { padding: 18px 14px; }
+  .arcade {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(7, auto);
+    gap: 14px;
+    max-width: 520px;
+  }
+  .arcade > * { grid-column: 1; grid-row: auto; }
+  .arcade .center { grid-row: 1; }
+  .arcade .atlas { grid-row: 2; }
+  .arcade .timeline { grid-row: 3; }
+  .arcade .ghazawat { grid-row: 4; }
+  .arcade .quran { grid-row: 5; }
+  .arcade .hadith { grid-row: 6; }
+  .arcade .madinah { grid-row: 7; }
+  .portalArch { width: 120px; height: 140px; }
+}
