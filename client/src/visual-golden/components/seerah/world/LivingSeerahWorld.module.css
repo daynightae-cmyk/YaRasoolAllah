@@ -122,13 +122,21 @@
   bottom: 8px;
   left: 50%;
   transform: translateX(-50%);
+  width: min(920px, 92%);
   font-size: 0.65rem;
-  color: rgba(245, 239, 230, 0.45);
-  max-width: 90%;
+  color: rgba(245, 239, 230, 0.52);
   text-align: center;
   line-height: 1.5;
   pointer-events: none;
   z-index: 50;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.85);
+}
+
+.ambientAttribution {
+  display: block;
+  margin-top: 2px;
+  color: rgba(222, 190, 127, 0.62);
+  font-size: 0.6rem;
 }
 
 /* Exit transition overlay */
@@ -231,6 +239,89 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Travel transition — the journey between two living-world scenes */
+.travelVeil {
+  position: absolute;
+  inset: 0;
+  z-index: 450;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse at 50% 55%, rgba(74, 54, 22, 0.92) 0%, rgba(10, 7, 5, 0.97) 62%),
+    #0a0705;
+  pointer-events: none;
+  animation: travelVeil 2.6s ease forwards;
+}
+
+.travelSweep {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 42%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(212, 160, 23, 0.06) 35%,
+    rgba(253, 230, 138, 0.22) 50%,
+    rgba(212, 160, 23, 0.06) 65%,
+    transparent 100%
+  );
+  filter: blur(18px);
+  animation: travelSweep 2.6s cubic-bezier(0.45, 0, 0.2, 1) forwards;
+}
+
+.travelText {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #f5efe6;
+  font-family: var(--font-cairo, "Cairo", system-ui, sans-serif);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.8);
+  animation: travelText 2.6s ease forwards;
+}
+
+.travelFrom,
+.travelTo {
+  font-size: clamp(0.95rem, 2.4vw, 1.5rem);
+  font-weight: 700;
+}
+
+.travelFrom {
+  color: rgba(245, 239, 230, 0.6);
+}
+
+.travelTo {
+  color: #fde68a;
+}
+
+.travelArrow {
+  font-size: clamp(1rem, 2.6vw, 1.6rem);
+  color: #d4a017;
+}
+
+@keyframes travelVeil {
+  0% { opacity: 0; }
+  14% { opacity: 1; }
+  68% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes travelSweep {
+  0% { transform: translateX(-160%); opacity: 0; }
+  22% { opacity: 1; }
+  100% { transform: translateX(320%); opacity: 0; }
+}
+
+@keyframes travelText {
+  0% { opacity: 0; transform: translateY(12px); }
+  22% { opacity: 1; transform: translateY(0); }
+  72% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-8px); }
+}
+
 /* Mobile adjustments */
 @media (pointer: coarse) {
   .loadingHint {
@@ -266,6 +357,12 @@
   .entranceRings,
   .entranceText {
     animation: none;
+  }
+  .travelVeil,
+  .travelSweep,
+  .travelText {
+    animation: none;
+    opacity: 0;
   }
 }
 

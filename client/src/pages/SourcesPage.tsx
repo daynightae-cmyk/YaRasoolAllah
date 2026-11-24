@@ -121,7 +121,11 @@ export default function SourcesPage() {
   const [query, setQuery] = useState(initialSourceQuery);
   const [kindFilter, setKindFilter] = useState<string>("all");
   const [openSourceId, setOpenSourceId] = useState<string>(initialSourceId);
-  const [treasuryOpen, setTreasuryOpen] = useState(false);
+  // Deep link /sources?treasury=1 opens the treasury vault directly (the
+  // unified station log links straight into the immersive surface).
+  const [treasuryOpen, setTreasuryOpen] = useState(
+    () => new URLSearchParams(window.location.search).get("treasury") === "1",
+  );
   const [treasuryFailed, setTreasuryFailed] = useState(false);
   const [treasuryLamp, setTreasuryLamp] = useState(true);
   // Browse-deck state: review chips, table/card view, real pagination and

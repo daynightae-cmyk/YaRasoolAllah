@@ -122,7 +122,11 @@ export function HadithPage() {
   const [corpusState, setCorpusState] = useState<CorpusState>({ state: "loading" });
   const [noteOpen, setNoteOpen] = useState(false);
   const [noteDraft, setNoteDraft] = useState("");
-  const [archiveOpen, setArchiveOpen] = useState(false);
+  // Deep link /hadith?archive=1 opens the archive hall directly (the unified
+  // station log links straight into the immersive surface).
+  const [archiveOpen, setArchiveOpen] = useState(
+    () => new URLSearchParams(window.location.search).get("archive") === "1",
+  );
   const [archiveFailed, setArchiveFailed] = useState(false);
   const [archiveLamp, setArchiveLamp] = useState(true);
   const recordReadingProgress = useInstitution((state) => state.recordReadingProgress);

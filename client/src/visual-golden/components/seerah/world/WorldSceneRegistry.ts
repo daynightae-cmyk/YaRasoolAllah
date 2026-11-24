@@ -83,6 +83,10 @@ export const SCENE_DESERT_CAMP: WorldSceneConfig = {
   // Camera forward is (-sin yaw, -cos yaw): yaw 0 faces -Z, toward the camp
   // at the world's centre (the player spawns at +Z on the desert path).
   entryYaw: 0,
+  props: [
+    { id: "prop-well-camp", type: "well", position: new THREE.Vector3(12, 2, 8) },
+    { id: "prop-fire-camp", type: "campfire", position: new THREE.Vector3(2, 2, 16) },
+  ],
   exits: [
     createInteraction(
       "exit-to-reading",
@@ -93,23 +97,42 @@ export const SCENE_DESERT_CAMP: WorldSceneConfig = {
       "الخروج من العالم الحي والعودة إلى تجربة السيرة المقروءة",
       { type: "chapter", id: "hijra-to-madinah" },
     ),
+    // ---- TRAVEL GATES (living-world network) ----
     createInteraction(
-      "enter-badr",
-      new THREE.Vector3(-60, 2, -60),
+      "gate-to-hira-cave",
+      new THREE.Vector3(-58, 2, 56),
       5,
       "transition",
-      "دخول وادي بدر",
-      "السفر إلى بيئة وادي بدر للغزوة الكبرى",
-      { type: "event", id: "badr" },
+      "بوابة غار حراء",
+      "سفر إلى غار حراء في جبل نور؛ مشهد ليلي لمكان التحنث، بلا تمثيل للوحي.",
+      { type: "scene", id: "hira-cave" },
     ),
     createInteraction(
-      "enter-uhud",
-      new THREE.Vector3(60, 2, -60),
+      "gate-to-badr-valley",
+      new THREE.Vector3(-58, 2, -56),
       5,
       "transition",
-      "دخول جبل أحد",
-      "السفر إلى بيئة جبل أحد للمعركة الثانية",
-      { type: "event", id: "uhud" },
+      "بوابة وادي بدر",
+      "سفر إلى وادي بدر؛ تضاريس تفسيرية لموقع المعركة الأولى كما تصفه المصادر.",
+      { type: "scene", id: "badr-valley" },
+    ),
+    createInteraction(
+      "gate-to-uhud-mountain",
+      new THREE.Vector3(58, 2, -56),
+      5,
+      "transition",
+      "بوابة جبل أحد",
+      "سفر إلى سفح جبل أحد؛ موقف مراقبة يشرح علاقة المكان بالخبر.",
+      { type: "scene", id: "uhud-mountain" },
+    ),
+    createInteraction(
+      "gate-to-madinah-walk",
+      new THREE.Vector3(58, 2, 56),
+      5,
+      "transition",
+      "بوابة المدينة الأولى",
+      "سفر إلى شوارع يثرب بعد الهجرة؛ ساحة المسجد الأول والبيوت الطينية.",
+      { type: "scene", id: "madinah-walk" },
     ),
   ],
   interactions: [
@@ -253,15 +276,6 @@ export const SCENE_BADR_VALLEY: WorldSceneConfig = {
   entryYaw: 0, // face -Z: toward the scene centre from the +Z spawn point
   exits: [
     createInteraction(
-      "exit-to-camp",
-      new THREE.Vector3(0, 2, -70),
-      4,
-      "transition",
-      "العودة إلى درب الصحراء",
-      "العودة إلى معسكر القوافل على درب الصحراء",
-      { type: "chapter", id: "hijra-to-madinah" },
-    ),
-    createInteraction(
       "exit-to-reading",
       new THREE.Vector3(0, 2, 75),
       4,
@@ -269,6 +283,16 @@ export const SCENE_BADR_VALLEY: WorldSceneConfig = {
       "العودة إلى القراءة",
       "الخروج إلى سجل غزوة بدر في قاعدة السيرة",
       { type: "event", id: "badr" },
+    ),
+    // ---- TRAVEL GATE (back to the desert road) ----
+    createInteraction(
+      "gate-to-desert-camp",
+      new THREE.Vector3(-70, 2, -66),
+      5,
+      "transition",
+      "بوابة درب الصحراء",
+      "سفر إلى درب الصحراء ومعسكر القوافل، نقطة الانطلاق بين بيئات السيرة.",
+      { type: "scene", id: "desert-camp" },
     ),
   ],
   interactions: [
@@ -375,15 +399,6 @@ export const SCENE_UHUD_MOUNTAIN: WorldSceneConfig = {
   entryYaw: 0, // face -Z: toward the scene centre from the +Z spawn point
   exits: [
     createInteraction(
-      "exit-to-camp",
-      new THREE.Vector3(0, 2, -65),
-      4,
-      "transition",
-      "العودة إلى درب الصحراء",
-      "العودة إلى معسكر القوافل",
-      { type: "chapter", id: "hijra-to-madinah" },
-    ),
-    createInteraction(
       "exit-to-reading",
       new THREE.Vector3(-15, 3, 50),
       3,
@@ -391,6 +406,16 @@ export const SCENE_UHUD_MOUNTAIN: WorldSceneConfig = {
       "العودة إلى القراءة",
       "الخروج إلى سجل غزوة أحد",
       { type: "event", id: "uhud" },
+    ),
+    // ---- TRAVEL GATE (back to the desert road) ----
+    createInteraction(
+      "gate-to-desert-camp",
+      new THREE.Vector3(64, 2, -62),
+      5,
+      "transition",
+      "بوابة درب الصحراء",
+      "سفر إلى درب الصحراء ومعسكر القوافل، نقطة الانطلاق بين بيئات السيرة.",
+      { type: "scene", id: "desert-camp" },
     ),
   ],
   interactions: [
@@ -485,6 +510,10 @@ export const SCENE_KHANDAQ: WorldSceneConfig = {
   rockColor: "#5c544a",
   entryPosition: new THREE.Vector3(0, 2, 45),
   entryYaw: 0, // face -Z: toward the scene centre from the +Z spawn point
+  night: true,
+  props: [
+    { id: "prop-fire-khandaq", type: "campfire", position: new THREE.Vector3(5, 2, 9) },
+  ],
   exits: [
     createInteraction(
       "exit-to-reading",
@@ -494,6 +523,16 @@ export const SCENE_KHANDAQ: WorldSceneConfig = {
       "العودة إلى القراءة",
       "الخروج إلى سجل غزوة الخندق",
       { type: "event", id: "khandaq" },
+    ),
+    // ---- TRAVEL GATE (back to the settlement) ----
+    createInteraction(
+      "gate-to-madinah-walk",
+      new THREE.Vector3(-56, 2, -54),
+      5,
+      "transition",
+      "بوابة المدينة الأولى",
+      "سفر إلى شوارع يثرب؛ الطريق من الخندق إلى سور المدينة.",
+      { type: "scene", id: "madinah-walk" },
     ),
   ],
   interactions: [
@@ -590,15 +629,6 @@ export const SCENE_MADINAH_WALK: WorldSceneConfig = {
   entryYaw: 0, // face -Z: toward the scene centre from the +Z spawn point
   exits: [
     createInteraction(
-      "exit-to-camp",
-      new THREE.Vector3(0, 2, -65),
-      4,
-      "transition",
-      "العودة إلى درب الصحراء",
-      "العودة إلى معسكر القوافل",
-      { type: "chapter", id: "hijra-to-madinah" },
-    ),
-    createInteraction(
       "exit-to-reading",
       new THREE.Vector3(-10, 2, 60),
       3,
@@ -606,6 +636,25 @@ export const SCENE_MADINAH_WALK: WorldSceneConfig = {
       "العودة إلى القراءة",
       "الخروج إلى فصل تأسيس الدولة",
       { type: "chapter", id: "establishing-state" },
+    ),
+    // ---- TRAVEL GATES (living-world network) ----
+    createInteraction(
+      "gate-to-desert-camp",
+      new THREE.Vector3(-64, 2, 60),
+      5,
+      "transition",
+      "بوابة درب الصحراء",
+      "سفر إلى درب الصحراء ومعسكر القوافل، نقطة الانطلاق بين بيئات السيرة.",
+      { type: "scene", id: "desert-camp" },
+    ),
+    createInteraction(
+      "gate-to-khandaq-trench",
+      new THREE.Vector3(64, 2, -60),
+      5,
+      "transition",
+      "بوابة الخندق",
+      "سفر إلى الخندق؛ خط دفاع حُفر حمايةً للمدينة، وعرضه هندسي تعليمي.",
+      { type: "scene", id: "khandaq-trench" },
     ),
   ],
   interactions: [
@@ -712,6 +761,10 @@ export const SCENE_HIRA_CAVE: WorldSceneConfig = {
   rockColor: "#7a5a44",
   entryPosition: new THREE.Vector3(0, 2, 40),
   entryYaw: 0, // face -Z: toward the scene centre from the +Z spawn point
+  night: true,
+  props: [
+    { id: "prop-lamp-hira", type: "campfire", position: new THREE.Vector3(8, 2, -9), scale: 0.8 },
+  ],
   exits: [
     createInteraction(
       "exit-to-reading",
@@ -721,6 +774,16 @@ export const SCENE_HIRA_CAVE: WorldSceneConfig = {
       "العودة إلى القراءة",
       "الخروج إلى فصل بدء الوحي",
       { type: "chapter", id: "prophethood-beginning" },
+    ),
+    // ---- TRAVEL GATE (back to the desert road) ----
+    createInteraction(
+      "gate-to-desert-camp",
+      new THREE.Vector3(-40, 2, 30),
+      5,
+      "transition",
+      "بوابة درب الصحراء",
+      "سفر إلى درب الصحراء ومعسكر القوافل، نقطة الانطلاق بين بيئات السيرة.",
+      { type: "scene", id: "desert-camp" },
     ),
   ],
   interactions: [

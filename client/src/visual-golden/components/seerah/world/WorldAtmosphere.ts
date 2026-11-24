@@ -192,8 +192,8 @@ export function createSkyDome(config: WorldSceneConfig, graphicsTier: WorldGraph
   const rings = graphicsTier === "low" ? 12 : 18;
 
   const geometry = new THREE.SphereGeometry(radius, segments, rings);
-  geometry.scale(-1, 1, 1); // Invert normals for inside view
 
+  // BackSide renders the interior without a negative-determinant transform.
   // Vertex colors for sky gradient
   const pos = geometry.attributes.position;
   const colors = new Float32Array(pos.count * 3);
@@ -203,9 +203,9 @@ export function createSkyDome(config: WorldSceneConfig, graphicsTier: WorldGraph
 
   for (let i = 0; i < pos.count; i++) {
     const y = pos.getY(i);
-    const normalizedY = THREE.MathUtils.clamp((y + radius) / (radius * 2), 0, 1);
-    // Smooth gradient from zenith to horizon
-    const color = zenithColor.clone().lerp(horizonColor, Math.pow(normalizedY, 0.7));
+    const normalizedY = THREE.MathUtils.clamp(y / radius, 0, 1);
+    // Warm haze stays at the horizon; the cooler/darker zenith is overhead.
+    const color = horizonColor.clone().lerp(skyColor, Math.pow(normalizedY, 0.42)).lerp(zenithColor, Math.pow(normalizedY, 1.8) * 0.55);
     colors[i * 3] = color.r;
     colors[i * 3 + 1] = color.g;
     colors[i * 3 + 2] = color.b;
@@ -230,7 +230,7 @@ export function createHorizonMeshes(
 ): THREE.Group {
   const group = new THREE.Group();
   const random = mulberry(config.seed + 500);
-  const worldRadius = Math.max(config.bounds.width, config.bounds.depth) * 0.6;
+  const playableHalfSize = Math.max(config.bounds.width, config.bounds.depth) / 2;
   const count = graphicsTier === "low" ? 6 : graphicsTier === "high" ? 14 : 10;
 
   const baseColor = new THREE.Color(config.groundColor).multiplyScalar(0.6);
@@ -246,14 +246,16 @@ export function createHorizonMeshes(
 
   for (let i = 0; i < count; i++) {
     const angle = (i / count) * Math.PI * 2 + random() * 0.4;
-    const distance = worldRadius * (0.85 + random() * 0.15);
-    const x = Math.cos(angle) * distance;
-    const z = Math.sin(angle) * distance;
-
     const isMesa = random() < 0.4;
     const geo = isMesa ? mesaGeo : mountainGeo;
     const height = isMesa ? 8 + random() * 12 : 15 + random() * 25;
     const radius = isMesa ? 6 + random() * 8 : 8 + random() * 12;
+    // Keep the whole mountain volume beyond the collision boundary. Its old
+    // nearest face could cross 18m into the playable world and engulf the
+    // camera at the edge, producing the giant inverted polygons in evidence.
+    const distance = playableHalfSize + radius + 12 + random() * 28;
+    const x = Math.cos(angle) * distance;
+    const z = Math.sin(angle) * distance;
 
     const mesh = new THREE.Mesh(geo, material);
     mesh.scale.set(radius, height, radius);
@@ -462,6 +464,251 @@ export function createHemisphereLight(config: WorldSceneConfig): THREE.Hemispher
   const skyFill = new THREE.Color(config.skyColor)
     .lerp(new THREE.Color(config.sunColor), 0.45);
   return new THREE.HemisphereLight(skyFill, new THREE.Color(config.groundColor), 0.9);
+}
+
+/**
+ * Star field for night scenes. The stars sit on a dome just inside the sky
+ * shell and twinkle on the GPU (per-star phase + size), so a moonless
+ * desert sky reads as a real sky instead of a flat black gradient.
+ */
+export function createNightStars(
+  config: WorldSceneConfig,
+  graphicsTier: WorldGraphicsTier,
+): THREE.Points {
+  const count = graphicsTier === "low" ? 220 : graphicsTier === "high" ? 900 : 520;
+  const radius = Math.max(config.bounds.width, config.bounds.depth) * 0.95;
+
+  const geometry = new THREE.BufferGeometry();
+  const positions = new Float32Array(count * 3);
+  const sizes = new Float32Array(count);
+  const opacities = new Float32Array(count);
+  const phases = new Float32Array(count);
+  const tints = new Float32Array(count * 3);
+
+  // Deterministic PRNG so the sky is identical on every visit.
+  const random = mulberry(config.seed + 97);
+  const warm = new THREE.Color("#fff4d6");
+  const cool = new THREE.Color("#cfe0ff");
+
+  for (let i = 0; i < count; i++) {
+    // Uniform-ish distribution on the upper hemisphere.
+    const u = random();
+    const v = random() * 0.86 + 0.14; // keep the horizon mostly clear
+    const theta = u * Math.PI * 2;
+    const phi = Math.acos(1 - 2 * v * 0.5);
+    const r = radius * (0.92 + random() * 0.08);
+    positions[i * 3] = Math.sin(phi) * Math.cos(theta) * r;
+    positions[i * 3 + 1] = Math.abs(Math.cos(phi)) * r * 0.9 + r * 0.06;
+    positions[i * 3 + 2] = Math.sin(phi) * Math.sin(theta) * r;
+
+    // A few bright anchors, many faint ones — a believable magnitude mix.
+    const bright = random() < 0.08;
+    sizes[i] = bright ? 0.16 + random() * 0.12 : 0.05 + random() * 0.07;
+    opacities[i] = bright ? 0.7 + random() * 0.3 : 0.18 + random() * 0.4;
+
+    const phase = random() * Math.PI * 2;
+    phases[i] = phase;
+
+    const tint = warm.clone().lerp(cool, random());
+    tints[i * 3] = tint.r;
+    tints[i * 3 + 1] = tint.g;
+    tints[i * 3 + 2] = tint.b;
+  }
+
+  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute("aSize", new THREE.BufferAttribute(sizes, 1));
+  geometry.setAttribute("aOpacity", new THREE.BufferAttribute(opacities, 1));
+  geometry.setAttribute("aPhase", new THREE.BufferAttribute(phases, 1));
+  geometry.setAttribute("aTint", new THREE.BufferAttribute(tints, 3));
+
+  const material = new THREE.ShaderMaterial({
+    transparent: true,
+    depthWrite: false,
+    fog: false,
+    blending: THREE.AdditiveBlending,
+    uniforms: {
+      uTime: { value: 0 },
+      uPixelRatio: { value: Math.min(window.devicePixelRatio || 1, 2) },
+    },
+    vertexShader: /* glsl */ `
+      attribute float aSize;
+      attribute float aOpacity;
+      attribute float aPhase;
+      attribute vec3 aTint;
+      uniform float uTime;
+      uniform float uPixelRatio;
+      varying float vOpacity;
+      varying vec3 vTint;
+      void main() {
+        vec4 mv = modelViewMatrix * vec4(position, 1.0);
+        gl_Position = projectionMatrix * mv;
+        gl_PointSize = aSize * uPixelRatio * 300.0 / max(1.0, -mv.z);
+        float twinkle = 0.72 + 0.28 * sin(uTime * 1.1 + aPhase * 3.0);
+        vOpacity = aOpacity * twinkle;
+        vTint = aTint;
+      }
+    `,
+    fragmentShader: /* glsl */ `
+      varying float vOpacity;
+      varying vec3 vTint;
+      void main() {
+        vec2 uv = gl_PointCoord - 0.5;
+        float d = length(uv);
+        float core = smoothstep(0.5, 0.05, d);
+        float halo = smoothstep(0.5, 0.22, d) * 0.35;
+        float alpha = (core + halo) * vOpacity;
+        if (alpha < 0.004) discard;
+        gl_FragColor = vec4(vTint, alpha);
+      }
+    `,
+  });
+
+  const points = new THREE.Points(geometry, material);
+  points.frustumCulled = false;
+  points.userData = { starsMaterial: material };
+  return points;
+}
+
+/** Advance the star twinkle clock. */
+export function updateNightStars(points: THREE.Points, elapsedTime: number): void {
+  const material = (points.userData as { starsMaterial?: THREE.ShaderMaterial }).starsMaterial;
+  if (material) material.uniforms.uTime.value = elapsedTime;
+}
+
+/**
+ * Footstep dust — small puffs kicked up where the traveller's feet land.
+ *
+ * A fixed pool of soft sprites is recycled: each puff grows, drifts back
+ * and fades, then dies. No allocation happens during the walk, and the
+ * whole system is inert under reduced motion.
+ */
+export class FootstepDust {
+  private readonly pool: Array<{
+    sprite: THREE.Sprite;
+    material: THREE.SpriteMaterial;
+    life: number;
+    maxLife: number;
+    active: boolean;
+    drift: THREE.Vector3;
+  }> = [];
+  private readonly texture: THREE.CanvasTexture;
+  private cursor = 0;
+  private reducedMotion = false;
+
+  constructor(
+    private readonly context: WorldRuntimeContext,
+    graphicsTier: WorldGraphicsTier,
+  ) {
+    const count = graphicsTier === "low" ? 8 : graphicsTier === "high" ? 28 : 16;
+    this.texture = makeSoftPuffTexture();
+
+    for (let i = 0; i < count; i++) {
+      const material = new THREE.SpriteMaterial({
+        map: this.texture,
+        color: new THREE.Color("#d8c3a0"),
+        transparent: true,
+        opacity: 0,
+        depthWrite: false,
+        blending: THREE.NormalBlending,
+      });
+      const sprite = new THREE.Sprite(material);
+      sprite.visible = false;
+      sprite.renderOrder = 2;
+      this.context.scene.add(sprite);
+      this.pool.push({
+        sprite,
+        material,
+        life: 0,
+        maxLife: 1,
+        active: false,
+        drift: new THREE.Vector3(),
+      });
+    }
+
+    this.context.registerDisposable(() => this.dispose());
+  }
+
+  /** Kick a puff of dust at the given ground position. */
+  emit(position: THREE.Vector3, intensity = 1): void {
+    if (this.reducedMotion) return;
+    const slot = this.pool[this.cursor];
+    this.cursor = (this.cursor + 1) % this.pool.length;
+    const amount = Math.max(0.25, Math.min(1.6, intensity));
+
+    slot.sprite.position.set(
+      position.x + (Math.random() - 0.5) * 0.35,
+      position.y + 0.08 + Math.random() * 0.1,
+      position.z + (Math.random() - 0.5) * 0.35,
+    );
+    slot.sprite.visible = true;
+    slot.material.opacity = 0.22 * amount;
+    slot.life = 0;
+    slot.maxLife = 0.75 + Math.random() * 0.5;
+    slot.active = true;
+    slot.drift.set(
+      (Math.random() - 0.5) * 0.35,
+      0.22 + Math.random() * 0.25,
+      (Math.random() - 0.5) * 0.35,
+    );
+    slot.sprite.scale.setScalar(0.25 * amount);
+  }
+
+  /** Advance the puffs. */
+  update(deltaTime: number): void {
+    if (this.reducedMotion) return;
+    for (const slot of this.pool) {
+      if (!slot.active) continue;
+      slot.life += deltaTime;
+      const t = slot.life / slot.maxLife;
+      if (t >= 1) {
+        slot.active = false;
+        slot.sprite.visible = false;
+        slot.material.opacity = 0;
+        continue;
+      }
+      slot.sprite.position.addScaledVector(slot.drift, deltaTime);
+      slot.drift.multiplyScalar(1 - Math.min(1, deltaTime * 1.4));
+      slot.sprite.scale.setScalar(0.25 + t * 0.85);
+      slot.material.opacity = 0.22 * (1 - t) * (1 - t);
+    }
+  }
+
+  setReducedMotion(reduced: boolean): void {
+    this.reducedMotion = reduced;
+    if (!reduced) return;
+    for (const slot of this.pool) {
+      slot.active = false;
+      slot.sprite.visible = false;
+      slot.material.opacity = 0;
+    }
+  }
+
+  dispose(): void {
+    for (const slot of this.pool) {
+      this.context.scene.remove(slot.sprite);
+      slot.material.dispose();
+    }
+    this.pool.length = 0;
+    this.texture.dispose();
+  }
+}
+
+/** Soft round puff texture generated on a canvas — no external assets. */
+function makeSoftPuffTexture(): THREE.CanvasTexture {
+  const size = 64;
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d")!;
+  const gradient = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+  gradient.addColorStop(0, "rgba(255,255,255,0.9)");
+  gradient.addColorStop(0.45, "rgba(255,255,255,0.42)");
+  gradient.addColorStop(1, "rgba(255,255,255,0)");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, size, size);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
 }
 
 /** Mulberry32 PRNG. */

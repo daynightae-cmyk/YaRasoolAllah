@@ -61,12 +61,15 @@ export interface FirstPersonControllerOptions {
    * while the user-driven experience is actually moving.
    */
   onMotionInput?: () => void;
+  /** Nearby moving environmental solids; queried once per player update. */
+  dynamicCollisionShapes?: (position: THREE.Vector3) => WorldCollisionShape[];
 }
 
 export class FirstPersonController {
   public readonly state: WorldPlayerState;
 
   private readonly options: FirstPersonControllerOptions;
+  private dynamicCollisionSource: ((position: THREE.Vector3) => WorldCollisionShape[]) | null;
   private readonly abort = new AbortController();
   private readonly solids: SolidBox[] = [];
 
@@ -119,6 +122,7 @@ export class FirstPersonController {
     options: FirstPersonControllerOptions,
   ) {
     this.options = options;
+    this.dynamicCollisionSource = options.dynamicCollisionShapes ?? null;
     this.reducedMotion = options.reducedMotion ?? false;
     this.yaw = startYaw;
 
@@ -232,6 +236,39 @@ export class FirstPersonController {
     return Math.sin(this.bobPhase) * 0.035 * Math.min(1, speed / WALK_SPEED);
   }
 
+  /**
+   * Breathing — the chest rises and falls. It quickens with exertion
+   * (running) and settles when standing still. Disabled under reduced
+   * motion, where the camera must stay perfectly still.
+   */
+  getBreathingOffset(elapsedSeconds: number): number {
+    if (this.reducedMotion) return 0;
+    const speed = Math.hypot(this.state.velocity.x, this.state.velocity.z);
+    const running = this.state.sprinting;
+    const rate = running ? 2.6 : speed > 0.5 ? 1.9 : 1.05;
+    const amplitude = running ? 0.026 : speed > 0.5 ? 0.017 : 0.012;
+    const wave = Math.sin(elapsedSeconds * rate);
+    return wave * amplitude * (this.state.crouching ? 0.55 : 1);
+  }
+
+  /**
+   * Lateral weight shift while walking — a slow sway, not a head roll.
+   * Gives the camera a human centre of gravity instead of a rigid tripod.
+   */
+  getWalkSwayOffset(elapsedSeconds: number): number {
+    if (this.reducedMotion || !this.state.onGround) return 0;
+    const speed = Math.hypot(this.state.velocity.x, this.state.velocity.z);
+    if (speed < 0.5) return 0;
+    const base = Math.sin(this.bobPhase * 0.5) * 0.022;
+    const drift = Math.sin(elapsedSeconds * 0.35) * 0.008;
+    return (base + drift) * Math.min(1, speed / WALK_SPEED);
+  }
+
+  /** Horizontal speed in meters per second (for FOV, dust and audio). */
+  getHorizontalSpeed(): number {
+    return Math.hypot(this.state.velocity.x, this.state.velocity.z);
+  }
+
   update(deltaTime: number): void {
     if (deltaTime <= 0) return;
     // Gamepad right stick look (continuous, applied per-frame).
@@ -336,9 +373,16 @@ export class FirstPersonController {
   private resolveSolids(): void {
     const pos = this.state.position;
     const playerTop = pos.y + this.getEyeHeight() + 0.1;
+    const nearby = this.dynamicCollisionSource?.(pos) ?? [];
+    const dynamicSolids: SolidBox[] = [];
+    for (const shape of nearby) {
+      const box = this.shapeToSolid(shape);
+      if (box) dynamicSolids.push(box);
+    }
+    const solids = dynamicSolids.length ? this.solids.concat(dynamicSolids) : this.solids;
     for (let iter = 0; iter < 2; iter++) {
       let pushed = false;
-      for (const box of this.solids) {
+      for (const box of solids) {
         // Vertical overlap test: skip solids entirely above head or below feet.
         if (box.minY > playerTop || box.maxY < pos.y + 0.25) continue;
         const closestX = THREE.MathUtils.clamp(pos.x, box.minX, box.maxX);
@@ -650,10 +694,17 @@ export class FirstPersonController {
     this.state.position.set(position.x, groundY, position.z);
     this.state.velocity.set(0, 0, 0);
     this.state.onGround = true;
+    this.pitch = 0;
+    this.state.pitch = 0;
+    this.resetInput();
     if (yaw !== undefined) {
       this.yaw = yaw;
       this.state.yaw = yaw;
     }
+  }
+
+  setDynamicCollisionSource(source: ((position: THREE.Vector3) => WorldCollisionShape[]) | null): void {
+    this.dynamicCollisionSource = source;
   }
 
   setInputEnabled(enabled: boolean): void {

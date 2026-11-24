@@ -8,10 +8,12 @@
  */
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import * as THREE from "three";
+import type { WorldRuntimeContext } from "../client/src/visual-golden/components/seerah/world/world-types";
+import type { AmbientAssetLoader } from "../client/src/visual-golden/components/seerah/world/ambient/AmbientTypes";
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (path: string) => readFileSync(join(repoRoot, path), "utf8");
@@ -26,12 +28,24 @@ function addListener(type: string, fn: Listener, options?: { signal?: AbortSigna
   listeners.get(type)!.add(fn);
   options?.signal?.addEventListener("abort", () => listeners.get(type)?.delete(fn));
 }
+/** Minimal localStorage so the visited-scene log can be exercised. */
+const storage = new Map<string, string>();
 const stubWindow = {
   innerWidth: 1280,
   innerHeight: 720,
   addEventListener: addListener,
   removeEventListener(type: string, fn: Listener) {
     listeners.get(type)?.delete(fn);
+  },
+  localStorage: {
+    getItem: (key: string) => storage.get(key) ?? null,
+    setItem: (key: string, value: string) => {
+      storage.set(key, value);
+    },
+    removeItem: (key: string) => {
+      storage.delete(key);
+    },
+    clear: () => storage.clear(),
   },
 };
 const stubDocument = {
@@ -163,6 +177,36 @@ describe("first-person movement (behavioral)", () => {
     controller.dispose();
   });
 
+  it("uses nearby dynamic solids without making them static constructor state", async () => {
+    listeners.clear();
+    const FirstPersonController = await loadController();
+    let queries = 0;
+    const controller = new FirstPersonController([], new THREE.Vector3(0, 0, 0), 0, {
+      groundHeightAt: () => 0,
+      worldHalfSize: 100,
+      dynamicCollisionShapes: () => {
+        queries++;
+        return [{
+          type: "cylinder",
+          center: new THREE.Vector3(0, 1, -2),
+          radiusTop: 0.5,
+          radiusBottom: 0.5,
+          height: 2,
+        }];
+      },
+    });
+    key("KeyW");
+    for (let i = 0; i < 120; i++) controller.update(1 / 60);
+    assert.ok(controller.state.position.z > -1.2, `dynamic solid must block the visitor, z=${controller.state.position.z}`);
+    assert.ok(queries >= 120, "the nearby-solid source is queried during real player updates");
+    key("KeyW", "keyup");
+    controller.setDynamicCollisionSource(null);
+    const before = queries;
+    controller.update(1 / 60);
+    assert.equal(queries, before, "clearing the source disconnects dynamic collision");
+    controller.dispose();
+  });
+
   it("jump leaves the ground and gravity returns the player to it", async () => {
     listeners.clear();
     const FirstPersonController = await loadController();
@@ -252,6 +296,43 @@ describe("procedural terrain (behavioral)", () => {
   });
 });
 
+describe("world atmosphere geometry (behavioral)", () => {
+  it("keeps every horizon mountain volume outside the playable boundary", async () => {
+    const { createHorizonMeshes, createSkyDome } = await import("../client/src/visual-golden/components/seerah/world/WorldAtmosphere");
+    const { DEFAULT_WORLD_SCENE } = await loadRegistry();
+    const group = createHorizonMeshes(DEFAULT_WORLD_SCENE, "balanced", false);
+    const playableHalf = Math.max(DEFAULT_WORLD_SCENE.bounds.width, DEFAULT_WORLD_SCENE.bounds.depth) / 2;
+    let count = 0;
+    group.traverse((object) => {
+      if (!(object instanceof THREE.Mesh)) return;
+      count++;
+      const radial = Math.hypot(object.position.x, object.position.z);
+      assert.ok(
+        radial - object.scale.x >= playableHalf + 12,
+        `mountain crossed the playable boundary: radial=${radial}, radius=${object.scale.x}`,
+      );
+    });
+    assert.ok(count >= 6);
+
+    const sky = createSkyDome(DEFAULT_WORLD_SCENE, "balanced");
+    assert.equal(sky.material instanceof THREE.MeshBasicMaterial && sky.material.side, THREE.BackSide);
+    assert.equal(sky.geometry.index ? sky.geometry.index.count % 3 : 0, 0);
+    assert.equal(sky.scale.x, 1, "sky must not use a negative-determinant mirrored transform");
+
+    const geometries = new Set<THREE.BufferGeometry>();
+    const materials = new Set<THREE.Material>();
+    group.traverse((object) => {
+      if (!(object instanceof THREE.Mesh)) return;
+      geometries.add(object.geometry);
+      materials.add(object.material as THREE.Material);
+    });
+    for (const geometry of geometries) geometry.dispose();
+    for (const material of materials) material.dispose();
+    sky.geometry.dispose();
+    (sky.material as THREE.Material).dispose();
+  });
+});
+
 describe("governed content links", () => {
   it("every interaction targetRef resolves to a real governed record", async () => {
     const { WORLD_SCENES } = await loadRegistry();
@@ -285,6 +366,11 @@ describe("governed content links", () => {
           case "atlas":
             assert.ok(findAtlasNodeByQuery(ref.id), `unresolvable atlas place: ${label}`);
             break;
+          case "scene": {
+            const sceneIds = new Set(WORLD_SCENES.map((s) => s.id));
+            assert.ok(sceneIds.has(ref.id), `missing world scene: ${label}`);
+            break;
+          }
         }
       }
       // Canonical refs must also resolve.
@@ -306,6 +392,333 @@ describe("governed content links", () => {
       assert.match(scene.disclosureAr, /تفسير|فني|تقريب/, `${scene.id} disclosure must label reconstruction`);
       assert.ok(!/تجسيد للنبي|صورة النبي|تمثيل النبي/.test(scene.descriptionAr));
     }
+  });
+});
+
+describe("living-world travel network", () => {
+  it("every authored gate has a matching arrival edge, and every edge has a gate", async () => {
+    const travel = await import("../client/src/visual-golden/components/seerah/world/WorldTravel");
+    const { WORLD_SCENES } = await loadRegistry();
+
+    const gates = travel.listTravelGates();
+    const edges = travel.listTravelEdges();
+    assert.ok(gates.length >= 10, `expected a living travel network, got ${gates.length} gates`);
+    assert.equal(gates.length, edges.length, "every gate needs an edge and vice versa");
+
+    for (const gate of gates) {
+      const arrival = travel.resolveArrival(gate.sceneId, gate.targetSceneId);
+      assert.ok(arrival, `gate ${gate.point.id} has no arrival pose`);
+      assert.ok(
+        Number.isFinite(arrival.position.x) && Number.isFinite(arrival.position.z),
+        `arrival position for ${gate.point.id} must be finite`,
+      );
+      assert.ok(Number.isFinite(arrival.yaw), `arrival yaw for ${gate.point.id} must be finite`);
+
+      // The arrival must land inside the destination scene bounds.
+      const destination = WORLD_SCENES.find((s) => s.id === gate.targetSceneId);
+      assert.ok(destination, `unknown destination ${gate.targetSceneId}`);
+      const halfW = destination.bounds.width / 2;
+      const halfD = destination.bounds.depth / 2;
+      assert.ok(
+        Math.abs(arrival.position.x) <= halfW && Math.abs(arrival.position.z) <= halfD,
+        `arrival for ${gate.point.id} falls outside ${destination.id} bounds`,
+      );
+
+      // The traveller must not spawn on top of another gate's trigger.
+      for (const other of gates) {
+        if (other.sceneId !== gate.targetSceneId) continue;
+        const distance = Math.hypot(
+          arrival.position.x - other.point.position.x,
+          arrival.position.z - other.point.position.z,
+        );
+        assert.ok(
+          distance > other.point.radius,
+          `arrival for ${gate.point.id} spawns inside ${other.point.id}`,
+        );
+      }
+    }
+
+    for (const edge of edges) {
+      const matching = gates.some(
+        (gate) => gate.sceneId === edge.from && gate.targetSceneId === edge.to,
+      );
+      assert.ok(matching, `edge ${edge.from}→${edge.to} has no physical gate`);
+    }
+  });
+
+  it("derives the arrival heading from the camera convention", async () => {
+    const travel = await import("../client/src/visual-golden/components/seerah/world/WorldTravel");
+    for (const { from, to } of travel.listTravelEdges()) {
+      const arrival = travel.resolveArrival(from, to);
+      assert.ok(arrival, `missing arrival for ${from}→${to}`);
+      // Camera forward is (-sin yaw, -cos yaw) — the heading must point
+      // from the arrival point toward the scene interior, never away.
+      const forwardX = -Math.sin(arrival.yaw);
+      const forwardZ = -Math.cos(arrival.yaw);
+      const length = Math.hypot(forwardX, forwardZ);
+      assert.ok(Math.abs(length - 1) < 1e-6, "heading must be a unit direction");
+    }
+  });
+
+  it("builds travel URLs that carry the origin scene", async () => {
+    const travel = await import("../client/src/visual-golden/components/seerah/world/WorldTravel");
+    const url = travel.buildTravelUrl("desert-camp", "hira-cave");
+    assert.ok(url, "camp → Hira must resolve");
+    assert.match(url, /^\/seerah\/world\?/);
+    const params = new URLSearchParams(url.split("?")[1]);
+    assert.equal(params.get("scene"), "hira-cave");
+    assert.equal(params.get("from"), "desert-camp");
+    assert.equal(travel.buildTravelUrl("desert-camp", "not-a-scene"), null);
+  });
+
+  it("persists visited scenes locally without inventing ids", async () => {
+    const travel = await import("../client/src/visual-golden/components/seerah/world/WorldTravel");
+    storage.clear();
+    assert.deepEqual(travel.getVisitedScenes(), []);
+
+    travel.markSceneVisited("desert-camp");
+    travel.markSceneVisited("badr-valley");
+    travel.markSceneVisited("desert-camp");
+    const visited = travel.getVisitedScenes();
+    assert.equal(visited.length, 2, "visits are deduplicated");
+    assert.equal(visited[0], "desert-camp", "newest visit comes first");
+
+    travel.markSceneVisited("not-a-scene");
+    assert.equal(travel.getVisitedScenes().length, 2, "unknown scenes are rejected");
+    storage.clear();
+  });
+});
+
+describe("anonymous ambient navigation (behavioral)", () => {
+  it("finds a walkable route around a real mesh obstacle without crossing blocked cells", async () => {
+    const { NavGrid } = await import("../client/src/visual-golden/components/seerah/world/ambient/AmbientNavigation");
+    const obstacle = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 16), new THREE.MeshBasicMaterial());
+    obstacle.updateMatrixWorld(true);
+    const grid = new NavGrid({
+      width: 40,
+      depth: 40,
+      cellSize: 2,
+      groundHeightAt: () => 0,
+      collisionShapes: [{ type: "mesh", mesh: obstacle }],
+    });
+    assert.equal(grid.isWalkablePoint(0, 0), false, "mesh footprint blocks the grid");
+    const start = new THREE.Vector3(-8, 0, 0);
+    const end = new THREE.Vector3(8, 0, 0);
+    const path = grid.findPath(start, end);
+    assert.ok(path.length >= 3, "the route must go around the wall");
+    assert.ok(path.some((point) => Math.abs(point.z) > 8), "the simplified path retains the detour");
+    for (let i = 1; i < path.length; i++) {
+      assert.ok(grid.hasLineOfSight(path[i - 1], path[i]), `segment ${i} crosses a blocked cell`);
+    }
+    obstacle.geometry.dispose();
+    (obstacle.material as THREE.Material).dispose();
+  });
+
+  it("prevents diagonal corner cutting and returns no path through a sealed barrier", async () => {
+    const { NavGrid } = await import("../client/src/visual-golden/components/seerah/world/ambient/AmbientNavigation");
+    const blockers = [
+      { type: "box" as const, center: new THREE.Vector3(0, 1, -2), size: new THREE.Vector3(0.5, 2, 0.5) },
+      { type: "box" as const, center: new THREE.Vector3(-2, 1, 0), size: new THREE.Vector3(0.5, 2, 0.5) },
+    ];
+    const cornerGrid = new NavGrid({ width: 16, depth: 16, cellSize: 2, groundHeightAt: () => 0, collisionShapes: blockers });
+    const start = new THREE.Vector3(-2, 0, -2);
+    const goal = new THREE.Vector3(0, 0, 0);
+    assert.equal(cornerGrid.hasLineOfSight(start, goal), false, "the diagonal cannot slip between blocked neighbours");
+    const cornerPath = cornerGrid.findPath(start, goal);
+    assert.ok(cornerPath.length >= 3, "A* uses a non-corner-cutting alternative");
+
+    const sealed = new NavGrid({
+      width: 40,
+      depth: 40,
+      cellSize: 2,
+      groundHeightAt: () => 0,
+      collisionShapes: [{
+        type: "box",
+        center: new THREE.Vector3(0, 2, 0),
+        size: new THREE.Vector3(2, 4, 40),
+      }],
+    });
+    assert.deepEqual(sealed.findPath(new THREE.Vector3(-8, 0, 0), new THREE.Vector3(8, 0, 0)), []);
+    assert.equal(sealed.nearestWalkable(new THREE.Vector3(100, 0, 100)), null, "outside positions are not invented as valid ground");
+  });
+
+  it("keeps presets deterministic, neutral and populated with anonymous environmental kinds", async () => {
+    const { createAmbientPresetDefinitions, AMBIENT_SCENE_PRESETS } = await import("../client/src/visual-golden/components/seerah/world/ambient/AmbientPresetRegistry");
+    const { WORLD_SCENES } = await loadRegistry();
+    const sceneIds = new Set(WORLD_SCENES.map((scene) => scene.id));
+    for (const [sceneId, presets] of Object.entries(AMBIENT_SCENE_PRESETS)) {
+      assert.ok(sceneIds.has(sceneId), `ambient preset references unknown scene ${sceneId}`);
+      const scene = WORLD_SCENES.find((candidate) => candidate.id === sceneId)!;
+      for (const preset of presets) {
+        const a = createAmbientPresetDefinitions(scene, preset, "high");
+        const b = createAmbientPresetDefinitions(scene, preset, "high");
+        assert.deepEqual(a, b, `${sceneId}/${preset} must be deterministic`);
+        assert.equal(new Set(a.map((entity) => entity.id)).size, a.length, "entity ids remain unique");
+        assert.ok(a.every((entity) => !entity.asset), "no unreviewed production asset mapping is invented");
+        assert.doesNotMatch(JSON.stringify(a), /prophet|companion|sacredPersonality/i);
+      }
+    }
+    const { DEFAULT_WORLD_SCENE } = await loadRegistry();
+    const camp = createAmbientPresetDefinitions(DEFAULT_WORLD_SCENE, "camp", "high");
+    for (const kind of ["human", "camel", "sheep", "goat", "bird"] as const) {
+      assert.ok(camp.some((entity) => entity.kind === kind), `camp is missing ${kind}`);
+    }
+    assert.ok(createAmbientPresetDefinitions(DEFAULT_WORLD_SCENE, "march", "high").some((entity) => entity.kind === "horse"));
+  });
+});
+
+async function makeAmbientCrowd(loader?: AmbientAssetLoader) {
+  const [{ AmbientCrowdManager }, { DEFAULT_WORLD_SCENE }] = await Promise.all([
+    import("../client/src/visual-golden/components/seerah/world/ambient/AmbientCrowdManager"),
+    loadRegistry(),
+  ]);
+  const scene = new THREE.Scene();
+  const groundHeightAt = (x: number, z: number) => Math.sin(x * 0.03) * 0.15 + Math.cos(z * 0.025) * 0.1;
+  const playerState = {
+    position: new THREE.Vector3(),
+    velocity: new THREE.Vector3(),
+    yaw: 0,
+    pitch: 0,
+    onGround: true,
+    sprinting: false,
+    crouching: false,
+  };
+  let invalidations = 0;
+  const context = {
+    renderer: { info: { render: { calls: 9, triangles: 99 } } },
+    host: {},
+    scene,
+    camera: new THREE.PerspectiveCamera(),
+    graphicsTier: "high",
+    shadowsEnabled: false,
+    signal: new AbortController().signal,
+    invalidate: () => { invalidations++; },
+    registerDisposable: () => () => undefined,
+    playerState,
+    deltaTime: 1 / 60,
+    elapsedTime: 0,
+  } as unknown as WorldRuntimeContext;
+  const sceneConfig = {
+    ...DEFAULT_WORLD_SCENE,
+    id: "ambient-test",
+    bounds: { width: 120, depth: 120, height: 40 },
+  };
+  const manager = new AmbientCrowdManager({
+    sceneConfig,
+    context,
+    collisionShapes: [],
+    groundHeightAt,
+    assetLoader: loader,
+  });
+  return { manager, scene, groundHeightAt, playerState, getInvalidations: () => invalidations };
+}
+
+describe("anonymous ambient crowd (behavioral)", () => {
+  it("moves on terrain, exposes real LOD/path state, collides with the visitor and responds to quality/motion", async () => {
+    const { manager, scene, groundHeightAt } = await makeAmbientCrowd();
+    // The host syncs motion before the deferred optional initialization.
+    manager.setReducedMotion(true);
+    manager.setReducedMotion(false);
+    manager.setQuality("low");
+    manager.setQuality("high");
+    await manager.initialize();
+    await manager.spawnPresetCrowd("camp");
+    const high = manager.getAmbientStats();
+    assert.ok(high.humans > 0 && high.otherAnimals > 0 && high.camels > 0);
+    assert.equal(high.developmentFallbacks, high.activeEntities, "every procedural entity is honestly labelled");
+    assert.equal(high.drawCalls, 9, "renderer counters come from the owning runtime renderer");
+    assert.ok(scene.children.some((child) => child.name === "anonymous-ambient-world-life"));
+
+    const walking = manager.getDiagnosticSnapshot().entities.find((entity) => entity.role === "water_carrier");
+    assert.ok(walking, "a real walking definition was spawned");
+    const before = walking.position.slice();
+    for (let i = 0; i < 180; i++) manager.update(1 / 60);
+    const after = manager.getDiagnosticSnapshot().entities.find((entity) => entity.id === walking.id)!;
+    assert.ok(Math.hypot(after.position[0] - before[0], after.position[2] - before[2]) > 0.05, "the agent follows its route");
+    assert.ok(Math.abs(after.position[1] - groundHeightAt(after.position[0], after.position[2])) < 0.003, "ground movement uses the shared terrain sampler");
+    assert.ok(after.pathNodes > 0, "diagnostics expose an actual path");
+    const nearby = manager.getCollisionShapesNear(new THREE.Vector3(after.position[0], after.position[1], after.position[2]), 2);
+    assert.ok(nearby.some((shape) => shape.type === "cylinder"), "moving life supplies dynamic visitor collision");
+
+    manager.setQuality("low");
+    assert.ok(manager.getAmbientStats().activeEntities < high.activeEntities, "low quality reduces active agents");
+    manager.setQuality("high");
+    assert.equal(manager.getAmbientStats().activeEntities, high.activeEntities, "quality can recover without a refetch");
+
+    manager.setReducedMotion(true);
+    const frozen = manager.getDiagnosticSnapshot().entities.find((entity) => entity.id === walking.id)!.position.slice();
+    for (let i = 0; i < 60; i++) manager.update(1 / 60);
+    assert.deepEqual(manager.getDiagnosticSnapshot().entities.find((entity) => entity.id === walking.id)!.position, frozen);
+    assert.equal(manager.getAmbientStats().animatedEntities, 0);
+    manager.setReducedMotion(false);
+    manager.pause();
+    for (let i = 0; i < 60; i++) manager.update(1 / 60);
+    assert.deepEqual(manager.getDiagnosticSnapshot().entities.find((entity) => entity.id === walking.id)!.position, frozen);
+    assert.equal(manager.getAmbientStats().paused, true);
+    manager.resume();
+    assert.equal(manager.getAmbientStats().paused, false);
+
+    manager.dispose();
+    manager.dispose();
+    assert.equal(manager.getAmbientStats().activeEntities, 0);
+    assert.equal(manager.getDiagnosticSnapshot().navigation, null);
+    assert.equal(scene.children.some((child) => child.name === "anonymous-ambient-world-life"), false);
+  });
+
+  it("contains optional asset failures per entity and retains the development fallback", async () => {
+    let calls = 0;
+    const loader: AmbientAssetLoader = {
+      async load() {
+        calls++;
+        if (calls <= 2) throw new Error("isolated test asset failure");
+        return null;
+      },
+    };
+    const { manager } = await makeAmbientCrowd(loader);
+    await manager.spawnPresetCrowd("camp");
+    const stats = manager.getAmbientStats();
+    assert.equal(stats.assetFailures, 2);
+    assert.ok(stats.activeEntities > 0, "other entities still spawn");
+    assert.equal(stats.developmentFallbacks, stats.activeEntities, "failed optional assets use the labelled fallback");
+    manager.dispose();
+  });
+
+  it("aborts outstanding spawns and disposes assets that resolve after teardown", async () => {
+    const pending: Array<(result: { root: THREE.Group; developmentFallback: false }) => void> = [];
+    let threePending!: () => void;
+    const allThreePending = new Promise<void>((resolve) => { threePending = resolve; });
+    let disposedGeometries = 0;
+    const loader: AmbientAssetLoader = {
+      load: () => new Promise((resolve) => {
+        pending.push(resolve);
+        if (pending.length === 3) threePending();
+      }),
+    };
+    const { manager } = await makeAmbientCrowd(loader);
+    const spawning = manager.spawnPresetCrowd("camp");
+    await allThreePending;
+    manager.dispose();
+    for (const resolve of pending) {
+      const root = new THREE.Group();
+      const geometry = new THREE.BoxGeometry(1, 1, 1);
+      geometry.addEventListener("dispose", () => { disposedGeometries++; });
+      root.add(new THREE.Mesh(geometry, new THREE.MeshBasicMaterial()));
+      resolve({ root, developmentFallback: false });
+    }
+    await spawning;
+    assert.equal(disposedGeometries, 3, "every late result is disposed, never attached");
+    assert.equal(manager.getAmbientStats().activeEntities, 0);
+  });
+
+  it("uses measured frame windows and hysteresis rather than instant quality flapping", async () => {
+    const { AmbientPerformanceBudget } = await import("../client/src/visual-golden/components/seerah/world/ambient/AmbientPerformanceBudget");
+    const budget = new AmbientPerformanceBudget("high");
+    budget.sample(0);
+    for (let i = 1; i <= 140; i++) budget.sample(i * 40);
+    assert.equal(budget.getQuality(), "medium", "sustained slow frames shed one tier");
+    budget.setQuality("high", 6000);
+    for (let i = 1; i <= 200; i++) budget.sample(6000 + i * 40);
+    assert.equal(budget.getQuality(), "high", "manual quality has a stable hold window");
   });
 });
 
@@ -365,5 +778,44 @@ describe("world integration source contracts", () => {
     assert.match(interaction, /targetMeshes/);
     assert.doesNotMatch(interaction, /new THREE\.SphereGeometry\(point\.radius, 8, 6\);\s*\n\s*const mat = new THREE\.MeshBasicMaterial\(\{ visible: false \}\);\s*\n\s*const mesh = new THREE\.Mesh\(geo, mat\);\s*\n\s*mesh\.position\.copy\(point\.position\);\s*\n\s*mesh\.userData\.interactionPoint = point;\s*\n\s*this\.context\.scene\.add\(mesh\);\s*\n\s*targets\.push/);
     assert.doesNotMatch(interaction, /renderInteractionPrompt/);
+  });
+
+  it("resolves arrival poses in the page and keeps travel inside wouter", () => {
+    assert.match(page, /resolveArrival/);
+    assert.match(page, /initialPosition=\{arrival\?\.position\}/);
+    assert.match(page, /initialYaw=\{arrival\?\.yaw\}/);
+    assert.match(page, /markSceneVisited/);
+    assert.match(page, /buildTravelUrl/);
+    assert.doesNotMatch(page, /window\.location\.href/);
+  });
+
+  it("exposes the unified station log inside the HUD without binding keys", () => {
+    assert.match(hud, /WorldStationsPanel/);
+    assert.match(hud, /getVisitedScenes/);
+    assert.doesNotMatch(hud, /addEventListener\("keydown"/);
+    assert.doesNotMatch(hud, /addEventListener\('keydown'/);
+  });
+
+  it("integrates ambient life into the same frame, collision, motion and diagnostics seams", () => {
+    assert.match(world, /new AmbientCrowdManager\(/);
+    assert.match(world, /ambient\.update\(delta\)/);
+    assert.match(world, /controller\.setDynamicCollisionSource/);
+    assert.match(world, /ambient\.setReducedMotion\(reduced\)/);
+    assert.match(world, /getAmbientStats/);
+    assert.match(world, /spawnPresetCrowd/);
+    assert.match(world, /pauseAmbientWorld/);
+    assert.match(world, /resumeAmbientWorld/);
+    assert.match(world, /ambient-development-fallback/);
+  });
+
+  it("keeps optional ambient modules free of global fallback, renderers and competing animation loops", () => {
+    const directory = join(repoRoot, "client/src/visual-golden/components/seerah/world/ambient");
+    const files = readdirSync(directory).filter((file) => file.endsWith(".ts"));
+    assert.ok(files.length >= 7);
+    for (const file of files) {
+      const source = readFileSync(join(directory, file), "utf8");
+      assert.doesNotMatch(source, /onUnavailable\s*\(/, `${file} must isolate optional failure`);
+      assert.doesNotMatch(source, /new THREE\.WebGLRenderer|requestAnimationFrame/, `${file} cannot own a competing runtime`);
+    }
   });
 });

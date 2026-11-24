@@ -59,13 +59,59 @@ export interface WorldInteractionPoint {
   kind: "info" | "transition" | "ambience" | "narrative";
   labelAr: string;
   descriptionAr: string;
-  /** Canonical event/chapter link for governed content. */
+  /**
+   * Canonical event/chapter link for governed content, or another scene in
+   * the living world (travel gate — resolved through the travel network).
+   */
   targetRef?: {
-    type: "event" | "chapter" | "atlas" | "database";
+    type: "event" | "chapter" | "atlas" | "database" | "scene";
     id: string;
   };
   /** Optional custom interaction handler. */
   onInteract?: () => void;
+}
+
+/** Sections that expose an immersive surface in the institution shell. */
+export type WorldStationSection =
+  | "seerah"
+  | "quran"
+  | "hadith"
+  | "sources"
+  | "audio"
+  | "atlas"
+  | "library"
+  | "noor"
+  | "kids";
+
+/**
+ * A unified station in the cross-section immersion log. Every station points
+ * at a REAL route (or a real scene id) — the registry never invents content.
+ */
+export interface WorldStation {
+  id: string;
+  sectionId: WorldStationSection;
+  titleAr: string;
+  subtitleAr: string;
+  /** Deep link for surface stations; scene route for world stations. */
+  href: string;
+  kind: "world-scene" | "surface";
+  /** Living-world scene id (only for `world-scene` stations). */
+  sceneId?: string;
+  /** Artistic-reconstruction disclosure for reconstructed spaces. */
+  disclosureAr?: string;
+}
+
+/**
+ * A static prop placed at an authored position in a scene (a well, a
+ * campfire). Props are scenery — they never carry governed claims, and
+ * their placement is artistic, not surveyed.
+ */
+export interface WorldSceneProp {
+  id: string;
+  type: "well" | "campfire";
+  position: THREE.Vector3;
+  /** Uniform scale multiplier (default 1). */
+  scale?: number;
 }
 
 /** Interaction prompt for HUD display. */
@@ -133,6 +179,10 @@ export interface WorldSceneConfig {
   /** Entry position for the player. */
   entryPosition: THREE.Vector3;
   entryYaw: number;
+  /** Night scenes get a star field and cooler ambient contrast. */
+  night?: boolean;
+  /** Static scenery props (wells, campfires) at authored positions. */
+  props?: WorldSceneProp[];
   /** Exit/transition points to other worlds or pages. */
   exits: WorldInteractionPoint[];
   /** Points of interest in this world. */

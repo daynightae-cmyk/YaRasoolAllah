@@ -14,6 +14,11 @@ import { ArrowRight, Compass, RotateCcw, LogOut } from "lucide-react";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { LivingSeerahWorld } from "@/visual-golden/components/seerah/world/LivingSeerahWorld";
 import { getWorldScene, listWorldSceneIds, DEFAULT_WORLD_SCENE } from "@/visual-golden/components/seerah/world/WorldSceneRegistry";
+import {
+  buildTravelUrl,
+  markSceneVisited,
+  resolveArrival,
+} from "@/visual-golden/components/seerah/world/WorldTravel";
 import styles from "./SeerahWorldPage.module.css";
 
 export function SeerahWorldPage() {
@@ -26,8 +31,25 @@ export function SeerahWorldPage() {
     [search],
   );
 
+  /** The scene the traveller arrived from (travel gate → destination). */
+  const fromSceneId = useMemo(() => {
+    const raw = new URLSearchParams(search).get("from") ?? "";
+    return getWorldScene(raw) ? raw : "";
+  }, [search]);
+
   const scene = useMemo(() => getWorldScene(requestedSceneId) ?? DEFAULT_WORLD_SCENE, [requestedSceneId]);
   const allSceneIds = useMemo(() => listWorldSceneIds(), []);
+
+  // The exact arrival pose for this journey — position + derived heading.
+  const arrival = useMemo(() => {
+    if (!fromSceneId) return null;
+    return resolveArrival(fromSceneId, scene.id);
+  }, [fromSceneId, scene.id]);
+
+  const fromScene = useMemo(
+    () => (fromSceneId ? getWorldScene(fromSceneId) : null),
+    [fromSceneId],
+  );
 
   const backToReading = useCallback(() => {
     if (scene.canonicalRef?.chapterId) {
@@ -62,10 +84,23 @@ export function SeerahWorldPage() {
   }, [recordReadingProgress, scene]);
 
   const switchScene = (sceneId: string) => {
+    // Prefer the authored travel network so the traveller lands with a
+    // real pose; scenes without a direct edge open on their entry point.
+    const travel = buildTravelUrl(scene.id, sceneId);
+    if (travel) {
+      navigate(travel);
+      return;
+    }
     const params = new URLSearchParams(search);
     params.set("scene", sceneId);
+    params.delete("from");
     navigate(`/seerah/world?${params.toString()}`, { replace: true });
   };
+
+  /** Persist the visit locally so the station log can show the route. */
+  const handleSceneVisited = useCallback((sceneId: string) => {
+    markSceneVisited(sceneId);
+  }, []);
 
   // The world's canvas + HUD are a fixed viewport layer; the page chrome
   // (dock, exit) must share that layer so it stacks ABOVE the world instead
@@ -85,6 +120,10 @@ export function SeerahWorldPage() {
           key={scene.id}
           sceneId={scene.id}
           immersive
+          initialPosition={arrival?.position}
+          initialYaw={arrival?.yaw}
+          travelFromAr={fromScene?.nameAr}
+          onSceneVisited={handleSceneVisited}
           onExit={backToReading}
           onUnavailable={handleUnavailable}
           onNavigate={navigate}

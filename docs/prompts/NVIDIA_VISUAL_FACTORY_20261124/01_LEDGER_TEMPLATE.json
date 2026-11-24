@@ -1,0 +1,17 @@
+{
+  "jobId": "",
+  "state": "PENDING",
+  "observedSHA": "",
+  "sourceRefs": [],
+  "model": "",
+  "endpoint": "",
+  "http": null,
+  "exitCode": null,
+  "output": [],
+  "review": {
+    "status": "NOT_REVIEWED",
+    "defects": []
+  },
+  "rights": "INTERNAL_EVALUATION_ONLY",
+  "nextAction": ""
+}

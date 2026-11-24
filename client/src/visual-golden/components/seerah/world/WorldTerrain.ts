@@ -178,6 +178,9 @@ export function generateWorldTerrain(
   const accentColor = biomeCfg.colorAccent.clone();
 
   const heightData = new Float32Array(pos.count);
+  // One phase per dune field. Sampling a new random phase per vertex created
+  // metre-scale spikes and made the ground read as artificial faceting.
+  const dunePhase = random() * 100;
 
   for (let i = 0; i < pos.count; i++) {
     const x = pos.getX(i);
@@ -192,7 +195,7 @@ export function generateWorldTerrain(
         // Large dune ridges
         const ridge1 = Math.sin(x * 0.018 + z * 0.012) * 2.5;
         const ridge2 = Math.sin(x * 0.035 - z * 0.022) * 1.4;
-        const ridge3 = Math.sin(x * 0.008 + z * 0.006 + random() * 100) * 0.8;
+        const ridge3 = Math.sin(x * 0.008 + z * 0.006 + dunePhase) * 0.8;
         height += ridge1 + ridge2 + ridge3;
         // Sharp dune crests
         const crest = Math.max(0, Math.sin(x * 0.045) * Math.cos(z * 0.038)) * 1.2;

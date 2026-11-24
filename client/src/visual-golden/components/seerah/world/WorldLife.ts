@@ -227,16 +227,29 @@ export class WorldLife {
       sideFlaps.push(sideFlap);
     }
 
-    // Guy ropes
-    const ropeGeo = new THREE.CylinderGeometry(0.01 * scale, 0.01 * scale, 3 * scale, 4);
+    // Guy ropes: real local-space attachment points, from canopy edge to a
+    // driven ground peg. A unit cylinder is aligned to the full segment, so
+    // no rope floats past its peg or points into the sky.
+    const ropeGeo = new THREE.CylinderGeometry(0.012 * scale, 0.012 * scale, 1, 5);
     const ropeMat = new THREE.MeshStandardMaterial({ color: 0x3a2f24, roughness: 1 });
-    for (let i = 0; i < 4; i++) {
-      const angle = (i / 4) * Math.PI * 2;
+    const pegGeo = new THREE.CylinderGeometry(0.035 * scale, 0.025 * scale, 0.32 * scale, 5);
+    for (let i = 0; i < 6; i++) {
+      const angle = (i / 6) * Math.PI * 2;
+      const start = new THREE.Vector3(Math.cos(angle) * 1.38 * scale, 1.52 * scale, Math.sin(angle) * 1.38 * scale);
+      const end = new THREE.Vector3(Math.cos(angle) * 3 * scale, 0.08 * scale, Math.sin(angle) * 3 * scale);
+      const direction = end.clone().sub(start);
+      const length = direction.length();
       const rope = new THREE.Mesh(ropeGeo, ropeMat);
-      rope.position.set(Math.cos(angle) * 1.5 * scale, 1.5 * scale, Math.sin(angle) * 1.5 * scale);
-      rope.lookAt(Math.cos(angle) * 3 * scale, 0, Math.sin(angle) * 3 * scale);
-      rope.rotateX(-Math.PI / 2);
+      rope.position.copy(start).add(end).multiplyScalar(0.5);
+      rope.scale.y = length;
+      rope.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), direction.normalize());
+      rope.userData.attachments = { start: start.toArray(), end: end.toArray() };
       group.add(rope);
+      const peg = new THREE.Mesh(pegGeo, matPole);
+      peg.position.copy(end);
+      peg.position.y = 0.02 * scale;
+      peg.rotation.z = Math.cos(angle) * 0.18;
+      group.add(peg);
     }
 
     const parts = new Map<string, THREE.Object3D>();
@@ -503,6 +516,255 @@ export class WorldLife {
     return entity;
   }
 
+  /**
+   * A desert well — stone rim, timber frame, rope and bucket.
+   * Purely scenic: the well marks a water source on the caravan road
+   * without claiming any surveyed position.
+   */
+  createWell(position: THREE.Vector3, scale = 1, seed = 0): WorldLifeEntity {
+    const random = mulberry(seed);
+    const group = new THREE.Group();
+    group.position.copy(position);
+
+    const stoneColor = new THREE.Color(0x8a7a63).lerp(new THREE.Color(0x6f6252), random() * 0.5);
+    const woodColor = new THREE.Color(0x4a3728);
+    const matStone = new THREE.MeshStandardMaterial({ color: stoneColor, roughness: 0.95, metalness: 0 });
+    const matWood = new THREE.MeshStandardMaterial({ color: woodColor, roughness: 1, metalness: 0 });
+    const matDark = new THREE.MeshStandardMaterial({ color: 0x120d08, roughness: 1, metalness: 0 });
+    const matRope = new THREE.MeshStandardMaterial({ color: 0x6b5a3f, roughness: 1 });
+
+    // Stone rim (ring of blocks, not a smooth torus — reads as masonry).
+    const blockCount = 12;
+    const blockGeo = new THREE.BoxGeometry(0.42 * scale, 0.3 * scale, 0.28 * scale);
+    for (let i = 0; i < blockCount; i++) {
+      const angle = (i / blockCount) * Math.PI * 2;
+      const jitter = 0.92 + random() * 0.16;
+      const block = new THREE.Mesh(blockGeo, matStone);
+      block.position.set(
+        Math.cos(angle) * 1.15 * scale * jitter,
+        0.15 * scale,
+        Math.sin(angle) * 1.15 * scale * jitter,
+      );
+      block.rotation.y = -angle + (random() - 0.5) * 0.25;
+      block.rotation.z = (random() - 0.5) * 0.12;
+      block.castShadow = true;
+      block.receiveShadow = true;
+      group.add(block);
+    }
+
+    // Shaft: dark inner wall + a water glint far below.
+    const shaft = new THREE.Mesh(
+      new THREE.CylinderGeometry(1.05 * scale, 0.85 * scale, 1.6 * scale, 16, 1, true),
+      matDark,
+    );
+    shaft.position.y = -0.8 * scale;
+    group.add(shaft);
+
+    const water = new THREE.Mesh(
+      new THREE.CircleGeometry(0.86 * scale, 16),
+      new THREE.MeshStandardMaterial({
+        color: 0x1d3b42,
+        roughness: 0.15,
+        metalness: 0.35,
+      }),
+    );
+    water.rotation.x = -Math.PI / 2;
+    water.position.y = -1.45 * scale;
+    group.add(water);
+
+    // Timber frame.
+    const postGeo = new THREE.CylinderGeometry(0.07 * scale, 0.09 * scale, 2.4 * scale, 6);
+    for (const side of [-1, 1]) {
+      const post = new THREE.Mesh(postGeo, matWood);
+      post.position.set(side * 1.25 * scale, 1.2 * scale, 0);
+      post.castShadow = true;
+      group.add(post);
+    }
+    const beam = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.06 * scale, 0.06 * scale, 2.7 * scale, 6),
+      matWood,
+    );
+    beam.rotation.z = Math.PI / 2;
+    beam.position.y = 2.36 * scale;
+    beam.castShadow = true;
+    group.add(beam);
+
+    // Rope + bucket.
+    const rope = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.015 * scale, 0.015 * scale, 1.5 * scale, 4),
+      matRope,
+    );
+    rope.position.y = 1.6 * scale;
+    group.add(rope);
+
+    const bucket = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.2 * scale, 0.16 * scale, 0.26 * scale, 10),
+      matWood,
+    );
+    bucket.position.y = 0.75 * scale;
+    bucket.castShadow = true;
+    group.add(bucket);
+
+    const entity: WorldLifeEntity = {
+      id: `well-${seed}-${Date.now()}`,
+      mesh: group,
+      animationType: "sway",
+      animationSpeed: 0.35,
+      bounds: new THREE.Box3().setFromObject(group).expandByScalar(1),
+      cullDistance: 70,
+    };
+
+    this.entities.push({
+      entity,
+      phase: random() * Math.PI * 2,
+      speed: entity.animationSpeed,
+      parts: new Map([["bucket", bucket]]),
+      baseTransforms: new Map([
+        ["bucket", { position: bucket.position.clone(), rotation: bucket.rotation.clone(), scale: bucket.scale.clone() }],
+      ]),
+      customData: { bucketBaseY: bucket.position.y },
+    });
+
+    // Solid: the stone rim blocks the player.
+    this.collisionShapes.push({
+      type: "cylinder",
+      center: new THREE.Vector3(position.x, position.y + 0.5 * scale, position.z),
+      radiusTop: 1.35 * scale,
+      radiusBottom: 1.35 * scale,
+      height: 1.1 * scale,
+    });
+
+    this.context.scene.add(group);
+    this.context.registerDisposable(() => {
+      group.traverse((obj) => {
+        if (obj instanceof THREE.Mesh) {
+          obj.geometry.dispose();
+          if (obj.material instanceof THREE.Material) obj.material.dispose();
+        }
+      });
+    });
+
+    return entity;
+  }
+
+  /**
+   * A campfire — stone ring, charred logs, live flames and a warm light.
+   * The flames are animated (not a static cone) so the camp reads as
+   * inhabited at night without depicting any person.
+   */
+  createCampfire(position: THREE.Vector3, scale = 1, seed = 0): WorldLifeEntity {
+    const random = mulberry(seed);
+    const group = new THREE.Group();
+    group.position.copy(position);
+
+    const stoneColor = new THREE.Color(0x7c6d5a);
+    const matStone = new THREE.MeshStandardMaterial({ color: stoneColor, roughness: 0.95 });
+    const matLog = new THREE.MeshStandardMaterial({ color: 0x2e2018, roughness: 1 });
+
+    // Stone ring.
+    const stoneGeo = new THREE.DodecahedronGeometry(0.18 * scale, 0);
+    for (let i = 0; i < 7; i++) {
+      const angle = (i / 7) * Math.PI * 2;
+      const stone = new THREE.Mesh(stoneGeo, matStone);
+      stone.position.set(
+        Math.cos(angle) * 0.72 * scale,
+        0.08 * scale,
+        Math.sin(angle) * 0.72 * scale,
+      );
+      stone.rotation.set(random() * 3, random() * 3, random() * 3);
+      stone.castShadow = true;
+      group.add(stone);
+    }
+
+    // Charred logs.
+    for (let i = 0; i < 3; i++) {
+      const log = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.07 * scale, 0.09 * scale, 0.95 * scale, 6),
+        matLog,
+      );
+      log.rotation.z = Math.PI / 2;
+      log.rotation.y = (i / 3) * Math.PI;
+      log.position.y = 0.14 * scale;
+      log.castShadow = true;
+      group.add(log);
+    }
+
+    // Embers.
+    const embers = new THREE.Mesh(
+      new THREE.SphereGeometry(0.16 * scale, 8, 6),
+      new THREE.MeshBasicMaterial({ color: 0xff6a1a }),
+    );
+    embers.position.y = 0.1 * scale;
+    group.add(embers);
+
+    // Flames — three additive cones, animated independently.
+    const flameGeo = new THREE.ConeGeometry(0.17 * scale, 0.72 * scale, 7, 1, true);
+    const flames: THREE.Mesh[] = [];
+    const flameColors = [0xffb347, 0xff7a18, 0xffd98a];
+    for (let i = 0; i < 3; i++) {
+      const flame = new THREE.Mesh(
+        flameGeo,
+        new THREE.MeshBasicMaterial({
+          color: flameColors[i],
+          transparent: true,
+          opacity: 0.62,
+          depthWrite: false,
+          blending: THREE.AdditiveBlending,
+        }),
+      );
+      flame.position.set((random() - 0.5) * 0.16 * scale, 0.42 * scale, (random() - 0.5) * 0.16 * scale);
+      flame.userData.baseScale = 0.85 + random() * 0.3;
+      group.add(flame);
+      flames.push(flame);
+    }
+
+    // Warm light the fire casts on the ground and nearby props.
+    const light = new THREE.PointLight(0xff9a3c, 2.4 * scale, 16 * scale, 2);
+    light.position.y = 0.7 * scale;
+    group.add(light);
+
+    const entity: WorldLifeEntity = {
+      id: `campfire-${seed}-${Date.now()}`,
+      mesh: group,
+      animationType: "custom",
+      animationSpeed: 1,
+      bounds: new THREE.Box3().setFromObject(group).expandByScalar(1),
+      cullDistance: 90,
+    };
+
+    this.entities.push({
+      entity,
+      phase: random() * Math.PI * 2,
+      speed: entity.animationSpeed,
+      parts: new Map([["embers", embers]]),
+      baseTransforms: new Map([
+        ["embers", { position: embers.position.clone(), rotation: embers.rotation.clone(), scale: embers.scale.clone() }],
+      ]),
+      customData: { flames, light, baseIntensity: 2.4 * scale },
+    });
+
+    // Solid: the fire ring blocks the player.
+    this.collisionShapes.push({
+      type: "cylinder",
+      center: new THREE.Vector3(position.x, position.y + 0.35 * scale, position.z),
+      radiusTop: 0.85 * scale,
+      radiusBottom: 0.85 * scale,
+      height: 0.7 * scale,
+    });
+
+    this.context.scene.add(group);
+    this.context.registerDisposable(() => {
+      group.traverse((obj) => {
+        if (obj instanceof THREE.Mesh) {
+          obj.geometry.dispose();
+          if (obj.material instanceof THREE.Material) obj.material.dispose();
+        }
+      });
+    });
+
+    return entity;
+  }
+
   /** Update all life entities (call each frame). */
   update(deltaTime: number, elapsedTime: number, playerPosition: THREE.Vector3): void {
     if (this.reducedMotion) return;
@@ -536,7 +798,32 @@ export class WorldLife {
           // Subtle breathing
           this.animateIdle(anim, t);
           break;
+        case "custom":
+          this.animateCustom(anim, t);
+          break;
       }
+    }
+  }
+
+  /** Animate custom props (campfire flames + light flicker). */
+  private animateCustom(anim: LifeAnimationState, t: number): void {
+    const flames = anim.customData?.flames as THREE.Mesh[] | undefined;
+    if (flames) {
+      for (let i = 0; i < flames.length; i++) {
+        const flame = flames[i];
+        const flicker = 0.78 + Math.sin(t * (5.4 + i * 1.7)) * 0.16 + Math.sin(t * (11.3 + i)) * 0.07;
+        const base = (flame.userData.baseScale as number) ?? 1;
+        flame.scale.set(base * (0.9 + flicker * 0.2), base * flicker, base * (0.9 + flicker * 0.2));
+        flame.position.y = 0.42 * (0.9 + flicker * 0.22);
+        flame.rotation.y = t * (0.6 + i * 0.25);
+      }
+    }
+
+    const light = anim.customData?.light as THREE.PointLight | undefined;
+    if (light) {
+      const baseIntensity = (anim.customData?.baseIntensity as number) ?? 2;
+      light.intensity =
+        baseIntensity * (0.82 + Math.sin(t * 6.1) * 0.1 + Math.sin(t * 13.7) * 0.06);
     }
   }
 

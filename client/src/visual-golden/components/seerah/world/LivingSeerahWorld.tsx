@@ -35,12 +35,18 @@ import {
   updateDustMotes,
   settleDustMotes,
   createHemisphereLight,
+  createNightStars,
+  updateNightStars,
+  FootstepDust,
   WorldParticleSystem,
 } from "./WorldAtmosphere";
 import { WorldLife } from "./WorldLife";
 import { WorldAudio } from "./WorldAudio";
 import { WorldInteraction, type InteractionPrompt } from "./WorldInteraction.tsx";
 import { getWorldScene, DEFAULT_WORLD_SCENE } from "./WorldSceneRegistry";
+import { AmbientCrowdManager } from "./ambient/AmbientCrowdManager";
+import { AMBIENT_SCENE_PRESETS } from "./ambient/AmbientPresetRegistry";
+import type { AmbientPresetName, AmbientQualityTier } from "./ambient/AmbientTypes";
 import type { WorldGraphicsTier, WorldPlayerState, WorldRuntimeContext, WorldSceneHandle } from "./world-types";
 import styles from "./LivingSeerahWorld.module.css";
 
@@ -62,12 +68,24 @@ interface LivingSeerahWorldProps {
   initialPosition?: THREE.Vector3;
   /** Initial yaw override. */
   initialYaw?: number;
+  /**
+   * Arabic name of the scene the traveller came from. When present, the
+   * world opens with a cinematic travel transition instead of the plain
+   * title card.
+   */
+  travelFromAr?: string;
+  /** Current scene id (used by the HUD station log). */
+  onSceneVisited?: (sceneId: string) => void;
 }
 
 /** HUD state is throttled — React must not re-render at frame rate. */
 const HUD_UPDATE_INTERVAL = 0.12; // ~8 Hz
 /** Keep discrete frames flowing briefly after input under reduced motion. */
 const REDUCED_MOTION_GRACE_SECONDS = 0.7;
+/** Base vertical field of view for the world camera. */
+const BASE_FOV = 70;
+/** Extra lens width while sprinting — the world opens up at speed. */
+const SPRINT_FOV_BONUS = 9;
 
 const EMPTY_PLAYER_STATE: WorldPlayerState = {
   position: new THREE.Vector3(),
@@ -87,6 +105,8 @@ export function LivingSeerahWorld({
   immersive = true,
   initialPosition,
   initialYaw,
+  travelFromAr,
+  onSceneVisited,
 }: LivingSeerahWorldProps) {
   const effectiveMotion = useEffectiveMotion();
   const reducedMotion = effectiveMotion === "reduced";
@@ -109,13 +129,30 @@ export function LivingSeerahWorld({
   const [loading, setLoading] = useState(true);
   const [entered, setEntered] = useState(false);
   const [entranceGone, setEntranceGone] = useState(false);
+  // Travel veil: shown while the traveller arrives from another scene.
+  const [travelVeil, setTravelVeil] = useState(() => Boolean(travelFromAr));
+
+  // Travel arrival transition (reduced motion: no veil at all).
+  useEffect(() => {
+    if (!travelFromAr) {
+      setTravelVeil(false);
+      return;
+    }
+    if (reducedMotion) {
+      setTravelVeil(false);
+      return;
+    }
+    setTravelVeil(true);
+    const timer = setTimeout(() => setTravelVeil(false), 2600);
+    return () => clearTimeout(timer);
+  }, [travelFromAr, reducedMotion]);
 
   // Scene config (stable per sceneId).
   const sceneConfig = useMemo(() => getWorldScene(sceneId) ?? DEFAULT_WORLD_SCENE, [sceneId]);
 
   // Live refs so the adapter never depends on changing callbacks/state.
-  const callbacksRef = useRef({ onExit, onUnavailable, onNavigate });
-  callbacksRef.current = { onExit, onUnavailable, onNavigate };
+  const callbacksRef = useRef({ onExit, onUnavailable, onNavigate, onSceneVisited });
+  callbacksRef.current = { onExit, onUnavailable, onNavigate, onSceneVisited };
   const motionRef = useRef(reducedMotion);
   motionRef.current = reducedMotion;
   const initialRef = useRef({ position: initialPosition, yaw: initialYaw });
@@ -124,13 +161,15 @@ export function LivingSeerahWorld({
   const hudTimerRef = useRef(0);
   const reducedGraceRef = useRef(0);
   const dustMotesRef = useRef<THREE.Points | null>(null);
+  const starsRef = useRef<THREE.Points | null>(null);
+  const footDustRef = useRef<FootstepDust | null>(null);
 
   const initializeWorld = useCallback(async (threeContext: ThreeRuntimeContext): Promise<WorldSceneHandle> => {
     const { renderer, graphicsTier: tier, shadowsEnabled, registerDisposable, signal, host } = threeContext;
     const config = sceneConfig;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(70, Math.max(1, host.clientWidth) / Math.max(1, host.clientHeight), 0.1, 500);
+    const camera = new THREE.PerspectiveCamera(BASE_FOV, Math.max(1, host.clientWidth) / Math.max(1, host.clientHeight), 0.1, 500);
 
     setGraphicsTier(tier);
 
@@ -225,6 +264,22 @@ export function LivingSeerahWorld({
       if (dustMotesRef.current === dustMotes) dustMotesRef.current = null;
     });
 
+    // ---- NIGHT STARS (night scenes only) ----
+    // A moonless desert sky needs a real sky: hundreds of twinkling
+    // points instead of a flat black gradient.
+    if (config.night) {
+      const stars = createNightStars(config, tier);
+      starsRef.current = stars;
+      scene.add(stars);
+      registerDisposable(() => {
+        stars.geometry.dispose();
+        const m = stars.material;
+        if (Array.isArray(m)) m.forEach((x) => x.dispose());
+        else m.dispose();
+        if (starsRef.current === stars) starsRef.current = null;
+      });
+    }
+
     // ---- TERRAIN ----
     const { ground, collisionShapes, instances, disposables: terrainDisposables } =
       generateWorldTerrain(config, tier, shadowsEnabled);
@@ -251,7 +306,12 @@ export function LivingSeerahWorld({
     // the player into a wall.
     const life = new WorldLife(worldContext, tier);
     const anchors = [...config.interactions, ...config.exits].map((p) => p.position);
+    const ambientCoversCamels = (AMBIENT_SCENE_PRESETS[config.id] ?? [])
+      .some((preset) => preset === "camp" || preset === "caravan" || preset === "market");
     for (const entityConfig of config.lifeEntities) {
+      // Preserve the legacy creator, but do not render two uncoordinated
+      // camel populations where the NavGrid caravan/camp preset owns them.
+      if (ambientCoversCamels && entityConfig.id.includes("camel")) continue;
       const seed = hashString(entityConfig.id + config.seed.toString());
       const random = mulberry(seed);
       const anchor = anchors[Math.floor(random() * anchors.length)] ?? new THREE.Vector3();
@@ -277,6 +337,24 @@ export function LivingSeerahWorld({
     life.setGroundSampler(groundHeightAt);
     registerDisposable(() => life.dispose());
 
+    // ---- SCENE PROPS (well, campfire) ----
+    // Authored props stand at exact positions (the camp well beside the
+    // caravan road, the watch-fire on the trench edge) — the random
+    // life-entity scatter would never land them beside their subject.
+    for (const prop of config.props ?? []) {
+      const propPosition = prop.position.clone();
+      propPosition.y = groundHeightAt(propPosition.x, propPosition.z);
+      if (prop.type === "well") {
+        life.createWell(propPosition, prop.scale ?? 1, hashString(prop.id));
+      } else if (prop.type === "campfire") {
+        life.createCampfire(propPosition, prop.scale ?? 1, hashString(prop.id));
+      }
+    }
+
+    // ---- FOOTSTEP DUST ----
+    const footDust = new FootstepDust(worldContext, tier);
+    footDustRef.current = footDust;
+
     // ---- AUDIO (opt-in; synthesized, no fetched assets) ----
     const audio = new WorldAudio();
     audioRef.current = audio;
@@ -295,7 +373,7 @@ export function LivingSeerahWorld({
     });
 
     // ---- INTERACTION ----
-    const interaction = new WorldInteraction(worldContext);
+    const interaction = new WorldInteraction(worldContext, { sceneId: config.id });
     const allPoints = [...config.interactions, ...config.exits];
     for (const point of allPoints) interaction.addPoint(point);
     interaction.onPromptChange((prompt) => setCurrentPrompt(prompt));
@@ -318,17 +396,24 @@ export function LivingSeerahWorld({
     window.addEventListener("keydown", onInteractionKey, { signal });
 
     // ---- FIRST PERSON CONTROLLER (new API) ----
+    const staticCollisionShapes = collisionShapes.concat(life.getCollisionShapes());
     const startPos = initialRef.current.position ?? config.entryPosition;
     const startYaw = initialRef.current.yaw ?? config.entryYaw;
     const controller = new FirstPersonController(
-      collisionShapes.concat(life.getCollisionShapes()),
+      staticCollisionShapes,
       startPos,
       startYaw,
       {
         groundHeightAt,
         worldHalfSize,
         reducedMotion: motionRef.current,
-        onFootstep: (pos) => { void audio.playFootstep(pos, "sand"); },
+        onFootstep: (pos) => {
+          void audio.playFootstep(pos, "sand");
+          // Dust intensity follows the actual speed — sprinting kicks up
+          // a visible cloud, walking only a wisp.
+          const speed = controllerRef.current?.getHorizontalSpeed() ?? 0;
+          footDust.emit(pos, speed > 5 ? 1.4 : 0.85);
+        },
         onInteractionEnter: (id) => {
           const point = allPoints.find((p) => p.id === id);
           if (point) void audio.playEnvironmental("cloth", point.position);
@@ -342,10 +427,54 @@ export function LivingSeerahWorld({
       },
     );
     controllerRef.current = controller;
+    for (const point of allPoints) controller.addInteractionPoint(point.id, point.position, point.radius);
     registerDisposable(() => {
       controller.dispose();
       if (controllerRef.current === controller) controllerRef.current = null;
     });
+
+    // ---- OPTIONAL ANONYMOUS AMBIENT POPULATION ----
+    // Construction is cheap, but NavGrid/entity creation starts only after the
+    // essential scene and controls are ready. This manager owns no renderer or
+    // animation loop; it is updated by the same ThreeRuntime frame below.
+    const ambient = new AmbientCrowdManager({
+      sceneConfig: config,
+      context: worldContext,
+      collisionShapes: staticCollisionShapes,
+      groundHeightAt,
+    });
+    let ambientState: "scheduled" | "loading" | "ready" | "isolated-error" = "scheduled";
+    ambient.setReducedMotion(motionRef.current);
+    controller.setDynamicCollisionSource((position) => ambient.getCollisionShapesNear(position));
+    host.dataset.worldAmbientState = ambientState;
+    registerDisposable(() => {
+      controller.setDynamicCollisionSource(null);
+      ambient.dispose();
+    });
+    const ambientTimer = window.setTimeout(() => {
+      void (async () => {
+        try {
+          ambientState = "loading";
+          host.dataset.worldAmbientState = ambientState;
+          await ambient.initialize(signal);
+          const presets = AMBIENT_SCENE_PRESETS[config.id] ?? [];
+          for (let i = 0; i < presets.length; i++) {
+            if (signal.aborted) return;
+            await ambient.spawnPresetCrowd(presets[i], { append: i > 0 });
+          }
+          if (signal.aborted) return;
+          ambientState = "ready";
+          host.dataset.worldAmbientState = ambientState;
+        } catch (error) {
+          // Optional population failure must never tear down the living world.
+          if (signal.aborted) return;
+          ambientState = "isolated-error";
+          host.dataset.worldAmbientState = ambientState;
+          console.warn("[AmbientWorld] Optional population isolated:", error);
+        }
+      })();
+    }, 120);
+    registerDisposable(() => window.clearTimeout(ambientTimer));
 
     // Camera starts at the player's eyes.
     camera.position.copy(controller.state.position);
@@ -354,6 +483,8 @@ export function LivingSeerahWorld({
     setWorldNameAr(config.nameAr);
     setLoading(false);
     setAudioState({ muted: audio.isMuted(), volume: audio.getMasterVolume() });
+    // Record the visit so the station log can show the traveller's route.
+    callbacksRef.current.onSceneVisited?.(config.id);
 
     // Cinematic entrance: brief golden title card, then fade out to reveal
     // the world. Reduced motion gets an immediate reveal (no timer drama).
@@ -428,7 +559,31 @@ export function LivingSeerahWorld({
       | Record<string, unknown>
       | undefined;
     if (diagHost) {
-      Object.assign(diagHost, { scene, camera, controller, audio, interaction, life, particleSystems });
+      Object.assign(diagHost, {
+        scene,
+        camera,
+        controller,
+        audio,
+        interaction,
+        life,
+        particleSystems,
+        ambient,
+        getAmbientStats: () => ambient.getAmbientStats(),
+        getAmbientSnapshot: () => ambient.getDiagnosticSnapshot(),
+        getAmbientState: () => ambientState,
+        spawnPresetCrowd: (preset: AmbientPresetName) => {
+          if (!(["market", "camp", "caravan", "march"] as string[]).includes(preset)) {
+            return Promise.reject(new Error("Unknown ambient preset"));
+          }
+          return ambient.spawnPresetCrowd(preset);
+        },
+        setAmbientQuality: (tier: AmbientQualityTier) => {
+          if (!(["low", "medium", "high"] as string[]).includes(tier)) throw new Error("Unknown ambient quality");
+          ambient.setQuality(tier);
+        },
+        pauseAmbientWorld: () => ambient.pause(),
+        resumeAmbientWorld: () => ambient.resume(),
+      });
     }
 
     return {
@@ -443,18 +598,38 @@ export function LivingSeerahWorld({
         playerPos.copy(state.position);
 
         life.update(delta, elapsed, playerPos);
+        ambient.update(delta);
         for (const ps of particleSystems) ps.update(delta, elapsed, playerPos);
         if (dustMotesRef.current && !motionRef.current) {
           updateDustMotes(dustMotesRef.current, delta, elapsed);
         }
+        if (starsRef.current && !motionRef.current) {
+          updateNightStars(starsRef.current, elapsed);
+        }
+        footDustRef.current?.update(delta);
 
         audio.updateListener(state);
         audio.updateZones(state);
         interaction.update(delta, state, camera);
 
-        // Camera follows the player with head-bob (disabled under reduced motion).
-        const eye = controller.getEyeHeight() + controller.getHeadBobOffset();
-        camera.position.set(state.position.x, state.position.y + eye, state.position.z);
+        // ---- CAMERA: sprint FOV, breathing, sway ----
+        // Running widens the lens the way human peripheral vision opens
+        // up; breathing and the weight-shift sway keep the camera attached
+        // to a body instead of a tripod.
+        const targetFov = state.sprinting ? BASE_FOV + SPRINT_FOV_BONUS : BASE_FOV;
+        if (Math.abs(camera.fov - targetFov) > 0.01) {
+          camera.fov += (targetFov - camera.fov) * Math.min(1, delta * 4.5);
+          camera.updateProjectionMatrix();
+        }
+
+        const breath = controller.getBreathingOffset(elapsed);
+        const sway = controller.getWalkSwayOffset(elapsed);
+        const eye = controller.getEyeHeight() + controller.getHeadBobOffset() + breath;
+        camera.position.set(
+          state.position.x + sway * 0.35,
+          state.position.y + eye,
+          state.position.z,
+        );
         const cosPitch = Math.cos(state.pitch);
         camera.lookAt(
           state.position.x - Math.sin(state.yaw) * cosPitch * 10,
@@ -480,6 +655,13 @@ export function LivingSeerahWorld({
           host.dataset.worldAudioZone = audio.getState().currentZone ?? "";
           host.dataset.worldAudioState = audio.getState().state;
           host.dataset.worldPrompt = interaction.getActivePrompt()?.point.id ?? "";
+          const ambientStats = ambient.getAmbientStats();
+          host.dataset.worldAmbientActive = String(ambientStats.activeEntities);
+          host.dataset.worldAmbientVisible = String(ambientStats.visibleEntities);
+          host.dataset.worldAmbientFallbacks = String(ambientStats.developmentFallbacks);
+          host.dataset.worldAmbientQuality = ambientStats.qualityTier;
+          host.dataset.worldAmbientDrawCalls = String(ambientStats.drawCalls);
+          host.dataset.worldAmbientFrameMs = ambientStats.frameTimeMs?.toFixed(2) ?? "";
         }
 
         renderer.render(scene, camera);
@@ -498,6 +680,7 @@ export function LivingSeerahWorld({
         const reduced = motion === "reduced";
         controller.setReducedMotion(reduced);
         life.setReducedMotion(reduced);
+        ambient.setReducedMotion(reduced);
         for (const ps of particleSystems) ps.setReducedMotion(reduced);
         audio.setReducedMotion(reduced);
         if (reduced && dustMotesRef.current) settleDustMotes(dustMotesRef.current);
@@ -608,6 +791,8 @@ export function LivingSeerahWorld({
             audio={audioState}
             worldNameAr={worldNameAr}
             heading={playerState.yaw}
+            currentSceneId={sceneConfig.id}
+            onNavigate={onNavigate}
             onExit={onExit}
             onToggleMute={toggleMute}
           />
@@ -624,7 +809,7 @@ export function LivingSeerahWorld({
       )}
 
       {/* Cinematic entrance overlay — golden title card that fades away */}
-      {!loading && !entranceGone && (
+      {!loading && !entranceGone && !travelVeil && (
         <div
           className={`${styles.entranceOverlay} ${entered ? styles.entranceOut : ""}`}
           data-visual="world-entrance"
@@ -639,9 +824,24 @@ export function LivingSeerahWorld({
         </div>
       )}
 
+      {/* Travel transition — the journey between two living-world scenes */}
+      {travelVeil && (
+        <div className={styles.travelVeil} data-visual="world-travel-transition" aria-hidden="true">
+          <div className={styles.travelSweep} />
+          <div className={styles.travelText}>
+            <span className={styles.travelFrom}>{travelFromAr}</span>
+            <span className={styles.travelArrow} aria-hidden="true">←</span>
+            <span className={styles.travelTo}>{sceneConfig.nameAr}</span>
+          </div>
+        </div>
+      )}
+
       {/* Reconstruction disclosure (always visible) */}
       <div className={styles.disclosure} data-visual="world-disclosure">
-        {sceneConfig.disclosureAr}
+        <span>{sceneConfig.disclosureAr}</span>
+        <span className={styles.ambientAttribution} data-visual="ambient-development-fallback">
+          الحياة البيئية المجرَّدة: نماذج تطوير إجرائية مجهولة، لا أصول شخصيات نهائية ولا تمثيل لشخصيات محددة.
+        </span>
       </div>
     </section>
   );

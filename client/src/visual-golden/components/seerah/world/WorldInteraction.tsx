@@ -12,6 +12,7 @@
 
 import * as THREE from "three";
 import type { WorldInteractionPoint, WorldPlayerState, WorldRuntimeContext } from "./world-types";
+import { buildTravelUrl } from "./WorldTravel";
 
 /** Interaction prompt data for HUD. */
 export interface InteractionPrompt {
@@ -33,8 +34,19 @@ export interface InteractionResult {
 const INTERACTION_KEYS = ["KeyE"];
 const INTERACTION_GAMEPAD_BUTTON = 0; // A button
 
+/** Options for the interaction system. */
+export interface WorldInteractionOptions {
+  /**
+   * The id of the scene the traveller is currently in. Travel gates need
+   * it to build a route that remembers where the journey started — with
+   * no origin, a gate resolves to nothing instead of guessing.
+   */
+  sceneId?: string;
+}
+
 export class WorldInteraction {
   private readonly context: WorldRuntimeContext;
+  private readonly sceneId: string | null;
   private points: WorldInteractionPoint[] = [];
   private activePrompt: InteractionPrompt | null = null;
   private lastInteractionTime = 0;
@@ -48,8 +60,9 @@ export class WorldInteraction {
   private readonly centerNdc = new THREE.Vector2(0, 0);
   private targetMeshes: THREE.Mesh[] = [];
 
-  constructor(context: WorldRuntimeContext) {
+  constructor(context: WorldRuntimeContext, options: WorldInteractionOptions = {}) {
     this.context = context;
+    this.sceneId = options.sceneId ?? null;
     this.raycaster.far = 8; // Max interaction distance
   }
 
@@ -204,6 +217,12 @@ export class WorldInteraction {
         return `/atlas?place=${encodeURIComponent(ref.id)}`;
       case "database":
         return `/seerah/database?event=${encodeURIComponent(ref.id)}`;
+      case "scene": {
+        // Travel gate: the destination and the origin both travel with the
+        // route so the arrival pose can be resolved exactly.
+        if (!this.sceneId) return null;
+        return buildTravelUrl(this.sceneId, ref.id);
+      }
       default:
         return null;
     }

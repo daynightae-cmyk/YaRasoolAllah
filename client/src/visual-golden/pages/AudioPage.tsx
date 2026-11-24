@@ -151,7 +151,11 @@ export function AudioPage() {
   // Immersive studio (opt-in). The real <audio> element and every player
   // control stay mounted while the scene is open — listening never stops or
   // restarts when entering/leaving the room; the scene only visualizes state.
-  const [studioOpen, setStudioOpen] = useState(false);
+  // Deep link /audio?studio=1 opens the studio directly (the unified station
+  // log links straight into the immersive surface).
+  const [studioOpen, setStudioOpen] = useState(
+    () => new URLSearchParams(window.location.search).get("studio") === "1",
+  );
   const [studioFailed, setStudioFailed] = useState(false);
   const [studioLamp, setStudioLamp] = useState(true);
   const studioScene = useMemo(() => getInteriorScene("audio-studio"), []);

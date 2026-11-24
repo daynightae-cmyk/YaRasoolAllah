@@ -14,8 +14,10 @@
  */
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { Compass, Volume2, VolumeX, Settings, LogOut, Minimize2, Maximize2 } from "lucide-react";
+import { Compass, Volume2, VolumeX, Settings, LogOut, Minimize2, Maximize2, Route } from "lucide-react";
 import type { WorldPlayerState, WorldGraphicsTier, InteractionPrompt } from "./world-types";
+import { getVisitedScenes } from "./WorldTravel";
+import { WorldStationsPanel } from "./WorldStationsPanel";
 import styles from "./WorldHUD.module.css";
 
 interface WorldHUDProps {
@@ -32,6 +34,10 @@ interface WorldHUDProps {
   areaNameAr?: string;
   /** Compass heading in degrees (0 = North). */
   heading: number;
+  /** Id of the scene currently loaded (station log highlight). */
+  currentSceneId?: string;
+  /** Navigate to another station (wouter navigate from the host page). */
+  onNavigate?: (url: string) => void;
   /** Callbacks */
   onExit: () => void;
   onToggleMute: () => void;
@@ -68,6 +74,8 @@ export function WorldHUD({
   worldNameAr,
   areaNameAr,
   heading,
+  currentSceneId,
+  onNavigate,
   onExit,
   onToggleMute,
   onToggleSettings,
@@ -77,6 +85,9 @@ export function WorldHUD({
 }: WorldHUDProps) {
   const hudRef = useRef<HTMLDivElement>(null);
   const [compassDirection, setCompassDirection] = useState("");
+  // The unified station log (all sections of the institution).
+  const [stationsOpen, setStationsOpen] = useState(false);
+  const [visitedScenes, setVisitedScenes] = useState<string[]>([]);
   // Coordinates stay available for diagnostics via the HUD data attribute.
   const showCoordinates = false;
 
@@ -84,6 +95,12 @@ export function WorldHUD({
   useEffect(() => {
     setCompassDirection(headingToCardinal(heading));
   }, [heading]);
+
+  // Visited scenes live in local storage — re-read whenever the scene
+  // changes so the log always reflects the route the traveller walked.
+  useEffect(() => {
+    setVisitedScenes(getVisitedScenes());
+  }, [currentSceneId]);
 
   // Keyboard shortcuts: Escape (exit) and M (mute) are owned by the world
   // component; C is crouch in the controller. The HUD binds no global keys.
@@ -154,6 +171,17 @@ export function WorldHUD({
       <div className={styles.topRight} aria-label="الصوت والإعدادات">
         <div className={styles.controlGroup}>
           <button
+            className={`${styles.controlButton} ${stationsOpen ? styles.controlButtonActive : ""}`}
+            onClick={() => setStationsOpen((open) => !open)}
+            aria-label="سجل المحطات"
+            aria-expanded={stationsOpen}
+            title="سجل المحطات — بيئات السيرة وأقسام المؤسسة"
+          >
+            <Route size={18} aria-hidden />
+            <span className={styles.controlLabel}>المحطات</span>
+          </button>
+
+          <button
             className={`${styles.controlButton} ${audio?.muted ? styles.muted : ""}`}
             onClick={onToggleMute}
             aria-label={audio?.muted ? "إلغاء كتم الصوت" : "كتم الصوت"}
@@ -189,6 +217,16 @@ export function WorldHUD({
           )}
         </div>
       </div>
+
+      {/* Unified station log — every immersive surface of the institution */}
+      {stationsOpen && (
+        <WorldStationsPanel
+          currentSceneId={currentSceneId}
+          visitedScenes={visitedScenes}
+          onNavigate={onNavigate}
+          onClose={() => setStationsOpen(false)}
+        />
+      )}
 
       {/* Center-bottom: Interaction Prompt */}
       {prompt && (

@@ -182,7 +182,11 @@ export function QuranPage() {
   const [tab, setTab] = useState<SidebarTab>("surah");
   const [focus, setFocus] = useState(false);
   const [lamp, setLamp] = useState(true);
-  const [sanctuaryOpen, setSanctuaryOpen] = useState(false);
+  // Deep link /quran?sanctuary=1 opens the reading sanctuary directly (the
+  // unified station log links straight into the immersive surface).
+  const [sanctuaryOpen, setSanctuaryOpen] = useState(
+    () => new URLSearchParams(window.location.search).get("sanctuary") === "1",
+  );
   const [sanctuaryFailed, setSanctuaryFailed] = useState(false);
   const [query, setQuery] = useState("");
   const [verseQuery, setVerseQuery] = useState(initialQuranSearchQuery);
