@@ -10,6 +10,7 @@ import { registerQuranEncTranslationRoutes } from "./quranenc-translations.js";
 import { registerApiNotFound } from "./api-not-found.js";
 import { assertRuntimeConfig } from "./env.js";
 import { errorHandler, requestLogging } from "./logging.js";
+import { nativeShellCors } from "./native-shell-cors.js";
 import { registerRoutes } from "./routes.js";
 
 function securityHeaders(req: express.Request, res: express.Response, next: express.NextFunction): void {
@@ -25,37 +26,15 @@ function securityHeaders(req: express.Request, res: express.Response, next: expr
 }
 
 /**
- * Native-shell CORS — the Capacitor Android WebView (and packaged desktop
+ * Native-shell CORS - the Capacitor Android WebView (and packaged desktop
  * shells) serve the bundled client from a local origin, so governed public
  * content endpoints must accept those exact origins. Allowlist only; no
  * credentials, no wildcard, GET/OPTIONS only.
+ *
+ * The policy itself lives in `server/native-shell-cors.ts` because the Vercel
+ * public-content function serves the same `/api/content/*` routes and must
+ * answer a native shell with the identical allowlist.
  */
-const NATIVE_SHELL_ORIGINS = new Set([
-  "https://localhost",
-  "http://localhost",
-  "capacitor://localhost",
-  "ionic://localhost",
-  "yra://institution",
-  "https://yarasoolallah.it.com",
-  "https://yarasoolallah.org",
-]);
-
-function nativeShellCors(req: express.Request, res: express.Response, next: express.NextFunction): void {
-  if (!req.path.startsWith("/api")) return next();
-  const origin = req.headers.origin;
-  if (typeof origin === "string" && NATIVE_SHELL_ORIGINS.has(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-    res.setHeader("Vary", "Origin");
-    res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Accept, Content-Type");
-    res.setHeader("Access-Control-Max-Age", "86400");
-    if (req.method === "OPTIONS") {
-      res.status(204).end();
-      return;
-    }
-  }
-  next();
-}
 
 export function createApiApp(): Express {
   assertRuntimeConfig();

@@ -38,6 +38,7 @@ describe("client api origin", () => {
       "client/src/visual-golden/services/quran-translations.ts",
       "client/src/visual-golden/services/quran-recitation.ts",
       "client/src/visual-golden/services/quranenc-translations.ts",
+      "client/src/visual-golden/services/iiif.ts",
       "client/src/visual-golden/pages/AudioPage.tsx",
     ];
     for (const site of sites) {
@@ -51,14 +52,25 @@ describe("client api origin", () => {
 
 describe("server native CORS", () => {
   const app = read("server/create-app.ts");
+  const publicApp = read("server/create-public-content-app.ts");
+  const policy = read("server/native-shell-cors.ts");
 
   it("allows only declared origins without credentials", () => {
-    assert.match(app, /NATIVE_SHELL_ORIGINS/);
-    assert.match(app, /"https:\/\/localhost"/);
-    assert.match(app, /"capacitor:\/\/localhost"/);
-    assert.doesNotMatch(app, /Access-Control-Allow-Origin", "\*/);
-    assert.doesNotMatch(app, /Access-Control-Allow-Credentials/);
+    assert.match(policy, /NATIVE_SHELL_ORIGINS/);
+    assert.match(policy, /"https:\/\/localhost"/);
+    assert.match(policy, /"capacitor:\/\/localhost"/);
+    assert.doesNotMatch(policy, /Access-Control-Allow-Origin", "\*/);
+    assert.doesNotMatch(policy, /Access-Control-Allow-Credentials/);
     assert.match(app, /app\.use\(nativeShellCors\)/);
+  });
+
+  it("serves the same allowlist from the public content function", () => {
+    // The Vercel public-content function is the entry that answers
+    // /api/content/* in production, so it must apply the identical policy
+    // or a native shell reads one origin and is blocked by another.
+    assert.match(publicApp, /import \{ nativeShellCors \} from "\.\/native-shell-cors\.js"/);
+    assert.match(publicApp, /app\.use\(nativeShellCors\)/);
+    assert.doesNotMatch(publicApp, /Access-Control-Allow-Origin", "\*/);
   });
 });
 

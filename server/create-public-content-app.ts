@@ -8,6 +8,7 @@ import { registerQuranTafsirRoutes } from "./quran-tafsir.js";
 import { registerHadithStatusRoutes } from "./hadith.js";
 import { registerApiNotFound } from "./api-not-found.js";
 import { errorHandler, requestLogging } from "./logging.js";
+import { nativeShellCors } from "./native-shell-cors.js";
 
 function publicContentHeaders(
   req: express.Request,
@@ -28,6 +29,7 @@ export function createPublicContentApp(): Express {
   app.use(express.json({ limit: "32kb" }));
   app.use(express.urlencoded({ extended: false, limit: "32kb" }));
   app.use(publicContentHeaders);
+  app.use(nativeShellCors);
   app.use(requestLogging);
 
   registerOpenLibraryRoutes(app);

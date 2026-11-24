@@ -1,4 +1,5 @@
 import { buildIiifImageUrl, type IiifCanvas, type IiifManifestSummary } from "@shared/iiif";
+import { apiUrl } from "@/lib/api-origin";
 
 export type ManuscriptSourceState = "live_check_required" | "provider_blocked";
 
@@ -73,7 +74,7 @@ export async function fetchIiifManifest(
   manifestUrl: string,
   signal?: AbortSignal,
 ): Promise<IiifManifestResponse> {
-  const response = await fetch(`/api/content/iiif/manifest?url=${encodeURIComponent(manifestUrl)}`, {
+  const response = await fetch(apiUrl(`/api/content/iiif/manifest?url=${encodeURIComponent(manifestUrl)}`), {
     signal,
     headers: { Accept: "application/json" },
   });

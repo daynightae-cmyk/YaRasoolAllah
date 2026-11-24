@@ -17,6 +17,7 @@ const reader = read("client/src/visual-golden/components/library/ManuscriptReade
 const readerCss = read("client/src/visual-golden/components/library/ManuscriptReader.module.css");
 const gallery = read("client/src/visual-golden/components/library/ManuscriptGallery.tsx");
 const libraryPage = read("client/src/visual-golden/pages/LibraryPage.tsx");
+const service = read("client/src/visual-golden/services/iiif.ts");
 
 describe("manuscript source and pagination truth", () => {
   it("does not relabel last-known provider states as verified readers or catalog records", () => {
@@ -105,5 +106,10 @@ describe("accessible manuscript dialog and mobile reader contract", () => {
     assert.match(libraryPage, /<ManuscriptGallery onOpen=\{setManuscript\}/);
     assert.match(libraryPage, /<ManuscriptReader source=\{manuscript\}/);
     assert.match(libraryPage, /catalogCapabilityReport/);
+  });
+
+  it("addresses the governed endpoint through the native-aware API origin", () => {
+    assert.match(service, /apiUrl\(`\/api\/content\/iiif\/manifest/);
+    assert.doesNotMatch(service, /fetch\(`\/api\/content\/iiif\/manifest/);
   });
 });
