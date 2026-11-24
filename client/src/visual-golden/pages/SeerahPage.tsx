@@ -38,6 +38,7 @@ import { SeerahChapterStage } from "@/visual-golden/components/seerah/SeerahChap
 import { ChapterGateway } from "@/visual-golden/components/seerah/ChapterGateway";
 import { SeerahJourneyTheatre } from "@/visual-golden/components/seerah/SeerahJourneyTheatre";
 import { SeerahPortalCrossroads } from "@/visual-golden/components/seerah/SeerahPortalCrossroads";
+import { SeerahTimelineGallery } from "@/visual-golden/components/seerah/SeerahTimelineGallery";
 import { SEERAH_JOURNEY_STOPS } from "@/visual-golden/services/seerah-journey";
 import {
   SEERAH_GRAPH,
@@ -327,6 +328,10 @@ export function SeerahPage() {
           <SeerahJourneyTheatre initialIndex={journeyInitialIndex} />
         </div>
       </section>
+
+      {/* Timeline gallery: chronological illuminated exhibition panels,
+          each linked to a real chapter/event — REF-17 / REF-32. */}
+      <SeerahTimelineGallery />
 
       <section className={styles.timelineWrap} id="seerah-chapters" aria-label="فصول السيرة بالترتيب السردي">
         <button type="button" className={styles.arrow} onClick={() => step(-1)} aria-label="الفصل السابق">

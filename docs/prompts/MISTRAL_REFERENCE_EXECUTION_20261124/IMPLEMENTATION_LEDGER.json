@@ -140,10 +140,19 @@
         "canonical_id":  13,
         "route":  "/seerah/world; /seerah/terrain",
         "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/seerah/REF-13-hijrah-landscape-journey.png",
-        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "status":  "VERIFIED",
         "evidence":  [
-
-                     ],
+          "Living Seerah World infrastructure at /seerah/world?scene=desert-camp (Hijrah landscape): Three.js walkable world with procedural dune terrain, camel/tent/palm entities, camp well + campfire props, sand-drift particles, night-stars skybox, warm sunset fog",
+          "Cinematic entry: golden title-card entrance overlay fades to world; travel veil between scenes; exit returns to /seerah reading",
+          "Spatial navigation: WASD/arrows + Shift sprint + C crouch + Space jump; pointer-lock mouse look and drag-look fallback; touch dual-zone controls (move left half, look right half); gamepad support",
+          "Independent interactive objects: well, campfire, info hotspots (camp, well, merchant tent, caravan, road guide) with E-key proximity prompts and Arabic labels; each hotspot links to governed Seerah/chapter/atlas/database records",
+          "Environmental lighting: directional sun + bounce fill + ACES filmic tone mapping, sky dome, horizon meshes, dust motes; audio zones (camp/market/desert wind) with synthesized spatial ambience",
+          "Return controls: exit bar button + Esc key exit to reading; station log (WorldStationsPanel) tracks visited scenes locally",
+          "Mobile touch navigation verified at 390x844; reduced-motion path (immediate reveal, no head-bob, static particles) supported",
+          "Before/after screenshots: artifacts/evidence/ref13-15/world-desert-camp.jpg (1440x900) and world-desert-camp-mobile.jpg (390x844); world-madinah-walk.jpg; world-badr-valley.jpg",
+          "Runtime probe: /seerah/world canvasHost, worldDisclosure, exitBar, HUD all present; sceneId=desert-camp",
+          "npm run check (tsc) clean; eslint clean; npm run build exit 0; full test:p0 711/711 pass"
+        ],
         "blocker":  null
     },
     {
@@ -151,10 +160,14 @@
         "canonical_id":  14,
         "route":  "/seerah/world; /seerah",
         "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/seerah/REF-14-madinah-courtyard-gate.png",
-        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "status":  "VERIFIED",
         "evidence":  [
-
-                     ],
+          "Madinah entry world at /seerah/world?scene=madinah-walk: settlement biome procedural terrain (flat mosque yard, mud-brick house forms, palm grove), awning awnings, settlement dust particles, warm sky/fog",
+          "Clickable carved doorway interaction at mosque yard (info-madinah-mosque): 'ساحة المسجد الأول' with description 'إعادة بناء فنية لفكرة المسجد الأول كما تصفه المصادر'; no depiction of the Prophet ﷺ or companions",
+          "Travel gates: gate-to-desert-camp (via travel network, authored arrival pose) and gate-to-khandaq-trench; back/movement controls verified",
+          "Screenshot evidence: artifacts/evidence/ref13-15/world-madinah-walk.jpg (1440x900)",
+          "npm run check (tsc) clean; eslint clean; npm run build exit 0; full test:p0 711/711 pass"
+        ],
         "blocker":  null
     },
     {
@@ -162,10 +175,14 @@
         "canonical_id":  15,
         "route":  "/seerah; /seerah/terrain",
         "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/seerah/REF-15-ghazawat-landscape-gate.png",
-        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "status":  "VERIFIED",
         "evidence":  [
-
-                     ],
+          "Ghazawat educational world entry at /seerah/world?scene=badr-valley: wadi biome procedural terrain (valley floor between sand dunes, water-proximate areas, rain-particle narrative), camel/palm entities, campfire prop",
+          "Dark carved gateway aesthetic with restrained parchment-style info panels: info-badr-hill ('مطل العدوة' - explains 'العدوة الدنيا والقصوى' terrain terminology without publishing army deployments), info-badr-valley ('قاع الوادي' - sandy basin with well locations), info-badr-wells ('جهة الآبار (تخطيطي)' - schematic water locations), info-badr-rain ('مطر ليلة بدر' - environmental rain effect only)",
+          "Exit: return to chapter reading (exit-to-reading → event badr); travel gate back to desert camp; no combat scoring, no tactical simulation, no graphic content",
+          "Screenshot evidence: artifacts/evidence/ref13-15/world-badr-valley.jpg (1440x900)",
+          "npm run check (tsc) clean; eslint clean; npm run build exit 0; full test:p0 711/711 pass"
+        ],
         "blocker":  null
     },
     {
@@ -184,10 +201,15 @@
         "canonical_id":  17,
         "route":  "/seerah",
         "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/seerah/REF-17-timeline-walkthrough-gallery.png",
-        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "status":  "VERIFIED",
         "evidence":  [
-
-                     ],
+          "SeerahTimelineGallery.tsx + SeerahTimelineGallery.module.css — immersive timeline gallery at /seerah: ten chronological illuminated exhibition panels from the real SEERAH_JOURNEY_STOPS data (makkah-before-islam → fath-makkah), each panel a real link to its canonical /seerah?chapter=&event= deep link, Arabic era + title + orientation text + illustrative reconstruction disclosure",
+          "Curved stone-arch SVG panels with accent glow for the active stop; left/right/arrow/Home/End keyboard navigation with smooth scroll-to-active; bottom time rail with per-period dots highlighting the active period",
+          "Inserted into SeerahPage after the journey band (section data-visual=\"seerah-timeline-gallery\"); all pre-existing hero/journey-band/chapter-rail/test-locked markup untouched",
+          "Screenshot evidence: artifacts/evidence/ref17-32/seerah-17-32-1440-after.jpg (1440x900 RTL) and seerah-17-32-390-after.jpg (390x844 mobile)",
+          "Runtime probe: timelineGallery + timelineCard0/4/9 + timelineEnter all present on /seerah",
+          "npm run check (tsc) clean; eslint clean; npm run build exit 0; scripts/seerah-page-composition.test.ts 9/9 pass; full test:p0 711/711 pass"
+        ],
         "blocker":  null
     },
     {
@@ -353,10 +375,12 @@
         "canonical_id":  32,
         "route":  "/seerah",
         "reference":  "artifacts/visual-references/approved/09_seerah_timeline.png",
-        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "status":  "CURRENT_MATCH",
         "evidence":  [
-
-                     ],
+          "The REF-17 SeerahTimelineGallery (VERIFIED above) IS the REF-32 golden timeline: gold-lit exhibition of ten tall arched period cards with emerald/gold title on /seerah, bound to actual canonical periods and chapters (SEERAH_JOURNEY_STOPS with chapterId/eventId deep links), arrow + Home/End keyboard controls, active period highlighted in the time rail, deep links preserved (each card navigates to its real /seerah chapter/event selection), back route to /seerah intact",
+          "No duplicate implementation — REF-17 and REF-32 share the same timeline surface, satisfying both instructions with one component",
+          "Same evidence as REF-17: tsc/eslint/build clean; seerah-page-composition 9/9; test:p0 711/711; screenshots artifacts/evidence/ref17-32/*"
+        ],
         "blocker":  null
     },
     {
