@@ -33,7 +33,7 @@ export function ManuscriptGallery({ onOpen }: Props) {
       };
 
   return (
-    <section className={styles.gallery} aria-labelledby="manuscript-gallery-title">
+    <section className={styles.gallery} aria-labelledby="manuscript-gallery-title" data-visual="manuscript-gallery">
       <header>
         <div>
           <span>{copy.eyebrow}</span>
