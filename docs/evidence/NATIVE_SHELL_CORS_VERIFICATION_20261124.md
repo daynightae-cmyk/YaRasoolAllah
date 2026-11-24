@@ -70,6 +70,25 @@ calls:
 The page rendered the live provider-governed numbers, so the value was read
 through the browser's CORS check — not merely received.
 
+## Production-bundle verification (after the deploy of `eff3a6eb`)
+
+`deployed-bundle-simulation.json`: the **deployed** production bundle (142
+assets pulled from `https://www.yarasoolallah.it.com` and served from
+`http://localhost` to imitate the shell) was loaded in Chrome headless:
+
+| Check | Result |
+|---|---|
+| Page origin | `http://localhost` |
+| Governed request | `GET https://www.yarasoolallah.it.com/api/content/hadith/status` |
+| Response | `200` |
+| `Access-Control-Allow-Origin` | `http://localhost` |
+| Network failures / console errors | none / none |
+
+The live bundle was also inspected directly: before the fix the deployed entry
+chunk contained `https://yarasoolallah.it.com` (the redirecting apex); after
+the deploy it contains `www.yarasoolallah.it.com` and no longer contains the
+apex API URL.
+
 ## Live header checks (production, after deploy of the server fix)
 
 | Origin | `GET /api/content/hadith/status` | `Access-Control-Allow-Origin` |

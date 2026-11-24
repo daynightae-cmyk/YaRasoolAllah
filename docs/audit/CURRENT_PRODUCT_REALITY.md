@@ -1,10 +1,34 @@
 # Current product reality
 
+> **Refreshed 2026-11-24.** The authoritative current state is
+> `docs/audit/PRODUCT_GAP_AUDIT_2026-11-24.md` (measured against `main` @
+> `eff3a6eb` and the live production domain). The long tables below remain as
+> the historical record of individual slices; where they disagree with the
+> 2026-11-24 audit, the audit wins. Three corrections are marked inline:
+> the Library's openable figure, the visual-evidence case count, and the
+> production deploy status.
+
 Audited against live `origin/main` = `79dd480701613333d35e16c7d961c858a36b13a1` after PR #97 merge on 2026-09-25, plus this slice's live verification.
 
 This document supersedes stale counts in older audit files. Historical
 percentages and “17 books / demo-token / 18 sample verses” claims are **not**
 current truth unless re-verified below.
+
+## Current truth — 2026-11-24 (measured, not declared)
+
+| Area | Measured value | Evidence |
+|---|---|---|
+| Git authority | `main` = `origin/main` = `eff3a6eb`; CI green (Quality Gates + Visual Golden Verify) | `gh run list` on 2026-11-24 |
+| Production domain | `https://yarasoolallah.it.com` → `308` → `https://www.yarasoolallah.it.com` (final host) | live sweep |
+| Public content API | `/api/content/*` live: hadith status 200, tafsir 200, translations en/fr/ur 200, library search 200 | `artifacts/runtime-evidence/live-api-20261124/live-http-sweep.json` |
+| Main API (auth/persistence/health) | `503 RUNTIME_CONFIG_MISSING` — `DATABASE_URL` + `JWT_SECRET` not set in production | live sweep |
+| Native shells | Capacitor (`https://localhost`), `capacitor://localhost`, `http://localhost` and desktop (`yra://institution`) read governed content through a real browser CORS check | `docs/evidence/NATIVE_SHELL_CORS_VERIFICATION_20261124.md` |
+| Library | 9,129 works · 9,106 digital records (`TXT_MARKDOWN`) · **16 readable in-app** · 9,090 catalog-text-only · 23 metadata-only · PDF 0 · IIIF 0 · presentation 0 | `catalogCapabilityReport()` |
+| IIIF reader | 2 curated external manifests; **0 openable** — Gallica and QDL both answer 403 from the runtime | live sweep (502 `provider_blocked` ×2) |
+| Media | 116 discovered records · **0 approved** · 116 rights `UNKNOWN` / `DRAFT` / embedding `UNTESTED`; 63 kids-scoped, 53 in Noor | `media-discovery.generated.ts` |
+| Seerah | 10 eras · 101 events · 58 people · 32 places · 15 sources; human review **206 required / 0 signed / 206 pending** | `client/src/data/seerah/index.ts`, `scripts/seerah-review-checklist.test.ts` |
+| Quran | Tanzil 114 surahs / 6,236 verses; EN/FR/UR translations + Muyassar tafsir live; 8 recitations in 5 categories | live sweep + `client/src/data/quranAudio.ts` |
+| Visual evidence | harness defines **101** cases; 7 captured in the 2026-11-24 session with 0 failures | `scripts/capture-visual-evidence.mjs`, `artifacts/visual-evidence/` |
 
 ## Git authority
 
@@ -85,7 +109,7 @@ Contract: `client/src/visual-golden/lib/public-shell.ts`.
 | Quran EN/FR/UR translations (AlQuran Cloud proxy) | IMPLEMENTED BUT NOT VERIFIED at production URL (Vercel quota) |
 | Quran Muyassar tafsir (QuranEnc proxy) | IMPLEMENTED AND VERIFIED locally (PR #95: mounted, honest null version, real surah-112 text in study reader) |
 | Quran audio MP3Quran | IMPLEMENTED AND VERIFIED in CI/runtime locally (incl. inline `/quran` recitation, PR #86; stream-element failure alerts this slice) |
-| Library catalog + readers | **OpenITI text IMPLEMENTED AND VERIFIED** (9,106 works open in-app, measured from the catalog by the same gate functions the reader uses). Every other format is measured at **zero records**: PDF 0, IIIF 0 (all 9,129 iiifUrl are null), EPUB 0, presentation 0, audiobook 0. 23 seed works are metadata-only and say so. |
+| Library catalog + readers | **OpenITI text IMPLEMENTED AND VERIFIED** — 9,106 works carry a digital text record, but only **16** are cleared for in-app reading by the same gate functions the reader uses; 9,090 remain catalog-text-only (not announced as readable) and 23 are metadata-only. Every other format is measured at **zero records**: PDF 0, IIIF 0, presentation 0, audiobook 0. (Corrected 2026-11-24: the older "9,106 works open in-app" wording overstated the readable figure.) |
 | Kids theatre | IMPLEMENTED AND VERIFIED (curtain); content PARTIAL |
 | Canonical public shell | IMPLEMENTED AND VERIFIED for supporting routes (PR #88); `/dashboard`, `/bab-alsamaa-settings` intentionally legacy |
 | Hadith sample contracts (copy/deep-link/search) | IMPLEMENTED AND VERIFIED locally 2026-09-25 (PR #92) |
@@ -94,6 +118,6 @@ Contract: `client/src/visual-golden/lib/public-shell.ts`.
 | Seerah event graph | IMPLEMENTED AND VERIFIED for recorded relations only (this slice: 23 event nodes, 62 recorded edges, 7 deferred relation kinds with stated reasons); entity, scripture, hadith, reference and absolute-chronology edges remain NOT IMPLEMENTED because the source data carries no IDs or citations |
 | Atlas theatre + schematic | IMPLEMENTED AND VERIFIED locally (PR #93 evidence); geographic layer NOT IMPLEMENTED |
 | Adhkar corpus | BLOCKED (rights/editorial) |
-| Visual evidence harness | IMPLEMENTED AND VERIFIED: 26/26 cases, zero failures (current capture) |
+| Visual evidence harness | IMPLEMENTED AND VERIFIED: the harness defines **101** cases (corrected 2026-11-24 from the older 26/26 snapshot); the 2026-11-24 session captured 7 (5 Noor + 2 manuscript gallery) with 0 mount / overflow / runtime / unnamed-interactive / language-direction failures |
 | Per-route content language | IMPLEMENTED AND VERIFIED locally: 31/31 canonical routes declared, 5 false Arabic-only declarations corrected, English content found on 14 of them; shape is derived per route and each bilingual route states what kind of English it shows; gate re-verified by reintroducing a known defect |
-| Production deploy | PARTIAL: Vercel quota intermittent, preview deploys completing; production domain cutover unverified |
+| Production deploy | **PARTIAL, now measured (2026-11-24)**: the production domain serves the current `main` client and the public-content API is live and governed; the apex answers `308` to `www`. The main API (`/api/*` auth/persistence/health) still answers `503 RUNTIME_CONFIG_MISSING` until `DATABASE_URL` and `JWT_SECRET` exist in the production environment. The Vercel project under scope `knuux7-3141` is not reachable from this CLI, so the deploy is proven by **asset content and live behaviour**, not by a claimed deployment SHA. |
