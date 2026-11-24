@@ -2,6 +2,7 @@ import express, { type Express } from "express";
 import { registerMp3QuranCatalogRoutes } from "./mp3quran-catalog.js";
 import { registerOpenItiReaderRoutes } from "./openiti-reader.js";
 import { registerOpenLibraryRoutes } from "./open-library.js";
+import { registerIiifRoutes } from "./iiif.js";
 import { registerQuranTranslationRoutes } from "./quran-translations.js";
 import { registerQuranTafsirRoutes } from "./quran-tafsir.js";
 import { registerHadithStatusRoutes } from "./hadith.js";
@@ -30,6 +31,7 @@ export function createPublicContentApp(): Express {
   app.use(requestLogging);
 
   registerOpenLibraryRoutes(app);
+  registerIiifRoutes(app);
   registerMp3QuranCatalogRoutes(app);
   registerQuranTranslationRoutes(app);
   registerQuranTafsirRoutes(app);
