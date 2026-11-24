@@ -1,9 +1,9 @@
 import { createServer } from "node:http";
 import path from "node:path";
-import { createApiApp } from "./create-app";
-import { log } from "./logging";
-import { compressedDataJson } from "./static-json";
-import { serveStatic, setupVite } from "./vite";
+import { createApiApp } from "./create-app.js";
+import { log } from "./logging.js";
+import { compressedDataJson } from "./static-json.js";
+import { serveStatic, setupVite } from "./vite.js";
 
 (async () => {
   const app = createApiApp();

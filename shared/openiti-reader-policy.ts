@@ -1,7 +1,7 @@
 import {
   OPENITI_RELEASE_COMMIT,
   type DigitalVersionRecord,
-} from "./knowledge-registry";
+} from "./knowledge-registry.js";
 
 /**
  * The one policy shared by the browser reader and the server reading desk.

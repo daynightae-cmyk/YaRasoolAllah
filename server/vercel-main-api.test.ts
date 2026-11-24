@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import test from "node:test";
 import express from "express";
-import { createMainApiHandler, RUNTIME_CONFIG_MISSING } from "./vercel-main-api";
+import { createMainApiHandler, RUNTIME_CONFIG_MISSING } from "./vercel-main-api.js";
 
 type ResponseSnapshot = {
   status: number;

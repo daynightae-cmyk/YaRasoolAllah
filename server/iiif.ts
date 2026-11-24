@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { z } from "zod";
-import { normalizeIiifManifest, type IiifManifestSummary } from "@shared/iiif";
+import { normalizeIiifManifest, type IiifManifestSummary } from "../shared/iiif.js";
 
 const manifestUrlSchema = z.string().url().max(800);
 const PROVIDERS = new Map<string, string>([

@@ -3,7 +3,7 @@ import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
 import { describe, it } from "node:test";
 import express, { type Express } from "express";
-import { normalizeIiifManifest } from "../shared/iiif";
+import { normalizeIiifManifest } from "../shared/iiif.js";
 import {
   fetchIiifManifestDocument,
   IiifRequestError,
@@ -11,7 +11,7 @@ import {
   registerIiifRoutes,
   validateIiifManifestResources,
   validatedIiifSource,
-} from "./iiif";
+} from "./iiif.js";
 
 const GALLICA_MANIFEST = "https://gallica.bnf.fr/iiif/ark:/12148/test/manifest.json";
 const QDL_MANIFEST = "https://www.qdl.qa/en/iiif/qnlhc/12933/manifest";

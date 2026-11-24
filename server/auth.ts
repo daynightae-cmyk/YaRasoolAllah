@@ -1,7 +1,7 @@
 import { createHmac, randomBytes, scrypt as scryptCallback, timingSafeEqual } from "node:crypto";
 import { promisify } from "node:util";
 import type { NextFunction, Request, Response } from "express";
-import { getJwtSecret } from "./env";
+import { getJwtSecret } from "./env.js";
 
 const scrypt = promisify(scryptCallback);
 const SCRYPT_KEYLEN = 32;

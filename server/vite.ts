@@ -3,8 +3,8 @@ import fs from "fs";
 import path from "path";
 import { createServer as createViteServer, createLogger, type ServerOptions } from "vite";
 import { type Server } from "http";
-import viteConfig from "../vite.config";
-import { log } from "./logging";
+import viteConfig from "../vite.config.js";
+import { log } from "./logging.js";
 
 export { log };
 

@@ -1,16 +1,16 @@
 import express, { type Express } from "express";
-import { registerMp3QuranCatalogRoutes } from "./mp3quran-catalog";
-import { registerQuranTranslationRoutes } from "./quran-translations";
-import { registerQuranTafsirRoutes } from "./quran-tafsir";
-import { registerHadithStatusRoutes } from "./hadith";
-import { registerOpenItiReaderRoutes } from "./openiti-reader";
-import { registerOpenLibraryRoutes } from "./open-library";
-import { registerIiifRoutes } from "./iiif";
-import { registerQuranEncTranslationRoutes } from "./quranenc-translations";
-import { registerApiNotFound } from "./api-not-found";
-import { assertRuntimeConfig } from "./env";
-import { errorHandler, requestLogging } from "./logging";
-import { registerRoutes } from "./routes";
+import { registerMp3QuranCatalogRoutes } from "./mp3quran-catalog.js";
+import { registerQuranTranslationRoutes } from "./quran-translations.js";
+import { registerQuranTafsirRoutes } from "./quran-tafsir.js";
+import { registerHadithStatusRoutes } from "./hadith.js";
+import { registerOpenItiReaderRoutes } from "./openiti-reader.js";
+import { registerOpenLibraryRoutes } from "./open-library.js";
+import { registerIiifRoutes } from "./iiif.js";
+import { registerQuranEncTranslationRoutes } from "./quranenc-translations.js";
+import { registerApiNotFound } from "./api-not-found.js";
+import { assertRuntimeConfig } from "./env.js";
+import { errorHandler, requestLogging } from "./logging.js";
+import { registerRoutes } from "./routes.js";
 
 function securityHeaders(req: express.Request, res: express.Response, next: express.NextFunction): void {
   res.setHeader("X-Content-Type-Options", "nosniff");

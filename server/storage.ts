@@ -12,9 +12,9 @@ import {
   type InsertBookmark,
   type PrayerTimes,
   type InsertPrayerTimes,
-} from "@shared/schema";
-import { getDb } from "./db";
-import { getPersistenceMode } from "./env";
+} from "../shared/schema.js";
+import { getDb } from "./db.js";
+import { getPersistenceMode } from "./env.js";
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;

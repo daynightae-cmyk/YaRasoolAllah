@@ -4,18 +4,18 @@ import {
   insertBookmarkSchema,
   insertPrayerTimesSchema,
   insertProgressSchema,
-} from "@shared/schema";
+} from "../shared/schema.js";
 import {
   authenticateToken,
   hashPassword,
   signAccessToken,
   verifyPasswordAgainstUser,
   type AuthedRequest,
-} from "./auth";
-import { getPersistenceMode } from "./env";
-import { registerQuarantinedDemoRoutes } from "./legacy-endpoints";
-import { rateLimit } from "./rate-limit";
-import { storage } from "./storage";
+} from "./auth.js";
+import { getPersistenceMode } from "./env.js";
+import { registerQuarantinedDemoRoutes } from "./legacy-endpoints.js";
+import { rateLimit } from "./rate-limit.js";
+import { storage } from "./storage.js";
 
 const registerSchema = z.object({
   username: z.string().trim().min(3).max(40).regex(/^[a-zA-Z0-9._-]+$/),

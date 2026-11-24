@@ -1,4 +1,4 @@
-import { createMainApiHandler } from "../server/vercel-main-api";
+import { createMainApiHandler } from "../server/vercel-main-api.js";
 
 /**
  * The main app is imported lazily so a production configuration failure does
