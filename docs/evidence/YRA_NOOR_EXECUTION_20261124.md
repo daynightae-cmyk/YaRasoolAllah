@@ -18,10 +18,10 @@ Starting `HEAD` and `origin/main`: `eede9208c4af225caebf6f6cacb24761201f24e5`
 
 | Verification | Command | Result |
 | --- | --- | --- |
-| Noor targeted tests | `node_modules/.bin/tsx.cmd --test scripts/noor-theatre.test.ts` | 7 passed; 0 failed |
+| Noor targeted tests | `node_modules/.bin/tsx.cmd --test scripts/noor-theatre.test.ts` | 14 passed; 0 failed |
 | TypeScript | `npm run check` | exit 0 |
 | Production web/server build | `npm run build` | exit 0 |
-| P0 project suite | `npm run test:p0` | 659 passed; 0 failed; exit 0 |
+| P0 project suite | `npm run test:p0` | 666 passed; 0 failed; 87 suites; exit 0 |
 | ESLint | `npm run lint` | exit 0 on the tested working tree |
 | Browser visual captures | `VISUAL_BASE_URL=http://127.0.0.1:4273 VISUAL_CASES=^noor-theatre- node scripts/capture-visual-evidence.mjs` | 5 captures; 0 mount errors; 0 horizontal overflow; 0 runtime error cases; 0 unnamed interactive elements; 0 direction/language mismatches |
 
@@ -34,17 +34,18 @@ The theatre displays 53 non-children catalog records, currently **0 approved for
 ## Work deliberately not included in the Noor integration
 
 - Android Capacitor Gradle changes remain in the owner working tree and are not treated as Noor changes.
-- `client/public/manus-routes.json` is separate from Noor and is not included.
-- IIIF reader recovery lives in a separate active worktree at `D:\Temp\opencode\yra-iiif-recovery`. No wholesale merge or deletion; it requires its own review and verification.
-- `C:\Users\day night\Downloads\04_NOOR_MEDIA_THEATRE.png` remains a *candidate* reference, not an approved member of the curated eleven.
-- `scripts/.noor-capture-setup.cjs` is an older temporary capture helper; its integration/cleanup is separate and must not be silently lost.
+- `client/public/manus-routes.json` carries the `/noor` route in the committed Noor integration; it is not presented as new design authority.
+- IIIF reader recovery lives in a separate active worktree at `D:\Temp\opencode\yra-iiif-recovery`. It was committed as `7b867d8c` for independent review and must not be described as merged until its security review and integration gates pass.
+- `C:\Users\day night\Downloads\04_NOOR_MEDIA_THEATRE.png` is retained as a verified *candidate* at `artifacts/visual-references/candidates/04_noor_media_theatre.png`; it is not an approved member of the curated eleven and no owner approval is claimed.
+- The older temporary capture helper `scripts/.noor-capture-setup.cjs` was reviewed and removed from the working tree after its live Noor cases had already been ported into `scripts/capture-visual-evidence.mjs`; no unique capture behavior remained.
+- The recovered reference candidate is documented at `docs/evidence/NOOR_REFERENCE_CANDIDATE_20261124.md` and keeps its SHA-256 provenance; it is intentionally outside the approved series.
 
 ## Remaining evidence before product release
 
 - Verify user-driven search, dialog focus, fullscreen controls and external links in a real browser.
 - Run tests/packaging on the real Android device and Windows Electron distributable as applicable.
 - Inspect final GitHub CI status and deployment/runtime independently of local build success.
-- Finish IIIF recovery without overwriting the parallel agent.
+- Finish IIIF recovery only after its independent security review and full integration gates pass.
 - Only clean confirmed disposable cache files; preserve unique work, backups and approved reference originals.
 
 No PASS/COMPLETE claim is made here for Android device QA, IIIF, deployed runtime, GitHub CI or release.
