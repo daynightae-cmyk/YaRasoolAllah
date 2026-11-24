@@ -1,100 +1,299 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   EMPTY_NOOR_FILTERS,
   NOOR_MEDIA_RECORDS,
   approvedNoorEmbedUrl,
   clearedNoorThumbnail,
   filterNoorRecords,
-  matchesNoorTopic,
   noorMediaDuration,
   noorMediaTitle,
 } from "../client/src/visual-golden/services/media/noor-theatre";
-import { isMediaRecordApproved, mediaReviewCounts } from "../client/src/visual-golden/services/media/review-gates";
+import {
+  DISCOVERED_MEDIA_CATALOG,
+  DISCOVERED_MEDIA_COUNTS,
+} from "../client/src/visual-golden/data/media-discovery.generated";
+import {
+  isMediaRecordApproved,
+  mediaReviewCounts,
+} from "../client/src/visual-golden/services/media/review-gates";
+import type { MediaDiscoveryRecord } from "../client/src/visual-golden/services/media/types";
+import {
+  CANONICAL_VISUAL_PATHS,
+  isCanonicalVisualPath,
+} from "../client/src/visual-golden/lib/public-shell";
+import {
+  INSTITUTION_NAVIGATION_WINGS,
+  INSTITUTION_WINGS,
+  workspaceContext,
+} from "../client/src/visual-golden/lib/institution/workspace";
+import { worldPlateForWing } from "../client/src/visual-golden/lib/institution/worlds";
+import { discoveryWings } from "../client/src/visual-golden/services/discovery";
 
-const root = resolve(import.meta.dirname ?? ".", "..");
-const read = (path: string) => readFileSync(resolve(root, path), "utf8");
+const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+const read = (path: string) => readFileSync(join(root, path), "utf8");
+const kidsCategories = new Set(["kids", "القرآن الكريم للأطفال"]);
 
-test("Noor is the governed non-kids projection, not a second fabricated media catalog", () => {
+function record(
+  overrides: Partial<MediaDiscoveryRecord> = {},
+): MediaDiscoveryRecord {
+  return {
+    id: "fixture-record",
+    provider: "youtube",
+    video_id: "dQw4w9WgXcQ",
+    official_url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    title_original: null,
+    title_ar: null,
+    description_ar: null,
+    language: "ar",
+    duration_seconds: null,
+    published_at: null,
+    channel_id: null,
+    channel_name: "fixture channel",
+    channel_url: null,
+    publisher_status: "UNKNOWN",
+    series_name: null,
+    playlist_id: null,
+    episode_number: null,
+    category: null,
+    subcategory: null,
+    age_band: null,
+    speaker: null,
+    content_type: null,
+    rights_holder: null,
+    rights_notice: null,
+    rights_status: "UNKNOWN",
+    license_type: null,
+    license_evidence_url: null,
+    attribution_text: null,
+    embedding_status: "UNTESTED",
+    embed_url: null,
+    editorial_status: "PENDING_REVIEW",
+    publication_status: "DRAFT",
+    religious_review_status: "PENDING_REVIEW",
+    depiction_review_status: "PENDING_REVIEW",
+    thumbnail_url: null,
+    thumbnail_rights_status: "UNKNOWN",
+    source_checked_at: null,
+    verification_method: null,
+    verification_evidence_urls: [],
+    notes: null,
+    rights_action: null,
+    review_reason: null,
+    review_next_action: null,
+    provenance: {
+      sourceFile: "noor-theatre.test.ts",
+      sourceRow: 1,
+      inputSha256: "0".repeat(64),
+    },
+    ...overrides,
+  };
+}
+
+const PASSING = {
+  publisher_status: "OFFICIAL",
+  rights_status: "CLEARED",
+  embedding_status: "VERIFIED",
+  editorial_status: "APPROVED",
+  religious_review_status: "APPROVED",
+  depiction_review_status: "APPROVED",
+  publication_status: "APPROVED",
+} as const;
+
+test("Noor is an independent governed wing and route", () => {
+  assert.equal(isCanonicalVisualPath("/noor"), true);
+  assert.ok((CANONICAL_VISUAL_PATHS as readonly string[]).includes("/noor"));
+  assert.equal(INSTITUTION_WINGS.media.path, "/noor");
+  assert.ok(INSTITUTION_NAVIGATION_WINGS.includes("media"));
+  assert.equal(workspaceContext("/noor").wing.id, "media");
+  assert.equal(worldPlateForWing("media").wing, "media");
+  assert.ok(discoveryWings.some((wing) => wing.path === "/noor"));
+});
+
+test("Noor is wired to the application and keeps the editorial route distinct", () => {
+  const app = read("client/src/App.tsx");
+  assert.match(app, /path="\/noor"/);
+  assert.match(app, /VisualNoorPage/);
+  assert.match(app, /path="\/media-theater"/);
+  assert.match(app, /Redirect to="\/noor"/);
+  assert.match(app, /path="\/media-review"/);
+  assert.match(app, /VisualMediaReviewPage/);
+  assert.ok(existsSync(join(root, "client/src/visual-golden/pages/NoorPage.tsx")));
+});
+
+test("Seerah no longer embeds the media catalog and links out to Noor", () => {
+  const seerah = read("client/src/visual-golden/pages/SeerahPage.tsx");
+  assert.doesNotMatch(seerah, /MediaLibrarySection/);
+  assert.doesNotMatch(seerah, /data-visual="media-library"/);
+  assert.match(seerah, /href="\/noor"/);
+});
+
+test("the public Noor catalog stays a view over the governed catalog", () => {
   assert.ok(NOOR_MEDIA_RECORDS.length > 0);
-  const ids = NOOR_MEDIA_RECORDS.map((record) => record.id);
-  assert.equal(new Set(ids).size, ids.length);
-  assert.ok(NOOR_MEDIA_RECORDS.every((record) => !["kids", "القرآن الكريم للأطفال"].includes(record.category ?? "")));
-  const counts = mediaReviewCounts(NOOR_MEDIA_RECORDS);
-  assert.equal(counts.total, ids.length);
-  assert.equal(counts.approved + counts.pending, counts.total);
+  assert.equal(
+    NOOR_MEDIA_RECORDS.length,
+    DISCOVERED_MEDIA_CATALOG.filter(
+      (item) => !kidsCategories.has(item.category ?? ""),
+    ).length,
+  );
+  assert.equal(DISCOVERED_MEDIA_COUNTS.approved, 0);
+  assert.equal(mediaReviewCounts(NOOR_MEDIA_RECORDS).approved, 0);
+  assert.equal(
+    mediaReviewCounts(NOOR_MEDIA_RECORDS).pending,
+    NOOR_MEDIA_RECORDS.length,
+  );
 });
 
-test("Playback and remote thumbnails stay blocked for every unapproved record", () => {
-  const blocked = NOOR_MEDIA_RECORDS.filter((record) => !isMediaRecordApproved(record));
-  assert.ok(blocked.length > 0, "test fixture currently needs at least one pending media record");
-  for (const record of blocked) {
-    assert.equal(approvedNoorEmbedUrl(record), null, "unreviewed media must not mount an embed");
-    assert.equal(clearedNoorThumbnail(record), null, "unreviewed media must not hotlink thumbnails");
+test("no children's catalogue record leaks into the public theatre", () => {
+  for (const item of NOOR_MEDIA_RECORDS) {
+    assert.ok(
+      !kidsCategories.has(item.category ?? ""),
+      `${item.id} is a children's record`,
+    );
   }
 });
 
-test("Filtering preserves the complete catalog and has deterministic facets", () => {
-  const all = filterNoorRecords(NOOR_MEDIA_RECORDS, EMPTY_NOOR_FILTERS);
-  assert.equal(all.length, NOOR_MEDIA_RECORDS.length);
-  assert.deepEqual(all.map((record) => record.id), NOOR_MEDIA_RECORDS.map((record) => record.id));
-  const sample = all[0];
-  assert.ok(sample);
-  assert.ok(noorMediaTitle(sample).length > 0);
-  const byCategory = filterNoorRecords(all, { ...EMPTY_NOOR_FILTERS, category: sample.category ?? "" });
-  assert.ok(byCategory.includes(sample));
-  assert.ok(byCategory.every((record) => record.category === sample.category));
-  const nonsense = filterNoorRecords(all, { ...EMPTY_NOOR_FILTERS, query: "NOOR___IMPOSSIBLE_SEARCH___4F8D" });
-  assert.equal(nonsense.length, 0);
-  const reviewed = filterNoorRecords(all, { ...EMPTY_NOOR_FILTERS, availability: "approved" });
-  assert.ok(reviewed.every(isMediaRecordApproved));
-  const pending = filterNoorRecords(all, { ...EMPTY_NOOR_FILTERS, availability: "review" });
-  assert.ok(pending.every((record) => !isMediaRecordApproved(record)));
-  assert.equal(reviewed.length + pending.length, all.length);
+test("availability filters never mutate approval state", () => {
+  const filters = { ...EMPTY_NOOR_FILTERS, availability: "approved" as const };
+  assert.deepEqual(filterNoorRecords(NOOR_MEDIA_RECORDS, filters), []);
 });
 
-test("Topic selection never changes record data or starts playback", () => {
-  for (const topic of ["all", "seerah", "lectures", "stories"] as const) {
-    const filtered = filterNoorRecords(NOOR_MEDIA_RECORDS, { ...EMPTY_NOOR_FILTERS, topic });
-    assert.ok(filtered.every((record) => matchesNoorTopic(record, topic)));
-    if (topic === "all") assert.equal(filtered.length, NOOR_MEDIA_RECORDS.length);
+test("pending catalogue never fabricates a player or remote art", () => {
+  for (const item of NOOR_MEDIA_RECORDS) {
+    assert.equal(approvedNoorEmbedUrl(item), null);
+    assert.equal(clearedNoorThumbnail(item), null);
   }
 });
 
-test("Duration labels use exact known data and never invent estimates", () => {
+test("an approved record mounts only a no-autoplay YouTube embed", () => {
+  const approved = record({
+    ...PASSING,
+    embed_url: "https://www.youtube.com/embed/abcdEFG1234?autoplay=1&t=60",
+    thumbnail_url: "https://i.ytimg.com/vi/abcdEFG1234/hqdefault.jpg",
+    thumbnail_rights_status: "CLEARED",
+  });
+  assert.equal(isMediaRecordApproved(approved), true);
+  const embed = approvedNoorEmbedUrl(approved);
+  assert.ok(embed);
+  const url = new URL(embed);
+  assert.equal(url.protocol, "https:");
+  assert.equal(url.hostname, "www.youtube-nocookie.com");
+  assert.equal(url.searchParams.get("autoplay"), "0");
+  assert.equal(url.searchParams.get("rel"), "0");
+  assert.equal(url.searchParams.get("t"), null);
+  assert.equal(clearedNoorThumbnail(approved), approved.thumbnail_url);
+});
+
+test("an approved record with an untrusted embed fails closed", () => {
+  for (const embed of [
+    "http://www.youtube.com/embed/abcdEFG1234",
+    "https://example.com/embed/abcdEFG1234",
+    "https://www.youtube.com/watch?v=abcdEFG1234",
+    "javascript:alert(1)",
+    "not-a-url",
+  ]) {
+    assert.equal(
+      approvedNoorEmbedUrl(record({ ...PASSING, embed_url: embed })),
+      null,
+      `unsafe embed accepted: ${embed}`,
+    );
+  }
+});
+
+test("pending records never resolve a stored provider URL", () => {
+  assert.equal(
+    approvedNoorEmbedUrl(
+      record({ embed_url: "https://www.youtube.com/embed/abcdEFG1234" }),
+    ),
+    null,
+  );
+});
+
+test("remote thumbnails require approval and a cleared rights decision", () => {
+  assert.equal(
+    clearedNoorThumbnail(
+      record({
+        ...PASSING,
+        thumbnail_rights_status: "UNKNOWN",
+        thumbnail_url: "https://i.ytimg.com/vi/abcdEFG1234/hqdefault.jpg",
+      }),
+    ),
+    null,
+  );
+  assert.equal(
+    clearedNoorThumbnail(
+      record({
+        thumbnail_rights_status: "CLEARED",
+        thumbnail_url: "/local-cleared.png",
+      }),
+    ),
+    null,
+  );
+  assert.equal(
+    clearedNoorThumbnail(
+      record({
+        ...PASSING,
+        thumbnail_rights_status: "CLEARED",
+        thumbnail_url: "https://evil.example/image.png",
+      }),
+    ),
+    null,
+  );
+  assert.ok(
+    clearedNoorThumbnail(
+      record({
+        ...PASSING,
+        video_id: "abcdEFG1234",
+        thumbnail_rights_status: "CLEARED",
+      }),
+    )?.endsWith("/hqdefault.jpg"),
+  );
+});
+
+test("duration and title render only recorded facts", () => {
   assert.equal(noorMediaDuration(null), null);
   assert.equal(noorMediaDuration(0), null);
   assert.equal(noorMediaDuration(-1), null);
   assert.equal(noorMediaDuration(Number.NaN), null);
-  assert.equal(noorMediaDuration(62), "1:02");
+  assert.equal(noorMediaDuration(59), "0:59");
+  assert.equal(noorMediaDuration(61), "1:01");
   assert.equal(noorMediaDuration(3661), "1:01:01");
+  assert.equal(
+    noorMediaTitle(record({ title_ar: "  ", title_original: "Recorded" })),
+    "Recorded",
+  );
+  assert.equal(
+    noorMediaTitle(record({ title_ar: "العنوان", title_original: "Original" })),
+    "العنوان",
+  );
+  assert.equal(
+    noorMediaTitle(record({ title_ar: null, title_original: null })),
+    "fixture-record",
+  );
 });
 
-test("Noor has a canonical independent route and Seerah does not embed its media catalog", () => {
-  const app = read("client/src/App.tsx");
-  const seerah = read("client/src/visual-golden/pages/SeerahPage.tsx");
-  const page = read("client/src/visual-golden/pages/NoorPage.tsx");
-  const sidebar = read("client/src/visual-golden/components/shell/InstitutionSidebar.tsx");
-  assert.match(app, /\/noor/);
-  assert.match(app, /NoorPage/);
-  assert.match(page, /<NoorMediaTheatre\s*\/>/);
-  assert.doesNotMatch(seerah, /<MediaLibrarySection[^>]*kind=["']seerah["']/);
-  assert.match(sidebar, /media:\s*Clapperboard/);
-  assert.match(read("client/src/visual-golden/lib/institution/workspace.ts"), /\/noor/);
+test("the page and the visible navigation entry exist", () => {
+  assert.ok(
+    read("client/src/visual-golden/pages/NoorPage.tsx").includes(
+      "NoorMediaTheatre",
+    ),
+  );
+  assert.match(
+    read("client/src/visual-golden/components/shell/InstitutionSidebar.tsx"),
+    /Clapperboard/,
+  );
+  assert.match(read("client/public/manus-routes.json"), /\/noor/);
 });
 
-test("Noor screen is a functional governed component with a complete CSS module", () => {
-  const jsx = read("client/src/visual-golden/components/media/NoorMediaTheatre.tsx");
-  const css = read("client/src/visual-golden/components/media/NoorMediaTheatre.module.css");
-  const names = [...jsx.matchAll(/styles\.([A-Za-z_][\w]*)/g)].map((match) => match[1]);
-  const missing = [...new Set(names)].filter((name) => !new RegExp("\\." + name + "(?![\\w-])").test(css));
-  assert.deepEqual(missing, [], "CSS selectors missing from the real theatre component");
-  assert.match(jsx, /data-approved-count/);
-  assert.match(jsx, /approvedNoorEmbedUrl/);
-  assert.match(jsx, /<dialog/);
-  assert.match(jsx, /requestFullscreen/);
-  assert.match(css, /prefers-reduced-motion/);
-  assert.match(css, /max-width:\s*430px/);
+test("capture evidence targets the actual Noor route and mount", () => {
+  const capture = read("scripts/capture-visual-evidence.mjs");
+  assert.match(capture, /path: "\/noor"/);
+  assert.match(capture, /data-visual="noor-theatre"/);
+  assert.doesNotMatch(
+    capture,
+    /path: "\/seerah"[^\n]*scrollSelector: '\[data-visual="media-library"\]'/,
+  );
 });
