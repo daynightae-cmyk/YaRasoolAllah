@@ -50,6 +50,17 @@ export const BRAND = {
   },
   domain: "yarasoolallah.it.com",
   canonicalUrl: "https://yarasoolallah.it.com",
+  /**
+   * API origin used by native shells (Capacitor WebView, packaged desktop).
+   *
+   * The apex host answers with a 308 redirect to the `www` deployment host.
+   * A redirect response that carries no `Access-Control-Allow-Origin` aborts
+   * the entire CORS request in Chrome/WebView ("No 'Access-Control-Allow-
+   * Origin' header is present on the requested resource"), so the native
+   * client addresses the final host directly instead of paying a redirect
+   * that can never pass the browser CORS check. Verified live 2026-11-24.
+   */
+  apiOrigin: "https://www.yarasoolallah.it.com",
   contactEmail: "contact@yarasoolallah.it.com",
   currentYear: 2026,
   nonPersonificationNotice: {

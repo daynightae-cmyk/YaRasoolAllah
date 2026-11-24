@@ -22,13 +22,26 @@ const read = (path: string) => readFileSync(join(repoRoot, path), "utf8");
 
 describe("client api origin", () => {
   const origin = read("client/src/lib/api-origin.ts");
+  const brand = read("client/src/config/brand.ts");
 
   it("keeps web same-origin and maps only local WebView origins", () => {
     assert.match(origin, /https:\/\/localhost/);
     assert.match(origin, /capacitor:\/\/localhost/);
-    assert.match(origin, /BRAND\.canonicalUrl/);
+    assert.match(origin, /BRAND\.apiOrigin/);
     assert.match(origin, /VITE_API_ORIGIN/);
     assert.match(origin, /return "";/);
+  });
+
+  it("addresses the final deployment host, not the CORS-less redirecting apex", () => {
+    // The apex host answers with a 308 to `www` and that redirect response
+    // carries no Access-Control-Allow-Origin, so a browser aborts the whole
+    // CORS request. Native shells must hit the final host directly.
+    assert.match(brand, /apiOrigin: "https:\/\/www\.yarasoolallah\.it\.com"/);
+    assert.doesNotMatch(origin, /BRAND\.canonicalUrl/);
+    const apiOrigin = brand.match(/apiOrigin: "([^"]+)"/)?.[1];
+    assert.ok(apiOrigin, "brand.apiOrigin must be declared");
+    assert.ok(apiOrigin.startsWith("https://"), apiOrigin);
+    assert.notEqual(apiOrigin, brand.match(/canonicalUrl: "([^"]+)"/)?.[1]);
   });
 
   it("routes every governed API call site through apiUrl", () => {
@@ -62,6 +75,16 @@ describe("server native CORS", () => {
     assert.doesNotMatch(policy, /Access-Control-Allow-Origin", "\*/);
     assert.doesNotMatch(policy, /Access-Control-Allow-Credentials/);
     assert.match(app, /app\.use\(nativeShellCors\)/);
+  });
+
+  it("accepts the exact origins the shipped shells present", () => {
+    // Capacitor Android serves the bundle from https://localhost
+    // (androidScheme: "https"); the packaged desktop shell presents
+    // yra://institution. Both must be answerable with their own origin.
+    const policySet = read("server/native-shell-cors.ts");
+    for (const origin of ["https://localhost", "http://localhost", "capacitor://localhost", "yra://institution"]) {
+      assert.match(policySet, new RegExp(`"${origin.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`), origin);
+    }
   });
 
   it("serves the same allowlist from the public content function", () => {

@@ -1,0 +1,38 @@
+{
+  "dom": "FAIL TypeError: Failed to fetch",
+  "consoleErrors": [
+    {
+      "source": "log",
+      "level": "error",
+      "text": "Access to fetch at 'https://yarasoolallah.it.com/api/content/hadith/status' from origin 'http://localhost' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.",
+      "url": "http://localhost/probe.html"
+    },
+    {
+      "source": "log",
+      "level": "error",
+      "text": "Failed to load resource: net::ERR_FAILED",
+      "url": "https://yarasoolallah.it.com/api/content/hadith/status"
+    }
+  ],
+  "networkFailures": [
+    {
+      "errorText": "net::ERR_FAILED",
+      "blockedReason": null,
+      "type": "Fetch"
+    }
+  ],
+  "requests": [
+    {
+      "url": "https://yarasoolallah.it.com/api/content/hadith/status",
+      "method": "GET",
+      "headers": {
+        "sec-ch-ua-platform": "\"Windows\"",
+        "Referer": "http://localhost/",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/158.0.0.0 Safari/537.36",
+        "sec-ch-ua": "\"Chromium\";v=\"158\", \"Not.A/Brand\";v=\"24\", \"Google Chrome\";v=\"158\"",
+        "sec-ch-ua-mobile": "?0"
+      }
+    }
+  ],
+  "responses": []
+}
