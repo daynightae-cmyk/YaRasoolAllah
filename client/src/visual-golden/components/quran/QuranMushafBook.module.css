@@ -1,0 +1,429 @@
+/* ==========================================================================
+   YA RASOOL ALLAH — ONE MUSHAF, TWO PAGES, REAL PAGE TURNING
+   CSS-3D paper leaf around the central binding. No crossfades, no stacked books.
+   ========================================================================== */
+
+.mushaf {
+  position: relative;
+  isolation: isolate;
+  direction: rtl;
+  font-family: var(--font-quran, "Scheherazade New", "Amiri", "Amiri Quran", serif);
+  text-align: center;
+  color: #1a140c;
+  background:
+    radial-gradient(ellipse at top, #fff8ec 0%, #f2dfae 70%, #eacd86 100%);
+}
+
+.readingStatus {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  padding: 0.6rem;
+  font-size: 0.72rem;
+  color: #634a1c;
+  gap: 0.7rem;
+}
+
+.book {
+  position: relative;
+  margin: 1rem auto 0;
+  width: min(94vw, 1220px);
+  height: clamp(420px, 72vh, 620px);
+  perspective: 1100px;
+  perspective-origin: 50% 50%;
+  border: 3px solid #8a6a2d;
+  border-radius: 1.1rem;
+  box-shadow:
+    0 22px 60px -14px rgba(10, 6, 2, 0.55),
+    inset 0 0 0 6px #e6cb87;
+  background: #faf2cf;
+  overflow: hidden;
+}
+
+.book::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 1.1rem;
+  pointer-events: none;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.pageStack {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.baseSpread {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.binding {
+  position: absolute;
+  inset-inline-start: 50%;
+  top: 0;
+  bottom: 0;
+  width: 16px;
+  z-index: 2;
+  transform: translateX(-50%);
+  background:
+    linear-gradient(180deg, #3e2b16 0%, #7a5a32 38%, #3e2b16 100%);
+  box-shadow:
+    inset 0 0 6px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(230, 203, 135, 0.6);
+  border-radius: 2px;
+}
+
+.binding::before,
+.binding::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  width: 100%;
+  height: 28%;
+  border-radius: 50%;
+  background: rgba(230, 203, 135, 0.35);
+  filter: blur(2px);
+}
+.binding::before { top: 12%; }
+.binding::after { bottom: 12%; }
+
+.cover {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(135deg, rgba(212, 160, 23, 0.06), rgba(16, 185, 129, 0.04));
+}
+
+.paper {
+  position: relative;
+  height: 100%;
+  padding: 1.5rem 2.1rem;
+  overflow: hidden;
+  background: linear-gradient(180deg, #fff7dc 0%, #f4e0a8 22%, #e6d09c 100%);
+  border-radius: 0 1rem 1rem 0;
+  box-shadow: inset 0 0 14px rgba(220, 190, 130, 0.55);
+}
+
+.paper.left {
+  border-radius: 1rem 0 0 1rem;
+}
+.paper.right { border-radius: 0 1rem 1rem 0; }
+
+.paper.back {
+  transform: rotateY(180deg);
+  backface-visibility: hidden;
+}
+
+.ornament {
+  position: absolute;
+  top: 0.55rem;
+  inset-inline-end: 0.75rem;
+  width: clamp(6px, 1.2vw, 10px);
+  height: clamp(6px, 1.2vw, 10px);
+  border-radius: 50%;
+  background: radial-gradient(circle, #b2842b, transparent 70%);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.pageHeading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 0.7rem;
+  border-bottom: 2px double #b38d46;
+  margin-bottom: 1rem;
+  gap: 0.5rem;
+}
+.pageHeading span {
+  font-weight: 700;
+  color: #5a3a1a;
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+}
+.pageHeading small {
+  font-size: 0.62rem;
+  color: #7c5e2d;
+}
+
+.verses {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  height: 100%;
+  overflow: auto;
+  padding-top: 0.4rem;
+}
+
+.ayah {
+  display: inline-block;
+  min-width: 0;
+  margin: 0 0.45rem;
+  padding: 0 0.18rem 0.28rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  line-height: 2.15;
+  text-align: right;
+  border-bottom: 1px solid transparent;
+  transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+.ayah span {
+  display: block;
+}
+.ayah span[lang="ar"] { font-family: inherit; }
+.ayah.ayahOn {
+  border-bottom-color: #b2842b;
+  background: radial-gradient(circle at 50% 0%, rgba(178, 132, 43, 0.18), transparent 70%);
+  border-radius: 4px;
+}
+.ayahNumber {
+  display: inline-grid;
+  place-items: center;
+  width: clamp(1.15rem, 2vw, 1.35rem);
+  height: clamp(1.15rem, 2vw, 1.35rem);
+  margin-inline-start: 0.5rem;
+  border-radius: 50%;
+  border: 1.6px solid #a47730;
+  background: radial-gradient(circle at 35% 30%, rgba(248, 239, 194, 0.45), #d9a73a 62%, rgba(135, 88, 16, 0.62));
+  color: #21140a;
+  font-size: 0.66rem;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
+.endMark {
+  display: grid;
+  place-items: center;
+  gap: 0.35rem;
+  color: #8c6d2b;
+  font-size: 0.72rem;
+}
+
+.pageFoot {
+  position: absolute;
+  bottom: 0.5rem;
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  color: #a6853a;
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  pointer-events: none;
+}
+.pageFoot i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #b2842b;
+  box-shadow: 0 0 6px rgba(178, 132, 43, 0.55);
+  margin-inline: 6px;
+}
+
+.binding {}
+.book:focus-within .binding {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(230, 203, 135, 0.6), 0 0 18px rgba(212, 160, 23, 0.35);
+}
+
+/* Page-turn leaf */
+.turnShadow {
+  position: absolute;
+  inset-inline-end: 50%;
+  top: 0;
+  bottom: 0;
+  width: 34%;
+  pointer-events: none;
+  z-index: 4;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.06), rgba(16, 12, 6, 0.14), transparent);
+  transform-origin: 50% 50%;
+  filter: blur(12px);
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+.shadowNext { right: 0; transform: translateX(-50%); }
+.shadowPrevious { left: 0; transform: translateX(50%); }
+
+.leaf {
+  position: absolute;
+  inset-inline-end: 50%;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  z-index: 6;
+  transform-origin: 50% 50%;
+  perspective: 1100px;
+  perspective-origin: 50% 50%;
+  pointer-events: none;
+  transition:
+    transform 760ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    opacity 760ms ease;
+}
+.leafPrevious { right: 0; transform: translateX(50%); }
+.leafNext { left: 0; transform: translateX(-50%); }
+.leaf[data-animating] { transition: none; }
+
+.face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: linear-gradient(180deg, #fff7dc 0%, #f4e0a8 22%, #e6d09c 100%);
+  border-radius: 0 1rem 1rem 0;
+  backface-visibility: hidden;
+  box-shadow:
+    inset 0 0 14px rgba(220, 190, 130, 0.55),
+    0 10px 30px -10px rgba(0, 0, 0, 0.28);
+}
+.reverseFace {
+  transform: rotateY(180deg);
+  border-radius: 1rem 0 0 1rem;
+}
+
+.leafPrevious .face.right,
+.leafNext .face.left {
+  border-radius: 1rem 0 0 1rem;
+}
+.leafPrevious .face.left,
+.leafNext .face.right {
+  border-radius: 0 1rem 1rem 0;
+}
+
+/* Corner controls */
+.corner {
+  position: absolute;
+  bottom: 0;
+  width: clamp(13%, 24vw, 21rem);
+  height: clamp(13%, 24vw, 21rem);
+  z-index: 8;
+  border: 0;
+  background: transparent;
+  cursor: grab;
+  opacity: 0;
+  transition: opacity 220ms ease;
+}
+.book:hover .corner,
+.book:focus-within .corner {
+  opacity: 0.35;
+}
+.corner:active { cursor: grabbing; }
+.corner[data-page-corner="next"] { inset-inline-end: 0; border-radius: 0 0 0 999px; }
+.corner[data-page-corner="previous"] { inset-inline-start: 0; border-radius: 0 0 999px 0; }
+.corner:disabled { opacity: 0.15; cursor: not-allowed; }
+.corner span {
+  position: absolute;
+  inset-inline-start: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    linear-gradient(135deg, transparent 45%, rgba(212, 160, 23, 0.14) 100%);
+  border-radius: inherit;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  max-width: min(100%, 1100px);
+  margin: 0 auto;
+  background: rgba(4, 18, 15, 0.92);
+  border: 1px solid rgba(232, 197, 71, 0.45);
+  border-radius: 999px;
+  box-shadow: 0 18px 44px -26px rgba(0, 0, 0, 0.95), inset 0 1px rgba(255, 255, 255, 0.09);
+}
+.controls label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #f6e6b2;
+  font-size: 0.72rem;
+}
+.controls button,
+.controls select {
+  min-height: 42px;
+  padding: 0.35rem 0.9rem;
+  border: 1px solid rgba(232, 197, 71, 0.55);
+  border-radius: 999px;
+  background: radial-gradient(120% 140% at 50% 0%, rgba(232, 197, 71, 0.22), transparent 62%), linear-gradient(180deg, rgba(9, 38, 31, 0.96), rgba(4, 18, 15, 0.98));
+  color: #f6e6b2;
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.controls button:hover {
+  border-color: rgba(232, 197, 71, 0.9);
+  background:
+    radial-gradient(120% 150% at 50% 0%, rgba(232, 197, 71, 0.34), transparent 66%),
+    linear-gradient(180deg, rgba(13, 52, 42, 0.97), rgba(5, 22, 18, 0.99));
+}
+.controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.motionButton {
+  background: var(--bg-glass, rgba(13, 52, 42, 0.9));
+  border-color: var(--border-gold, rgba(232, 197, 71, 0.55));
+  color: #f6e6b2;
+}
+.motionButton[aria-pressed="true"] {
+  background: linear-gradient(#ffedbc, #d0a04d);
+  color: #241a0a;
+}
+.controls select {
+  border-color: rgba(232, 197, 71, 0.55);
+  background: rgba(13, 52, 42, 0.95);
+  color: #f6e6b2;
+}
+
+.instructions {
+  margin: 0.5rem auto 0;
+  text-align: center;
+  color: #8c6d2b;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  border: 0;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .mushaf[data-reduced-motion="true"] .leaf,
+  .mushaf[data-reduced-motion="true"] .turnShadow,
+  .mushaf[data-reduced-motion="true"] .corner span {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+  }
+  .mushaf[data-reduced-motion="true"] .face { backface-visibility: visible; }
+}

@@ -36,6 +36,7 @@ import {
   type QuranChapter,
   type QuranVerse,
 } from "@/services/quranService";
+import { QuranMushafBook } from "@/visual-golden/components/quran/QuranMushafBook";
 import { getGovernanceRecord } from "@shared/source-registry";
 import { searchVerifiedQuran, type QuranSearchHit } from "@/visual-golden/services/quran-search";
 import {
@@ -73,7 +74,6 @@ const Sanctuary3D = lazy(() =>
 
 type SidebarTab = "surah" | "marks";
 type ReadingMode = "mushaf" | "study";
-const VERSES_PER_SPREAD = 8;
 type TranslationState =
   | { state: "idle" | "loading" }
   | { state: "error"; message: string }
@@ -718,24 +718,6 @@ export function QuranPage() {
     window.requestAnimationFrame(() => document.getElementById("quran-reader")?.scrollIntoView({ block: "start" }));
   };
 
-  const renderVerse = (item: (typeof verses)[number]) => (
-    <button
-      type="button"
-      key={item.ayah}
-      id={`quran-ayah-${active}-${item.ayah}`}
-      className={`${styles.ayah} ${ayah === item.ayah ? styles.ayahOn : ""}`}
-      onClick={() => {
-        setAyah(item.ayah);
-        setShowNote(false);
-      }}
-      aria-pressed={ayah === item.ayah}
-      title={`الآية ${item.ayah}`}
-    >
-      <span>{item.arabic}</span>
-      <span className={styles.ayahNum}>{item.ayah}</span>
-    </button>
-  );
-
   return (
     <div className={`${styles.page} ${focus ? styles.focus : ""}`}>
       {studioOpen ? (
@@ -1090,111 +1072,26 @@ export function QuranPage() {
           ) : null}
           <a className={styles.catalogJump} href="#quran-surah-nav">فهرس السور والبحث ↓</a>
 
-          <div
-            className={`${styles.sheet} ${readingMode === "mushaf" ? styles.spread : ""} ${lamp ? styles.lampOn : ""}`}
-            dir="rtl"
-            lang="ar"
-            data-visual="quran-sheet"
-            data-quran-state={loading ? "loading" : loadError ? "error" : verses.length > 0 ? "ready" : "empty"}
-          >
-            <button
-              className={styles.sheetNav}
-              type="button"
-              aria-label="السورة السابقة"
-              disabled={active <= 1}
-              onClick={() => moveSurah(-1)}
-            >
-              <ChevronRight size={18} />
-            </button>
-
-            <div className={`${styles.ayat} ${readingMode === "study" ? styles.studyAyat : ""}`} style={{ fontSize: `calc(clamp(1.25rem, 2.2vw, 1.7rem) * ${fontScale})`, lineHeight }}>
-              {loading ? (
-                <p className={styles.loadingState}>
-                  جارٍ فتح السورة من المصحف المحلي…
-                </p>
-              ) : loadError ? (
-                <p className={styles.errorState}>{loadError}</p>
-              ) : readingMode === "study" ? (
-                verses.map(renderVerse)
-              ) : (
-                Array.from({ length: Math.ceil(verses.length / VERSES_PER_SPREAD) }, (_, index) => {
-                  const first = index * VERSES_PER_SPREAD;
-                  const middle = first + VERSES_PER_SPREAD / 2;
-                  return (
-                    <div className={styles.folio} key={verses[first].ayah} data-visual="quran-spread">
-                      <div className={styles.folioPage}>{verses.slice(first, middle).map(renderVerse)}</div>
-                      <div className={styles.folioPage}>{verses.slice(middle, first + VERSES_PER_SPREAD).map(renderVerse)}</div>
-                    </div>
-                  );
-                })
-              )}
+          {currentChapter ? (
+            <div data-visual="quran-sheet" className={styles.sheetWrapper} aria-label="المصحف المفتوح">
+              <QuranMushafBook
+                verses={verses}
+                chapterName={currentChapter.arabicName}
+                selectedAyah={ayah}
+                onSelectAyah={(nextAyah) => setAyah(nextAyah)}
+                canPreviousChapter={active > 1}
+                canNextChapter={active < 114}
+                onPreviousChapter={() => moveSurah(-1)}
+                onNextChapter={() => moveSurah(1)}
+                fontScale={fontScale}
+                lineHeight={lineHeight}
+              />
             </div>
-            {readingMode === "study" && selectedVerse ? (
-              <div className={styles.studyCard} aria-live="polite">
-                <strong>مادة الدراسة · الآية {selectedVerse.ayah}</strong>
-                {translationState.state === "loading" ? (
-                  <p className={styles.pendingStudy}>جارٍ تحميل ترجمة السورة…</p>
-                ) : translationState.state === "error" ? (
-                  <p className={styles.pendingStudy}>{translationState.message}</p>
-                ) : selectedTranslation && translationState.state === "ready" ? (
-                  <p
-                    className={styles.translationText}
-                    dir={translationState.payload.direction}
-                    lang={translationState.payload.language}
-                  >
-                    <b>ترجمة المعنى:</b> {selectedTranslation}
-                  </p>
-                ) : (
-                  <p className={styles.pendingStudy}>لا توجد ترجمة متاحة لهذا الموضع من المزوّد الآن.</p>
-                )}
-                {quranEncState.state === "loading" ? (
-                  <p className={styles.pendingStudy}>جارٍ تحميل ترجمة المعاني من QuranEnc داخل الرواق…</p>
-                ) : quranEncState.state === "error" ? (
-                  <p className={styles.pendingStudy}>{quranEncState.message}</p>
-                ) : selectedEncVerse ? (
-                  <div
-                    className={styles.translationText}
-                    dir={selectedEncEdition.direction}
-                    lang={selectedEncEdition.language}
-                  >
-                    <b>{selectedEncEdition.label}</b>
-                    <p>{selectedEncVerse.translation}</p>
-                    <small>
-                      QuranEnc.com · الإصدار {selectedEncEdition.version} · النص معروض دون تعديل.
-                    </small>
-                  </div>
-                ) : (
-                  <p className={styles.pendingStudy}>لا توجد ترجمة QuranEnc لهذه الآية في استجابة المصدر الحالية.</p>
-                )}
-                {tafsirState.state === "loading" ? (
-                  <p className={styles.pendingStudy}>جارٍ تحميل التفسير الميسر…</p>
-                ) : tafsirState.state === "error" ? (
-                  <p className={styles.pendingStudy}>{tafsirState.message}</p>
-                ) : selectedTafsir && tafsirState.state === "ready" ? (
-                  <>
-                    <p><b>التفسير الميسر:</b> {selectedTafsir.text}</p>
-                    {selectedTafsir.footnotes ? <p><b>هامش المصدر:</b> {selectedTafsir.footnotes}</p> : null}
-                  </>
-                ) : (
-                  <p className={styles.pendingStudy}>لا يوجد تفسير متاح لهذا الموضع من المصدر الآن.</p>
-                )}
-                <small>
-                  النص العربي المحلي مستقل عن الترجمة والتفسير. ترجمة AlQuran Cloud تُجلب عبر خادم المنصة مع الحفاظ على هوية الإصدار والمترجم، وترجمة QuranEnc طبقة مستقلة بشروط إعادة النشر الخاصة بها،
-                  والتفسير الميسر يأتي حيًا من QuranEnc.com دون تعديل مع رقم الإصدار وآخر تحديث.
-                </small>
-              </div>
-            ) : null}
-
-            <button
-              className={styles.sheetNav}
-              type="button"
-              aria-label="السورة التالية"
-              disabled={active >= 114}
-              onClick={() => moveSurah(1)}
-            >
-              <ChevronLeft size={18} />
-            </button>
-          </div>
+          ) : (
+            <p className={styles.loadingState}>
+              جارٍ تحميل فهرس السور…
+            </p>
+          )}
 
         </section>
 

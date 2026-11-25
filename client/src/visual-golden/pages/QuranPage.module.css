@@ -321,7 +321,12 @@
   font-size: 0.72rem;
 }
 
+.sheetWrapper {
+  display: contents;
+}
+
 /* --- Mushaf sheet (the Qur'an text surface) --- */
+
 .sheet {
   position: relative;
   background:
