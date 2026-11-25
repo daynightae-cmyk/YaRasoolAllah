@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState, type FormEvent } 
 import { Link } from "wouter";
 import {
   Bookmark,
+  BookMarked,
   BookmarkCheck,
   Share2,
   Copy,
@@ -24,6 +25,8 @@ import { getInteriorScene } from "@/visual-golden/services/interior-scenes";
 import { art } from "@/visual-golden/mock/art";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { PageHero } from "@/visual-golden/components/shared/PageHero";
+import { WingStart } from "@/visual-golden/components/shared/WingStart";
+import chamber from "@/visual-golden/components/shared/ReferenceChamber.module.css";
 import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
 import { FocusBar } from "@/visual-golden/components/present/FocusBar";
 import {
@@ -69,6 +72,7 @@ const Sanctuary3D = lazy(() =>
 
 type SidebarTab = "surah" | "marks";
 type ReadingMode = "mushaf" | "study";
+const VERSES_PER_SPREAD = 8;
 type TranslationState =
   | { state: "idle" | "loading" }
   | { state: "error"; message: string }
@@ -705,6 +709,24 @@ export function QuranPage() {
   const sanctuaryAvailable = !!sanctuaryScene && !sanctuaryFailed;
   const showSanctuary = sanctuaryOpen && sanctuaryAvailable;
 
+  const renderVerse = (item: (typeof verses)[number]) => (
+    <button
+      type="button"
+      key={item.ayah}
+      id={`quran-ayah-${active}-${item.ayah}`}
+      className={`${styles.ayah} ${ayah === item.ayah ? styles.ayahOn : ""}`}
+      onClick={() => {
+        setAyah(item.ayah);
+        setShowNote(false);
+      }}
+      aria-pressed={ayah === item.ayah}
+      title={`الآية ${item.ayah}`}
+    >
+      <span>{item.arabic}</span>
+      <span className={styles.ayahNum}>{item.ayah}</span>
+    </button>
+  );
+
   return (
     <div className={`${styles.page} ${focus ? styles.focus : ""}`}>
       {showSanctuary && sanctuaryScene ? (
@@ -758,14 +780,26 @@ export function QuranPage() {
           />
         </Suspense>
       ) : focus ? null : (
-        <PageHero
-          title="رواق القرآن"
-          subtitle="المصحف العربي الكامل · نص موثّق"
-          desc="النص العربي من نسخة Tanzil Uthmani-min 1.1 المحفوظة حرفيًا دون تعديل."
-          image={worldPlateForWing("quran").plate}
-          compact
-          wing="quran"
-        />
+        <div className={chamber.quran}>
+          <PageHero
+            title="القرآن الكريم"
+            subtitle="Qur’an Knowledge Chamber"
+            desc="النص العربي من نسخة Tanzil Uthmani-min 1.1 المحفوظة حرفيًا دون تعديل."
+            image={worldPlateForWing("quran").plate}
+            wing="quran"
+            centered
+          >
+            <img className={chamber.mushaf} src="/visual-golden/art/quran-reference-mushaf.webp" alt="" />
+          </PageHero>
+          <WingStart label="ابدأ رحلتك مع القرآن" actions={[
+            { title: "اقرأ وتدبر", en: "Read and reflect", description: "المصحف والآيات", icon: BookMarked, target: "quran-reader", image: art.mushafOpen },
+            { title: "اختر سورة", en: "Browse surahs", description: "فهرس السور والبحث", icon: Search, target: "quran-surah-nav", image: art.mushaf },
+            { title: "استمع للتلاوة", en: "Recitation", description: "القارئ والتحكم في التشغيل", icon: Headphones, target: "quran-listening", image: art.reciterMushaf },
+            { title: "التفسير", en: "Tafsir", description: "مساحة التفسير والتدبر", icon: BookMarked, href: "/tafsir", image: art.books },
+            { title: "المصادر", en: "Sources", description: "فهرس المصادر", icon: Search, href: "/sources", image: art.shelves },
+            { title: "مكتبة التلاوات", en: "Recitation library", description: "تصفح التسجيلات والقراء", icon: Headphones, href: "/quran-audio", image: art.reciterLanterns },
+          ]} />
+        </div>
       )}
 
       <FocusBar
@@ -997,7 +1031,7 @@ export function QuranPage() {
           <a className={styles.catalogJump} href="#quran-surah-nav">فهرس السور والبحث ↓</a>
 
           <div
-            className={`${styles.sheet} ${lamp ? styles.lampOn : ""}`}
+            className={`${styles.sheet} ${readingMode === "mushaf" ? styles.spread : ""} ${lamp ? styles.lampOn : ""}`}
             dir="rtl"
             lang="ar"
             data-visual="quran-sheet"
@@ -1020,26 +1054,19 @@ export function QuranPage() {
                 </p>
               ) : loadError ? (
                 <p className={styles.errorState}>{loadError}</p>
+              ) : readingMode === "study" ? (
+                verses.map(renderVerse)
               ) : (
-                verses.map((item) => (
-                  <button
-                    type="button"
-                    key={item.ayah}
-                    id={`quran-ayah-${active}-${item.ayah}`}
-                    className={`${styles.ayah} ${
-                      ayah === item.ayah ? styles.ayahOn : ""
-                    }`}
-                    onClick={() => {
-                      setAyah(item.ayah);
-                      setShowNote(false);
-                    }}
-                    aria-pressed={ayah === item.ayah}
-                    title={`الآية ${item.ayah}`}
-                  >
-                    <span>{item.arabic}</span>
-                    <span className={styles.ayahNum}>{item.ayah}</span>
-                  </button>
-                ))
+                Array.from({ length: Math.ceil(verses.length / VERSES_PER_SPREAD) }, (_, index) => {
+                  const first = index * VERSES_PER_SPREAD;
+                  const middle = first + VERSES_PER_SPREAD / 2;
+                  return (
+                    <div className={styles.folio} key={verses[first].ayah} data-visual="quran-spread">
+                      <div className={styles.folioPage}>{verses.slice(first, middle).map(renderVerse)}</div>
+                      <div className={styles.folioPage}>{verses.slice(middle, first + VERSES_PER_SPREAD).map(renderVerse)}</div>
+                    </div>
+                  );
+                })
               )}
             </div>
             {readingMode === "study" && selectedVerse ? (
@@ -1109,7 +1136,10 @@ export function QuranPage() {
             </button>
           </div>
 
-          <div className={styles.player} data-visual="quran-player">
+        </section>
+
+        <div className={styles.studioRail}>
+          <section id="quran-listening" className={styles.player} data-visual="quran-player" aria-label="الاستماع للتلاوة">
             <audio
               ref={audioRef}
               src={selectedReciter?.streamUrl}
@@ -1241,8 +1271,7 @@ export function QuranPage() {
                 </ol>
               </div>
             ) : null}
-          </div>
-        </section>
+          </section>
 
         {focus ? null : (
           <aside className={styles.sidePanel}>
@@ -1389,6 +1418,7 @@ export function QuranPage() {
             </div>
           </aside>
         )}
+        </div>
       </div>
 
       {focus ? null : (

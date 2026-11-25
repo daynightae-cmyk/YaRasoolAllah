@@ -1,5 +1,6 @@
 import { useRef } from "react";
-import { useLocation } from "wouter";
+import { Link, useLocation } from "wouter";
+import { Home, Library, ScrollText, Map, BookOpen, Compass } from "lucide-react";
 import { Search, Bell, Menu, Sun, Moon, Globe, Contrast, ChevronDown, Activity } from "lucide-react";
 import { useInstitution, type MotionPreference, type ThemeMode } from "@/visual-golden/lib/institution/store";
 import { workspaceContext } from "@/visual-golden/lib/institution/workspace";
@@ -10,7 +11,17 @@ import styles from "./shell.module.css";
 interface Props {
   onMenuClick: () => void;
   onSearch: () => void;
+  referenceNavigation?: boolean;
 }
+
+const REFERENCE_NAVIGATION = [
+  { href: "/", ar: "الرئيسية", en: "Home", icon: Home },
+  { href: "/library", ar: "المكتبة", en: "The Library", icon: Library },
+  { href: "/quran", ar: "القرآن الكريم", en: "Qur’an", icon: BookOpen },
+  { href: "/hadith", ar: "الحديث الشريف", en: "Hadith", icon: ScrollText },
+  { href: "/seerah", ar: "السيرة النبوية", en: "Seerah", icon: Compass },
+  { href: "/atlas", ar: "الأطلس التفاعلي", en: "Interactive Atlas", icon: Map },
+];
 
 const THEME_OPTIONS: { id: ThemeMode; labelAr: string; labelEn: string }[] = [
   { id: "dark", labelAr: "العتمة الهادئة", labelEn: "Dark sanctuary" },
@@ -24,7 +35,7 @@ const MOTION_OPTIONS: { id: MotionPreference; labelAr: string; labelEn: string }
   { id: "full", labelAr: "حركة كاملة", labelEn: "Full" },
 ];
 
-export function InstitutionHeader({ onMenuClick, onSearch }: Props) {
+export function InstitutionHeader({ onMenuClick, onSearch, referenceNavigation }: Props) {
   const theme = useInstitution((state) => state.theme);
   const lang = useInstitution((state) => state.lang);
   const motion = useInstitution((state) => state.motion);
@@ -41,6 +52,15 @@ export function InstitutionHeader({ onMenuClick, onSearch }: Props) {
   return (
     <header className={styles.header}>
       <div className={styles.headerPrimary}>
+        {referenceNavigation ? <nav className={styles.referenceNav} aria-label={lang === "ar" ? "أقسام المؤسسة" : "Institution sections"}>
+          <Link href="/" className={styles.referenceBrand}><span>YA RASOUL ALLAH ﷺ</span><small>— The Living Seerah —</small></Link>
+          {REFERENCE_NAVIGATION.map(({ href, ar, en, icon: Icon }) => (
+            <Link key={href} href={href} aria-current={pathname === href ? "page" : undefined}>
+              <Icon size={20} aria-hidden="true" />
+              <span><span lang="ar">{ar}</span><small lang="en">{en}</small></span>
+            </Link>
+          ))}
+        </nav> : null}
         <button type="button" className={styles.menuBtn} onClick={onMenuClick} aria-label={t(lang, "menu")}>
           <Menu size={22} aria-hidden="true" />
         </button>

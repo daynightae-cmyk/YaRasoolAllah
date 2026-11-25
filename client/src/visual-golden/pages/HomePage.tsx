@@ -25,6 +25,7 @@ import {
   readingResumeTarget,
 } from "@/visual-golden/lib/institution/reading-progress";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
+import { HomeReferencePortals } from "@/visual-golden/components/shared/HomeReferencePortals";
 import { ViewSwitcher, type ViewMode } from "@/visual-golden/components/present/ViewSwitcher";
 import {
   getDailyVerse,
@@ -245,8 +246,10 @@ export function HomePage() {
   return (
     <SectionEntry3D wing="home" variant="threshold">
     <div className={styles.page}>
-      <section className={styles.hero} data-visual="home-gateway" dir="rtl" lang="ar">
-        <img className={styles.heroBg} src={art.sceneThreshold} alt="" />
+      <section className={`${styles.hero} ${styles.referenceHero}`} data-visual="home-gateway" dir="rtl" lang="ar">
+        <img className={styles.heroBg} src={worldPlateForWing("home").plate} alt="" />
+        <img className={styles.referenceArch} src="/visual-golden/art/home-reference-arch.webp" alt="" />
+        <img className={styles.referenceForeground} src="/visual-golden/art/home-reference-foreground.webp" alt="" />
         <div className={styles.heroOrnament} />
         <div className={styles.heroBloom} aria-hidden />
         <div className={styles.heroVeil} />
@@ -260,24 +263,20 @@ export function HomePage() {
           <h1 className="calligraphy">
             يا رسول الله <span className={styles.heroSalat}>ﷺ</span>
           </h1>
-          <p className={styles.heroLatin}>THE LIVING SEERAH</p>
+          <p className={styles.heroLatin}>YA RASOUL ALLAH ﷺ<span>The Living Seerah</span></p>
           <p className={styles.heroSub}>
-            رحلةٌ في المكان والزمان، من مكة إلى المدينة، ومن الغار إلى الفتح.
+            رحلة تفاعلية شاملة في السيرة النبوية، نستكشف فيها حياة النبي ﷺ، وأحداثها، ومعالمها، ودروسها الخالدة.
           </p>
-          <p className={styles.heroDesc}>
-            أطلسٌ حيّ، وفصولٌ غامرة، وقاعدةٌ زمنية تربط كل حدث بمصدره — دون تجسيد،
-            ودون اختلاق. ادخل من البوابة، ثم اختر طريقك: الفصل، أو المكان، أو المصدر.
+          <p className={styles.heroDesc} lang="en" dir="ltr">
+            An immersive journey through the Seerah, exploring its events, key places, and timeless lessons.
           </p>
           <div className={styles.heroActions}>
             <Link href="/seerah" className={styles.heroPrimary}>
-              ابدأ رحلة السيرة <span aria-hidden>←</span>
+              ابدأ الرحلة <span aria-hidden>◀</span>
             </Link>
-            <Link href="/seerah/database" className={styles.heroSecondary}>
-              قاعدة السيرة
-            </Link>
-            <Link href="/atlas" className={styles.heroSecondary}>
-              الأطلس التاريخي
-            </Link>
+            <a href="#knowledge-wings" className={styles.heroSecondary}>
+              <Compass size={20} aria-hidden="true" /> اكتشف المحتوى
+            </a>
           </div>
           <form
             className={styles.heroSearch}
@@ -309,6 +308,7 @@ export function HomePage() {
             اكتشف الأجنحة <span aria-hidden>↓</span>
           </a>
         </div>
+        <HomeReferencePortals />
       </section>
 
       <section className={styles.section} id="knowledge-wings">

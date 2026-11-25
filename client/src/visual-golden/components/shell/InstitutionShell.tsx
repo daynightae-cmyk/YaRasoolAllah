@@ -145,6 +145,7 @@ export function InstitutionShell({ children }: { children: ReactNode }) {
   // never trapped. The Library keeps its door because the door is also the
   // entrance to this wing.
   const cinema = /^\/(seerah\/terrain|seerah\/world|library)(\/|$)/.test(pathname);
+  const referenceNavigation = ["/", "/quran", "/hadith", "/seerah"].includes(pathname);
 
   return (
     <div
@@ -154,6 +155,7 @@ export function InstitutionShell({ children }: { children: ReactNode }) {
       data-lang={lang}
       data-motion={reducedMotion ? "reduced" : "full"}
       data-surface={cinema ? "cinema" : "institution"}
+      data-reference-nav={referenceNavigation ? "" : undefined}
       dir={lang === "ar" || lang === "ur" ? "rtl" : "ltr"}
     >
       {splash ? <SplashCeremony onDone={closeSplash} reducedMotion={reducedMotion} /> : null}
@@ -165,7 +167,7 @@ export function InstitutionShell({ children }: { children: ReactNode }) {
       <AmbientSound />
       <InstitutionSidebar open={sidebarOpen} onClose={closeSidebar} onReplaySplash={openSplash} />
       <div className={styles.mainArea}>
-        <InstitutionHeader onMenuClick={openMenu} onSearch={openDiscover} />
+        <InstitutionHeader onMenuClick={openMenu} onSearch={openDiscover} referenceNavigation={referenceNavigation} />
         <ContentLanguageNotice pathname={pathname}/>
         <main ref={contentRef} id="main-content" className={styles.content}>
           <div key={pathname} className="vg-page-enter">{children}</div>

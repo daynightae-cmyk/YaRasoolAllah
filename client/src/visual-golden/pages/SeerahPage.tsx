@@ -15,6 +15,7 @@ import { art } from "@/visual-golden/mock/art";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { useEffectiveMotion } from "@/visual-golden/lib/institution/effective-motion";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
+import { WingStart } from "@/visual-golden/components/shared/WingStart";
 import {
   CHAPTERS,
   CATEGORIES,
@@ -205,6 +206,9 @@ export function SeerahPage() {
 
   return (
     <div className={styles.page} dir="rtl" lang="ar">
+      <SeerahPortalCrossroads>
+        <h1 id="seerah-crossroads-title">السيرة النبوية</h1>
+      </SeerahPortalCrossroads>
       {/* Full-page hero, as in the approved composition: a cinematic world
           plate behind the identity, a service row to real surfaces, two
           entry CTAs, and a ledger whose numbers are measured from the local
@@ -222,7 +226,7 @@ export function SeerahPage() {
             <span className={styles.journeyRule} aria-hidden />
             رحلة تفاعلية في
           </p>
-          <h1 className={styles.journeyTitle}>السيرة النبوية</h1>
+          <h2 className={styles.journeyTitle}>رحلة السيرة النبوية</h2>
           <p className={styles.journeyLead}>
             رحلة سردية في المكان والزمان: من مكة إلى المدينة، ومن الغار إلى الفتح.
             كل فصلٍ مسرحٌ قائم بذاته، وكل محطةٍ تعود إلى قاعدتها الزمنية وموضعها في الأطلس.
@@ -303,10 +307,14 @@ export function SeerahPage() {
       </header>
 
       {/* Destination portals — every arch a real link to a real route. */}
-      <SeerahPortalCrossroads />
+      <WingStart label="اختر طريقك في السيرة" actions={[
+        { title: "فصول السيرة", description: "تصفح الفصول بالترتيب واختر محطتك", icon: BookOpenCheck, target: "seerah-chapters" },
+        { title: "اقرأ الفصل", description: "النص والأحداث والمراجع المرتبطة بالفصل الحالي", icon: ScrollText, target: "chapter-reading" },
+        { title: "رحلة المكان والزمان", description: "انتقل بين محطات الرحلة الموجودة", icon: Compass, target: "seerah-journey-band" },
+      ]} />
 
       {/* Journey band: the interactive path through the recorded stops. */}
-      <section className={styles.journeyBand} data-visual="seerah-journey-band" aria-label="مسار الرحلة">
+      <section id="seerah-journey-band" className={styles.journeyBand} data-visual="seerah-journey-band" aria-label="مسار الرحلة">
         <div className={styles.bandHead}>
           <div>
             <p className={styles.bandKicker}>مسار الرحلة</p>

@@ -13,6 +13,27 @@
 .heroCompact .heroCopy {
   padding: 1.6rem 2rem 2.2rem;
 }
+.hero.heroCentered {
+  min-height: auto;
+  display: grid;
+  place-items: center;
+  padding: clamp(1.3rem, 3vw, 3rem) 0 0;
+}
+.heroCentered .heroImg {
+  object-position: center 43%;
+  filter: brightness(.95) saturate(1.15);
+}
+.hero.heroCentered .heroFrame {
+  background: radial-gradient(ellipse at 50% 20%, #2d1e1470, transparent 63%);
+}
+.heroCentered .heroCopy {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  padding: .8rem 1rem 0;
+  text-align: center;
+  background: none;
+}
 .hero[data-wing="library"] .heroFrame {
   background:
     linear-gradient(to left, rgba(28, 16, 8, 0.92) 0%, rgba(28, 16, 8, 0.55) 36%, transparent 78%),

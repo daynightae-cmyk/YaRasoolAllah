@@ -5,6 +5,8 @@ import { art } from "@/visual-golden/mock/art";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
 import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
 import { SectionHead } from "@/visual-golden/components/shared/SectionHead";
+import { WingStart } from "@/visual-golden/components/shared/WingStart";
+import chamber from "@/visual-golden/components/shared/ReferenceChamber.module.css";
 import { IsnadChain } from "@/visual-golden/components/unique/IsnadChain";
 import { getInteriorScene } from "@/visual-golden/services/interior-scenes";
 import p from "@/visual-golden/components/present/present.module.css";
@@ -348,18 +350,14 @@ export function HadithPage() {
           />
         </Suspense>
       ) : (
-        <section className={styles.archiveHero} data-visual="hadith-archive-hero">
-          <img className={styles.heroImg} src={worldPlateForWing("hadith").plate} alt="" />
-          <div className={styles.heroShade} aria-hidden="true" />
-          <div className={styles.heroBody}>
-            <div className={styles.heroCopy}>
+        <section className={`${styles.archiveHero} ${chamber.hadith}`} data-visual="hadith-archive-hero">
+          <img className={`${styles.heroImg} ${chamber.hall}`} src={worldPlateForWing("hadith").plate} alt="" />
+          <div className={chamber.hallShade} aria-hidden="true" />
+          <div className={`${styles.heroBody} ${chamber.hallBody}`}>
+            <div className={`${styles.heroCopy} ${chamber.hallCopy}`}>
               <span className={styles.heroEyebrow}><LibraryBig size={15} aria-hidden="true" /> دار الحديث النبوي</span>
-              <h1>أرشيف الحديث الشريف</h1>
-              <p className={styles.heroDesc}>
-                موسوعة رقمية تجمع كتب السنة المعتمدة وشروحها، مع أدوات بحث ودراسة —
-                وعدد صادق: {HADITH_COUNTS.collections} مصنفات ببليوغرافية و{HADITH_COUNTS.localSamples} سجلات
-                محلية قيد المراجعة. العدد الكلي للمصنف ليس حجم المتن المحلي.
-              </p>
+              <h1>الحديث الشريف</h1>
+              <span className={chamber.subtitle} lang="en">Hadith Wisdom Hall</span>
               <div className={styles.heroServices}>
                 <span><ShieldCheck size={15} aria-hidden="true" /> كتب السنة المعتمدة بتحقاقات موثقة</span>
                 <span><Users size={15} aria-hidden="true" /> أسانيد ورواة بخرائط مختصرة</span>
@@ -371,7 +369,18 @@ export function HadithPage() {
                 </button>
               ) : null}
             </div>
-            <div className={styles.heroLedger} aria-label="أعداد الأرشيف">
+          </div>
+          <WingStart label="ابدأ الدراسة في دار الحديث" actions={[
+            { title: "ابحث عن حديث", en: "Search hadith", description: "بحث في السجلات المحلية", icon: Search, target: "hadith-search", image: art.arches },
+            { title: "تصفح المصنفات", en: "Hadith collections", description: "فهرس الكتب ومصادرها", icon: LibraryBig, target: "hadith-collections", image: art.shelves },
+            { title: "اقرأ وادرس", en: "Read and study", description: "السجلات المحلية وأدوات الدراسة", icon: BookOpen, target: "hadith-records", image: art.mushafOpen },
+            { title: "دار الكتب", en: "Library", description: "تصفح كتالوج المكتبة", icon: LibraryBig, href: "/library", image: art.library },
+            { title: "مصادر الحديث", en: "Source archive", description: "فهرس المصادر", icon: ShieldCheck, href: "/sources", image: art.bookStack },
+            { title: "أدوات البحث", en: "Research tools", description: "البحث في فهارس المؤسسة", icon: Search, href: "/basirah", image: art.lantern },
+          ]} />
+          <img className={chamber.desk} src="/visual-golden/art/hadith-reference-desk.webp" alt="" />
+          <div className={chamber.hallSummary}>
+            <div className={`${styles.heroLedger} ${chamber.hallLedger}`} aria-label="أعداد الأرشيف">
               <div>
                 <strong>{bibliographicTotal.toLocaleString("ar-EG")}</strong>
                 <span>حديثًا — عدد ببليوغرافي مجموع</span>
@@ -389,12 +398,14 @@ export function HadithPage() {
                 <span>سجلات محلية قيد المراجعة</span>
               </div>
             </div>
+            <p className={styles.heroDesc}>
+              فهرس كتب السنة وشروحها مع أدوات البحث والدراسة. العدد الكلي للمصنف ليس حجم المتن المحلي،
+              وتظهر السجلات المحلية قيد المراجعة في عدد منفصل.
+            </p>
           </div>
         </section>
       )}
-
-      {/* Full-width search bar + scope tabs, as in the approved composition. */}
-      <div className={styles.searchDeck} data-visual="hadith-search-deck">
+      <div id="hadith-search" className={styles.searchDeck} data-visual="hadith-search-deck">
         <div className={styles.scopeTabs} role="tablist" aria-label="نطاق البحث">
           <button
             type="button"
@@ -490,7 +501,7 @@ export function HadithPage() {
       {/* The full archive stays mounted while the 3D study room is open;
           it is only visually hidden (state, search and notes keep working). */}
       <div className={showArchive ? styles.archiveHidden : undefined}>
-      <section className={styles.pad} data-visual="hadith-collection-shelf">
+      <section id="hadith-collections" className={styles.pad} data-visual="hadith-collection-shelf">
         <SectionHead title="أبرز كتب الحديث" en="Collection Metadata — not local corpus" href="/library" />
         <div className={`${styles.grid} stagger`}>
           {COLLECTIONS.map((collection, i) => {
@@ -526,7 +537,7 @@ export function HadithPage() {
       {/* Three-column browsing deck, as in the approved composition:
           subjects rail · hadith feed · books rail. Every card is a real
           local record; nothing is padded with invented ahadith. */}
-      <div className={styles.browseDeck} data-visual="hadith-browse-deck">
+      <div id="hadith-records" className={styles.browseDeck} data-visual="hadith-browse-deck">
         <aside className={styles.railPanel} ref={chapterListRef} aria-label="تصفح الأحاديث حسب الموضوع">
           <SectionHead title="تصفح حسب كتب الأبواب" en="By recorded book" />
           <div className={styles.railList}>

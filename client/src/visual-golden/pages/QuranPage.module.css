@@ -11,11 +11,16 @@
 /* --- Workspace layout --- */
 .workspace {
   display: grid;
-  grid-template-columns: 260px minmax(0, 1fr) 300px;
+  grid-template-columns: minmax(190px, .9fr) minmax(0, 2.75fr) minmax(205px, 1fr);
   gap: 1rem;
   padding: 1rem 1.3rem 0.8rem;
   align-items: start;
+  direction: ltr;
 }
+.workspace > * { min-width: 0; direction: rtl; }
+.studioRail { display: grid; gap: .85rem; }
+.studioRail .player { border-color: var(--border-gold); }
+.studioRail .playerCopy { flex-basis: min(100%, 8rem); }
 
 /* --- Side panels --- */
 .surahNav,
@@ -339,6 +344,50 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
   pointer-events: none;
   z-index: 1;
+}
+.spread, .folio {
+  background: radial-gradient(ellipse at top, #fff6d9, #f2dfae 88%);
+  color: #211b13;
+  border: 3px solid #73501f;
+  border-radius: 1.1rem;
+  box-shadow: 0 .6rem 1.5rem #160d07bc, inset 0 0 0 5px #e5c075, inset 0 0 0 7px #0f4a40;
+}
+.spread[data-quran-state="ready"] {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  overflow: visible;
+}
+.spread[data-quran-state="ready"]::before { display: none; }
+.spread[data-quran-state="ready"] .sheetNav { z-index: 2; top: 1.5rem; }
+.folio {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding: 1.4rem;
+  gap: 1rem;
+  margin-block-end: .9rem;
+}
+.folioPage {
+  min-width: 0;
+  padding: clamp(.65rem, 2vw, 1.4rem);
+  border: 3px double #ab7731;
+  border-radius: .4rem;
+}
+.folioPage:empty { display: none; }
+.spread .ayahNum { color: #292015; border-color: #ad7730; }
+.spread .ayah:focus-visible { outline: 2px solid #175447; outline-offset: 2px; }
+.spread .loadingState, .spread .errorState { color: #633923; }
+@media (min-width: 1200px) {
+  .folio {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-height: 19rem;
+    gap: clamp(.8rem, 2vw, 1.7rem);
+    background:
+      linear-gradient(90deg, transparent 47%, #8f591e35 49.6%, #5a3a1e6a 50%, #8f591e45 50.4%, transparent 53%),
+      radial-gradient(ellipse at top, #fff6d9, #f2dfae 88%);
+    text-align: start;
+  }
 }
 .lampOn {
   box-shadow:
@@ -963,6 +1012,7 @@
   .reader {
     order: -1;
   }
+  .surahNav { order: 1; }
   .sheet {
     padding: 1.2rem 1.4rem;
   }

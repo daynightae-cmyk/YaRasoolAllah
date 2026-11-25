@@ -1,3 +1,32 @@
+.referenceNav { display: none; }
+@media (min-width: 1200px) {
+  .shell[data-reference-nav] { --sidebar-width: 164px; }
+  .shell[data-reference-nav] .mainArea { overflow: visible; }
+  .shell[data-reference-nav] .content { padding-right: 0; }
+  .shell[data-reference-nav] .sidebar { top: 68px; height: calc(100vh - 68px); }
+  .shell[data-reference-nav] .logoArea { display: none; }
+  .shell[data-reference-nav] .sidebar .currentWing { display: none; }
+  .shell[data-reference-nav] .nav { padding: 1rem .4rem; }
+  .shell[data-reference-nav] .navItem { min-height: 48px; padding: .5rem .6rem; border-bottom: 1px solid #b68e4160; border-radius: 0; gap: .5rem; }
+  .shell[data-reference-nav] .navEn { display: none; }
+  .shell[data-reference-nav] .navAr { font-size: .82rem; }
+  .shell[data-reference-nav] .header { margin-left: -164px; width: calc(100% + 164px); z-index: 110; }
+  .shell[data-reference-nav] .headerPrimary { min-height: 68px; padding: .35rem 1rem; gap: .65rem; direction: ltr; }
+  .shell[data-reference-nav] .headerPrimary > .wingIdentity,
+
+  .shell[data-reference-nav] .userChip,
+  .shell[data-reference-nav] .breadcrumb { display: none; }
+  .shell[data-reference-nav] .searchWrap { flex: 0 0 44px; min-width: 44px; min-height: 44px; padding: .35rem; justify-content: center; }
+  .shell[data-reference-nav] .searchInput, .shell[data-reference-nav] .searchFilter { display: none; }
+  .shell[data-reference-nav] .referenceNav { display: flex; flex: 1; align-items: center; justify-content: space-between; gap: .5rem; min-width: 0; }
+  .referenceNav a { display: flex; align-items: center; gap: .4rem; color: #f8e4b5; padding: .35rem .4rem; font-size: clamp(.74rem, .88vw, .95rem); border: 1px solid transparent; border-radius: 14px; white-space: nowrap; }
+  .referenceNav a[aria-current="page"]:not(.referenceBrand) { border-color: #f2c368; background: linear-gradient(#6d5327, #3c3216); box-shadow: 0 0 12px #e9b64e60; }
+  .referenceNav small { display: block; font: .73rem Georgia, serif; margin-top: .15rem; }
+  .referenceNav .referenceBrand { flex-direction: column; gap: 0; font: 1.2rem Georgia, serif; color: #f6d589; }
+  .referenceNav .referenceBrand small { font-size: 1rem; }
+  .shell[data-reference-nav] .activityRail { display: none; }
+}
+
 .shell {
   display: flex;
   min-height: 100vh;

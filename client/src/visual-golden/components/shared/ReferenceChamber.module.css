@@ -1,0 +1,115 @@
+.quran {
+  background: #19170d;
+}
+.quran section::before,
+.quran section::after {
+  content: "";
+  position: absolute;
+  inset: 0 4% 0 auto;
+  width: 25%;
+  background: url("/visual-golden/art/quran-reference-window.webp") center / cover;
+  mask-image: radial-gradient(ellipse 80% 82%, #000 37%, #0000 77%);
+  pointer-events: none;
+}
+.quran section::before {
+  inset: 0 auto 0 4%;
+  transform: scaleX(-1);
+}
+
+.quran section h1, .hadith .hallCopy h1 {
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+  padding: .1em .7em;
+  background: #0b261d;
+  border: 2px solid #eac77e;
+  border-radius: 38% 38% 16% 16% / 45% 45% 20% 20%;
+  box-shadow: 0 0 0 4px #62431d, 0 .4rem 1.5rem #170c05bb;
+  color: #ffe7ae;
+  font-size: clamp(2rem, 4.9vw, 4.9rem);
+  line-height: 1.35;
+}
+
+.quran section h1 ~ p, .subtitle {
+  width: fit-content;
+  margin-inline: auto;
+  color: #fff1c9;
+  background: #23170dda;
+  border-radius: .4rem;
+  padding: .15rem .65rem;
+}
+
+.quran section h1 + p, .subtitle {
+  font: clamp(1rem, 2.3vw, 1.85rem)/1.35 var(--font-latin), Georgia, serif;
+  letter-spacing: .02em;
+  text-transform: none;
+}
+
+.mushaf {
+  display: block;
+  width: min(100%, 50rem);
+  margin: .7rem auto 0;
+  mask-image: radial-gradient(ellipse 62% 68% at 50% 50%, #000 45%, transparent 87%);
+}
+
+.hadith {
+  background: #292012;
+  margin: 0;
+  border-radius: 0;
+}
+
+.hadith .hall { filter: brightness(.93) saturate(1.18); }
+.hallShade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(#1b100645, #211609df 52%, transparent 82%);
+}
+
+.hadith .hallBody {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 70rem;
+  margin-inline: auto;
+  gap: .85rem;
+  padding: clamp(1.25rem, 3vw, 3rem) 1rem 1rem;
+}
+
+.hadith .hallCopy {
+  justify-items: center;
+  text-align: center;
+  margin-inline: auto;
+}
+
+.hadith .hallLedger {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: none;
+  width: fit-content;
+  margin-inline: auto;
+}
+
+.hadith > nav, .desk { position: relative; z-index: 2; }
+
+.hallSummary {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: .65rem;
+  padding: .85rem 1rem;
+  background: #151e15;
+  text-align: center;
+}
+
+.desk {
+  display: block;
+  width: 100%;
+  height: clamp(6rem, 16vw, 16rem);
+  object-fit: cover;
+  object-position: center;
+}
+
+@media (max-width: 760px) {
+  .quran section::before, .quran section::after { display: none; }
+}

@@ -9,6 +9,7 @@ interface Props {
   children?: ReactNode;
   tall?: boolean;
   compact?: boolean;
+  centered?: boolean;
   wing?: "library" | "quran" | "tafsir" | "seerah" | "hadith" | "daily" | "home";
 }
 
@@ -20,11 +21,12 @@ export function PageHero({
   children,
   tall,
   compact,
+  centered,
   wing,
 }: Props) {
   return (
     <section
-      className={`${styles.hero} ${tall ? styles.heroTall : ""} ${compact ? styles.heroCompact : ""}`}
+      className={`${styles.hero} ${tall ? styles.heroTall : ""} ${compact ? styles.heroCompact : ""} ${centered ? styles.heroCentered : ""}`}
       data-wing={wing}
     >
       <img className={styles.heroImg} src={image} alt="" />
