@@ -46,6 +46,7 @@ export interface ThreeRuntimeOptions {
   adapter: ThreeSceneAdapter;
   active?: boolean;
   paused?: boolean;
+  transparent?: boolean;
   motion?: EffectiveMotion;
   onStateChange?: (state: ThreeRuntimeState) => void;
   onFallback?: (error: unknown) => void;
@@ -136,7 +137,7 @@ export class ThreeRuntime {
       this.syncDiagnostics();
       const renderer = new THREE.WebGLRenderer({
         antialias: this.graphicsTier === "high",
-        alpha: false,
+        alpha: this.options.transparent ?? false,
         powerPreference: this.graphicsTier === "low" ? "low-power" : "default",
       });
       this.renderer = renderer;

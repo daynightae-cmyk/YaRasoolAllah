@@ -16,6 +16,7 @@ interface TableHandle extends ThreeSceneHandle {
 export function AtlasTable3D() {
   const host = useRef<HTMLDivElement>(null);
   const controller = useRef<TableHandle | null>(null);
+  const markerLabel = useRef<HTMLSpanElement>(null);
   const runtimeRef = useRef<ThreeRuntime | null>(null);
   const [selected, setSelected] = useState(0);
   const [state, setState] = useState("starting");
@@ -28,14 +29,15 @@ export function AtlasTable3D() {
     if (!host.current) return;
     const runtime = new ThreeRuntime({
       host: host.current,
+      transparent: true,
       motion,
       onStateChange: setState,
       adapter: {
         build(context) {
           const world = new THREE.Scene();
-          world.background = new THREE.Color("#4a3021");
           const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 90);
-          camera.position.set(0, 8.5, 12.9);
+          const overview = new THREE.Vector3(0, 10, 15.6);
+          camera.position.copy(overview);
           const controls = new OrbitControls(camera, context.renderer.domElement);
           controls.target.set(0, 1.5, 0);
           controls.minDistance = 3;
@@ -43,13 +45,13 @@ export function AtlasTable3D() {
           controls.maxPolarAngle = Math.PI * 0.46;
           controls.enablePan = false;
           controls.addEventListener("change", context.invalidate);
-          world.add(new THREE.HemisphereLight(0xfff5de, 0x87613a, 2.15));
-          const lamp = new THREE.DirectionalLight(0xffe0a7, 3.1);
+          world.add(new THREE.HemisphereLight(0xfff5de, 0x87613a, 1.4));
+          const lamp = new THREE.DirectionalLight(0xffe0a7, 2.15);
           lamp.position.set(-4, 12, 6);
           world.add(lamp);
           const wood = new THREE.MeshStandardMaterial({ color: "#7a492a", roughness: 0.58 });
           const gold = new THREE.MeshStandardMaterial({ color: "#c79c4c", metalness: 0.65, roughness: 0.35 });
-          const sand = new THREE.MeshStandardMaterial({ color: "#dbac6b", roughness: 0.87, flatShading: true });
+          const sand = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.87, flatShading: true });
           const sea = new THREE.MeshStandardMaterial({ color: "#16606f", roughness: 0.46 });
           const geometries = new Set<THREE.BufferGeometry>();
           const box = (width: number, height: number, depth: number, material: THREE.Material, x: number, y: number, z: number) => {
@@ -67,17 +69,27 @@ export function AtlasTable3D() {
             box(12.4, 0.14, 0.16, gold, 0, 1.5, side * 5.15);
             for (const end of [-1, 1]) box(0.55, 2.2, 0.55, wood, side * 5.5, 0, end * 4.5);
           }
-          const relief = new THREE.PlaneGeometry(10.6, 9.2, 56, 48);
+          const relief = new THREE.PlaneGeometry(10.6, 9.2, 108, 94);
           relief.rotateX(-Math.PI / 2);
           const positions = relief.attributes.position;
+          const terrainColors = new Float32Array(positions.count * 3);
+          const hillside = new THREE.Color("#806243");
+          const lowland = new THREE.Color("#d6b078");
+          const color = new THREE.Color();
           for (let index = 0; index < positions.count; index += 1) {
             const x = positions.getX(index);
             const z = positions.getZ(index);
-            const ridge = Math.exp(-((x + 1.6 + z * 0.25) ** 2) / 1.3);
+            const ridge = Math.exp(-((x + 1.6 + z * .23 + .48 * Math.sin(z * .7)) ** 2) / 1.65);
+            const secondRidge = Math.exp(-((x - 1.25 + z * .14) ** 2) / .72);
             const coastalEdge = Math.exp(-((x + 5.3) ** 2) / .85);
+            const detail = Math.abs(Math.sin(x * 4.1 + z * 3.4) * Math.cos(z * 2.9 - x * 2.1));
+            const height = (ridge * .8 + secondRidge * .33) * (.23 + detail * .83) + .07 * Math.sin(x * 3 + z * 1.17);
             positions.setX(index, x + coastalEdge * (.42 + .23 * Math.sin(z * .8)));
-            positions.setY(index, 1.6 + ridge * (.4 + .25 * Math.sin(z * 2.5 + x * 1.8)) + .06 * Math.sin(x * 3 + z));
+            positions.setY(index, 1.6 + height);
+            color.copy(lowland).lerp(hillside, Math.min(.85, Math.max(0, height * .72 + detail * .18)));
+            color.toArray(terrainColors, index * 3);
           }
+          relief.setAttribute("color", new THREE.BufferAttribute(terrainColors, 3));
           relief.computeVertexNormals();
           geometries.add(relief);
           world.add(new THREE.Mesh(relief, sand));
@@ -100,11 +112,13 @@ export function AtlasTable3D() {
           world.add(halo);
           const target = new THREE.Vector3(0, 1.5, 0);
           const destination = camera.position.clone();
+          const labelPoint = new THREE.Vector3();
           let travelling = false;
           const focus = (index: number) => {
-            target.copy(markers[index].position);
-            destination.copy(target).add(new THREE.Vector3(0, 5, 5));
-            halo.position.set(target.x, 2, target.z);
+            const marker = markers[index];
+            target.set(marker.position.x * .38, 1.5, marker.position.z * .38);
+            destination.set(overview.x + target.x, overview.y, overview.z + target.z);
+            halo.position.set(marker.position.x, 2, marker.position.z);
             travelling = true;
             if (context.motion === "reduced") {
               camera.position.copy(destination);
@@ -142,6 +156,13 @@ export function AtlasTable3D() {
               }
               controls.update();
               context.renderer.render(world, camera);
+              const label = markerLabel.current;
+              if (label) {
+                labelPoint.set(halo.position.x, halo.position.y + .72, halo.position.z).project(camera);
+                label.style.left = `${(labelPoint.x + 1) * 50}%`;
+                label.style.top = `${(1 - labelPoint.y) * 50}%`;
+                label.hidden = Math.abs(labelPoint.x) > .95 || Math.abs(labelPoint.y) > .95 || Math.abs(labelPoint.z) > 1;
+              }
             },
             resize(width, height) { camera.aspect = width / Math.max(height, 1); camera.updateProjectionMatrix(); },
             dispose() {
@@ -168,7 +189,10 @@ export function AtlasTable3D() {
   return <section className={styles.table} aria-label="طاولة الأطلس المجسمة" data-visual="atlas-table-3d">
     <h2>طاولة الأطلس التاريخي</h2>
     <p>تضاريس تعليمية تخطيطية ومواضع رمزية، وليست خريطة مساحية أو إعادة بناء تاريخية موثقة. اسحب للدوران، واقرص للتقريب، واختر علامة أو اسم موضع.</p>
-    <div ref={host} className={styles.canvas} data-table-state={state} />
+    <div className={styles.mapStage}>
+      <div ref={host} className={styles.canvas} data-table-state={state} />
+      {state === "running" || state === "paused" ? <span ref={markerLabel} className={styles.markerLabel} aria-hidden="true">{node.name}</span> : null}
+    </div>
     {state === "fallback" || state === "context-lost" ? <p role="status">تعذّر العرض المجسم. المواضع والسجلات متاحة في القائمة التالية.</p> : null}
     <nav className={styles.places} aria-label="مواضع طاولة الأطلس">
       {ATLAS_NODES.map((place, index) => <button type="button" key={place.id} aria-pressed={selected === index} onClick={() => { setSelected(index); controller.current?.focus(index); }}>{place.name}</button>)}
