@@ -11,7 +11,7 @@
 .copy > span { color: var(--text-muted); font-size: .76rem; line-height: 1.7; }
 .arrow { color: var(--text-gold); flex-shrink: 0; margin-inline-start: auto; }
 .illustrated {
-  background: radial-gradient(ellipse at 50% 0%, #866034, #251c13 72%);
+  background: radial-gradient(ellipse at 50% 0%, #bc8e54, #513b24 79%);
   border-block: 1px solid #bd9454;
   padding: clamp(.85rem, 2vw, 1.6rem) clamp(1rem, 5vw, 5rem);
 }
@@ -35,8 +35,8 @@
 .illustrated .action:hover,
 .illustrated .action:focus-visible { border-color: #fff0b1; }
 .art, .illustrated .action::after { position: absolute; inset: 0; z-index: -1; }
-.art { width: 100%; height: 100%; object-fit: cover; }
-.illustrated .action::after { content: ""; background: linear-gradient(0deg, #071a12 3%, #071a12f5 25%, transparent 75%); }
+.art { width: 100%; height: 100%; object-fit: cover; filter: brightness(1.17) saturate(1.13); }
+.illustrated .action::after { content: ""; background: linear-gradient(0deg, #071a12 3%, #071a12de 27%, transparent 66%); }
 .illustrated .icon { width: auto; height: auto; border: 0; color: #f0cd81; }
 .illustrated .copy { padding: 0; gap: .12rem; }
 .illustrated .copy strong { font-size: clamp(.83rem, 1.5vw, 1.3rem); }

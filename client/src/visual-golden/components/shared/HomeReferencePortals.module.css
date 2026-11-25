@@ -1,10 +1,10 @@
-.worlds { position: relative; z-index: 3; margin-top: auto; padding: 1rem 2rem 1.5rem; }
+.worlds { position: relative; z-index: 3; margin-top: auto; padding: 1rem 2rem clamp(1.5rem, 5vw, 5.75rem); }
 .portals { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: .4rem; direction: ltr; max-width: 1190px; margin-inline-start: auto; }
 .portal { position: relative; display: block; min-height: clamp(150px, 14vw, 205px); overflow: hidden; isolation: isolate; clip-path: polygon(0 100%, 0 29%, 5% 19%, 20% 12%, 40% 5%, 50% 0, 60% 5%, 80% 12%, 95% 19%, 100% 29%, 100% 100%); background: #051b13; color: #ffe2a0 !important; text-align: center; transition: transform .2s, box-shadow .2s; }
 .frame { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; fill: none; stroke: #e8bc5e; stroke-width: 1.7; }
 .frame path + path { stroke: #9f7936; stroke-width: .8; }
 .portal img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; }
-.shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(0deg, #03170dfc 0%, #03170df2 32%, #03170d11 78%); }
+.shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(0deg, #03170df8 0%, #041a10e3 30%, transparent 69%); }
 .label { display: flex; flex-direction: column; align-items: center; justify-content: end; gap: .18rem; min-height: inherit; padding: .6rem .25rem 1rem; direction: rtl; }
 .label strong { font-size: clamp(.75rem, 1vw, 1rem); font-weight: 600; line-height: 1.6; }
 .label > span { font-family: Georgia, serif; font-size: .9rem; color: #f8e7bd; }
@@ -13,6 +13,6 @@
 .portal:focus-visible .frame { stroke: #fff5d1; stroke-width: 4; }
 .plaque { width: fit-content; margin: 1.4rem auto 0; padding: .5rem 3rem; border: 2px solid #dbab50; border-radius: 45px 10px; background: #09271de8; box-shadow: 0 0 0 3px #34250e, 0 5px 15px #0009; color: #fbe6ac; text-align: center; font-size: 1.35rem; }
 .plaque span { display: block; font: 1rem Georgia, serif; margin-top: .25rem; }
-@media (max-width: 1000px) { .worlds { padding-inline: 1rem; } .portals { grid-template-columns: repeat(5, minmax(0, 1fr)); } .portal { min-height: 150px; } }
+@media (max-width: 1000px) { .worlds { padding: 1rem 1rem 1.5rem; } .portals { grid-template-columns: repeat(5, minmax(0, 1fr)); } .portal { min-height: 150px; } }
 @media (max-width: 600px) { .portals { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; } .portal { min-height: 155px; } .plaque { font-size: 1rem; padding-inline: 1.5rem; } }
 @media (prefers-reduced-motion: reduce) { .portal { transition: none; } .portal:hover { transform: none; } }

@@ -1,7 +1,7 @@
 .crossroads {
   position: relative;
   padding: clamp(2.6rem, 4vw, 4rem) clamp(.8rem, 3vw, 3rem) 2rem;
-  background: linear-gradient(#24150f38, #271b0bba), url("/visual-golden/art/worlds/seerah.webp") center / cover;
+  background: linear-gradient(#24150f0c, #271b0b4d), url("/visual-golden/art/worlds/seerah.webp") center / cover;
   border-block: 1px solid #c39a5a;
 }
 .crossroadsHome {
@@ -61,8 +61,8 @@
   font-family: var(--font-display), serif;
 }
 .portal img, .portal::after { position: absolute; inset: 0; width: 100%; height: 100%; }
-.portal img { object-fit: cover; z-index: -2; }
-.portal::after { content: ""; background: linear-gradient(0deg, #101b11 0, #0f2118db 18%, transparent 65%); z-index: -1; }
+.portal img { object-fit: cover; z-index: -2; filter: brightness(1.14) saturate(1.1); }
+.portal::after { content: ""; background: linear-gradient(0deg, #101b11 0, #0f2118c9 16%, transparent 59%); z-index: -1; }
 .portal small { font: .72em/1.2 var(--font-latin), Georgia, serif; }
 .portal:hover, .portal:focus-visible { border-color: #fff2bd; }
 .portal:focus-visible, .crossroadsHome:focus-visible { outline: 3px solid #fff4c6; outline-offset: 3px; }

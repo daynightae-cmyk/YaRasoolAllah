@@ -21,10 +21,10 @@
 }
 .heroCentered .heroImg {
   object-position: center 43%;
-  filter: brightness(.95) saturate(1.15);
+  filter: brightness(1.13) saturate(1.11);
 }
 .hero.heroCentered .heroFrame {
-  background: radial-gradient(ellipse at 50% 20%, #2d1e1470, transparent 63%);
+  background: radial-gradient(ellipse at 50% 20%, #2d1e1442, transparent 62%);
 }
 .heroCentered .heroCopy {
   width: 100%;

@@ -14,7 +14,7 @@
   filter: saturate(1.15) brightness(1.12);
 }
 .referenceHero .heroVeil {
-  background: linear-gradient(90deg, #03170fe8, #03170fa8 30%, #03170d14 57%, transparent 80%), linear-gradient(0deg, #24180e70, transparent 45%);
+  background: linear-gradient(90deg, #10291d6e, #061b1260 31%, transparent 54%);
 }
 .referenceArch {
   position: absolute;
@@ -36,6 +36,7 @@
   mask-image: linear-gradient(to left, transparent, #000 26%), linear-gradient(to bottom, transparent, #000 23%);
   mask-composite: intersect;
   pointer-events: none;
+  z-index: 2;
 }
 @media (max-width: 760px) {
   .referenceArch { width: 100%; height: 31rem; }
@@ -45,16 +46,16 @@
   width: 47%;
   max-width: 650px;
   margin-inline-start: auto;
-  padding: 3.8rem 2.5rem 1rem;
+  padding: 2.15rem 2rem 1rem;
   text-align: center;
 }
-.referenceHero .heroKicker, .referenceHero .heroSearch, .referenceHero .heroFooter,
+.referenceHero .heroKicker, .referenceHero .heroFooter,
 .referenceHero .heroOrnament, .referenceHero .heroIllumination { display: none; }
-.referenceHero .heroCopy h1 { color: #ffe9ae; font-size: clamp(3rem, 5.7vw, 5.5rem); line-height: 1.5; margin-bottom: .2rem; }
+.referenceHero .heroCopy h1 { color: #ffe9ae; font-size: clamp(3rem, 5vw, 5.05rem); line-height: 1.4; margin-bottom: .15rem; }
 .referenceHero .heroLatin { font: clamp(1.1rem, 2.15vw, 2rem) Georgia, serif; letter-spacing: .015em; color: #f6d88c; }
 .referenceHero .heroLatin span { display: block; font-style: italic; font-size: .9em; margin-top: .35rem; }
-.referenceHero .heroSub { font-size: 1.05rem; line-height: 1.8; margin-top: 1.3rem; }
-.referenceHero .heroDesc { max-width: 370px; margin: .8rem auto 1.4rem; font: 1rem/1.6 Georgia, serif; }
+.referenceHero .heroSub { font-size: 1.05rem; line-height: 1.7; margin-top: .85rem; }
+.referenceHero .heroDesc { max-width: 370px; margin: .6rem auto .95rem; font: 1rem/1.5 Georgia, serif; }
 .referenceHero .heroActions { justify-content: center; gap: .7rem; }
 .referenceHero .heroPrimary { min-width: 170px; background: linear-gradient(#fff2b3, #ffc94a 45%, #efab2e); color: #241603; border: 2px solid #ffe9a3; box-shadow: 0 0 18px #eab44885, inset 0 0 8px #fff2cb; }
 .referenceHero .heroSecondary { min-width: 170px; border: 2px solid #e9c16a; background: #112318bb; }

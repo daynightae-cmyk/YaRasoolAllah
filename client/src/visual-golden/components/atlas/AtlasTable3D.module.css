@@ -1,0 +1,32 @@
+.table {
+  display: grid;
+  grid-template-columns: minmax(150px, .65fr) minmax(0, 2.7fr) minmax(178px, .8fr);
+  grid-template-areas: "title title title" "intro intro intro" "record canvas places" "status status status";
+  gap: .7rem;
+  margin: .9rem auto;
+  padding: clamp(.75rem, 2vw, 1.6rem);
+  text-align: start;
+  color: #fff0c9;
+  background: radial-gradient(ellipse at 50% 24%, #805934, #312113 79%);
+  border: 2px solid #d8a95b;
+  border-radius: 1rem;
+  direction: rtl;
+}
+.table > h2 { grid-area: title; }
+.table > p:not([role="status"]) { grid-area: intro; }
+.table > p[role="status"] { grid-area: status; }
+.table h2 { font-size: 1.6rem; color: #e5bd71; }
+.table p { line-height: 1.7; margin-block: .2rem; }
+.canvas { grid-area: canvas; height: clamp(320px, 56vh, 600px); width: 100%; overflow: hidden; border: 1px solid #edc77f; border-radius: .6rem; }
+.canvas canvas { display: block; width: 100%; height: 100%; }
+.places { grid-area: places; display: grid; align-content: start; gap: .35rem; max-height: clamp(320px, 56vh, 600px); overflow: auto; }
+.places button { padding: .45rem .55rem; border: 1px solid #a17c48; border-radius: .5rem; background: #402b1c; color: #ffecbe; min-height: 44px; }
+.places button[aria-pressed="true"] { background: #efc775; color: #281a10; }
+.places button:focus-visible, .record a:focus-visible { outline: 3px solid #f8d68f; outline-offset: 3px; }
+.record { grid-area: record; min-width: 0; padding: .85rem; background: #2b1e14; border: 1px solid #ba8e50; border-radius: .6rem; overflow-wrap: anywhere; }
+.record li { margin-block: .75rem; }
+.record a { color: #f4cc7d; text-decoration: underline; }
+@media (max-width: 990px) {
+  .table { grid-template-columns: minmax(0, 1fr); grid-template-areas: "title" "intro" "canvas" "status" "places" "record"; }
+  .places { display: flex; flex-wrap: wrap; max-height: 10rem; }
+}

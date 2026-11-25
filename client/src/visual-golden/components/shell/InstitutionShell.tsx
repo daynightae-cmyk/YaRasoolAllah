@@ -145,7 +145,7 @@ export function InstitutionShell({ children }: { children: ReactNode }) {
   // never trapped. The Library keeps its door because the door is also the
   // entrance to this wing.
   const cinema = /^\/(seerah\/terrain|seerah\/world|library)(\/|$)/.test(pathname);
-  const referenceNavigation = ["/", "/quran", "/hadith", "/seerah"].includes(pathname);
+  const referenceNavigation = ["/", "/quran", "/hadith", "/seerah", "/noor", "/atlas"].includes(pathname);
 
   return (
     <div

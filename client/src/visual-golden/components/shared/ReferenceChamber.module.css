@@ -58,11 +58,11 @@
   border-radius: 0;
 }
 
-.hadith .hall { filter: brightness(.93) saturate(1.18); }
+.hadith .hall { filter: brightness(1.15) saturate(1.12); }
 .hallShade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(#1b100645, #211609df 52%, transparent 82%);
+  background: radial-gradient(ellipse at 50% 18%, #1b100655, transparent 64%);
 }
 
 .hadith .hallBody {

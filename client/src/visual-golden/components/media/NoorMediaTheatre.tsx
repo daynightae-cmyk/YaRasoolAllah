@@ -24,7 +24,6 @@ import {
   ShieldCheck,
   SkipBack,
   SkipForward,
-  Sparkles,
   X,
   XCircle,
 } from "lucide-react";
@@ -175,25 +174,13 @@ export function NoorMediaTheatre() {
   return (
     <div className={styles.page} data-visual="noor-theatre" data-approved-count={counts.approved}>
       <header className={styles.masthead}>
-        <div className={styles.arch} aria-hidden="true"><span /><span /><span /></div>
         <div className={styles.mastheadCopy}>
-          <p className={styles.kicker}><Sparkles size={15} aria-hidden /> قاعة المعرفة المرئية <span lang="en">NOOR MEDIA THEATRE</span></p>
           <h1>مسرح <em>النور</em></h1>
           <p className={styles.englishTitle} lang="en">Noor Media Theatre</p>
           <p className={styles.lead}>
             بوابة استكشاف موثّقة للسيرة والمحاضرات؛ تعرض المصدر وحالة المراجعة قبل أي قرار تشغيل.
           </p>
-          <nav className={styles.mastheadActions} aria-label="أبواب مرتبطة بالمسرح">
-            <Link href="/seerah" className={styles.textLink}><BookOpenText size={15} /> اقرأ السيرة</Link>
-            <Link href="/audio" className={styles.textLink}><Headphones size={15} /> غرفة التلاوات</Link>
-            <Link href="/seerah/world" className={styles.textLink}><Clapperboard size={15} /> العالم التفاعلي</Link>
-          </nav>
         </div>
-        <dl className={styles.ledger} aria-label="حصيلة كتالوج المسرح">
-          <div><dt>مادة مفهرسة</dt><dd>{counts.total}</dd></div>
-          <div><dt>معتمدة للتشغيل</dt><dd>{counts.approved}</dd></div>
-          <div><dt>قيد المراجعة</dt><dd>{counts.pending}</dd></div>
-        </dl>
       </header>
 
       <section className={styles.cinema} aria-label="قاعة مسرح النور">
@@ -278,7 +265,8 @@ export function NoorMediaTheatre() {
                   <>
                     <img
                       className={styles.screenArt}
-                      src={selectedThumbnail ?? "/visual-golden/art/worlds/seerah.webp"}
+                      data-decorative={!selectedThumbnail}
+                      src={selectedThumbnail ?? "/visual-golden/art/madinah-walk-portal.webp"}
                       alt=""
                     />
                     <div className={styles.screenVeil} aria-hidden="true" />
@@ -424,6 +412,19 @@ export function NoorMediaTheatre() {
           </div>
         </div>
       </section>
+
+      <div className={styles.hallServices}>
+        <nav className={styles.mastheadActions} aria-label="أبواب مرتبطة بالمسرح">
+          <Link href="/seerah" className={styles.textLink}><BookOpenText size={15} /> اقرأ السيرة</Link>
+          <Link href="/audio" className={styles.textLink}><Headphones size={15} /> غرفة التلاوات</Link>
+          <Link href="/seerah/world" className={styles.textLink}><Clapperboard size={15} /> العالم التفاعلي</Link>
+        </nav>
+        <dl className={styles.ledger} aria-label="حصيلة كتالوج المسرح">
+          <div><dt>مادة مفهرسة</dt><dd>{counts.total}</dd></div>
+          <div><dt>معتمدة للتشغيل</dt><dd>{counts.approved}</dd></div>
+          <div><dt>قيد المراجعة</dt><dd>{counts.pending}</dd></div>
+        </dl>
+      </div>
 
       <section className={styles.library} aria-labelledby="noor-library-title">
         <header className={styles.libraryHead}>

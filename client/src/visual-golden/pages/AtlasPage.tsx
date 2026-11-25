@@ -42,6 +42,7 @@ const TerrainTheatre3D = lazy(() =>
     default: module.TerrainTheatre3D,
   })),
 );
+const AtlasTable3D = lazy(() => import("@/visual-golden/components/atlas/AtlasTable3D").then((module) => ({ default: module.AtlasTable3D })));
 import {
   LIVING_CAMPAIGNS,
   CERTAINTY_LABEL,
@@ -148,6 +149,7 @@ export function AtlasPage() {
   const [showMarkers, setShowMarkers] = useState(true);
   const [listMode, setListMode] = useState(false);
   const [observer3D, setObserver3D] = useState(false);
+  const [tableOpen, setTableOpen] = useState(() => new URLSearchParams(window.location.search).get("table") === "open");
   const [observerFailed, setObserverFailed] = useState(false);
   const [placeFilter, setPlaceFilter] = useState<AtlasFilter>("all");
   const [placeId, setPlaceId] = useState(linkedPlace ?? ATLAS_NODES[0]?.id ?? "");
@@ -449,7 +451,7 @@ export function AtlasPage() {
         <div className={styles.atlasHeroBody}>
           <div className={styles.atlasHeroCopy}>
             <span className={styles.atlasEyebrow}><Compass size={15} aria-hidden="true" /> الأطلس التاريخي الإسلامي</span>
-            <h1 id="atlas-title">أطلس الحضارة الإسلامية</h1>
+            <h1 id="atlas-title">الأطلس التاريخي التفاعلي</h1>
             <p>
               رحلة بصرية عبر الزمن والمكان: مسارح الغزوات الموثقة ومواضع السيرة التخطيطية
               على لوحات فنية — بلا تجسيد للنبي ﷺ ولا محاكاة قتال، وبلا إحداثيات مساحية.
@@ -487,6 +489,16 @@ export function AtlasPage() {
               <span>عصور زمنية مسجلة</span>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className={styles.tableEntry} aria-label="دخول طاولة الأطلس">
+        <button type="button" className={styles.atlasCtaPrimary} aria-controls="atlas-table-panel" aria-expanded={tableOpen} onClick={() => setTableOpen((open) => !open)}>
+          <Layers size={16} aria-hidden="true" />
+          {tableOpen ? "إغلاق طاولة الأطلس" : "دخول طاولة الأطلس المجسمة"}
+        </button>
+        <div id="atlas-table-panel" hidden={!tableOpen}>
+          {tableOpen ? <Suspense fallback={<p role="status">جارٍ تجهيز طاولة الأطلس…</p>}><AtlasTable3D /></Suspense> : null}
         </div>
       </section>
 

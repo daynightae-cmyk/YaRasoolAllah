@@ -8,9 +8,9 @@ const origin = process.env.VISUAL_BASE_URL ?? "http://127.0.0.1:3000";
 const chromePath = process.env.CHROME_PATH;
 if (!chromePath) throw new Error("CHROME_PATH is required for visual golden smoke");
 
-const evidenceDir = resolve("artifacts", "visual-golden-smoke");
+const evidenceDir = resolve(process.env.VISUAL_EVIDENCE_DIR ?? "artifacts/visual-golden-smoke");
 const profileDir = mkdtempSync(join(tmpdir(), "yra-visual-golden-smoke-"));
-const debuggingPort = 9342;
+const debuggingPort = Number(process.env.VISUAL_DEBUG_PORT ?? 9342);
 mkdirSync(evidenceDir, { recursive: true });
 
 const cases = [
@@ -284,7 +284,7 @@ try {
         const hero = shell?.querySelector("main section");
         const copy = hero?.querySelector("h1")?.parentElement;
         const form = hero?.querySelector("form");
-        const wings = [...shell.querySelectorAll("main nav[aria-label] a")];
+        const wings = [...shell.querySelectorAll("main #knowledge-wings nav[aria-label] a")];
         const rect = (element) => element?.getBoundingClientRect().toJSON() ?? null;
         return {
           direction: shell?.getAttribute("dir"),
@@ -303,7 +303,7 @@ try {
       if (geometry.lang !== expectedLang || geometry.theme !== (item.theme ?? "dark") || geometry.direction !== (expectedLang === "ar" ? "rtl" : "ltr")) {
         throw new Error(`${item.name} language/theme did not hydrate: ${JSON.stringify(geometry)}`);
       }
-      if (!geometry.search || !geometry.form || !geometry.copy || geometry.documentWidth > geometry.viewport + 1 || geometry.search.width < 32 || geometry.search.left < -1 || geometry.search.right > geometry.viewport + 1 || geometry.form.left < -1 || geometry.form.right > geometry.viewport + 1 || geometry.form.top < geometry.copy.top - 1 || geometry.form.bottom > geometry.copy.bottom + 1) {
+      if (!geometry.search || !geometry.form || !geometry.copy || geometry.documentWidth > geometry.viewport + 1 || geometry.search.width < 32 || geometry.search.left < -1 || geometry.search.right > geometry.viewport + 1 || geometry.form.width < 80 || geometry.form.left < -1 || geometry.form.right > geometry.viewport + 1 || geometry.form.top < geometry.copy.top - 1 || geometry.form.bottom > geometry.copy.bottom + 1) {
         throw new Error(`${item.name} clipped or overlapping shell: ${JSON.stringify(geometry)}`);
       }
       // The Gate of Light home renders nine distinct knowledge wings (the

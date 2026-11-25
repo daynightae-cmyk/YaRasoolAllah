@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { Link, useLocation } from "wouter";
-import { Home, Library, ScrollText, Map, BookOpen, Compass } from "lucide-react";
+import { Home, Library, ScrollText, Map, BookOpen, Compass, Clapperboard, Headphones } from "lucide-react";
 import { Search, Bell, Menu, Sun, Moon, Globe, Contrast, ChevronDown, Activity } from "lucide-react";
 import { useInstitution, type MotionPreference, type ThemeMode } from "@/visual-golden/lib/institution/store";
 import { workspaceContext } from "@/visual-golden/lib/institution/workspace";
@@ -21,6 +21,15 @@ const REFERENCE_NAVIGATION = [
   { href: "/hadith", ar: "الحديث الشريف", en: "Hadith", icon: ScrollText },
   { href: "/seerah", ar: "السيرة النبوية", en: "Seerah", icon: Compass },
   { href: "/atlas", ar: "الأطلس التفاعلي", en: "Interactive Atlas", icon: Map },
+];
+
+const THEATRE_NAVIGATION = [
+  REFERENCE_NAVIGATION[0],
+  REFERENCE_NAVIGATION[1],
+  { href: "/noor", ar: "مسرح النور", en: "Noor Media Theatre", icon: Clapperboard },
+  { href: "/audio", ar: "الصوتيات", en: "Audio and recitations", icon: Headphones },
+  REFERENCE_NAVIGATION[4],
+  REFERENCE_NAVIGATION[5],
 ];
 
 const THEME_OPTIONS: { id: ThemeMode; labelAr: string; labelEn: string }[] = [
@@ -44,6 +53,7 @@ export function InstitutionHeader({ onMenuClick, onSearch, referenceNavigation }
   const setMotion = useInstitution((state) => state.setMotion);
   const setPanel = useInstitution((state) => state.setPanel);
   const [pathname] = useLocation();
+  const navigationLinks = pathname === "/noor" ? THEATRE_NAVIGATION : REFERENCE_NAVIGATION;
   const workspace = workspaceContext(pathname);
   const preferencesRef = useRef<HTMLDetailsElement>(null);
 
@@ -54,7 +64,7 @@ export function InstitutionHeader({ onMenuClick, onSearch, referenceNavigation }
       <div className={styles.headerPrimary}>
         {referenceNavigation ? <nav className={styles.referenceNav} aria-label={lang === "ar" ? "أقسام المؤسسة" : "Institution sections"}>
           <Link href="/" className={styles.referenceBrand}><span>YA RASOUL ALLAH ﷺ</span><small>— The Living Seerah —</small></Link>
-          {REFERENCE_NAVIGATION.map(({ href, ar, en, icon: Icon }) => (
+          {navigationLinks.map(({ href, ar, en, icon: Icon }) => (
             <Link key={href} href={href} aria-current={pathname === href ? "page" : undefined}>
               <Icon size={20} aria-hidden="true" />
               <span><span lang="ar">{ar}</span><small lang="en">{en}</small></span>

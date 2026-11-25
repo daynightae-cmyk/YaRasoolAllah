@@ -52,6 +52,10 @@ export function SeerahWorldPage() {
   );
 
   const backToReading = useCallback(() => {
+    if (new URLSearchParams(search).get("return") === "atlas") {
+      navigate("/atlas?table=open");
+      return;
+    }
     if (scene.canonicalRef?.chapterId) {
       const params = new URLSearchParams();
       params.set("chapter", scene.canonicalRef.chapterId);
@@ -60,7 +64,7 @@ export function SeerahWorldPage() {
     } else {
       navigate("/seerah");
     }
-  }, [navigate, scene]);
+  }, [navigate, scene, search]);
 
   const handleUnavailable = useCallback(() => {
     backToReading();
