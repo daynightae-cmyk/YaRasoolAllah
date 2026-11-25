@@ -26,11 +26,9 @@
         "canonical_id":  3,
         "route":  "/noor",
         "reference":  "artifacts/visual-references/candidates/04_noor_media_theatre.png",
-        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
-        "evidence":  [
-
-                     ],
-        "blocker":  null
+        "status":  "PARTIALLY_VERIFIED",
+        "evidence":  ["scripts/verify-cinematic-halls.mjs: /noor rendered with WebGL on desktop and mobile.", "Exercise media selection, 53-record catalogue, collapsible rooms, lighting, three viewing modes, and ordinary accessible view."],
+        "blocker":  "Fine architectural detail and material realism remain below the owner reference. The registry has zero approved playable records."
     },
     {
         "id":  4,
@@ -59,33 +57,27 @@
         "canonical_id":  6,
         "route":  "/quran",
         "reference":  "artifacts/visual-references/approved/03_quran_chamber.png",
-        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
-        "evidence":  [
-
-                     ],
-        "blocker":  null
+        "status":  "PARTIALLY_VERIFIED",
+        "evidence":  ["scripts/verify-primary-interfaces.mjs: /quran entrance captured on desktop and mobile with working reader navigation."],
+        "blocker":  "Ornament, floor reflections and card artwork differ from REF-06."
     },
     {
         "id":  7,
         "canonical_id":  7,
         "route":  "/hadith; /sunnah",
         "reference":  "artifacts/visual-references/approved/04_hadith_hall.png",
-        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
-        "evidence":  [
-
-                     ],
-        "blocker":  null
+        "status":  "PARTIALLY_VERIFIED",
+        "evidence":  ["scripts/verify-primary-interfaces.mjs: /hadith entrance and focus navigation captured on desktop and mobile."],
+        "blocker":  "The six functional cards and architectural ornament differ from the reference."
     },
     {
         "id":  8,
         "canonical_id":  8,
         "route":  "/atlas",
         "reference":  "artifacts/visual-references/approved/08_interactive_atlas.png",
-        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
-        "evidence":  [
-
-                     ],
-        "blocker":  null
+        "status":  "PARTIALLY_VERIFIED",
+        "evidence":  ["/atlas?table=open: live WebGL canvas, selectable Madinah record, linked events and camera focus verified on desktop and mobile."],
+        "blocker":  "The terrain is schematic and does not reproduce the reference topography or ornamental room."
     },
     {
         "id":  9,
@@ -619,11 +611,9 @@
         "canonical_id":  54,
         "route":  "/quran; /tafsir",
         "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/assets-rooms/REF-54-digital-quran-learning-studio.png",
-        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
-        "evidence":  [
-
-                     ],
-        "blocker":  null
+        "status":  "PARTIALLY_VERIFIED",
+        "evidence":  ["scripts/verify-cinematic-halls.mjs: /quran?studio=1 rendered with WebGL and selected verified Qur’an text on desktop and mobile."],
+        "blocker":  "The independent studio uses procedural architecture. Photorealistic materials and a provider-backed waveform remain incomplete."
     },
     {
         "id":  55,
@@ -718,11 +708,9 @@
         "canonical_id":  63,
         "route":  "/quran; /audio",
         "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/quran/REF-63-quran-studio-reader-dashboard.png",
-        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
-        "evidence":  [
-
-                     ],
-        "blocker":  null
+        "status":  "PARTIALLY_VERIFIED",
+        "evidence":  ["scripts/verify-primary-interfaces.mjs: the mushaf reader verified all 286 Al-Baqarah verses and the eight consecutive verses of the first spread."],
+        "blocker":  "The full Quran reader layout remains visually distinct from REF-63. The /audio variant has not been accepted here."
     },
     {
         "id":  64,

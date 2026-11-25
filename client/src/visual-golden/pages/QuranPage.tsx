@@ -29,6 +29,7 @@ import { WingStart } from "@/visual-golden/components/shared/WingStart";
 import chamber from "@/visual-golden/components/shared/ReferenceChamber.module.css";
 import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
 import { FocusBar } from "@/visual-golden/components/present/FocusBar";
+import { QuranCinematicStudio } from "@/visual-golden/components/quran/QuranCinematicStudio";
 import {
   getQuranChapterVerses,
   getQuranChapters,
@@ -185,6 +186,7 @@ export function QuranPage() {
   const [ayah, setAyah] = useState(initialSelection.ayah);
   const [tab, setTab] = useState<SidebarTab>("surah");
   const [focus, setFocus] = useState(false);
+  const [studioOpen, setStudioOpen] = useState(() => new URLSearchParams(window.location.search).get("studio") === "1");
   const [lamp, setLamp] = useState(true);
   // Deep link /quran?sanctuary=1 opens the reading sanctuary directly (the
   // unified station log links straight into the immersive surface).
@@ -707,7 +709,14 @@ export function QuranPage() {
 
   const sanctuaryScene = useMemo(() => getInteriorScene("quran-sanctuary"), []);
   const sanctuaryAvailable = !!sanctuaryScene && !sanctuaryFailed;
-  const showSanctuary = sanctuaryOpen && sanctuaryAvailable;
+  const showSanctuary = !studioOpen && sanctuaryOpen && sanctuaryAvailable;
+
+  const leaveStudioForReader = (study: boolean) => {
+    setStudioOpen(false);
+    setFocus(!study);
+    setReadingMode(study ? "study" : "mushaf");
+    window.requestAnimationFrame(() => document.getElementById("quran-reader")?.scrollIntoView({ block: "start" }));
+  };
 
   const renderVerse = (item: (typeof verses)[number]) => (
     <button
@@ -729,7 +738,52 @@ export function QuranPage() {
 
   return (
     <div className={`${styles.page} ${focus ? styles.focus : ""}`}>
-      {showSanctuary && sanctuaryScene ? (
+      {studioOpen ? (
+        <QuranCinematicStudio
+          verse={loading || loadError ? null : selectedVerse?.arabic ?? null}
+          passage={loading ? "جارٍ فتح النص المحلي…" : loadError ?? (currentChapter ? `سورة ${currentChapter.arabicName} · الآية ${selectedVerse?.ayah ?? ayah}` : "المصحف المحلي")}
+          onClose={() => {
+            setStudioOpen(false);
+            window.requestAnimationFrame(() => document.getElementById("quran-studio-enter")?.focus());
+          }}
+          onAccessibleReading={() => leaveStudioForReader(false)}
+        >
+          <label>السورة
+            <select aria-label="سورة الاستوديو" value={active} onChange={(event) => selectSurah(Number(event.target.value))}>
+              {chapters.map((chapter) => <option key={chapter.number} value={chapter.number}>{chapter.arabicName}</option>)}
+            </select>
+          </label>
+          <label>الآية
+            <select aria-label="آية الاستوديو" value={ayah} disabled={loading || !verses.length} onChange={(event) => { setAyah(Number(event.target.value)); setShowNote(false); }}>
+              {verses.map((entry) => <option key={entry.ayah} value={entry.ayah}>{entry.ayah}</option>)}
+            </select>
+          </label>
+          <button type="button" disabled={active === 1 && ayah === 1} onClick={() => stepAyah(-1)}>الآية السابقة</button>
+          <button type="button" disabled={active === 114 && ayah === currentChapter?.ayahCount} onClick={() => stepAyah(1)}>الآية التالية</button>
+          {recitationState.state === "ready" && selectedReciter ? (
+            <label>القارئ
+              <select aria-label="قارئ الاستوديو" value={selectedReciterKey ?? ""} onChange={(event) => chooseReciter(event.target.value)}>
+                {recitationState.payload.reciters.map((reciter) => <option key={`${reciter.id}:${reciter.moshafId}`} value={`${reciter.id}:${reciter.moshafId}`}>{reciter.name} · {reciter.reading}</option>)}
+              </select>
+            </label>
+          ) : (
+            <small role={recitationState.state === "error" ? "alert" : "status"}>
+              {recitationState.state === "error" ? recitationState.message : recitationState.state === "ready" ? "لا تتوفر تلاوة لهذه السورة في استجابة المزوّد." : "جارٍ التحقق من التلاوات المتاحة…"}
+            </small>
+          )}
+          <button type="button" disabled={!selectedReciter} onClick={() => void toggleAudio()}>
+            {audioPlaying ? <Pause size={17} aria-hidden="true" /> : <Play size={17} aria-hidden="true" />}
+            {audioPlaying ? "إيقاف التلاوة مؤقتًا" : "تشغيل التلاوة"}
+          </button>
+          <label><Volume2 size={16} aria-hidden="true" />
+            <input type="range" aria-label="مستوى صوت تلاوة الاستوديو" min={0} max={1} step={.05} value={audioVolume} onChange={(event) => setAudioVolume(Number(event.target.value))} />
+          </label>
+          {audioStreamError ? <small role="alert">{audioStreamError}</small> : null}
+          <button type="button" onClick={() => leaveStudioForReader(true)}>الترجمة والتفسير</button>
+          <Link href="/tafsir">رواق التفسير</Link>
+          <small>مؤثرات الصوت غير مفعّلة لبث المزوّد.</small>
+        </QuranCinematicStudio>
+      ) : showSanctuary && sanctuaryScene ? (
         <Suspense fallback={<div className={styles.sanctuaryLoading} role="status">جارٍ تهيئة رواق القراءة ثلاثي الأبعاد…</div>}>
           <Sanctuary3D
             scene={sanctuaryScene}
@@ -802,7 +856,7 @@ export function QuranPage() {
         </div>
       )}
 
-      <FocusBar
+      {!studioOpen ? <FocusBar
         focus={focus}
         onFocus={() => setFocus((value) => !value)}
         extra={{
@@ -810,9 +864,15 @@ export function QuranPage() {
           on: lamp,
           onClick: () => setLamp((value) => !value),
         }}
-      />
+      /> : null}
 
-      {sanctuaryAvailable && !showSanctuary ? (
+      {!studioOpen && !showSanctuary && !focus ? (
+        <button type="button" id="quran-studio-enter" className={styles.sanctuaryEnter} onClick={() => setStudioOpen(true)}>
+          <Headphones size={16} aria-hidden="true" /> ادخل استوديو القرآن والتلاوة
+        </button>
+      ) : null}
+
+      {sanctuaryAvailable && !showSanctuary && !studioOpen ? (
         <button
           type="button"
           className={styles.sanctuaryEnter}
@@ -826,7 +886,7 @@ export function QuranPage() {
 
       {/* The full reading surface stays mounted (audio playback continuity)
           while the sanctuary is open; it is only visually hidden. */}
-      <div className={showSanctuary ? styles.sanctuaryHidden : undefined}>
+      <div className={showSanctuary ? styles.sanctuaryHidden : undefined} hidden={studioOpen}>
       <div className={styles.workspace}>
         {focus ? null : (
           <aside id="quran-surah-nav" className={styles.surahNav} aria-label="فهرس القرآن">

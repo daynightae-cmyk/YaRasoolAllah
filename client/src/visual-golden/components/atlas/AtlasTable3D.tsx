@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
+import { Minus, Plus, RotateCcw } from "lucide-react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { ThreeRuntime, type ThreeSceneHandle } from "../three/three-runtime";
@@ -11,6 +12,8 @@ import styles from "./AtlasTable3D.module.css";
 
 interface TableHandle extends ThreeSceneHandle {
   focus(index: number): void;
+  zoom(factor: number): void;
+  reset(): void;
 }
 
 export function AtlasTable3D() {
@@ -113,6 +116,7 @@ export function AtlasTable3D() {
           const target = new THREE.Vector3(0, 1.5, 0);
           const destination = camera.position.clone();
           const labelPoint = new THREE.Vector3();
+          const zoomOffset = new THREE.Vector3();
           let travelling = false;
           const focus = (index: number) => {
             const marker = markers[index];
@@ -147,6 +151,22 @@ export function AtlasTable3D() {
           canvas.addEventListener("pointerup", onUp);
           const handle: TableHandle = {
             focus,
+            zoom(factor) {
+              travelling = false;
+              zoomOffset.subVectors(camera.position, controls.target);
+              const distance = THREE.MathUtils.clamp(zoomOffset.length() * factor, controls.minDistance, controls.maxDistance);
+              camera.position.copy(controls.target).add(zoomOffset.setLength(distance));
+              controls.update();
+              context.invalidate();
+            },
+            reset() {
+              travelling = false;
+              camera.position.copy(overview);
+              controls.target.set(0, 1.5, 0);
+              halo.position.set(markers[0].position.x, 2, markers[0].position.z);
+              controls.update();
+              context.invalidate();
+            },
             frame(delta) {
               if (travelling) {
                 const amount = context.motion === "reduced" ? 1 : 1 - Math.exp(-delta * 5);
@@ -192,6 +212,11 @@ export function AtlasTable3D() {
     <div className={styles.mapStage}>
       <div ref={host} className={styles.canvas} data-table-state={state} />
       {state === "running" || state === "paused" ? <span ref={markerLabel} className={styles.markerLabel} aria-hidden="true">{node.name}</span> : null}
+      {state === "running" || state === "paused" ? <div className={styles.mapControls} role="group" aria-label="عرض طاولة الأطلس">
+        <button type="button" aria-label="تقريب الخريطة" onClick={() => controller.current?.zoom(.82)}><Plus size={19} aria-hidden="true" /></button>
+        <button type="button" aria-label="إبعاد الخريطة" onClick={() => controller.current?.zoom(1.22)}><Minus size={19} aria-hidden="true" /></button>
+        <button type="button" aria-label="إعادة ضبط الخريطة" onClick={() => { setSelected(0); controller.current?.reset(); }}><RotateCcw size={18} aria-hidden="true" /></button>
+      </div> : null}
     </div>
     {state === "fallback" || state === "context-lost" ? <p role="status">تعذّر العرض المجسم. المواضع والسجلات متاحة في القائمة التالية.</p> : null}
     <nav className={styles.places} aria-label="مواضع طاولة الأطلس">

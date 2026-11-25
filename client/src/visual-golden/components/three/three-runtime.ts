@@ -413,6 +413,7 @@ export class ThreeRuntime {
     const height = Math.max(1, this.options.host.clientHeight || 1);
     this.renderer.setSize(width, height, false);
     this.scene.resize(width, height);
+    this.invalidate();
   };
 
   private canRender(): boolean {
@@ -433,7 +434,7 @@ export class ThreeRuntime {
       this.cancelFrame();
       return;
     }
-    if (this.motion === "full") this.scheduleContinuous();
+    this.invalidate();
   }
 
   private scheduleContinuous(): void {

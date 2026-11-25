@@ -22,6 +22,9 @@
 .canvas { position: relative; height: clamp(320px, 56vh, 600px); width: 100%; }
 .canvas canvas { display: block; width: 100%; height: 100%; }
 .markerLabel { position: absolute; transform: translate(-50%, -125%); padding: .18rem .48rem; border: 1px solid #ffe08d; border-radius: .4rem; color: #ffebbc; background: #2b1c12; box-shadow: 0 0 .85rem #ffcc6a96; pointer-events: none; white-space: nowrap; }
+.mapControls { position: absolute; inset-inline-end: .65rem; inset-block-end: .65rem; display: grid; gap: .22rem; }
+.mapControls button { display: grid; place-items: center; min-width: 44px; min-height: 44px; border: 1px solid #d4ac66; background: #2e2118f0; border-radius: .48rem; color: #ffe5aa; }
+.mapControls button:focus-visible { outline: 3px solid #ffdf95; outline-offset: 2px; }
 .places { grid-area: places; display: grid; align-content: start; gap: .35rem; max-height: clamp(320px, 56vh, 600px); overflow: auto; }
 .places button { padding: .45rem .55rem; border: 1px solid #a17c48; border-radius: .5rem; background: #402b1c; color: #ffecbe; min-height: 44px; }
 .places button[aria-pressed="true"] { background: #efc775; color: #281a10; }

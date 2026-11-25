@@ -14,18 +14,11 @@
   font-family: inherit;
   line-height: 1.65;
 }
-.page::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto;
-  height: min(68rem, 100vw);
-  min-height: 36rem;
-  background: url("/visual-golden/art/worlds/audio.webp") center top / cover;
-  filter: brightness(1.28) saturate(1.13);
-  mask-image: linear-gradient(#000 60%, transparent);
-  z-index: -1;
-  pointer-events: none;
-}
+.room { position: relative; isolation: isolate; min-height: clamp(36rem, 76vh, 57rem); border: 1px solid #e6b66382; overflow: hidden; border-radius: .8rem .8rem 1.65rem 1.65rem; }
+.room[data-view="explore"] { min-height: clamp(33rem, 77vh, 57rem); }
+.room[data-plain="true"] { background: linear-gradient(135deg, #173e3d, #102039); }
+.room :is(.masthead, .viewControls, .cinema) { z-index: 1; }
+.room [hidden] { display: none; }
 .page * { box-sizing: border-box; }
 .page button, .page input, .page select { font: inherit; }
 .page button { cursor: pointer; }
@@ -47,7 +40,7 @@
   content: "";
   position: absolute;
   inset: 0 10% -3rem;
-  background: radial-gradient(ellipse, #09142ceb 18%, #09142c6e 53%, transparent 73%);
+  background: radial-gradient(ellipse, #102737b8 13%, #10273732 57%, transparent 72%);
   pointer-events: none;
 }
 .mastheadCopy { min-width: 0; position: relative; }
@@ -57,6 +50,9 @@
 .lead { max-width: 85ch; color: #fff5de; font-size: .88rem; margin: .35rem auto 0 !important; text-shadow: 0 2px 4px #0a142c; }
 .mastheadActions { display: flex; flex-wrap: wrap; justify-content: center; gap: .55rem; }
 .hallServices { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .75rem; margin-block: .9rem; }
+.viewControls { position: relative; display: flex; flex-wrap: wrap; justify-content: center; gap: .35rem; padding: .25rem .65rem; }
+.viewControls button { display: inline-flex; gap: .35rem; align-items: center; min-height: 40px; padding: .3rem .7rem; color: #fff3d2; background: #12382ee8; border: 1px solid #dfba78; border-radius: .7rem; font-size: .78rem; }
+.viewControls button:is([aria-pressed="true"], [aria-expanded="true"]) { color: #291e10; background: linear-gradient(#ffedbc, #dba452); }
 .textLink, .sourceButton, .detailButton, .goldButton, .playButton {
   display: inline-flex; align-items: center; justify-content: center; gap: .45rem;
   min-height: 40px; padding: .56rem .9rem; border-radius: 10px; border: 1px solid #d7ba784a;
@@ -71,10 +67,14 @@
 .cinema { position: relative; padding: clamp(.65rem, 1.65vw, 1.4rem); }
 .hallLight { position: absolute; inset: 0 0 auto; height: 27rem; pointer-events: none;
   background: radial-gradient(ellipse at 12% 47%, #feba5260, transparent 23%), radial-gradient(ellipse at 88% 47%, #feba5260, transparent 23%); }
-.hallGrid { display: grid; direction: ltr; grid-template-columns: minmax(160px, .75fr) minmax(0, 2.85fr) minmax(175px,.9fr); align-items: stretch; gap: clamp(.65rem,1.3vw,1.25rem); position: relative; }
+.hallGrid { display: grid; direction: ltr; grid-template-columns: minmax(105px, 1fr) minmax(0, 3.45fr) minmax(105px, 1fr); grid-template-areas: "topics screen playlist"; align-items: start; gap: clamp(.65rem,1.3vw,1.25rem); position: relative; }
 .hallGrid > * { direction: rtl; }
-.glassPanel { min-width: 0; padding: .85rem; border: 2px solid var(--noor-border); border-radius: 23px 23px 15px 15px;
-  background: linear-gradient(145deg,#21304de8,#0b1429f5); box-shadow: inset 0 0 0 2px #222742, 0 0 18px #f4a63d7a, 0 1rem 2rem #070b1aab; }
+.topics { grid-area: topics; }
+.screenColumn { grid-area: screen; }
+.playlist { grid-area: playlist; }
+.room[data-view="cinema"] .hallGrid { grid-template-columns: minmax(0, .12fr) minmax(0, 1fr) minmax(0, .12fr); }
+.glassPanel { min-width: 0; padding: .8rem; border: 2px solid var(--noor-border); border-radius: 35% 35% .9rem .9rem / 1.8rem 1.8rem .9rem .9rem;
+  background: linear-gradient(145deg,#145548d9,#112f32e8); box-shadow: inset 0 0 0 2px #bd965452, 0 0 18px #f4a63d7a, 0 1rem 2rem #070b1aab; }
 .panelHead { display: flex; align-items: center; gap: .65rem; padding-bottom: .85rem; color: var(--noor-gold); border-bottom: 1px solid #dfc58125; }
 .panelHead h2 { color: #fff3d9; font-size: 1rem; line-height: 1.25; }
 .panelHead span { color: #9eb7ae; font-size: .72rem; }
@@ -89,7 +89,7 @@
 .topicButton:hover, .topicButton[data-active="true"] { background: linear-gradient(#684616, #402c1c); border-color: #ffc962; box-shadow: inset 0 0 .7rem #ffbc4548, 0 0 .75rem #ffab46a0; }
 .topicNote, .playlistNote, .playlistEmpty { margin-top: .9rem !important; color: #a8bcb3; font-size: .73rem; }
 .screenColumn { display: flex; flex-direction: column; gap: .85rem; min-width: 0; }
-.screenFrame { min-width: 0; border-radius: 19px; overflow: hidden; border: 2px solid #ffcb79;
+.screenFrame { min-width: 0; border-radius: 3% 3% 12% 12% / 5% 5% 4% 4%; overflow: hidden; border: 2px solid #ffcb79;
   background: #101a36; box-shadow: 0 0 0 4px #1b2541, 0 0 20px #ffad53bf, 0 22px 40px #0009; display: flex; flex-direction: column; }
 .screenFrame:fullscreen { border-radius: 0; width: 100%; height: 100%; padding: clamp(.5rem,2vw,1.8rem); }
 .screenTopline, .screenControls { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .65rem;
@@ -97,12 +97,12 @@
 .screenTopline > span, .screenControls button { display: inline-flex; align-items: center; gap: .45rem; }
 .reviewBadge, .approvedBadge { padding: .24rem .55rem; border-radius: 100px; font-size: .67rem; border: 1px solid #c5a75a55; color: #f1d594; background: #53431d57; }
 .approvedBadge { border-color: #83d6ae6e; color: #a6eed0; background: #18553c77; }
-.screenBody { position: relative; isolation: isolate; flex: 1; min-height: 280px; aspect-ratio: 16/9; overflow: hidden; background: #061821; }
+.screenBody { position: relative; isolation: isolate; flex: 1; min-height: 250px; aspect-ratio: 2.05; overflow: hidden; background: #061821; }
 .screenFrame:fullscreen .screenBody { aspect-ratio: auto; min-height: 0; }
 .screenArt, .screenVeil, .providerFrame { position: absolute; inset: 0; width: 100%; height: 100%; }
 .screenArt { object-fit: cover; filter: brightness(1.06) saturate(1.15); }
 .screenArt[data-decorative="true"] { transform: scale(1.14); transform-origin: center 29%; }
-.screenVeil { background: radial-gradient(ellipse at 50% 49%, #0b183dc9 0, #0b183d99 50%, #0b183d0c 91%); }
+.screenVeil { background: radial-gradient(ellipse at 50% 49%, #10293ac4 0, #10293a83 48%, #10293a03 86%); }
 .providerFrame { z-index: 1; border: 0; background: #000; }
 .emptyState, .playerOverlay { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: .5rem; padding: clamp(.8rem,3vw,2rem); }
 .emptyState > svg, .playerOverlay > svg { color: var(--noor-gold); filter: drop-shadow(0 0 15px #cfb46b55); flex-shrink: 0; }
@@ -126,7 +126,7 @@
 .nowActions { display: flex; gap: .35rem; }
 .nowActions button { display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid var(--noor-border); background: #113b38; border-radius: 9px; color: var(--noor-gold); }
 .playlist { display: flex; flex-direction: column; min-height: 0; }
-.playlistItems { list-style: none; margin: .85rem 0 0; padding: 0; max-height: 470px; overflow: auto; scrollbar-color: #c5aa6899 #0b2b2b; scrollbar-width: thin; }
+.playlistItems { list-style: none; margin: .6rem 0 0; padding: 0; max-height: clamp(270px, 41vh, 380px); overflow: auto; scrollbar-color: #c5aa6899 #0b2b2b; scrollbar-width: thin; }
 .playlistItems li + li { margin-top: .42rem; }
 .playlistItem { width: 100%; padding: .56rem .45rem; display: flex; align-items: center; gap: .45rem; text-align: start;
   color: #d7e5db; background: #0a262c96; border: 1px solid #d6c17d1a; border-radius: 9px; }
@@ -204,11 +204,8 @@
 @media (max-width: 950px) {
   .mastheadActions { justify-content: center; }
   .ledger { justify-content: center; }
-  .hallGrid { grid-template-columns: minmax(0,1fr); }
-  .topics { grid-row: 2; }
-  .screenColumn { grid-row: 1; }
+  .hallGrid, .room[data-view="cinema"] .hallGrid { grid-template-columns: minmax(0,1fr); grid-template-areas: "screen" "topics" "playlist"; }
   .topicList { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .playlist { grid-column: auto; }
   .filterDeck { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .searchBox { grid-column: 1/-1; }
   .mediaGrid { grid-template-columns: repeat(2,minmax(0,1fr)); }

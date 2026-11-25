@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearch } from "wouter";
 import {
   BookOpenText,
@@ -24,6 +24,7 @@ import {
   ShieldCheck,
   SkipBack,
   SkipForward,
+  Sun,
   X,
   XCircle,
 } from "lucide-react";
@@ -48,7 +49,16 @@ import {
   type NoorTopic,
 } from "@/visual-golden/services/media/noor-theatre";
 import type { MediaDiscoveryRecord } from "@/visual-golden/services/media/types";
+import type { HallView } from "@/visual-golden/components/three/CinematicHall";
+import { art } from "@/visual-golden/mock/art";
 import styles from "./NoorMediaTheatre.module.css";
+
+const CinematicHall = lazy(() => import("@/visual-golden/components/three/CinematicHall"));
+const VIEW_CHOICES = [
+  { id: "explore", label: "استكشف القاعة" },
+  { id: "interactive", label: "تصفح واختر" },
+  { id: "cinema", label: "عرض سينمائي" },
+] as const;
 
 const GATE_ORDER = Object.keys(MEDIA_REVIEW_GATE_LABELS) as MediaReviewGateKey[];
 const TOPICS: ReadonlyArray<{ id: NoorTopic; label: string; en: string; icon: typeof Film }> = [
@@ -79,6 +89,11 @@ export function NoorMediaTheatre() {
   const [playerAttempt, setPlayerAttempt] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
   const [fullscreenMessage, setFullscreenMessage] = useState("");
+  const [view, setView] = useState<HallView>("interactive");
+  const [illuminated, setIlluminated] = useState(true);
+  const [topicsOpen, setTopicsOpen] = useState(false);
+  const [playlistOpen, setPlaylistOpen] = useState(true);
+  const [plainView, setPlainView] = useState(false);
   const screenRef = useRef<HTMLDivElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -114,6 +129,15 @@ export function NoorMediaTheatre() {
     document.addEventListener("fullscreenchange", onFullscreen);
     return () => document.removeEventListener("fullscreenchange", onFullscreen);
   }, []);
+
+  useEffect(() => {
+    if (view === "interactive") return;
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && !document.fullscreenElement && !dialogRef.current?.open) setView("interactive");
+    };
+    window.addEventListener("keydown", onEscape);
+    return () => window.removeEventListener("keydown", onEscape);
+  }, [view]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -173,6 +197,10 @@ export function NoorMediaTheatre() {
 
   return (
     <div className={styles.page} data-visual="noor-theatre" data-approved-count={counts.approved}>
+      <div className={styles.room} data-view={plainView ? "interactive" : view} data-plain={plainView}>
+      {!plainView ? <Suspense fallback={null}>
+        <CinematicHall room="noor" view={view} illuminated={illuminated} />
+      </Suspense> : null}
       <header className={styles.masthead}>
         <div className={styles.mastheadCopy}>
           <h1>مسرح <em>النور</em></h1>
@@ -183,10 +211,23 @@ export function NoorMediaTheatre() {
         </div>
       </header>
 
-      <section className={styles.cinema} aria-label="قاعة مسرح النور">
+      <div className={styles.viewControls} role="group" aria-label="عرض قاعة مسرح النور">
+        {!plainView ? VIEW_CHOICES.map(({ id, label }) => (
+          <button type="button" key={id} aria-pressed={id === view} onClick={() => setView(id)}>{label}</button>
+        )) : null}
+        {!plainView ? <button type="button" aria-pressed={illuminated} onClick={() => setIlluminated((value) => !value)}>
+          <Sun size={16} aria-hidden="true" /> إضاءة القاعة
+        </button> : null}
+        <button type="button" aria-pressed={plainView} onClick={() => { setView("interactive"); setPlainView((value) => !value); }}>عرض مبسّط</button>
+        {view === "interactive" ? <>
+          <button type="button" aria-controls="noor-topics-panel" aria-expanded={topicsOpen} onClick={() => setTopicsOpen((value) => !value)}>الأروقة</button>
+          <button type="button" aria-controls="noor-playlist-panel" aria-expanded={playlistOpen} onClick={() => setPlaylistOpen((value) => !value)}>قائمة التشغيل</button>
+        </> : null}
+      </div>
+      <section className={styles.cinema} aria-label="قاعة مسرح النور" hidden={view === "explore"} data-topics={view === "interactive" && topicsOpen} data-playlist={view === "interactive" && playlistOpen}>
         <div className={styles.hallLight} aria-hidden="true" />
         <div className={styles.hallGrid}>
-          <aside className={`${styles.glassPanel} ${styles.topics}`} aria-labelledby="noor-topics-title">
+          <aside id="noor-topics-panel" hidden={view !== "interactive" || !topicsOpen} className={`${styles.glassPanel} ${styles.topics}`} aria-labelledby="noor-topics-title">
             <header className={styles.panelHead}>
               <ListFilter size={17} aria-hidden />
               <div><h2 id="noor-topics-title">أروقة المسرح</h2><span lang="en">Media rooms</span></div>
@@ -266,7 +307,7 @@ export function NoorMediaTheatre() {
                     <img
                       className={styles.screenArt}
                       data-decorative={!selectedThumbnail}
-                      src={selectedThumbnail ?? "/visual-golden/art/madinah-walk-portal.webp"}
+                      src={selectedThumbnail ?? art.mosque}
                       alt=""
                     />
                     <div className={styles.screenVeil} aria-hidden="true" />
@@ -333,7 +374,7 @@ export function NoorMediaTheatre() {
             </div>
           </div>
 
-          <aside className={`${styles.glassPanel} ${styles.playlist}`} aria-labelledby="noor-playlist-title">
+          <aside id="noor-playlist-panel" hidden={view !== "interactive" || !playlistOpen} className={`${styles.glassPanel} ${styles.playlist}`} aria-labelledby="noor-playlist-title">
             <header className={styles.panelHead}>
               <ListVideo size={18} aria-hidden />
               <div><h2 id="noor-playlist-title">قائمة التشغيل</h2><span>{filtered.length} مادة في العرض الحالي</span></div>
@@ -368,7 +409,7 @@ export function NoorMediaTheatre() {
           </aside>
         </div>
 
-        <div className={styles.filterDeck}>
+        <div className={styles.filterDeck} hidden={view === "cinema"}>
           <label className={styles.searchBox}>
             <Search size={18} aria-hidden />
             <span className="sr-only">ابحث في مسرح النور</span>
@@ -412,6 +453,7 @@ export function NoorMediaTheatre() {
           </div>
         </div>
       </section>
+      </div>
 
       <div className={styles.hallServices}>
         <nav className={styles.mastheadActions} aria-label="أبواب مرتبطة بالمسرح">
