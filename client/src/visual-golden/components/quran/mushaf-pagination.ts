@@ -17,6 +17,7 @@ export interface MushafReadingPage<T extends MushafVerseLike> {
 export function buildMushafReadingPages<T extends MushafVerseLike>(
   verses: readonly T[],
   weightBudget = 360,
+  maxVersesPerPage = 5,
 ): MushafReadingPage<T>[] {
   const pages: MushafReadingPage<T>[] = [];
   let current: T[] = [];
@@ -24,7 +25,7 @@ export function buildMushafReadingPages<T extends MushafVerseLike>(
 
   for (const verse of verses) {
     const verseWeight = Math.max(54, verse.arabic.length + 34);
-    if (current.length > 0 && (weight + verseWeight > weightBudget || current.length >= 5)) {
+    if (current.length > 0 && (weight + verseWeight > weightBudget || current.length >= maxVersesPerPage)) {
       pages.push({
         verses: current,
         firstAyah: current[0].ayah,

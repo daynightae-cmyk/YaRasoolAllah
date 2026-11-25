@@ -16,6 +16,7 @@ import styles from "./QuranMushafBook.module.css";
 interface QuranMushafBookProps {
   verses: QuranVerse[];
   chapterName: string;
+  chapterNumber: number;
   selectedAyah: number;
   onSelectAyah(ayah: number): void;
   canPreviousChapter: boolean;
@@ -62,51 +63,126 @@ function useReducedMotion() {
   return { reduced: systemReduced || userReduced, userReduced, setUserReduced, systemReduced };
 }
 
+function CornerOrnament({ position }: { position: "tl" | "tr" | "bl" | "br" }) {
+  return (
+    <svg
+      viewBox="0 0 82 82"
+      className={`${styles.cornerOrnament} ${styles[`corner_${position}`]}`}
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M3 79C3 38 38 3 79 3" />
+      <path d="M12 79C12 44 44 12 79 12" />
+      <path d="M3 59C29 57 43 43 41 23C40 10 28 7 20 13C12 19 14 31 25 32C34 33 37 24 32 22" />
+      <path d="M59 3C57 29 43 43 23 41C10 40 7 28 13 20C19 12 23 22 16 32" />
+      <path d="M3 3L17 3L3 17Z" className={styles.cornerSolid} />
+      <circle cx="24" cy="24" r="2.6" />
+    </svg>
+  );
+}
+
 interface PageFaceProps {
   page?: MushafReadingPage<QuranVerse>;
   side: "right" | "left";
   selectedAyah: number;
   onSelectAyah(ayah: number): void;
   chapterName: string;
+  chapterNumber: number;
   fontScale: number;
   lineHeight: number;
   back?: boolean;
+  interactive?: boolean;
 }
 
-function PageFace({ page, side, selectedAyah, onSelectAyah, chapterName, fontScale, lineHeight, back = false }: PageFaceProps) {
+function PageFace({
+  page,
+  side,
+  selectedAyah,
+  onSelectAyah,
+  chapterName,
+  chapterNumber,
+  fontScale,
+  lineHeight,
+  back = false,
+  interactive = true,
+}: PageFaceProps) {
+  const pageTextLength = page?.verses.reduce((sum, verse) => sum + verse.arabic.length, 0) ?? 0;
+  const densityFit = pageTextLength > 760 ? Math.max(0.64, 760 / pageTextLength) : 1;
+  const isOpening = chapterNumber === 1;
+  const style = {
+    "--mushaf-font-scale": fontScale,
+    "--mushaf-line-height": lineHeight,
+    "--mushaf-density-fit": densityFit,
+  } as CSSProperties;
+
   return (
     <div
-      className={`${styles.paper} ${side === "right" ? styles.right : styles.left} ${back ? styles.back : ""}`}
+      className={`${styles.paper} ${side === "right" ? styles.right : styles.left} ${back ? styles.back : ""} ${isOpening ? styles.openingPage : ""}`}
       data-quran-page={back ? undefined : side}
+      style={style}
       aria-label={page ? `${side === "right" ? "الصفحة اليمنى" : "الصفحة اليسرى"}، الآيات ${page.firstAyah} إلى ${page.lastAyah}` : "صفحة ختام السورة"}
     >
-      <div className={styles.ornament} aria-hidden="true"><span /></div>
+      <div className={styles.frame} aria-hidden="true">
+        <CornerOrnament position="tl" />
+        <CornerOrnament position="tr" />
+        <CornerOrnament position="bl" />
+        <CornerOrnament position="br" />
+        <span className={styles.frameBandTop} />
+        <span className={styles.frameBandBottom} />
+        <span className={styles.frameBandSideRight} />
+        <span className={styles.frameBandSideLeft} />
+        <span className={styles.frameDiamondTop} />
+        <span className={styles.frameDiamondBottom} />
+      </div>
+
+      {isOpening && side === "right" ? (
+        <div className={styles.openingCrest} aria-hidden="true">
+          <svg viewBox="0 0 120 64" focusable="false">
+            <path d="M60 4c11 12 23 18 38 18-8 12-13 22-14 34H36c-1-12-6-22-14-34 15 0 27-6 38-18Z" />
+            <path d="M60 14c7 8 15 12 24 12-5 8-8 15-9 22H45c-1-7-4-14-9-22 9 0 17-4 24-12Z" />
+            <circle cx="60" cy="32" r="4" />
+            <path d="M30 58h60M36 53h48" />
+          </svg>
+        </div>
+      ) : null}
+
       <div className={styles.pageHeading}>
-        <span>سورة {chapterName}</span>
+        <span>{isOpening ? "سورة الفاتحة" : `سورة ${chapterName}`}</span>
         {page ? <small>الآيات {page.firstAyah}–{page.lastAyah}</small> : null}
       </div>
+
       <div
-        className={styles.verses}
-        style={{ fontSize: `calc(clamp(1.03rem, 1.65vw, 1.5rem) * ${fontScale})`, lineHeight }}
+        className={`${styles.verses} ${isOpening ? styles.openingVerses : ""}`}
+        style={style}
       >
         {page ? page.verses.map((verse) => (
           <button
             type="button"
             key={`${verse.surah}:${verse.ayah}`}
+            id={interactive && !back ? `quran-ayah-${verse.surah}-${verse.ayah}` : undefined}
+            data-ayah={`${verse.surah}:${verse.ayah}`}
             className={`${styles.ayah} ${verse.ayah === selectedAyah ? styles.ayahOn : ""}`}
             onClick={() => onSelectAyah(verse.ayah)}
             aria-pressed={verse.ayah === selectedAyah}
             title={`الآية ${verse.ayah}`}
-            tabIndex={back ? -1 : 0}
+            tabIndex={back || !interactive ? -1 : 0}
           >
-            <span lang="ar">{verse.arabic}</span>
+            <span lang="ar" className={styles.ayahText}>{verse.arabic}</span>
             <span className={styles.ayahNumber} aria-label={`الآية ${verse.ayah}`}>{verse.ayah}</span>
           </button>
         )) : (
-          <div className={styles.endMark}><BookOpen aria-hidden="true" /><span>نهاية السورة</span></div>
+          <div className={styles.endMark}>
+            <BookOpen aria-hidden="true" />
+            <span>نهاية السورة</span>
+          </div>
         )}
       </div>
-      <div className={styles.pageFoot} aria-hidden="true"><i />{page ? `${page.firstAyah} · ${page.lastAyah}` : "﷽"}<i /></div>
+
+      <div className={styles.pageFoot} aria-hidden="true">
+        <i />
+        <span>{page ? `${page.firstAyah} — ${page.lastAyah}` : "تمّ"}</span>
+        <i />
+      </div>
     </div>
   );
 }
@@ -114,6 +190,7 @@ function PageFace({ page, side, selectedAyah, onSelectAyah, chapterName, fontSca
 export function QuranMushafBook({
   verses,
   chapterName,
+  chapterNumber,
   selectedAyah,
   onSelectAyah,
   canPreviousChapter,
@@ -123,7 +200,11 @@ export function QuranMushafBook({
   fontScale,
   lineHeight,
 }: QuranMushafBookProps) {
-  const pages = useMemo(() => buildMushafReadingPages(verses), [verses]);
+  const maxVersesPerPage = chapterNumber === 1 ? 4 : 5;
+  const pages = useMemo(
+    () => buildMushafReadingPages(verses, 360, maxVersesPerPage),
+    [verses, maxVersesPerPage],
+  );
   const spreadCount = Math.max(1, Math.ceil(pages.length / 2));
   const [spreadIndex, setSpreadIndex] = useState(() => spreadForAyah(pages, selectedAyah));
   const [turn, setTurn] = useState<TurnState | null>(null);
@@ -255,6 +336,8 @@ export function QuranMushafBook({
   };
 
   const touchStarted = (event: ReactTouchEvent<HTMLDivElement>) => {
+    touchStart.current = null;
+    if (event.target instanceof Element && event.target.closest("[data-page-corner]")) return;
     touchStart.current = event.changedTouches[0]?.clientX ?? null;
   };
   const touchEnded = (event: ReactTouchEvent<HTMLDivElement>) => {
@@ -282,15 +365,25 @@ export function QuranMushafBook({
   const baseLeft = turn?.direction === -1 ? targetLeft : turn && visualProgress >= 0.5 ? targetLeft : currentLeft;
   const leafFront = turn?.direction === 1 ? currentRight : currentLeft;
   const leafBack = turn?.direction === 1 ? targetLeft : targetRight;
-  const sharedFaceProps = { selectedAyah, onSelectAyah, chapterName, fontScale, lineHeight };
+  const sharedFaceProps = {
+    selectedAyah,
+    onSelectAyah,
+    chapterName,
+    chapterNumber,
+    fontScale,
+    lineHeight,
+  };
 
   return (
-    <section className={styles.mushaf} data-visual="quran-mushaf" data-spread-count="1" data-reduced-motion={reduced ? "true" : "false"} aria-label="المصحف — كتاب واحد مفتوح على صفحتين">
-      <div className={styles.readingStatus}>
-        <span><BookOpen size={15} aria-hidden="true" /> كتاب واحد · صفحتان</span>
-        <span>تقسيم قراءة للسورة، وليس ترقيم المصحف المدني</span>
-      </div>
-
+    <section
+      className={`${styles.mushaf} ${chapterNumber === 1 ? styles.fatihaMushaf : ""}`}
+      data-visual="quran-mushaf"
+      data-spread-count="1"
+      data-surah={chapterNumber}
+      data-reduced-motion={reduced ? "true" : "false"}
+      aria-label="المصحف — كتاب واحد مفتوح على صفحتين"
+      dir="rtl"
+    >
       <div
         ref={bookRef}
         className={styles.book}
@@ -308,18 +401,23 @@ export function QuranMushafBook({
         onTouchStart={touchStarted}
         onTouchEnd={touchEnded}
       >
-        <div className={styles.cover} aria-hidden="true" />
         <div className={styles.pageStack} aria-hidden="true" />
+        <div className={styles.cover} aria-hidden="true" />
+        <div className={styles.ribbon} aria-hidden="true" />
         <div className={styles.baseSpread} data-visual="quran-spread">
           <PageFace {...sharedFaceProps} page={baseRight} side="right" />
           <PageFace {...sharedFaceProps} page={baseLeft} side="left" />
         </div>
-        <div className={styles.binding} aria-hidden="true" />
+        <div className={styles.gutter} aria-hidden="true"><span /></div>
+
         {turn ? (
           <>
             <div
               className={`${styles.turnShadow} ${turn.direction === 1 ? styles.shadowNext : styles.shadowPrevious}`}
-              style={{ opacity: lift * 0.65, transform: `translateX(${turn.direction === 1 ? -visualProgress * 65 : visualProgress * 65}%)` }}
+              style={{
+                opacity: lift * 0.7,
+                transform: `translateX(${turn.direction === 1 ? -visualProgress * 62 : visualProgress * 62}%) scaleY(${0.98 + lift * 0.02})`,
+              }}
               aria-hidden="true"
             />
             <div
@@ -328,15 +426,17 @@ export function QuranMushafBook({
               data-visual="quran-turning-leaf"
               aria-hidden="true"
             >
-              <div className={styles.face}>
-                <PageFace {...sharedFaceProps} page={leafFront} side={turn.direction === 1 ? "right" : "left"} />
+              <div className={`${styles.face} ${turn.direction === 1 ? styles.faceRight : styles.faceLeft}`}>
+                <PageFace {...sharedFaceProps} page={leafFront} side={turn.direction === 1 ? "right" : "left"} interactive={false} />
               </div>
               <div className={`${styles.face} ${styles.reverseFace}`}>
                 <PageFace {...sharedFaceProps} page={leafBack} side={turn.direction === 1 ? "left" : "right"} back />
               </div>
+              <div className={styles.curlEdge} aria-hidden="true" />
             </div>
           </>
         ) : null}
+
         <button
           type="button"
           className={`${styles.corner} ${styles.cornerNext}`}
@@ -349,7 +449,7 @@ export function QuranMushafBook({
           onPointerUp={cornerPointerUp}
           onPointerCancel={() => { dragRef.current = null; setTurn(null); }}
           onClick={() => cornerClick(1)}
-        ><span aria-hidden="true" /></button>
+        />
         <button
           type="button"
           className={`${styles.corner} ${styles.cornerPrevious}`}
@@ -362,25 +462,52 @@ export function QuranMushafBook({
           onPointerUp={cornerPointerUp}
           onPointerCancel={() => { dragRef.current = null; setTurn(null); }}
           onClick={() => cornerClick(-1)}
-        ><span aria-hidden="true" /></button>
+        />
+      </div>
+
+      <div className={styles.bookCaption} aria-live="polite">
+        <span>{chapterName}</span>
+        <span>·</span>
+        <span>الموضع {spreadIndex + 1} من {spreadCount}</span>
+        <span>·</span>
+        <span>{currentRight?.firstAyah ?? "—"}–{currentLeft?.lastAyah ?? currentRight?.lastAyah ?? "—"}</span>
       </div>
 
       <div className={styles.controls}>
-        <button type="button" onClick={() => startTurn(-1)} disabled={!canPreviousChapter && spreadIndex <= 0}>
-          <ChevronRight size={18} aria-hidden="true" /> الموضع السابق
+        <button
+          type="button"
+          onClick={() => startTurn(-1)}
+          disabled={!canPreviousChapter && spreadIndex <= 0}
+          aria-label="الموضع السابق"
+        >
+          <ChevronRight size={18} aria-hidden="true" /> السابق
         </button>
         <label>
-          <span>موضع القراءة</span>
-          <select aria-label="اختيار موضع القراءة" value={spreadIndex} onChange={(event) => goToSpread(Number(event.target.value))} disabled={Boolean(turn)}>
+          <span>الموضع</span>
+          <select
+            aria-label="اختيار موضع القراءة"
+            value={spreadIndex}
+            onChange={(event) => goToSpread(Number(event.target.value))}
+            disabled={Boolean(turn)}
+          >
             {Array.from({ length: spreadCount }, (_, index) => {
               const right = pages[index * 2];
               const left = pages[index * 2 + 1];
-              return <option key={index} value={index}>{index + 1} / {spreadCount} · الآيات {right?.firstAyah}–{left?.lastAyah ?? right?.lastAyah}</option>;
+              return (
+                <option key={index} value={index}>
+                  {index + 1} / {spreadCount} · {right?.firstAyah ?? "—"}–{left?.lastAyah ?? right?.lastAyah ?? "—"}
+                </option>
+              );
             })}
           </select>
         </label>
-        <button type="button" onClick={() => startTurn(1)} disabled={!canNextChapter && spreadIndex >= spreadCount - 1}>
-          الموضع التالي <ChevronLeft size={18} aria-hidden="true" />
+        <button
+          type="button"
+          onClick={() => startTurn(1)}
+          disabled={!canNextChapter && spreadIndex >= spreadCount - 1}
+          aria-label="الموضع التالي"
+        >
+          التالي <ChevronLeft size={18} aria-hidden="true" />
         </button>
         <button
           type="button"
@@ -390,11 +517,17 @@ export function QuranMushafBook({
           onClick={() => setUserReduced((value) => !value)}
           title={systemReduced ? "تقليل الحركة مفعّل من إعدادات النظام" : "بديل فوري دون حركة الورقة"}
         >
-          <Feather size={15} aria-hidden="true" /> {systemReduced ? "تقليل الحركة مفعّل" : userReduced ? "تفعيل حركة الورقة" : "قراءة دون حركة"}
+          <Feather size={15} aria-hidden="true" /> {systemReduced ? "تقليل الحركة" : userReduced ? "تحريك الورق" : "بلا حركة"}
         </button>
       </div>
-      <p className={styles.instructions}>اضغط زاوية الورقة أو اسحبها · مرّر أفقيًا على الهاتف · استخدم الأسهم وPage Up / Page Down</p>
-      <span className={styles.srOnly} aria-live="polite">الموضع {spreadIndex + 1} من {spreadCount}. الآيات {currentRight?.firstAyah} إلى {currentLeft?.lastAyah ?? currentRight?.lastAyah}.</span>
+      <p className={styles.instructions}>
+        اضغط زاوية الورقة أو اسحبها · مرّر أفقيًا على الهاتف · الأسهم و Page Up / Page Down
+      </p>
+      {!turn ? (
+        <span className={styles.srOnly} aria-live="polite">
+          الموضع {spreadIndex + 1} من {spreadCount}. الآيات {currentRight?.firstAyah} إلى {currentLeft?.lastAyah ?? currentRight?.lastAyah}.
+        </span>
+      ) : null}
     </section>
   );
 }

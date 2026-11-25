@@ -36,6 +36,9 @@ jobs:
       - name: TypeScript check
         run: npm run check
 
+      - name: Mushaf pagination integrity
+        run: npm run test:mushaf
+
       - name: Incremental lint
         run: npm run lint
 

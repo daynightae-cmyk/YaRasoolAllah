@@ -1077,6 +1077,7 @@ export function QuranPage() {
               <QuranMushafBook
                 verses={verses}
                 chapterName={currentChapter.arabicName}
+                chapterNumber={active}
                 selectedAyah={ayah}
                 onSelectAyah={(nextAyah) => setAyah(nextAyah)}
                 canPreviousChapter={active > 1}
