@@ -10,18 +10,18 @@
 
 ## بصمات المدخلات
 - data-sources/media/acquisition/media-acquisition-manifest.json: ec248dc092be69016a30b93e8c6a0b983fe48d0bc0f977691c1ac67de53970ef (1266 bytes, utf8-lf)
-- data-sources/media/acquisition/kids-media-catalog.csv: b5797f46785bbf98f3c6bb18a18f18d37083721e798c27b23dd6eb84874cfc75 (69917 bytes, utf8-lf)
-- data-sources/media/acquisition/kids-media-catalog.json: 4ec861095869ab9049041c300237e88a8935d67ebf8a1c6e47a53e7101cc10af (139638 bytes, utf8-lf)
-- data-sources/media/acquisition/seerah-media-catalog.csv: 280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e (73067 bytes, utf8-lf)
-- data-sources/media/acquisition/seerah-media-catalog.json: 94da03d7935a7e83ec9f6f24df4bdeaf7ade860a235a147336f0a49da582be69 (131389 bytes, utf8-lf)
-- data-sources/media/acquisition/media-rights-ledger.csv: 498e21d77c943a33c530c47b2c25ac7d6683ede3d1d700fe9b077b49352806b1 (35757 bytes, utf8-lf)
-- data-sources/media/acquisition/media-rejected-and-pending.csv: b5c60587323acc0c01dda182b4e73b75dcfcc27b6edc74b7ed6a1b40fd241cf7 (36761 bytes, utf8-lf)
+- data-sources/media/acquisition/kids-media-catalog.csv: 539d115b34bda8b2635d976554a861743417f26c6a9d8b48c7acb4a3433d9b43 (88306 bytes, utf8-lf)
+- data-sources/media/acquisition/kids-media-catalog.json: ee43aaa1bc649263ca97fea551f578c71bd5f6021c7c1f4e5a63b298e2897ef5 (158979 bytes, utf8-lf)
+- data-sources/media/acquisition/seerah-media-catalog.csv: 95e520d234813210f6914ca93d48f670ffa54e917a00261f35101277d2597d04 (86207 bytes, utf8-lf)
+- data-sources/media/acquisition/seerah-media-catalog.json: 031a23bb42c94ed0d53782eaefecc4fc7da24d960d5c15ecb7066f7b18e255ec (145549 bytes, utf8-lf)
+- data-sources/media/acquisition/media-rights-ledger.csv: 67befe52d987b92d03aab9a3da6b50915e8c7ea33d13380a808a24ed86999702 (35762 bytes, utf8-lf)
+- data-sources/media/acquisition/media-rejected-and-pending.csv: ce4dd8723cd1fe58c6914a82ce064b7f14aa43f7ec713409344ecb26b400adb8 (37641 bytes, utf8-lf)
 
 ## بصمات المخرجات
-- media-discovery-catalog.json: 2ade5de6860f1977ec099c5e127859d6c2c37c653e6a9c3db1366ecc8d940dd3
-- ingestion-manifest.json: c73f4057461fc7cdbae097ee7878ed5b5d119648d24f6039bed9bea1c14bf80b
-- media-discovery.generated.ts: 111dd2d54668e4b834d8a11226d203ee4a8969adc9dee66cbf98c0e7ae82d38a
-- media-discovery-status.generated.ts: e22c61d0ede39763f52f41de54aad66c05b2ae272454050e33e2b0b08ce5a874
+- media-discovery-catalog.json: de763ad203891d732914ff201a0a800bc9ebeb802197b170fc45b7edaf5ba45c
+- ingestion-manifest.json: efdef8ca55dad343de4c1fbc9a4b3820552ab7e607ecd237036cc5c9907982bd
+- media-discovery.generated.ts: 3e94dc1c122d650346ada6beec1007cf49343e1c4877c96c9bec033a9ed5c7d4
+- media-discovery-status.generated.ts: 4788669a6cb970aa3f522b750e2abe6e87039d86eae7f9245296d1048ef02d4b
 
 ## حسب الفئة
 - kids: 46

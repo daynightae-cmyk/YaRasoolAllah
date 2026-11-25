@@ -30,7 +30,8 @@
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=NtlnwlBNztE",
         "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=NtlnwlBNztE&format=json",
-        "https://www.youtube.com/@tvbedaya"
+        "https://www.youtube.com/@tvbedaya",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DNtlnwlBNztE&format=json"
       ],
       "video_id": "NtlnwlBNztE",
       "id": "youtube:NtlnwlBNztE",
@@ -45,8 +46,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/NtlnwlBNztE",
       "channel_id": null
     },
@@ -76,7 +77,8 @@
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=2UOqwLQ7BBw",
         "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=2UOqwLQ7BBw&format=json",
-        "https://www.youtube.com/@tvbedaya"
+        "https://www.youtube.com/@tvbedaya",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D2UOqwLQ7BBw&format=json"
       ],
       "video_id": "2UOqwLQ7BBw",
       "id": "youtube:2UOqwLQ7BBw",
@@ -91,8 +93,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/2UOqwLQ7BBw",
       "channel_id": null
     },
@@ -122,7 +124,8 @@
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=pCafqMnOIZc",
         "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=pCafqMnOIZc&format=json",
-        "https://www.youtube.com/@tvbedaya"
+        "https://www.youtube.com/@tvbedaya",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DpCafqMnOIZc&format=json"
       ],
       "video_id": "pCafqMnOIZc",
       "id": "youtube:pCafqMnOIZc",
@@ -137,8 +140,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/pCafqMnOIZc",
       "channel_id": null
     },
@@ -168,7 +171,8 @@
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=ebM4UTNO32w",
         "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=ebM4UTNO32w&format=json",
-        "https://www.youtube.com/@tvbedaya"
+        "https://www.youtube.com/@tvbedaya",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DebM4UTNO32w&format=json"
       ],
       "video_id": "ebM4UTNO32w",
       "id": "youtube:ebM4UTNO32w",
@@ -183,8 +187,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/ebM4UTNO32w",
       "channel_id": null
     },
@@ -214,7 +218,8 @@
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=xv5bswGGi-w",
         "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=xv5bswGGi-w&format=json",
-        "https://www.youtube.com/@tvbedaya"
+        "https://www.youtube.com/@tvbedaya",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dxv5bswGGi-w&format=json"
       ],
       "video_id": "xv5bswGGi-w",
       "id": "youtube:xv5bswGGi-w",
@@ -229,15 +234,15 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/xv5bswGGi-w",
       "channel_id": null
     },
     {
       "attribution_text": null,
       "category": "السيرة النبوية",
-      "channel_name": "AlAbrar.net",
+      "channel_name": "الأبرار دوت نت",
       "channel_url": "https://www.youtube.com/@alabraar",
       "content_type": "lecture_series",
       "duration_seconds": 5013,
@@ -261,7 +266,8 @@
         "https://www.youtube.com/watch?v=z9VlkgVyLhg",
         "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=z9VlkgVyLhg&format=json",
         "https://www.youtube.com/@alabraar",
-        "https://www.youtube.com/results?search_query=%D8%A7%D9%84%D8%B3%D9%8A%D8%B1%D8%A9+%D8%A7%D9%84%D9%86%D8%A8%D9%88%D9%8A%D8%A9+%D8%A8%D8%AF%D8%B1+%D8%A7%D9%84%D9%85%D8%B4%D8%A7%D8%B1%D9%8A+%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9"
+        "https://www.youtube.com/results?search_query=%D8%A7%D9%84%D8%B3%D9%8A%D8%B1%D8%A9+%D8%A7%D9%84%D9%86%D8%A8%D9%88%D9%8A%D8%A9+%D8%A8%D8%AF%D8%B1+%D8%A7%D9%84%D9%85%D8%B4%D8%A7%D8%B1%D9%8A+%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dz9VlkgVyLhg&format=json"
       ],
       "video_id": "z9VlkgVyLhg",
       "id": "youtube:z9VlkgVyLhg",
@@ -276,15 +282,15 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/z9VlkgVyLhg",
       "channel_id": null
     },
     {
       "attribution_text": null,
       "category": "السيرة النبوية",
-      "channel_name": "AlAbrar.net",
+      "channel_name": "الأبرار دوت نت",
       "channel_url": "https://www.youtube.com/@alabraar",
       "content_type": "lecture_series",
       "duration_seconds": null,
@@ -308,7 +314,8 @@
         "https://www.youtube.com/watch?v=Cut8UA4dSS4",
         "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=Cut8UA4dSS4&format=json",
         "https://www.youtube.com/@alabraar",
-        "https://www.youtube.com/results?search_query=%D8%A7%D9%84%D8%B3%D9%8A%D8%B1%D8%A9+%D8%A7%D9%84%D9%86%D8%A8%D9%88%D9%8A%D8%A9+%D8%A8%D8%AF%D8%B1+%D8%A7%D9%84%D9%85%D8%B4%D8%A7%D8%B1%D9%8A+%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9"
+        "https://www.youtube.com/results?search_query=%D8%A7%D9%84%D8%B3%D9%8A%D8%B1%D8%A9+%D8%A7%D9%84%D9%86%D8%A8%D9%88%D9%8A%D8%A9+%D8%A8%D8%AF%D8%B1+%D8%A7%D9%84%D9%85%D8%B4%D8%A7%D8%B1%D9%8A+%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DCut8UA4dSS4&format=json"
       ],
       "video_id": "Cut8UA4dSS4",
       "id": "youtube:Cut8UA4dSS4",
@@ -323,8 +330,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/Cut8UA4dSS4",
       "channel_id": null
     },
@@ -354,7 +361,8 @@
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=s5ZPujmYhUE",
         "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=s5ZPujmYhUE&format=json",
-        "https://www.youtube.com/@alabraar"
+        "https://www.youtube.com/@alabraar",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Ds5ZPujmYhUE&format=json"
       ],
       "video_id": "s5ZPujmYhUE",
       "id": "youtube:s5ZPujmYhUE",
@@ -369,8 +377,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/s5ZPujmYhUE",
       "channel_id": null
     },
@@ -401,7 +409,8 @@
         "https://www.youtube.com/watch?v=ExL16_g5-qQ",
         "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=ExL16_g5-qQ&format=json",
         "https://www.youtube.com/@alabraar",
-        "https://www.youtube.com/results?search_query=%D8%A7%D9%84%D8%B3%D9%8A%D8%B1%D8%A9+%D8%A7%D9%84%D9%86%D8%A8%D9%88%D9%8A%D8%A9+%D8%A8%D8%AF%D8%B1+%D8%A7%D9%84%D9%85%D8%B4%D8%A7%D8%B1%D9%8A+%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9"
+        "https://www.youtube.com/results?search_query=%D8%A7%D9%84%D8%B3%D9%8A%D8%B1%D8%A9+%D8%A7%D9%84%D9%86%D8%A8%D9%88%D9%8A%D8%A9+%D8%A8%D8%AF%D8%B1+%D8%A7%D9%84%D9%85%D8%B4%D8%A7%D8%B1%D9%8A+%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DExL16_g5-qQ&format=json"
       ],
       "video_id": "ExL16_g5-qQ",
       "id": "youtube:ExL16_g5-qQ",
@@ -416,8 +425,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/ExL16_g5-qQ",
       "channel_id": null
     },
@@ -446,7 +455,9 @@
       "title_original": "الشيخ د محمد العريفي السيرة النبوية",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=4i5i9thTxK8",
-        "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=4i5i9thTxK8&format=json"
+        "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=4i5i9thTxK8&format=json",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D4i5i9thTxK8&format=json",
+        "https://www.youtube.com/@hamode656"
       ],
       "video_id": "4i5i9thTxK8",
       "id": "youtube:4i5i9thTxK8",
@@ -461,8 +472,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/4i5i9thTxK8",
       "channel_id": null
     },
@@ -491,7 +502,9 @@
       "title_original": "د العريفي دروس من السيرة النبوية ( ٧ )",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=iYFj1MYxUpw",
-        "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=iYFj1MYxUpw&format=json"
+        "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=iYFj1MYxUpw&format=json",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DiYFj1MYxUpw&format=json",
+        "https://www.youtube.com/@hamode656"
       ],
       "video_id": "iYFj1MYxUpw",
       "id": "youtube:iYFj1MYxUpw",
@@ -506,8 +519,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/iYFj1MYxUpw",
       "channel_id": null
     },
@@ -515,7 +528,7 @@
       "attribution_text": null,
       "category": "seerah",
       "channel_name": "جامع السيرة النبوية",
-      "channel_url": "https://www.youtube.com/@مجموعةالسيرةالنبوية",
+      "channel_url": "https://www.youtube.com/@%D9%85%D8%AC%D9%85%D9%88%D8%B9%D8%A9%D8%A7%D9%84%D8%B3%D9%8A%D8%B1%D8%A9%D8%A7%D9%84%D9%86%D8%A8%D9%88%D9%8A%D8%A9",
       "content_type": "lecture",
       "duration_seconds": null,
       "embedding_status": "UNTESTED",
@@ -533,15 +546,17 @@
       "speaker": "محمد العريفي",
       "subcategory": "الدروس المتسلسلة",
       "thumbnail_url": "https://i.ytimg.com/vi/qubrKp9eZoQ/hqdefault.jpg",
-      "title_original": "الشيخ محمد العريفي || السيرة النبوية الحلقة 1",
+      "title_original": "الشيخ محمد العريفي  || السيرة النبوية الحلقة 1",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=qubrKp9eZoQ",
-        "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=qubrKp9eZoQ&format=json"
+        "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=qubrKp9eZoQ&format=json",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DqubrKp9eZoQ&format=json",
+        "https://www.youtube.com/@%D9%85%D8%AC%D9%85%D9%88%D8%B9%D8%A9%D8%A7%D9%84%D8%B3%D9%8A%D8%B1%D8%A9%D8%A7%D9%84%D9%86%D8%A8%D9%88%D9%8A%D8%A9"
       ],
       "video_id": "qubrKp9eZoQ",
       "id": "youtube:qubrKp9eZoQ",
       "provider": "youtube",
-      "title_ar": "الشيخ محمد العريفي || السيرة النبوية الحلقة 1",
+      "title_ar": "الشيخ محمد العريفي  || السيرة النبوية الحلقة 1",
       "description_ar": null,
       "age_band": null,
       "rights_holder": null,
@@ -551,8 +566,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/qubrKp9eZoQ",
       "channel_id": null
     },
@@ -581,7 +596,9 @@
       "title_original": "محمد العريفي | هجرة الرسول ﷺ و معجزات الهجرة التي حدثت لسيدنا محمد ﷺ أثناء هجرته إلى المدينة",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=Sb78oanqSqc",
-        "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=Sb78oanqSqc&format=json"
+        "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=Sb78oanqSqc&format=json",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DSb78oanqSqc&format=json",
+        "https://www.youtube.com/@etfakron-ie2yn"
       ],
       "video_id": "Sb78oanqSqc",
       "id": "youtube:Sb78oanqSqc",
@@ -596,8 +613,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/Sb78oanqSqc",
       "channel_id": null
     },
@@ -605,7 +622,7 @@
       "attribution_text": null,
       "category": "seerah",
       "channel_name": "هدي الإسلام",
-      "channel_url": "https://www.youtube.com/@هديالإسلام-ف13ه",
+      "channel_url": "https://www.youtube.com/@%D9%87%D8%AF%D9%8A%D8%A7%D9%84%D8%A5%D8%B3%D9%84%D8%A7%D9%85-%D9%813%D9%87",
       "content_type": "lecture",
       "duration_seconds": 4692,
       "embedding_status": "UNTESTED",
@@ -626,7 +643,9 @@
       "title_original": "محمد العريفي | قصص رائعة من السيرة النبوية ستعيد سماعها أكثر من مرة",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=fnFj09Q4xHE",
-        "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=fnFj09Q4xHE&format=json"
+        "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=fnFj09Q4xHE&format=json",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DfnFj09Q4xHE&format=json",
+        "https://www.youtube.com/@%D9%87%D8%AF%D9%8A%D8%A7%D9%84%D8%A5%D8%B3%D9%84%D8%A7%D9%85-%D9%813%D9%87"
       ],
       "video_id": "fnFj09Q4xHE",
       "id": "youtube:fnFj09Q4xHE",
@@ -641,8 +660,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/fnFj09Q4xHE",
       "channel_id": null
     },
@@ -668,15 +687,17 @@
       "speaker": "محمد العريفي",
       "subcategory": "أخلاق النبي ﷺ",
       "thumbnail_url": "https://i.ytimg.com/vi/Cdqp5aNAYCA/hqdefault.jpg",
-      "title_original": "د الشيخ محمد عبدالرحمن العريفي السيرة النبوية",
+      "title_original": "د الشيخ محمد عبدالرحمن العريفي  السيرة النبوية",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=Cdqp5aNAYCA",
-        "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=Cdqp5aNAYCA&format=json"
+        "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=Cdqp5aNAYCA&format=json",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DCdqp5aNAYCA&format=json",
+        "https://www.youtube.com/@hamode656"
       ],
       "video_id": "Cdqp5aNAYCA",
       "id": "youtube:Cdqp5aNAYCA",
       "provider": "youtube",
-      "title_ar": "د الشيخ محمد عبدالرحمن العريفي السيرة النبوية",
+      "title_ar": "د الشيخ محمد عبدالرحمن العريفي  السيرة النبوية",
       "description_ar": null,
       "age_band": null,
       "rights_holder": null,
@@ -686,8 +707,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/Cdqp5aNAYCA",
       "channel_id": null
     },
@@ -716,7 +737,9 @@
       "title_original": "د العريفي الإحداث في حياة النبي صلى الله عليه وسلم ( السيرة النبوية )",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=w5w46SZr6dY",
-        "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=w5w46SZr6dY&format=json"
+        "https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=w5w46SZr6dY&format=json",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dw5w46SZr6dY&format=json",
+        "https://www.youtube.com/@hamode656"
       ],
       "video_id": "w5w46SZr6dY",
       "id": "youtube:w5w46SZr6dY",
@@ -731,8 +754,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/w5w46SZr6dY",
       "channel_id": null
     },
@@ -757,17 +780,19 @@
       "series_name": "السيرة النبوية | د. طارق السويدان",
       "speaker": "د. طارق السويدان",
       "subcategory": "ما قبل البعثة",
-      "thumbnail_url": null,
-      "title_original": "The Prophetic Biography | Episode (1)",
+      "thumbnail_url": "https://i.ytimg.com/vi/PzVUqMYsfro/hqdefault.jpg",
+      "title_original": "السيرة النبوية | الحلقة (1) | قصة دخول الأديان السماوية إلى الجزيرة العربية | د. طارق السويدان",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=PzVUqMYsfro",
         "https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured",
-        "https://suwaidan.com/"
+        "https://suwaidan.com/",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DPzVUqMYsfro&format=json",
+        "https://www.youtube.com/@DrAlSuwaidan"
       ],
       "video_id": "PzVUqMYsfro",
       "id": "youtube:PzVUqMYsfro",
       "provider": "youtube",
-      "title_ar": "The Prophetic Biography | Episode (1)",
+      "title_ar": "السيرة النبوية | الحلقة (1) | قصة دخول الأديان السماوية إلى الجزيرة العربية | د. طارق السويدان",
       "description_ar": null,
       "age_band": null,
       "rights_holder": null,
@@ -777,8 +802,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/PzVUqMYsfro",
       "channel_id": null
     },
@@ -803,12 +828,14 @@
       "series_name": "السيرة النبوية | د. طارق السويدان",
       "speaker": "د. طارق السويدان",
       "subcategory": "ما قبل البعثة",
-      "thumbnail_url": null,
+      "thumbnail_url": "https://i.ytimg.com/vi/QqeNhIBv2IE/hqdefault.jpg",
       "title_original": "السيرة النبوية | الحلقة (2) | قصص وأحداث عظيمة مهّدت لولادة النبي ﷺ | د. طارق السويدان",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=QqeNhIBv2IE",
         "https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured",
-        "https://suwaidan.com/"
+        "https://suwaidan.com/",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DQqeNhIBv2IE&format=json",
+        "https://www.youtube.com/@DrAlSuwaidan"
       ],
       "video_id": "QqeNhIBv2IE",
       "id": "youtube:QqeNhIBv2IE",
@@ -823,8 +850,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/QqeNhIBv2IE",
       "channel_id": null
     },
@@ -849,12 +876,14 @@
       "series_name": "السيرة النبوية | د. طارق السويدان",
       "speaker": "د. طارق السويدان",
       "subcategory": "مولد النبي ﷺ وطفولته",
-      "thumbnail_url": null,
+      "thumbnail_url": "https://i.ytimg.com/vi/Grg00H7JH4E/hqdefault.jpg",
       "title_original": "السيرة النبوية | الحلقة (3) | ولادة خير البرية محمد ﷺ وقصته العجيبة مع الراهب | د. طارق السويدان",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=Grg00H7JH4E",
         "https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured",
-        "https://suwaidan.com/"
+        "https://suwaidan.com/",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DGrg00H7JH4E&format=json",
+        "https://www.youtube.com/@DrAlSuwaidan"
       ],
       "video_id": "Grg00H7JH4E",
       "id": "youtube:Grg00H7JH4E",
@@ -869,8 +898,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/Grg00H7JH4E",
       "channel_id": null
     },
@@ -895,12 +924,14 @@
       "series_name": "السيرة النبوية | د. طارق السويدان",
       "speaker": "د. طارق السويدان",
       "subcategory": "نزول الوحي",
-      "thumbnail_url": null,
+      "thumbnail_url": "https://i.ytimg.com/vi/d_3emteBaeY/hqdefault.jpg",
       "title_original": "السيرة النبوية | الحلقة (4) | وحي أضاء ظلمات العالم | د. طارق السويدان",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=d_3emteBaeY",
         "https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured",
-        "https://suwaidan.com/"
+        "https://suwaidan.com/",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dd_3emteBaeY&format=json",
+        "https://www.youtube.com/@DrAlSuwaidan"
       ],
       "video_id": "d_3emteBaeY",
       "id": "youtube:d_3emteBaeY",
@@ -915,8 +946,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/d_3emteBaeY",
       "channel_id": null
     },
@@ -941,12 +972,14 @@
       "series_name": "السيرة النبوية | د. طارق السويدان",
       "speaker": "د. طارق السويدان",
       "subcategory": "العهد المكي",
-      "thumbnail_url": null,
+      "thumbnail_url": "https://i.ytimg.com/vi/VKKdipTSUDE/hqdefault.jpg",
       "title_original": "السيرة النبوية | الحلقة (5) | إسلام كبار الصحابة وثبات النبي ﷺ في الجهر بالدعوة | د. طارق السويدان",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=VKKdipTSUDE",
         "https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured",
-        "https://suwaidan.com/"
+        "https://suwaidan.com/",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DVKKdipTSUDE&format=json",
+        "https://www.youtube.com/@DrAlSuwaidan"
       ],
       "video_id": "VKKdipTSUDE",
       "id": "youtube:VKKdipTSUDE",
@@ -961,8 +994,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/VKKdipTSUDE",
       "channel_id": null
     },
@@ -987,12 +1020,14 @@
       "series_name": "السيرة النبوية | د. طارق السويدان",
       "speaker": "د. طارق السويدان",
       "subcategory": "العهد المكي",
-      "thumbnail_url": null,
+      "thumbnail_url": "https://i.ytimg.com/vi/6iXmxYsrZV4/hqdefault.jpg",
       "title_original": "السيرة النبوية| الحلقة (6) | هجرة المسلمين إلى الحبشة وقصة إسلام عمر بن الخطاب | د. طارق السويدان",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=6iXmxYsrZV4",
         "https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured",
-        "https://suwaidan.com/"
+        "https://suwaidan.com/",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D6iXmxYsrZV4&format=json",
+        "https://www.youtube.com/@DrAlSuwaidan"
       ],
       "video_id": "6iXmxYsrZV4",
       "id": "youtube:6iXmxYsrZV4",
@@ -1007,8 +1042,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/6iXmxYsrZV4",
       "channel_id": null
     },
@@ -1033,13 +1068,15 @@
       "series_name": "السيرة النبوية | د. طارق السويدان",
       "speaker": "د. طارق السويدان",
       "subcategory": "العهد المكي",
-      "thumbnail_url": null,
+      "thumbnail_url": "https://i.ytimg.com/vi/Oqrnfp-R2AQ/hqdefault.jpg",
       "title_original": "السيرة النبوية | الحلقة (7) | قصة إسلام الجن وإسلام النجاشي ملك الحبشة | د. طارق السويدان",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=Oqrnfp-R2AQ",
         "https://www.youtube.com/watch?v=6iXmxYsrZV4",
         "https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured",
-        "https://suwaidan.com/"
+        "https://suwaidan.com/",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DOqrnfp-R2AQ&format=json",
+        "https://www.youtube.com/@DrAlSuwaidan"
       ],
       "video_id": "Oqrnfp-R2AQ",
       "id": "youtube:Oqrnfp-R2AQ",
@@ -1054,8 +1091,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/Oqrnfp-R2AQ",
       "channel_id": null
     },
@@ -1080,13 +1117,15 @@
       "series_name": "السيرة النبوية | د. طارق السويدان",
       "speaker": "د. طارق السويدان",
       "subcategory": "الهجرة",
-      "thumbnail_url": null,
+      "thumbnail_url": "https://i.ytimg.com/vi/-N5gc5fO8uo/hqdefault.jpg",
       "title_original": "السيرة النبوية | الحلقة (8) | الهجرة النبوية الشريفة وما صاحبها من أحداث | د. طارق السويدان",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=-N5gc5fO8uo",
         "https://www.youtube.com/watch?v=6iXmxYsrZV4",
         "https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured",
-        "https://suwaidan.com/"
+        "https://suwaidan.com/",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D-N5gc5fO8uo&format=json",
+        "https://www.youtube.com/@DrAlSuwaidan"
       ],
       "video_id": "-N5gc5fO8uo",
       "id": "youtube:-N5gc5fO8uo",
@@ -1101,8 +1140,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/-N5gc5fO8uo",
       "channel_id": null
     },
@@ -1127,13 +1166,15 @@
       "series_name": "السيرة النبوية | د. طارق السويدان",
       "speaker": "د. طارق السويدان",
       "subcategory": "العهد المدني",
-      "thumbnail_url": null,
+      "thumbnail_url": "https://i.ytimg.com/vi/sWCoY6Jtap8/hqdefault.jpg",
       "title_original": "السيرة النبوية | الحلقة (9) | موقف اليهود من الإسلام وقصة إسلام سلمان الفارسي | د. طارق السويدان",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=sWCoY6Jtap8",
         "https://www.youtube.com/watch?v=6iXmxYsrZV4",
         "https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured",
-        "https://suwaidan.com/"
+        "https://suwaidan.com/",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DsWCoY6Jtap8&format=json",
+        "https://www.youtube.com/@DrAlSuwaidan"
       ],
       "video_id": "sWCoY6Jtap8",
       "id": "youtube:sWCoY6Jtap8",
@@ -1148,8 +1189,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/sWCoY6Jtap8",
       "channel_id": null
     },
@@ -1178,7 +1219,8 @@
       "title_original": "درس 1 مقدمة ج1 | السيرة وبناء الأمة | السيرة النبوية | راغب السرجاني",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=fM8AJIZ6jSY",
-        "https://www.youtube.com/@%D8%A3%D8%B1%D8%B4%D9%8A%D9%81%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%D8%B1%D8%A7%D8%BA%D8%A8%D8%A7%D9%84%D8%B3%D8%B1%D8%AC%D8%A7%D9%86%D9%8A"
+        "https://www.youtube.com/@%D8%A3%D8%B1%D8%B4%D9%8A%D9%81%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%D8%B1%D8%A7%D8%BA%D8%A8%D8%A7%D9%84%D8%B3%D8%B1%D8%AC%D8%A7%D9%86%D9%8A",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DfM8AJIZ6jSY&format=json"
       ],
       "video_id": "fM8AJIZ6jSY",
       "id": "youtube:fM8AJIZ6jSY",
@@ -1193,8 +1235,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/fM8AJIZ6jSY",
       "channel_id": null
     },
@@ -1220,15 +1262,17 @@
       "speaker": "د. راغب السرجاني",
       "subcategory": "ما قبل البعثة",
       "thumbnail_url": "https://i.ytimg.com/vi/rQADMKn7x5Y/hqdefault.jpg",
-      "title_original": "Lesson 3 Introduction Part 3 | Where Islam Began",
+      "title_original": "درس 3 مقدمة ج3 | من هنا بدأ الإسلام | السيرة النبوية | راغب السرجاني",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=rQADMKn7x5Y",
-        "https://www.youtube.com/playlist?list=PL4aBqnO2MtcFT7jgUVs5WwYa9Vi053HeU"
+        "https://www.youtube.com/playlist?list=PL4aBqnO2MtcFT7jgUVs5WwYa9Vi053HeU",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DrQADMKn7x5Y&format=json",
+        "https://www.youtube.com/@%D8%A3%D8%B1%D8%B4%D9%8A%D9%81%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%D8%B1%D8%A7%D8%BA%D8%A8%D8%A7%D9%84%D8%B3%D8%B1%D8%AC%D8%A7%D9%86%D9%8A"
       ],
       "video_id": "rQADMKn7x5Y",
       "id": "youtube:rQADMKn7x5Y",
       "provider": "youtube",
-      "title_ar": null,
+      "title_ar": "درس 3 مقدمة ج3 | من هنا بدأ الإسلام | السيرة النبوية | راغب السرجاني",
       "description_ar": null,
       "age_band": null,
       "rights_holder": null,
@@ -1238,8 +1282,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/rQADMKn7x5Y",
       "channel_id": null
     },
@@ -1268,7 +1312,8 @@
       "title_original": "درس 4 بدء الوحي | السيرة النبوية | راغب السرجاني",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=3W4M8yBNlrY",
-        "https://www.youtube.com/@%D8%A3%D8%B1%D8%B4%D9%8A%D9%81%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%D8%B1%D8%A7%D8%BA%D8%A8%D8%A7%D9%84%D8%B3%D8%B1%D8%AC%D8%A7%D9%86%D9%8A"
+        "https://www.youtube.com/@%D8%A3%D8%B1%D8%B4%D9%8A%D9%81%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%D8%B1%D8%A7%D8%BA%D8%A8%D8%A7%D9%84%D8%B3%D8%B1%D8%AC%D8%A7%D9%86%D9%8A",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D3W4M8yBNlrY&format=json"
       ],
       "video_id": "3W4M8yBNlrY",
       "id": "youtube:3W4M8yBNlrY",
@@ -1283,8 +1328,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/3W4M8yBNlrY",
       "channel_id": null
     },
@@ -1310,15 +1355,16 @@
       "speaker": "د. راغب السرجاني",
       "subcategory": "العهد المكي",
       "thumbnail_url": "https://i.ytimg.com/vi/evibnjmmUwY/hqdefault.jpg",
-      "title_original": "درس 7 | تربية الثبات | السيرة النبوية | راغب السرجاني",
+      "title_original": "درس 7 | تربية الثبات | السيرة النبوية |  راغب السرجاني",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=evibnjmmUwY",
-        "https://www.youtube.com/@%D8%A3%D8%B1%D8%B4%D9%8A%D9%81%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%D8%B1%D8%A7%D8%BA%D8%A8%D8%A7%D9%84%D8%B3%D8%B1%D8%AC%D8%A7%D9%86%D9%8A"
+        "https://www.youtube.com/@%D8%A3%D8%B1%D8%B4%D9%8A%D9%81%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%D8%B1%D8%A7%D8%BA%D8%A8%D8%A7%D9%84%D8%B3%D8%B1%D8%AC%D8%A7%D9%86%D9%8A",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DevibnjmmUwY&format=json"
       ],
       "video_id": "evibnjmmUwY",
       "id": "youtube:evibnjmmUwY",
       "provider": "youtube",
-      "title_ar": "درس 7 | تربية الثبات | السيرة النبوية | راغب السرجاني",
+      "title_ar": "درس 7 | تربية الثبات | السيرة النبوية |  راغب السرجاني",
       "description_ar": null,
       "age_band": null,
       "rights_holder": null,
@@ -1328,8 +1374,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/evibnjmmUwY",
       "channel_id": null
     },
@@ -1359,7 +1405,8 @@
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=OPJBlTQeP-U",
         "https://www.youtube.com/@islamstory",
-        "https://islamstory.com/"
+        "https://islamstory.com/",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DOPJBlTQeP-U&format=json"
       ],
       "video_id": "OPJBlTQeP-U",
       "id": "youtube:OPJBlTQeP-U",
@@ -1374,8 +1421,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/OPJBlTQeP-U",
       "channel_id": null
     },
@@ -1405,7 +1452,8 @@
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=NA6bFjTI108",
         "https://www.youtube.com/@islamstory",
-        "https://islamstory.com/"
+        "https://islamstory.com/",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DNA6bFjTI108&format=json"
       ],
       "video_id": "NA6bFjTI108",
       "id": "youtube:NA6bFjTI108",
@@ -1420,8 +1468,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/NA6bFjTI108",
       "channel_id": null
     },
@@ -1451,7 +1499,8 @@
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=gR3ReR9Tn-U",
         "https://www.youtube.com/@islamstory",
-        "https://islamstory.com/"
+        "https://islamstory.com/",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DgR3ReR9Tn-U&format=json"
       ],
       "video_id": "gR3ReR9Tn-U",
       "id": "youtube:gR3ReR9Tn-U",
@@ -1466,15 +1515,15 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/gR3ReR9Tn-U",
       "channel_id": null
     },
     {
       "attribution_text": "Bedaya TV | قناة بداية الفضائية",
       "category": "سيرة نبوية",
-      "channel_name": "Bedaya TV | قناة بداية الفضائية",
+      "channel_name": "Bedaya TV l قناة بداية الفضائية",
       "channel_url": "https://www.youtube.com/@tvbedaya",
       "content_type": "lecture",
       "duration_seconds": null,
@@ -1496,7 +1545,8 @@
       "title_original": "الحلقة الثانية - بدر المشاري - السيرة النبوية",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=y0uTP-pc-5A",
-        "https://www.youtube.com/@tvbedaya"
+        "https://www.youtube.com/@tvbedaya",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dy0uTP-pc-5A&format=json"
       ],
       "video_id": "y0uTP-pc-5A",
       "id": "youtube:y0uTP-pc-5A",
@@ -1511,8 +1561,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/y0uTP-pc-5A",
       "channel_id": null
     },
@@ -1541,7 +1591,8 @@
       "title_original": "السيرة النبوية | الحلقة (21) | معركة مؤتة ودعوة النبي ﷺ للملوك | د. طارق السويدان",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=qZ7HpSbtZW4",
-        "https://www.youtube.com/@DrAlSuwaidan"
+        "https://www.youtube.com/@DrAlSuwaidan",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DqZ7HpSbtZW4&format=json"
       ],
       "video_id": "qZ7HpSbtZW4",
       "id": "youtube:qZ7HpSbtZW4",
@@ -1556,8 +1607,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/qZ7HpSbtZW4",
       "channel_id": null
     },
@@ -1583,15 +1634,16 @@
       "speaker": "الشيخ محمد العريفي",
       "subcategory": "محاضرات ومواعظ",
       "thumbnail_url": "https://i.ytimg.com/vi/BoN38WWe1O8/hqdefault.jpg",
-      "title_original": "الشيخ محمد العريفي محاضرة بعنوان مجالس الطيبين",
+      "title_original": "الشيخ محمد العريفي محاضرة بعنوان مجالس  الطيبن",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=BoN38WWe1O8",
-        "https://www.youtube.com/@hamode656"
+        "https://www.youtube.com/@hamode656",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DBoN38WWe1O8&format=json"
       ],
       "video_id": "BoN38WWe1O8",
       "id": "youtube:BoN38WWe1O8",
       "provider": "youtube",
-      "title_ar": "الشيخ محمد العريفي محاضرة بعنوان مجالس الطيبين",
+      "title_ar": "الشيخ محمد العريفي محاضرة بعنوان مجالس  الطيبن",
       "description_ar": null,
       "age_band": null,
       "rights_holder": null,
@@ -1601,8 +1653,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/BoN38WWe1O8",
       "channel_id": null
     },
@@ -1628,15 +1680,16 @@
       "speaker": "الشيخ محمد العريفي",
       "subcategory": "محاضرات ومواعظ",
       "thumbnail_url": "https://i.ytimg.com/vi/QF_6YzkDuXw/hqdefault.jpg",
-      "title_original": "د العريفي محاضرة بعنوان الأصل الأخلاقي عند أهل السنة",
+      "title_original": "د العريفي محاضرة بعنوان  الأصل الاخلاقي عند أهل السنة",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=QF_6YzkDuXw",
-        "https://www.youtube.com/@hamode656"
+        "https://www.youtube.com/@hamode656",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DQF_6YzkDuXw&format=json"
       ],
       "video_id": "QF_6YzkDuXw",
       "id": "youtube:QF_6YzkDuXw",
       "provider": "youtube",
-      "title_ar": "د العريفي محاضرة بعنوان الأصل الأخلاقي عند أهل السنة",
+      "title_ar": "د العريفي محاضرة بعنوان  الأصل الاخلاقي عند أهل السنة",
       "description_ar": null,
       "age_band": null,
       "rights_holder": null,
@@ -1646,8 +1699,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/QF_6YzkDuXw",
       "channel_id": null
     },
@@ -1673,15 +1726,16 @@
       "speaker": "الشيخ محمد العريفي",
       "subcategory": "محاضرات ومواعظ",
       "thumbnail_url": "https://i.ytimg.com/vi/IR-ol17Is2Q/hqdefault.jpg",
-      "title_original": "د العريفي الذاكرين الله كثيرًا والذاكرات",
+      "title_original": "د العريفي الذاكرين الله كثيرا والذاكرات ( استغفر الله العظيم في اليوم 100 مره )",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=IR-ol17Is2Q",
-        "https://www.youtube.com/@hamode656"
+        "https://www.youtube.com/@hamode656",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DIR-ol17Is2Q&format=json"
       ],
       "video_id": "IR-ol17Is2Q",
       "id": "youtube:IR-ol17Is2Q",
       "provider": "youtube",
-      "title_ar": "د العريفي الذاكرين الله كثيرًا والذاكرات",
+      "title_ar": "د العريفي الذاكرين الله كثيرا والذاكرات ( استغفر الله العظيم في اليوم 100 مره )",
       "description_ar": null,
       "age_band": null,
       "rights_holder": null,
@@ -1691,8 +1745,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/IR-ol17Is2Q",
       "channel_id": null
     },
@@ -1718,15 +1772,16 @@
       "speaker": "الشيخ محمد العريفي",
       "subcategory": "محاضرات ومواعظ",
       "thumbnail_url": "https://i.ytimg.com/vi/8FTfJ_KMIOQ/hqdefault.jpg",
-      "title_original": "د العريفي: إن كانت الحياة بحرًا من الهموم فاعبرها بقارب الصبر",
+      "title_original": "د العريفي إن كانت الحياة بحر من الهموم .. فاعبرها بقاربٍ صغيرٍ من الصبر ..",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=8FTfJ_KMIOQ",
-        "https://www.youtube.com/@hamode656"
+        "https://www.youtube.com/@hamode656",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D8FTfJ_KMIOQ&format=json"
       ],
       "video_id": "8FTfJ_KMIOQ",
       "id": "youtube:8FTfJ_KMIOQ",
       "provider": "youtube",
-      "title_ar": "د العريفي: إن كانت الحياة بحرًا من الهموم فاعبرها بقارب الصبر",
+      "title_ar": "د العريفي إن كانت الحياة بحر من الهموم .. فاعبرها بقاربٍ صغيرٍ من الصبر ..",
       "description_ar": null,
       "age_band": null,
       "rights_holder": null,
@@ -1736,8 +1791,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/8FTfJ_KMIOQ",
       "channel_id": null
     },
@@ -1763,15 +1818,16 @@
       "speaker": "الشيخ صالح المغامسي",
       "subcategory": "قصص الأنبياء والدروس",
       "thumbnail_url": "https://i.ytimg.com/vi/N0MG6XN4bJ4/hqdefault.jpg",
-      "title_original": "من هي الجسّاسة وما علاقتها بالمسيح الدجال؟ | الشيخ صالح المغامسي",
+      "title_original": "من هي الجسّاسة وما علاقتها بالمسيح الدجال؟| الشيخ صالح المغامسي",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=N0MG6XN4bJ4",
-        "https://www.youtube.com/@Alrasekhoon"
+        "https://www.youtube.com/@Alrasekhoon",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DN0MG6XN4bJ4&format=json"
       ],
       "video_id": "N0MG6XN4bJ4",
       "id": "youtube:N0MG6XN4bJ4",
       "provider": "youtube",
-      "title_ar": "من هي الجسّاسة وما علاقتها بالمسيح الدجال؟ | الشيخ صالح المغامسي",
+      "title_ar": "من هي الجسّاسة وما علاقتها بالمسيح الدجال؟| الشيخ صالح المغامسي",
       "description_ar": null,
       "age_band": null,
       "rights_holder": null,
@@ -1781,8 +1837,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/N0MG6XN4bJ4",
       "channel_id": null
     },
@@ -1808,15 +1864,16 @@
       "speaker": "الشيخ صالح المغامسي",
       "subcategory": "قصص الأنبياء والدروس",
       "thumbnail_url": "https://i.ytimg.com/vi/vaPPoOeSGAk/hqdefault.jpg",
-      "title_original": "هل فرعون ربّى موسى ولبث عنده سنين؟ | الشيخ صالح المغامسي",
+      "title_original": "قصة فرعون كاملة كما لم تسمعها من قبل دروس وعِبر تهزّ القلب!",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=vaPPoOeSGAk",
-        "https://www.youtube.com/@Alrasekhoon"
+        "https://www.youtube.com/@Alrasekhoon",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DvaPPoOeSGAk&format=json"
       ],
       "video_id": "vaPPoOeSGAk",
       "id": "youtube:vaPPoOeSGAk",
       "provider": "youtube",
-      "title_ar": "هل فرعون ربّى موسى ولبث عنده سنين؟ | الشيخ صالح المغامسي",
+      "title_ar": "قصة فرعون كاملة كما لم تسمعها من قبل دروس وعِبر تهزّ القلب!",
       "description_ar": null,
       "age_band": null,
       "rights_holder": null,
@@ -1826,8 +1883,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/vaPPoOeSGAk",
       "channel_id": null
     },
@@ -1853,15 +1910,16 @@
       "speaker": "الشيخ صالح المغامسي",
       "subcategory": "قصص الأنبياء والدروس",
       "thumbnail_url": "https://i.ytimg.com/vi/c-nqGuRmXqY/hqdefault.jpg",
-      "title_original": "قصة نبي الله شعيب عليه السلام مليئة بالعبر",
+      "title_original": "قصة نبي الله شعيب عليه السلام مليئة بالعبر الأخلاقية والعملية | الشيخ صالح المغامسي",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=c-nqGuRmXqY",
-        "https://www.youtube.com/@Alrasekhoon"
+        "https://www.youtube.com/@Alrasekhoon",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dc-nqGuRmXqY&format=json"
       ],
       "video_id": "c-nqGuRmXqY",
       "id": "youtube:c-nqGuRmXqY",
       "provider": "youtube",
-      "title_ar": "قصة نبي الله شعيب عليه السلام مليئة بالعبر",
+      "title_ar": "قصة نبي الله شعيب عليه السلام مليئة بالعبر الأخلاقية والعملية | الشيخ صالح المغامسي",
       "description_ar": null,
       "age_band": null,
       "rights_holder": null,
@@ -1871,8 +1929,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/c-nqGuRmXqY",
       "channel_id": null
     },
@@ -1898,15 +1956,16 @@
       "speaker": "الشيخ صالح المغامسي",
       "subcategory": "قصص الأنبياء والدروس",
       "thumbnail_url": "https://i.ytimg.com/vi/RukFPc4qA1A/hqdefault.jpg",
-      "title_original": "قصة لوط عليه السلام عبرة لكل زمان",
+      "title_original": "قصة لوط عليه السلام عبرة لكل زمان | الشيخ صالح المغامسي",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=RukFPc4qA1A",
-        "https://www.youtube.com/@Alrasekhoon"
+        "https://www.youtube.com/@Alrasekhoon",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DRukFPc4qA1A&format=json"
       ],
       "video_id": "RukFPc4qA1A",
       "id": "youtube:RukFPc4qA1A",
       "provider": "youtube",
-      "title_ar": "قصة لوط عليه السلام عبرة لكل زمان",
+      "title_ar": "قصة لوط عليه السلام عبرة لكل زمان | الشيخ صالح المغامسي",
       "description_ar": null,
       "age_band": null,
       "rights_holder": null,
@@ -1916,8 +1975,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/RukFPc4qA1A",
       "channel_id": null
     },
@@ -1943,15 +2002,16 @@
       "speaker": "الشيخ صالح المغامسي",
       "subcategory": "قصص الأنبياء والدروس",
       "thumbnail_url": "https://i.ytimg.com/vi/l2dLtP_x2qA/hqdefault.jpg",
-      "title_original": "قصة موسى وفرعون كاملة ونهاية الطغيان | الشيخ صالح المغامسي",
+      "title_original": "قصة موسى وفرعون كاملة ونهاية الطغيان! | الشيخ صالح المغامسي",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=l2dLtP_x2qA",
-        "https://www.youtube.com/@Alrasekhoon"
+        "https://www.youtube.com/@Alrasekhoon",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dl2dLtP_x2qA&format=json"
       ],
       "video_id": "l2dLtP_x2qA",
       "id": "youtube:l2dLtP_x2qA",
       "provider": "youtube",
-      "title_ar": "قصة موسى وفرعون كاملة ونهاية الطغيان | الشيخ صالح المغامسي",
+      "title_ar": "قصة موسى وفرعون كاملة ونهاية الطغيان! | الشيخ صالح المغامسي",
       "description_ar": null,
       "age_band": null,
       "rights_holder": null,
@@ -1961,8 +2021,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/l2dLtP_x2qA",
       "channel_id": null
     },
@@ -1970,7 +2030,7 @@
       "attribution_text": "عمر عبد الكافي",
       "category": "محاضرات ومواعظ",
       "channel_name": "عمر عبد الكافي",
-      "channel_url": "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+      "channel_url": "https://www.youtube.com/@abdelkafytube",
       "content_type": "lecture",
       "duration_seconds": null,
       "embedding_status": "UNTESTED",
@@ -1991,7 +2051,9 @@
       "title_original": "إيمانيات - الحلقة 1 - الشيخ عمر عبد الكافي",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=ouOz30mHrEg",
-        "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos"
+        "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DouOz30mHrEg&format=json",
+        "https://www.youtube.com/@abdelkafytube"
       ],
       "video_id": "ouOz30mHrEg",
       "id": "youtube:ouOz30mHrEg",
@@ -2006,8 +2068,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/ouOz30mHrEg",
       "channel_id": null
     },
@@ -2015,7 +2077,7 @@
       "attribution_text": "عمر عبد الكافي",
       "category": "محاضرات ومواعظ",
       "channel_name": "عمر عبد الكافي",
-      "channel_url": "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+      "channel_url": "https://www.youtube.com/@abdelkafytube",
       "content_type": "lecture",
       "duration_seconds": null,
       "embedding_status": "UNTESTED",
@@ -2036,7 +2098,9 @@
       "title_original": "الهجرة طريق ريادة ومنهج حضارة محاضرة عمر عبد الكافي",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=YPf0c1mcgYg",
-        "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos"
+        "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DYPf0c1mcgYg&format=json",
+        "https://www.youtube.com/@abdelkafytube"
       ],
       "video_id": "YPf0c1mcgYg",
       "id": "youtube:YPf0c1mcgYg",
@@ -2051,8 +2115,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/YPf0c1mcgYg",
       "channel_id": null
     },
@@ -2060,7 +2124,7 @@
       "attribution_text": "عمر عبد الكافي",
       "category": "محاضرات ومواعظ",
       "channel_name": "عمر عبد الكافي",
-      "channel_url": "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+      "channel_url": "https://www.youtube.com/@abdelkafytube",
       "content_type": "lecture",
       "duration_seconds": null,
       "embedding_status": "UNTESTED",
@@ -2078,15 +2142,17 @@
       "speaker": "الشيخ عمر عبد الكافي",
       "subcategory": "محاضرات ومواعظ",
       "thumbnail_url": "https://i.ytimg.com/vi/NhV_u_67HP8/hqdefault.jpg",
-      "title_original": "الحياة السعيدة محاضرة الشيخ عمر عبد الكافي",
+      "title_original": "الحياة السعيدة محاضرة الشيخ عمرعبد الكافي",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=NhV_u_67HP8",
-        "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos"
+        "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DNhV_u_67HP8&format=json",
+        "https://www.youtube.com/@abdelkafytube"
       ],
       "video_id": "NhV_u_67HP8",
       "id": "youtube:NhV_u_67HP8",
       "provider": "youtube",
-      "title_ar": "الحياة السعيدة محاضرة الشيخ عمر عبد الكافي",
+      "title_ar": "الحياة السعيدة محاضرة الشيخ عمرعبد الكافي",
       "description_ar": null,
       "age_band": null,
       "rights_holder": null,
@@ -2096,8 +2162,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/NhV_u_67HP8",
       "channel_id": null
     },
@@ -2105,7 +2171,7 @@
       "attribution_text": "عمر عبد الكافي",
       "category": "محاضرات ومواعظ",
       "channel_name": "عمر عبد الكافي",
-      "channel_url": "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+      "channel_url": "https://www.youtube.com/@abdelkafytube",
       "content_type": "lecture",
       "duration_seconds": null,
       "embedding_status": "UNTESTED",
@@ -2123,15 +2189,17 @@
       "speaker": "الشيخ عمر عبد الكافي",
       "subcategory": "محاضرات ومواعظ",
       "thumbnail_url": "https://i.ytimg.com/vi/AoUR_I6734s/hqdefault.jpg",
-      "title_original": "محاضرة الفرحة: قصص مشوقة وعبر مفيدة - الشيخ عمر عبد الكافي",
+      "title_original": "محاضرة ( الفرحة)  قصص مشوقة وعبر مفيدة -  الشيخ عمر عبد الكافي",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=AoUR_I6734s",
-        "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos"
+        "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DAoUR_I6734s&format=json",
+        "https://www.youtube.com/@abdelkafytube"
       ],
       "video_id": "AoUR_I6734s",
       "id": "youtube:AoUR_I6734s",
       "provider": "youtube",
-      "title_ar": "محاضرة الفرحة: قصص مشوقة وعبر مفيدة - الشيخ عمر عبد الكافي",
+      "title_ar": "محاضرة ( الفرحة)  قصص مشوقة وعبر مفيدة -  الشيخ عمر عبد الكافي",
       "description_ar": null,
       "age_band": null,
       "rights_holder": null,
@@ -2141,8 +2209,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/AoUR_I6734s",
       "channel_id": null
     },
@@ -2150,7 +2218,7 @@
       "attribution_text": "عمر عبد الكافي",
       "category": "محاضرات ومواعظ",
       "channel_name": "عمر عبد الكافي",
-      "channel_url": "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+      "channel_url": "https://www.youtube.com/@abdelkafytube",
       "content_type": "lecture",
       "duration_seconds": null,
       "embedding_status": "UNTESTED",
@@ -2171,7 +2239,9 @@
       "title_original": "برنامج مع القرآن (22) | علامات تدل أن قلبك سليم",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=L873wrflZ9w",
-        "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos"
+        "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DL873wrflZ9w&format=json",
+        "https://www.youtube.com/@abdelkafytube"
       ],
       "video_id": "L873wrflZ9w",
       "id": "youtube:L873wrflZ9w",
@@ -2186,8 +2256,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/L873wrflZ9w",
       "channel_id": null
     },
@@ -2195,7 +2265,7 @@
       "attribution_text": "أضواء الرباط",
       "category": "سيرة نبوية",
       "channel_name": "أضواء الرباط",
-      "channel_url": "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+      "channel_url": "https://www.youtube.com/@%D8%A3%D8%B6%D9%88%D8%A7%D8%A1%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B71961",
       "content_type": "lecture",
       "duration_seconds": null,
       "embedding_status": "UNTESTED",
@@ -2213,15 +2283,17 @@
       "speaker": "الشيخ سعد العتيق",
       "subcategory": "سيرة نبوية",
       "thumbnail_url": "https://i.ytimg.com/vi/MXXhMIC16Es/hqdefault.jpg",
-      "title_original": "1- السيرة النبوية | فوائد تعلم سيرة النبي ﷺ | الشيخ سعد العتيق",
+      "title_original": "1- السيرة النبوية | فوائد تعلم سيرة النبي ﷴ ﷺ | الشيخ سعد العتيق",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=MXXhMIC16Es",
-        "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg"
+        "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DMXXhMIC16Es&format=json",
+        "https://www.youtube.com/@%D8%A3%D8%B6%D9%88%D8%A7%D8%A1%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B71961"
       ],
       "video_id": "MXXhMIC16Es",
       "id": "youtube:MXXhMIC16Es",
       "provider": "youtube",
-      "title_ar": "1- السيرة النبوية | فوائد تعلم سيرة النبي ﷺ | الشيخ سعد العتيق",
+      "title_ar": "1- السيرة النبوية | فوائد تعلم سيرة النبي ﷴ ﷺ | الشيخ سعد العتيق",
       "description_ar": null,
       "age_band": null,
       "rights_holder": null,
@@ -2231,8 +2303,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/MXXhMIC16Es",
       "channel_id": null
     },
@@ -2240,7 +2312,7 @@
       "attribution_text": "أضواء الرباط",
       "category": "سيرة نبوية",
       "channel_name": "أضواء الرباط",
-      "channel_url": "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+      "channel_url": "https://www.youtube.com/@%D8%A3%D8%B6%D9%88%D8%A7%D8%A1%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B71961",
       "content_type": "lecture",
       "duration_seconds": null,
       "embedding_status": "UNTESTED",
@@ -2258,15 +2330,17 @@
       "speaker": "الشيخ سعد العتيق",
       "subcategory": "سيرة نبوية",
       "thumbnail_url": "https://i.ytimg.com/vi/I3cJrdbd1h0/hqdefault.jpg",
-      "title_original": "2- السيرة النبوية | تاريخ مكة المكرمة قبل الإسلام | الشيخ سعد العتيق",
+      "title_original": "2 - السيرة النبوية | تاريخ مكه المكرمه قبل الاسلام | الشيخ سعد العتيق",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=I3cJrdbd1h0",
-        "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg"
+        "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DI3cJrdbd1h0&format=json",
+        "https://www.youtube.com/@%D8%A3%D8%B6%D9%88%D8%A7%D8%A1%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B71961"
       ],
       "video_id": "I3cJrdbd1h0",
       "id": "youtube:I3cJrdbd1h0",
       "provider": "youtube",
-      "title_ar": "2- السيرة النبوية | تاريخ مكة المكرمة قبل الإسلام | الشيخ سعد العتيق",
+      "title_ar": "2 - السيرة النبوية | تاريخ مكه المكرمه قبل الاسلام | الشيخ سعد العتيق",
       "description_ar": null,
       "age_band": null,
       "rights_holder": null,
@@ -2276,8 +2350,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/I3cJrdbd1h0",
       "channel_id": null
     },
@@ -2285,7 +2359,7 @@
       "attribution_text": "أضواء الرباط",
       "category": "سيرة نبوية",
       "channel_name": "أضواء الرباط",
-      "channel_url": "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+      "channel_url": "https://www.youtube.com/@%D8%A3%D8%B6%D9%88%D8%A7%D8%A1%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B71961",
       "content_type": "lecture",
       "duration_seconds": null,
       "embedding_status": "UNTESTED",
@@ -2303,15 +2377,17 @@
       "speaker": "الشيخ سعد العتيق",
       "subcategory": "سيرة نبوية",
       "thumbnail_url": "https://i.ytimg.com/vi/9jy5aRKoCZ8/hqdefault.jpg",
-      "title_original": "3- السيرة النبوية | قصة بحيرا الراهب بالشام | الشيخ سعد العتيق",
+      "title_original": "3 -  السيرة النبوية | قصة بحيرا الراهب بالشام | الشيخ سعدالعتيق",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=9jy5aRKoCZ8",
-        "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg"
+        "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D9jy5aRKoCZ8&format=json",
+        "https://www.youtube.com/@%D8%A3%D8%B6%D9%88%D8%A7%D8%A1%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B71961"
       ],
       "video_id": "9jy5aRKoCZ8",
       "id": "youtube:9jy5aRKoCZ8",
       "provider": "youtube",
-      "title_ar": "3- السيرة النبوية | قصة بحيرا الراهب بالشام | الشيخ سعد العتيق",
+      "title_ar": "3 -  السيرة النبوية | قصة بحيرا الراهب بالشام | الشيخ سعدالعتيق",
       "description_ar": null,
       "age_band": null,
       "rights_holder": null,
@@ -2321,8 +2397,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/9jy5aRKoCZ8",
       "channel_id": null
     },
@@ -2330,7 +2406,7 @@
       "attribution_text": "أضواء الرباط",
       "category": "سيرة نبوية",
       "channel_name": "أضواء الرباط",
-      "channel_url": "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+      "channel_url": "https://www.youtube.com/@%D8%A3%D8%B6%D9%88%D8%A7%D8%A1%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B71961",
       "content_type": "lecture",
       "duration_seconds": null,
       "embedding_status": "UNTESTED",
@@ -2348,15 +2424,17 @@
       "speaker": "الشيخ سعد العتيق",
       "subcategory": "سيرة نبوية",
       "thumbnail_url": "https://i.ytimg.com/vi/2IICQtyIJnU/hqdefault.jpg",
-      "title_original": "4- السيرة النبوية | غار حراء ونزول الوحي | الشيخ سعد العتيق",
+      "title_original": "4 - السيرة النبوية | غار حراء ونزول الوحي | الشيخ سعد العتيق",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=2IICQtyIJnU",
-        "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg"
+        "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D2IICQtyIJnU&format=json",
+        "https://www.youtube.com/@%D8%A3%D8%B6%D9%88%D8%A7%D8%A1%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B71961"
       ],
       "video_id": "2IICQtyIJnU",
       "id": "youtube:2IICQtyIJnU",
       "provider": "youtube",
-      "title_ar": "4- السيرة النبوية | غار حراء ونزول الوحي | الشيخ سعد العتيق",
+      "title_ar": "4 - السيرة النبوية | غار حراء ونزول الوحي | الشيخ سعد العتيق",
       "description_ar": null,
       "age_band": null,
       "rights_holder": null,
@@ -2366,8 +2444,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/2IICQtyIJnU",
       "channel_id": null
     },
@@ -2375,7 +2453,7 @@
       "attribution_text": "أضواء الرباط",
       "category": "سيرة نبوية",
       "channel_name": "أضواء الرباط",
-      "channel_url": "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+      "channel_url": "https://www.youtube.com/@%D8%A3%D8%B6%D9%88%D8%A7%D8%A1%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B71961",
       "content_type": "lecture",
       "duration_seconds": null,
       "embedding_status": "UNTESTED",
@@ -2393,15 +2471,17 @@
       "speaker": "الشيخ سعد العتيق",
       "subcategory": "سيرة نبوية",
       "thumbnail_url": "https://i.ytimg.com/vi/oTv_Qy9CFFg/hqdefault.jpg",
-      "title_original": "5- السيرة النبوية | الدعوة السرية والدعوة الجهرية | الشيخ سعد العتيق",
+      "title_original": "5 - السيرة النبوية | الدعوه السريه والدعوة الجهريه | الشيخ سعد العتيق",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=oTv_Qy9CFFg",
-        "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg"
+        "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DoTv_Qy9CFFg&format=json",
+        "https://www.youtube.com/@%D8%A3%D8%B6%D9%88%D8%A7%D8%A1%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B71961"
       ],
       "video_id": "oTv_Qy9CFFg",
       "id": "youtube:oTv_Qy9CFFg",
       "provider": "youtube",
-      "title_ar": "5- السيرة النبوية | الدعوة السرية والدعوة الجهرية | الشيخ سعد العتيق",
+      "title_ar": "5 - السيرة النبوية | الدعوه السريه والدعوة الجهريه | الشيخ سعد العتيق",
       "description_ar": null,
       "age_band": null,
       "rights_holder": null,
@@ -2411,8 +2491,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval",
       "embed_url": "https://www.youtube.com/embed/oTv_Qy9CFFg",
       "channel_id": null
     }

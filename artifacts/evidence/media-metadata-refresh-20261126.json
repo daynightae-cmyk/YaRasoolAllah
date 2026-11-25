@@ -1,0 +1,3160 @@
+{
+  "summary": {
+    "checkedAt": "2026-11-26",
+    "provider": "YouTube oEmbed",
+    "write": true,
+    "total": 116,
+    "updated": 114,
+    "unchanged": 0,
+    "unavailable": 2,
+    "note": "Metadata verification only. No rights, editorial, religious, publication, age-safety, or embedding approval is inferred."
+  },
+  "changes": [
+    {
+      "videoId": "NtlnwlBNztE",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=NtlnwlBNztE | https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=NtlnwlBNztE&format=json | https://www.youtube.com/@tvbedaya",
+          "after": "https://www.youtube.com/watch?v=NtlnwlBNztE|https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=NtlnwlBNztE&format=json|https://www.youtube.com/@tvbedaya|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DNtlnwlBNztE&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "2UOqwLQ7BBw",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=2UOqwLQ7BBw | https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=2UOqwLQ7BBw&format=json | https://www.youtube.com/@tvbedaya",
+          "after": "https://www.youtube.com/watch?v=2UOqwLQ7BBw|https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=2UOqwLQ7BBw&format=json|https://www.youtube.com/@tvbedaya|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D2UOqwLQ7BBw&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "pCafqMnOIZc",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=pCafqMnOIZc | https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=pCafqMnOIZc&format=json | https://www.youtube.com/@tvbedaya",
+          "after": "https://www.youtube.com/watch?v=pCafqMnOIZc|https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=pCafqMnOIZc&format=json|https://www.youtube.com/@tvbedaya|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DpCafqMnOIZc&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "ebM4UTNO32w",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=ebM4UTNO32w | https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=ebM4UTNO32w&format=json | https://www.youtube.com/@tvbedaya",
+          "after": "https://www.youtube.com/watch?v=ebM4UTNO32w|https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=ebM4UTNO32w&format=json|https://www.youtube.com/@tvbedaya|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DebM4UTNO32w&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "xv5bswGGi-w",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=xv5bswGGi-w | https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=xv5bswGGi-w&format=json | https://www.youtube.com/@tvbedaya",
+          "after": "https://www.youtube.com/watch?v=xv5bswGGi-w|https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=xv5bswGGi-w&format=json|https://www.youtube.com/@tvbedaya|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dxv5bswGGi-w&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "z9VlkgVyLhg",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "channel_name": {
+          "before": "AlAbrar.net",
+          "after": "الأبرار دوت نت"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=z9VlkgVyLhg | https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=z9VlkgVyLhg&format=json | https://www.youtube.com/@alabraar | https://www.youtube.com/results?search_query=%D8%A7%D9%84%D8%B3%D9%8A%D8%B1%D8%A9+%D8%A7%D9%84%D9%86%D8%A8%D9%88%D9%8A%D8%A9+%D8%A8%D8%AF%D8%B1+%D8%A7%D9%84%D9%85%D8%B4%D8%A7%D8%B1%D9%8A+%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9",
+          "after": "https://www.youtube.com/watch?v=z9VlkgVyLhg|https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=z9VlkgVyLhg&format=json|https://www.youtube.com/@alabraar|https://www.youtube.com/results?search_query=%D8%A7%D9%84%D8%B3%D9%8A%D8%B1%D8%A9+%D8%A7%D9%84%D9%86%D8%A8%D9%88%D9%8A%D8%A9+%D8%A8%D8%AF%D8%B1+%D8%A7%D9%84%D9%85%D8%B4%D8%A7%D8%B1%D9%8A+%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dz9VlkgVyLhg&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "Cut8UA4dSS4",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "channel_name": {
+          "before": "AlAbrar.net",
+          "after": "الأبرار دوت نت"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=Cut8UA4dSS4 | https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=Cut8UA4dSS4&format=json | https://www.youtube.com/@alabraar | https://www.youtube.com/results?search_query=%D8%A7%D9%84%D8%B3%D9%8A%D8%B1%D8%A9+%D8%A7%D9%84%D9%86%D8%A8%D9%88%D9%8A%D8%A9+%D8%A8%D8%AF%D8%B1+%D8%A7%D9%84%D9%85%D8%B4%D8%A7%D8%B1%D9%8A+%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9",
+          "after": "https://www.youtube.com/watch?v=Cut8UA4dSS4|https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=Cut8UA4dSS4&format=json|https://www.youtube.com/@alabraar|https://www.youtube.com/results?search_query=%D8%A7%D9%84%D8%B3%D9%8A%D8%B1%D8%A9+%D8%A7%D9%84%D9%86%D8%A8%D9%88%D9%8A%D8%A9+%D8%A8%D8%AF%D8%B1+%D8%A7%D9%84%D9%85%D8%B4%D8%A7%D8%B1%D9%8A+%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DCut8UA4dSS4&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "s5ZPujmYhUE",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=s5ZPujmYhUE | https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=s5ZPujmYhUE&format=json | https://www.youtube.com/@alabraar",
+          "after": "https://www.youtube.com/watch?v=s5ZPujmYhUE|https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=s5ZPujmYhUE&format=json|https://www.youtube.com/@alabraar|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Ds5ZPujmYhUE&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "ExL16_g5-qQ",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=ExL16_g5-qQ | https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=ExL16_g5-qQ&format=json | https://www.youtube.com/@alabraar | https://www.youtube.com/results?search_query=%D8%A7%D9%84%D8%B3%D9%8A%D8%B1%D8%A9+%D8%A7%D9%84%D9%86%D8%A8%D9%88%D9%8A%D8%A9+%D8%A8%D8%AF%D8%B1+%D8%A7%D9%84%D9%85%D8%B4%D8%A7%D8%B1%D9%8A+%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9",
+          "after": "https://www.youtube.com/watch?v=ExL16_g5-qQ|https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=ExL16_g5-qQ&format=json|https://www.youtube.com/@alabraar|https://www.youtube.com/results?search_query=%D8%A7%D9%84%D8%B3%D9%8A%D8%B1%D8%A9+%D8%A7%D9%84%D9%86%D8%A8%D9%88%D9%8A%D8%A9+%D8%A8%D8%AF%D8%B1+%D8%A7%D9%84%D9%85%D8%B4%D8%A7%D8%B1%D9%8A+%D8%A7%D9%84%D8%AD%D9%84%D9%82%D8%A9|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DExL16_g5-qQ&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "4i5i9thTxK8",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=4i5i9thTxK8 | https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=4i5i9thTxK8&format=json",
+          "after": "https://www.youtube.com/watch?v=4i5i9thTxK8|https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=4i5i9thTxK8&format=json|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D4i5i9thTxK8&format=json|https://www.youtube.com/@hamode656"
+        }
+      }
+    },
+    {
+      "videoId": "iYFj1MYxUpw",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=iYFj1MYxUpw | https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=iYFj1MYxUpw&format=json",
+          "after": "https://www.youtube.com/watch?v=iYFj1MYxUpw|https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=iYFj1MYxUpw&format=json|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DiYFj1MYxUpw&format=json|https://www.youtube.com/@hamode656"
+        }
+      }
+    },
+    {
+      "videoId": "qubrKp9eZoQ",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "الشيخ محمد العريفي || السيرة النبوية الحلقة 1",
+          "after": "الشيخ محمد العريفي  || السيرة النبوية الحلقة 1"
+        },
+        "title_ar": {
+          "before": "الشيخ محمد العريفي || السيرة النبوية الحلقة 1",
+          "after": "الشيخ محمد العريفي  || السيرة النبوية الحلقة 1"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/@مجموعةالسيرةالنبوية",
+          "after": "https://www.youtube.com/@%D9%85%D8%AC%D9%85%D9%88%D8%B9%D8%A9%D8%A7%D9%84%D8%B3%D9%8A%D8%B1%D8%A9%D8%A7%D9%84%D9%86%D8%A8%D9%88%D9%8A%D8%A9"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=qubrKp9eZoQ | https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=qubrKp9eZoQ&format=json",
+          "after": "https://www.youtube.com/watch?v=qubrKp9eZoQ|https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=qubrKp9eZoQ&format=json|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DqubrKp9eZoQ&format=json|https://www.youtube.com/@%D9%85%D8%AC%D9%85%D9%88%D8%B9%D8%A9%D8%A7%D9%84%D8%B3%D9%8A%D8%B1%D8%A9%D8%A7%D9%84%D9%86%D8%A8%D9%88%D9%8A%D8%A9"
+        }
+      }
+    },
+    {
+      "videoId": "Sb78oanqSqc",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=Sb78oanqSqc | https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=Sb78oanqSqc&format=json",
+          "after": "https://www.youtube.com/watch?v=Sb78oanqSqc|https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=Sb78oanqSqc&format=json|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DSb78oanqSqc&format=json|https://www.youtube.com/@etfakron-ie2yn"
+        }
+      }
+    },
+    {
+      "videoId": "fnFj09Q4xHE",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "channel_url": {
+          "before": "https://www.youtube.com/@هديالإسلام-ف13ه",
+          "after": "https://www.youtube.com/@%D9%87%D8%AF%D9%8A%D8%A7%D9%84%D8%A5%D8%B3%D9%84%D8%A7%D9%85-%D9%813%D9%87"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=fnFj09Q4xHE | https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=fnFj09Q4xHE&format=json",
+          "after": "https://www.youtube.com/watch?v=fnFj09Q4xHE|https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=fnFj09Q4xHE&format=json|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DfnFj09Q4xHE&format=json|https://www.youtube.com/@%D9%87%D8%AF%D9%8A%D8%A7%D9%84%D8%A5%D8%B3%D9%84%D8%A7%D9%85-%D9%813%D9%87"
+        }
+      }
+    },
+    {
+      "videoId": "Cdqp5aNAYCA",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "د الشيخ محمد عبدالرحمن العريفي السيرة النبوية",
+          "after": "د الشيخ محمد عبدالرحمن العريفي  السيرة النبوية"
+        },
+        "title_ar": {
+          "before": "د الشيخ محمد عبدالرحمن العريفي السيرة النبوية",
+          "after": "د الشيخ محمد عبدالرحمن العريفي  السيرة النبوية"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=Cdqp5aNAYCA | https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=Cdqp5aNAYCA&format=json",
+          "after": "https://www.youtube.com/watch?v=Cdqp5aNAYCA|https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=Cdqp5aNAYCA&format=json|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DCdqp5aNAYCA&format=json|https://www.youtube.com/@hamode656"
+        }
+      }
+    },
+    {
+      "videoId": "w5w46SZr6dY",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=w5w46SZr6dY | https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=w5w46SZr6dY&format=json",
+          "after": "https://www.youtube.com/watch?v=w5w46SZr6dY|https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=w5w46SZr6dY&format=json|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dw5w46SZr6dY&format=json|https://www.youtube.com/@hamode656"
+        }
+      }
+    },
+    {
+      "videoId": "PzVUqMYsfro",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "The Prophetic Biography | Episode (1)",
+          "after": "السيرة النبوية | الحلقة (1) | قصة دخول الأديان السماوية إلى الجزيرة العربية | د. طارق السويدان"
+        },
+        "title_ar": {
+          "before": "The Prophetic Biography | Episode (1)",
+          "after": "السيرة النبوية | الحلقة (1) | قصة دخول الأديان السماوية إلى الجزيرة العربية | د. طارق السويدان"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/PzVUqMYsfro/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=PzVUqMYsfro | https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured | https://suwaidan.com/",
+          "after": "https://www.youtube.com/watch?v=PzVUqMYsfro|https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured|https://suwaidan.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DPzVUqMYsfro&format=json|https://www.youtube.com/@DrAlSuwaidan"
+        }
+      }
+    },
+    {
+      "videoId": "QqeNhIBv2IE",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/QqeNhIBv2IE/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=QqeNhIBv2IE | https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured | https://suwaidan.com/",
+          "after": "https://www.youtube.com/watch?v=QqeNhIBv2IE|https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured|https://suwaidan.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DQqeNhIBv2IE&format=json|https://www.youtube.com/@DrAlSuwaidan"
+        }
+      }
+    },
+    {
+      "videoId": "Grg00H7JH4E",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/Grg00H7JH4E/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=Grg00H7JH4E | https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured | https://suwaidan.com/",
+          "after": "https://www.youtube.com/watch?v=Grg00H7JH4E|https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured|https://suwaidan.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DGrg00H7JH4E&format=json|https://www.youtube.com/@DrAlSuwaidan"
+        }
+      }
+    },
+    {
+      "videoId": "d_3emteBaeY",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/d_3emteBaeY/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=d_3emteBaeY | https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured | https://suwaidan.com/",
+          "after": "https://www.youtube.com/watch?v=d_3emteBaeY|https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured|https://suwaidan.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dd_3emteBaeY&format=json|https://www.youtube.com/@DrAlSuwaidan"
+        }
+      }
+    },
+    {
+      "videoId": "VKKdipTSUDE",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/VKKdipTSUDE/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=VKKdipTSUDE | https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured | https://suwaidan.com/",
+          "after": "https://www.youtube.com/watch?v=VKKdipTSUDE|https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured|https://suwaidan.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DVKKdipTSUDE&format=json|https://www.youtube.com/@DrAlSuwaidan"
+        }
+      }
+    },
+    {
+      "videoId": "6iXmxYsrZV4",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/6iXmxYsrZV4/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=6iXmxYsrZV4 | https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured | https://suwaidan.com/",
+          "after": "https://www.youtube.com/watch?v=6iXmxYsrZV4|https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured|https://suwaidan.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D6iXmxYsrZV4&format=json|https://www.youtube.com/@DrAlSuwaidan"
+        }
+      }
+    },
+    {
+      "videoId": "Oqrnfp-R2AQ",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/Oqrnfp-R2AQ/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=Oqrnfp-R2AQ | https://www.youtube.com/watch?v=6iXmxYsrZV4 | https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured | https://suwaidan.com/",
+          "after": "https://www.youtube.com/watch?v=Oqrnfp-R2AQ|https://www.youtube.com/watch?v=6iXmxYsrZV4|https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured|https://suwaidan.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DOqrnfp-R2AQ&format=json|https://www.youtube.com/@DrAlSuwaidan"
+        }
+      }
+    },
+    {
+      "videoId": "-N5gc5fO8uo",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/-N5gc5fO8uo/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=-N5gc5fO8uo | https://www.youtube.com/watch?v=6iXmxYsrZV4 | https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured | https://suwaidan.com/",
+          "after": "https://www.youtube.com/watch?v=-N5gc5fO8uo|https://www.youtube.com/watch?v=6iXmxYsrZV4|https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured|https://suwaidan.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D-N5gc5fO8uo&format=json|https://www.youtube.com/@DrAlSuwaidan"
+        }
+      }
+    },
+    {
+      "videoId": "sWCoY6Jtap8",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/sWCoY6Jtap8/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=sWCoY6Jtap8 | https://www.youtube.com/watch?v=6iXmxYsrZV4 | https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured | https://suwaidan.com/",
+          "after": "https://www.youtube.com/watch?v=sWCoY6Jtap8|https://www.youtube.com/watch?v=6iXmxYsrZV4|https://www.youtube.com/channel/UCTW4teojDBh2Bs2cDSMgztA/featured|https://suwaidan.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DsWCoY6Jtap8&format=json|https://www.youtube.com/@DrAlSuwaidan"
+        }
+      }
+    },
+    {
+      "videoId": "fM8AJIZ6jSY",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=fM8AJIZ6jSY | https://www.youtube.com/@%D8%A3%D8%B1%D8%B4%D9%8A%D9%81%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%D8%B1%D8%A7%D8%BA%D8%A8%D8%A7%D9%84%D8%B3%D8%B1%D8%AC%D8%A7%D9%86%D9%8A",
+          "after": "https://www.youtube.com/watch?v=fM8AJIZ6jSY|https://www.youtube.com/@%D8%A3%D8%B1%D8%B4%D9%8A%D9%81%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%D8%B1%D8%A7%D8%BA%D8%A8%D8%A7%D9%84%D8%B3%D8%B1%D8%AC%D8%A7%D9%86%D9%8A|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DfM8AJIZ6jSY&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "rQADMKn7x5Y",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "Lesson 3 Introduction Part 3 | Where Islam Began",
+          "after": "درس 3 مقدمة ج3 | من هنا بدأ الإسلام | السيرة النبوية | راغب السرجاني"
+        },
+        "title_ar": {
+          "before": "",
+          "after": "درس 3 مقدمة ج3 | من هنا بدأ الإسلام | السيرة النبوية | راغب السرجاني"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=rQADMKn7x5Y | https://www.youtube.com/playlist?list=PL4aBqnO2MtcFT7jgUVs5WwYa9Vi053HeU",
+          "after": "https://www.youtube.com/watch?v=rQADMKn7x5Y|https://www.youtube.com/playlist?list=PL4aBqnO2MtcFT7jgUVs5WwYa9Vi053HeU|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DrQADMKn7x5Y&format=json|https://www.youtube.com/@%D8%A3%D8%B1%D8%B4%D9%8A%D9%81%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%D8%B1%D8%A7%D8%BA%D8%A8%D8%A7%D9%84%D8%B3%D8%B1%D8%AC%D8%A7%D9%86%D9%8A"
+        }
+      }
+    },
+    {
+      "videoId": "3W4M8yBNlrY",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=3W4M8yBNlrY | https://www.youtube.com/@%D8%A3%D8%B1%D8%B4%D9%8A%D9%81%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%D8%B1%D8%A7%D8%BA%D8%A8%D8%A7%D9%84%D8%B3%D8%B1%D8%AC%D8%A7%D9%86%D9%8A",
+          "after": "https://www.youtube.com/watch?v=3W4M8yBNlrY|https://www.youtube.com/@%D8%A3%D8%B1%D8%B4%D9%8A%D9%81%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%D8%B1%D8%A7%D8%BA%D8%A8%D8%A7%D9%84%D8%B3%D8%B1%D8%AC%D8%A7%D9%86%D9%8A|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D3W4M8yBNlrY&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "evibnjmmUwY",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "درس 7 | تربية الثبات | السيرة النبوية | راغب السرجاني",
+          "after": "درس 7 | تربية الثبات | السيرة النبوية |  راغب السرجاني"
+        },
+        "title_ar": {
+          "before": "درس 7 | تربية الثبات | السيرة النبوية | راغب السرجاني",
+          "after": "درس 7 | تربية الثبات | السيرة النبوية |  راغب السرجاني"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=evibnjmmUwY | https://www.youtube.com/@%D8%A3%D8%B1%D8%B4%D9%8A%D9%81%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%D8%B1%D8%A7%D8%BA%D8%A8%D8%A7%D9%84%D8%B3%D8%B1%D8%AC%D8%A7%D9%86%D9%8A",
+          "after": "https://www.youtube.com/watch?v=evibnjmmUwY|https://www.youtube.com/@%D8%A3%D8%B1%D8%B4%D9%8A%D9%81%D8%A7%D9%84%D8%B4%D9%8A%D8%AE%D8%B1%D8%A7%D8%BA%D8%A8%D8%A7%D9%84%D8%B3%D8%B1%D8%AC%D8%A7%D9%86%D9%8A|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DevibnjmmUwY&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "OPJBlTQeP-U",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=OPJBlTQeP-U | https://www.youtube.com/@islamstory | https://islamstory.com/",
+          "after": "https://www.youtube.com/watch?v=OPJBlTQeP-U|https://www.youtube.com/@islamstory|https://islamstory.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DOPJBlTQeP-U&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "NA6bFjTI108",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=NA6bFjTI108 | https://www.youtube.com/@islamstory | https://islamstory.com/",
+          "after": "https://www.youtube.com/watch?v=NA6bFjTI108|https://www.youtube.com/@islamstory|https://islamstory.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DNA6bFjTI108&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "gR3ReR9Tn-U",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=gR3ReR9Tn-U | https://www.youtube.com/@islamstory | https://islamstory.com/",
+          "after": "https://www.youtube.com/watch?v=gR3ReR9Tn-U|https://www.youtube.com/@islamstory|https://islamstory.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DgR3ReR9Tn-U&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "y0uTP-pc-5A",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "channel_name": {
+          "before": "Bedaya TV | قناة بداية الفضائية",
+          "after": "Bedaya TV l قناة بداية الفضائية"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=y0uTP-pc-5A | https://www.youtube.com/@tvbedaya",
+          "after": "https://www.youtube.com/watch?v=y0uTP-pc-5A|https://www.youtube.com/@tvbedaya|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dy0uTP-pc-5A&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "qZ7HpSbtZW4",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=qZ7HpSbtZW4 | https://www.youtube.com/@DrAlSuwaidan",
+          "after": "https://www.youtube.com/watch?v=qZ7HpSbtZW4|https://www.youtube.com/@DrAlSuwaidan|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DqZ7HpSbtZW4&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "BoN38WWe1O8",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "الشيخ محمد العريفي محاضرة بعنوان مجالس الطيبين",
+          "after": "الشيخ محمد العريفي محاضرة بعنوان مجالس  الطيبن"
+        },
+        "title_ar": {
+          "before": "الشيخ محمد العريفي محاضرة بعنوان مجالس الطيبين",
+          "after": "الشيخ محمد العريفي محاضرة بعنوان مجالس  الطيبن"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=BoN38WWe1O8 | https://www.youtube.com/@hamode656",
+          "after": "https://www.youtube.com/watch?v=BoN38WWe1O8|https://www.youtube.com/@hamode656|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DBoN38WWe1O8&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "QF_6YzkDuXw",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "د العريفي محاضرة بعنوان الأصل الأخلاقي عند أهل السنة",
+          "after": "د العريفي محاضرة بعنوان  الأصل الاخلاقي عند أهل السنة"
+        },
+        "title_ar": {
+          "before": "د العريفي محاضرة بعنوان الأصل الأخلاقي عند أهل السنة",
+          "after": "د العريفي محاضرة بعنوان  الأصل الاخلاقي عند أهل السنة"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=QF_6YzkDuXw | https://www.youtube.com/@hamode656",
+          "after": "https://www.youtube.com/watch?v=QF_6YzkDuXw|https://www.youtube.com/@hamode656|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DQF_6YzkDuXw&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "IR-ol17Is2Q",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "د العريفي الذاكرين الله كثيرًا والذاكرات",
+          "after": "د العريفي الذاكرين الله كثيرا والذاكرات ( استغفر الله العظيم في اليوم 100 مره )"
+        },
+        "title_ar": {
+          "before": "د العريفي الذاكرين الله كثيرًا والذاكرات",
+          "after": "د العريفي الذاكرين الله كثيرا والذاكرات ( استغفر الله العظيم في اليوم 100 مره )"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=IR-ol17Is2Q | https://www.youtube.com/@hamode656",
+          "after": "https://www.youtube.com/watch?v=IR-ol17Is2Q|https://www.youtube.com/@hamode656|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DIR-ol17Is2Q&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "8FTfJ_KMIOQ",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "د العريفي: إن كانت الحياة بحرًا من الهموم فاعبرها بقارب الصبر",
+          "after": "د العريفي إن كانت الحياة بحر من الهموم .. فاعبرها بقاربٍ صغيرٍ من الصبر .."
+        },
+        "title_ar": {
+          "before": "د العريفي: إن كانت الحياة بحرًا من الهموم فاعبرها بقارب الصبر",
+          "after": "د العريفي إن كانت الحياة بحر من الهموم .. فاعبرها بقاربٍ صغيرٍ من الصبر .."
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=8FTfJ_KMIOQ | https://www.youtube.com/@hamode656",
+          "after": "https://www.youtube.com/watch?v=8FTfJ_KMIOQ|https://www.youtube.com/@hamode656|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D8FTfJ_KMIOQ&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "N0MG6XN4bJ4",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "من هي الجسّاسة وما علاقتها بالمسيح الدجال؟ | الشيخ صالح المغامسي",
+          "after": "من هي الجسّاسة وما علاقتها بالمسيح الدجال؟| الشيخ صالح المغامسي"
+        },
+        "title_ar": {
+          "before": "من هي الجسّاسة وما علاقتها بالمسيح الدجال؟ | الشيخ صالح المغامسي",
+          "after": "من هي الجسّاسة وما علاقتها بالمسيح الدجال؟| الشيخ صالح المغامسي"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=N0MG6XN4bJ4 | https://www.youtube.com/@Alrasekhoon",
+          "after": "https://www.youtube.com/watch?v=N0MG6XN4bJ4|https://www.youtube.com/@Alrasekhoon|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DN0MG6XN4bJ4&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "vaPPoOeSGAk",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "هل فرعون ربّى موسى ولبث عنده سنين؟ | الشيخ صالح المغامسي",
+          "after": "قصة فرعون كاملة كما لم تسمعها من قبل دروس وعِبر تهزّ القلب!"
+        },
+        "title_ar": {
+          "before": "هل فرعون ربّى موسى ولبث عنده سنين؟ | الشيخ صالح المغامسي",
+          "after": "قصة فرعون كاملة كما لم تسمعها من قبل دروس وعِبر تهزّ القلب!"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=vaPPoOeSGAk | https://www.youtube.com/@Alrasekhoon",
+          "after": "https://www.youtube.com/watch?v=vaPPoOeSGAk|https://www.youtube.com/@Alrasekhoon|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DvaPPoOeSGAk&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "c-nqGuRmXqY",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "قصة نبي الله شعيب عليه السلام مليئة بالعبر",
+          "after": "قصة نبي الله شعيب عليه السلام مليئة بالعبر الأخلاقية والعملية | الشيخ صالح المغامسي"
+        },
+        "title_ar": {
+          "before": "قصة نبي الله شعيب عليه السلام مليئة بالعبر",
+          "after": "قصة نبي الله شعيب عليه السلام مليئة بالعبر الأخلاقية والعملية | الشيخ صالح المغامسي"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=c-nqGuRmXqY | https://www.youtube.com/@Alrasekhoon",
+          "after": "https://www.youtube.com/watch?v=c-nqGuRmXqY|https://www.youtube.com/@Alrasekhoon|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dc-nqGuRmXqY&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "RukFPc4qA1A",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "قصة لوط عليه السلام عبرة لكل زمان",
+          "after": "قصة لوط عليه السلام عبرة لكل زمان | الشيخ صالح المغامسي"
+        },
+        "title_ar": {
+          "before": "قصة لوط عليه السلام عبرة لكل زمان",
+          "after": "قصة لوط عليه السلام عبرة لكل زمان | الشيخ صالح المغامسي"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=RukFPc4qA1A | https://www.youtube.com/@Alrasekhoon",
+          "after": "https://www.youtube.com/watch?v=RukFPc4qA1A|https://www.youtube.com/@Alrasekhoon|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DRukFPc4qA1A&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "l2dLtP_x2qA",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "قصة موسى وفرعون كاملة ونهاية الطغيان | الشيخ صالح المغامسي",
+          "after": "قصة موسى وفرعون كاملة ونهاية الطغيان! | الشيخ صالح المغامسي"
+        },
+        "title_ar": {
+          "before": "قصة موسى وفرعون كاملة ونهاية الطغيان | الشيخ صالح المغامسي",
+          "after": "قصة موسى وفرعون كاملة ونهاية الطغيان! | الشيخ صالح المغامسي"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=l2dLtP_x2qA | https://www.youtube.com/@Alrasekhoon",
+          "after": "https://www.youtube.com/watch?v=l2dLtP_x2qA|https://www.youtube.com/@Alrasekhoon|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dl2dLtP_x2qA&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "ouOz30mHrEg",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+          "after": "https://www.youtube.com/@abdelkafytube"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=ouOz30mHrEg | https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+          "after": "https://www.youtube.com/watch?v=ouOz30mHrEg|https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DouOz30mHrEg&format=json|https://www.youtube.com/@abdelkafytube"
+        }
+      }
+    },
+    {
+      "videoId": "YPf0c1mcgYg",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+          "after": "https://www.youtube.com/@abdelkafytube"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=YPf0c1mcgYg | https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+          "after": "https://www.youtube.com/watch?v=YPf0c1mcgYg|https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DYPf0c1mcgYg&format=json|https://www.youtube.com/@abdelkafytube"
+        }
+      }
+    },
+    {
+      "videoId": "NhV_u_67HP8",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "الحياة السعيدة محاضرة الشيخ عمر عبد الكافي",
+          "after": "الحياة السعيدة محاضرة الشيخ عمرعبد الكافي"
+        },
+        "title_ar": {
+          "before": "الحياة السعيدة محاضرة الشيخ عمر عبد الكافي",
+          "after": "الحياة السعيدة محاضرة الشيخ عمرعبد الكافي"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+          "after": "https://www.youtube.com/@abdelkafytube"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=NhV_u_67HP8 | https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+          "after": "https://www.youtube.com/watch?v=NhV_u_67HP8|https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DNhV_u_67HP8&format=json|https://www.youtube.com/@abdelkafytube"
+        }
+      }
+    },
+    {
+      "videoId": "AoUR_I6734s",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "محاضرة الفرحة: قصص مشوقة وعبر مفيدة - الشيخ عمر عبد الكافي",
+          "after": "محاضرة ( الفرحة)  قصص مشوقة وعبر مفيدة -  الشيخ عمر عبد الكافي"
+        },
+        "title_ar": {
+          "before": "محاضرة الفرحة: قصص مشوقة وعبر مفيدة - الشيخ عمر عبد الكافي",
+          "after": "محاضرة ( الفرحة)  قصص مشوقة وعبر مفيدة -  الشيخ عمر عبد الكافي"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+          "after": "https://www.youtube.com/@abdelkafytube"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=AoUR_I6734s | https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+          "after": "https://www.youtube.com/watch?v=AoUR_I6734s|https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DAoUR_I6734s&format=json|https://www.youtube.com/@abdelkafytube"
+        }
+      }
+    },
+    {
+      "videoId": "L873wrflZ9w",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+          "after": "https://www.youtube.com/@abdelkafytube"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=L873wrflZ9w | https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos",
+          "after": "https://www.youtube.com/watch?v=L873wrflZ9w|https://www.youtube.com/channel/UCKUOmGXE9Ytlc2EzpGqimtw/videos|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DL873wrflZ9w&format=json|https://www.youtube.com/@abdelkafytube"
+        }
+      }
+    },
+    {
+      "videoId": "MXXhMIC16Es",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "1- السيرة النبوية | فوائد تعلم سيرة النبي ﷺ | الشيخ سعد العتيق",
+          "after": "1- السيرة النبوية | فوائد تعلم سيرة النبي ﷴ ﷺ | الشيخ سعد العتيق"
+        },
+        "title_ar": {
+          "before": "1- السيرة النبوية | فوائد تعلم سيرة النبي ﷺ | الشيخ سعد العتيق",
+          "after": "1- السيرة النبوية | فوائد تعلم سيرة النبي ﷴ ﷺ | الشيخ سعد العتيق"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+          "after": "https://www.youtube.com/@%D8%A3%D8%B6%D9%88%D8%A7%D8%A1%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B71961"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=MXXhMIC16Es | https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+          "after": "https://www.youtube.com/watch?v=MXXhMIC16Es|https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DMXXhMIC16Es&format=json|https://www.youtube.com/@%D8%A3%D8%B6%D9%88%D8%A7%D8%A1%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B71961"
+        }
+      }
+    },
+    {
+      "videoId": "I3cJrdbd1h0",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "2- السيرة النبوية | تاريخ مكة المكرمة قبل الإسلام | الشيخ سعد العتيق",
+          "after": "2 - السيرة النبوية | تاريخ مكه المكرمه قبل الاسلام | الشيخ سعد العتيق"
+        },
+        "title_ar": {
+          "before": "2- السيرة النبوية | تاريخ مكة المكرمة قبل الإسلام | الشيخ سعد العتيق",
+          "after": "2 - السيرة النبوية | تاريخ مكه المكرمه قبل الاسلام | الشيخ سعد العتيق"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+          "after": "https://www.youtube.com/@%D8%A3%D8%B6%D9%88%D8%A7%D8%A1%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B71961"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=I3cJrdbd1h0 | https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+          "after": "https://www.youtube.com/watch?v=I3cJrdbd1h0|https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DI3cJrdbd1h0&format=json|https://www.youtube.com/@%D8%A3%D8%B6%D9%88%D8%A7%D8%A1%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B71961"
+        }
+      }
+    },
+    {
+      "videoId": "9jy5aRKoCZ8",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "3- السيرة النبوية | قصة بحيرا الراهب بالشام | الشيخ سعد العتيق",
+          "after": "3 -  السيرة النبوية | قصة بحيرا الراهب بالشام | الشيخ سعدالعتيق"
+        },
+        "title_ar": {
+          "before": "3- السيرة النبوية | قصة بحيرا الراهب بالشام | الشيخ سعد العتيق",
+          "after": "3 -  السيرة النبوية | قصة بحيرا الراهب بالشام | الشيخ سعدالعتيق"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+          "after": "https://www.youtube.com/@%D8%A3%D8%B6%D9%88%D8%A7%D8%A1%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B71961"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=9jy5aRKoCZ8 | https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+          "after": "https://www.youtube.com/watch?v=9jy5aRKoCZ8|https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D9jy5aRKoCZ8&format=json|https://www.youtube.com/@%D8%A3%D8%B6%D9%88%D8%A7%D8%A1%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B71961"
+        }
+      }
+    },
+    {
+      "videoId": "2IICQtyIJnU",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "4- السيرة النبوية | غار حراء ونزول الوحي | الشيخ سعد العتيق",
+          "after": "4 - السيرة النبوية | غار حراء ونزول الوحي | الشيخ سعد العتيق"
+        },
+        "title_ar": {
+          "before": "4- السيرة النبوية | غار حراء ونزول الوحي | الشيخ سعد العتيق",
+          "after": "4 - السيرة النبوية | غار حراء ونزول الوحي | الشيخ سعد العتيق"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+          "after": "https://www.youtube.com/@%D8%A3%D8%B6%D9%88%D8%A7%D8%A1%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B71961"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=2IICQtyIJnU | https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+          "after": "https://www.youtube.com/watch?v=2IICQtyIJnU|https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D2IICQtyIJnU&format=json|https://www.youtube.com/@%D8%A3%D8%B6%D9%88%D8%A7%D8%A1%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B71961"
+        }
+      }
+    },
+    {
+      "videoId": "oTv_Qy9CFFg",
+      "catalog": "seerah-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "5- السيرة النبوية | الدعوة السرية والدعوة الجهرية | الشيخ سعد العتيق",
+          "after": "5 - السيرة النبوية | الدعوه السريه والدعوة الجهريه | الشيخ سعد العتيق"
+        },
+        "title_ar": {
+          "before": "5- السيرة النبوية | الدعوة السرية والدعوة الجهرية | الشيخ سعد العتيق",
+          "after": "5 - السيرة النبوية | الدعوه السريه والدعوة الجهريه | الشيخ سعد العتيق"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+          "after": "https://www.youtube.com/@%D8%A3%D8%B6%D9%88%D8%A7%D8%A1%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B71961"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=oTv_Qy9CFFg | https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg",
+          "after": "https://www.youtube.com/watch?v=oTv_Qy9CFFg|https://www.youtube.com/channel/UCcihVAwfySu91ZByRJ_bxkg|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DoTv_Qy9CFFg&format=json|https://www.youtube.com/@%D8%A3%D8%B6%D9%88%D8%A7%D8%A1%D8%A7%D9%84%D8%B1%D8%A8%D8%A7%D8%B71961"
+        }
+      }
+    },
+    {
+      "videoId": "mJaADk-OM_I",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "Zaky Learning Club | Full 6-Hour Compilation for Kids!",
+          "after": "Zaky Learning Club | Full 6-Hour Compilation for Kids! ⏰"
+        },
+        "title_ar": {
+          "before": "",
+          "after": "Zaky Learning Club | Full 6-Hour Compilation for Kids! ⏰"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/mJaADk-OM_I/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=mJaADk-OM_I | https://www.youtube.com/@One4kids-Zaky | https://one4kids.net/",
+          "after": "https://www.youtube.com/watch?v=mJaADk-OM_I|https://www.youtube.com/@One4kids-Zaky|https://one4kids.net/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DmJaADk-OM_I&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "0HVH-KWSC8c",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Zaky & Friends 40 Minute Compilation | Islamic Cartoons For Kids"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/0HVH-KWSC8c/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=0HVH-KWSC8c | https://www.youtube.com/@One4kids-Zaky | https://one4kids.net/",
+          "after": "https://www.youtube.com/watch?v=0HVH-KWSC8c|https://www.youtube.com/@One4kids-Zaky|https://one4kids.net/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D0HVH-KWSC8c&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "1TJNdq0PtFk",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Kazwa & Bilal | 8 EPISODES | Featuring Zaky"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/1TJNdq0PtFk/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=1TJNdq0PtFk | https://www.youtube.com/@One4kids-Zaky | https://one4kids.net/",
+          "after": "https://www.youtube.com/watch?v=1TJNdq0PtFk|https://www.youtube.com/@One4kids-Zaky|https://one4kids.net/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D1TJNdq0PtFk&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "Gc-HTK-cZ-4",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Zaky & Friends Cartoons Compilation | 10 Episodes | 55 Minutes"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/Gc-HTK-cZ-4/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=Gc-HTK-cZ-4 | https://www.youtube.com/@One4kids-Zaky | https://one4kids.net/",
+          "after": "https://www.youtube.com/watch?v=Gc-HTK-cZ-4|https://www.youtube.com/@One4kids-Zaky|https://one4kids.net/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DGc-HTK-cZ-4&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "NbIG26OvMRI",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Zaky & Friends Compilation | Islamic Kids Cartoons | 70 Minutes"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/NbIG26OvMRI/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=NbIG26OvMRI | https://www.youtube.com/@One4kids-Zaky | https://one4kids.net/",
+          "after": "https://www.youtube.com/watch?v=NbIG26OvMRI|https://www.youtube.com/@One4kids-Zaky|https://one4kids.net/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DNbIG26OvMRI&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "OoLnFtzFm7s",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Zaky & Friends 60 Minute Compilation | Islamic Cartoons & Songs For Kids"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/OoLnFtzFm7s/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=OoLnFtzFm7s | https://www.youtube.com/@One4kids-Zaky | https://one4kids.net/",
+          "after": "https://www.youtube.com/watch?v=OoLnFtzFm7s|https://www.youtube.com/@One4kids-Zaky|https://one4kids.net/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DOoLnFtzFm7s&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "65Ea4kZSOjw",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Zaky's Football Match | Zaky And Friends Episodes"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/65Ea4kZSOjw/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=65Ea4kZSOjw | https://www.youtube.com/@One4kids-Zaky | https://one4kids.net/",
+          "after": "https://www.youtube.com/watch?v=65Ea4kZSOjw|https://www.youtube.com/@One4kids-Zaky|https://one4kids.net/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D65Ea4kZSOjw&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "9EPUvG9_4xw",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Ramadan Moon 🌙 Kazwa & Bilal Featuring Zaky | EP12"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/9EPUvG9_4xw/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=9EPUvG9_4xw | https://www.youtube.com/@One4kids-Zaky | https://one4kids.net/",
+          "after": "https://www.youtube.com/watch?v=9EPUvG9_4xw|https://www.youtube.com/@One4kids-Zaky|https://one4kids.net/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D9EPUvG9_4xw&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "u-HGRbLTEuQ",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "🍎 Zaky & Nadeen's Fruit Song! 🍌 + More",
+          "after": "🍎 Zaky & Nadeen’s Fruit Song! 🍌 + More"
+        },
+        "title_ar": {
+          "before": "",
+          "after": "🍎 Zaky & Nadeen’s Fruit Song! 🍌 + More"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/u-HGRbLTEuQ/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=u-HGRbLTEuQ | https://www.youtube.com/@One4kids-Zaky | https://one4kids.net/",
+          "after": "https://www.youtube.com/watch?v=u-HGRbLTEuQ|https://www.youtube.com/@One4kids-Zaky|https://one4kids.net/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Du-HGRbLTEuQ&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "Ypj2_tG7zUY",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "10 Zaky Animal Songs For Kids - Muslim Cartoons"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/Ypj2_tG7zUY/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=Ypj2_tG7zUY | https://www.youtube.com/@One4kids-Zaky | https://one4kids.net/",
+          "after": "https://www.youtube.com/watch?v=Ypj2_tG7zUY|https://www.youtube.com/@One4kids-Zaky|https://one4kids.net/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DYpj2_tG7zUY&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "yW3bgiFmC1w",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "Zaky & Friends Compilation | Islamic Kids Cartoons | 70 Minutes",
+          "after": "Zaky & Friends Compilation | Islamic Cartoons For Kids"
+        },
+        "title_ar": {
+          "before": "",
+          "after": "Zaky & Friends Compilation | Islamic Cartoons For Kids"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/yW3bgiFmC1w/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=yW3bgiFmC1w | https://www.youtube.com/@One4kids-Zaky | https://one4kids.net/",
+          "after": "https://www.youtube.com/watch?v=yW3bgiFmC1w|https://www.youtube.com/@One4kids-Zaky|https://one4kids.net/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DyW3bgiFmC1w&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "HIFc-VjzHbI",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/HIFc-VjzHbI/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=HIFc-VjzHbI | https://www.youtube.com/@Omarandhanaarabic | https://omarhana.com/",
+          "after": "https://www.youtube.com/watch?v=HIFc-VjzHbI|https://www.youtube.com/@Omarandhanaarabic|https://omarhana.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DHIFc-VjzHbI&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "3N0dmHVTc48",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/3N0dmHVTc48/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=3N0dmHVTc48 | https://www.youtube.com/@Omarandhanaarabic | https://omarhana.com/",
+          "after": "https://www.youtube.com/watch?v=3N0dmHVTc48|https://www.youtube.com/@Omarandhanaarabic|https://omarhana.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D3N0dmHVTc48&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "qYYeOUYSkUg",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/qYYeOUYSkUg/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=qYYeOUYSkUg | https://www.youtube.com/@Omarandhanaarabic",
+          "after": "https://www.youtube.com/watch?v=qYYeOUYSkUg|https://www.youtube.com/@Omarandhanaarabic|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DqYYeOUYSkUg&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "Sl4hYYOi6yk",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/Sl4hYYOi6yk/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=Sl4hYYOi6yk | https://www.youtube.com/@Omarandhanaarabic",
+          "after": "https://www.youtube.com/watch?v=Sl4hYYOi6yk|https://www.youtube.com/@Omarandhanaarabic|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DSl4hYYOi6yk&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "bE2jqFbwnpA",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/bE2jqFbwnpA/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=bE2jqFbwnpA | https://www.youtube.com/@Omarandhanaarabic | https://omarhana.com/",
+          "after": "https://www.youtube.com/watch?v=bE2jqFbwnpA|https://www.youtube.com/@Omarandhanaarabic|https://omarhana.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DbE2jqFbwnpA&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "J58e1IBM-RI",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/J58e1IBM-RI/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=J58e1IBM-RI | https://www.youtube.com/@Omarandhanaarabic | https://omarhana.com/",
+          "after": "https://www.youtube.com/watch?v=J58e1IBM-RI|https://www.youtube.com/@Omarandhanaarabic|https://omarhana.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DJ58e1IBM-RI&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "hs-1o10P4ck",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/hs-1o10P4ck/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=hs-1o10P4ck | https://www.youtube.com/@Omarandhanaarabic | https://omarhana.com/",
+          "after": "https://www.youtube.com/watch?v=hs-1o10P4ck|https://www.youtube.com/@Omarandhanaarabic|https://omarhana.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dhs-1o10P4ck&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "HEYhc5voZxY",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/HEYhc5voZxY/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=HEYhc5voZxY | https://www.youtube.com/channel/UC178EmfQAV3OT-UpuO6WUMg | https://www.youtube.com/@Omarandhanaarabic | https://omarhana.com/",
+          "after": "https://www.youtube.com/watch?v=HEYhc5voZxY|https://www.youtube.com/channel/UC178EmfQAV3OT-UpuO6WUMg|https://www.youtube.com/@Omarandhanaarabic|https://omarhana.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DHEYhc5voZxY&format=json|https://www.youtube.com/@OmarHanaIslamicSongsforKids"
+        }
+      }
+    },
+    {
+      "videoId": "U089TRfFtWI",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/U089TRfFtWI/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=U089TRfFtWI | https://www.youtube.com/@Omarandhanaarabic | https://omarhana.com/",
+          "after": "https://www.youtube.com/watch?v=U089TRfFtWI|https://www.youtube.com/@Omarandhanaarabic|https://omarhana.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DU089TRfFtWI&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "T5b1d3xvh3c",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/T5b1d3xvh3c/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=T5b1d3xvh3c | https://www.youtube.com/@Omarandhanaarabic | https://omarhana.com/",
+          "after": "https://www.youtube.com/watch?v=T5b1d3xvh3c|https://www.youtube.com/@Omarandhanaarabic|https://omarhana.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DT5b1d3xvh3c&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "2N3uRbjl3zs",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/2N3uRbjl3zs/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=2N3uRbjl3zs | https://www.youtube.com/@Omarandhanaarabic | https://omarhana.com/",
+          "after": "https://www.youtube.com/watch?v=2N3uRbjl3zs|https://www.youtube.com/@Omarandhanaarabic|https://omarhana.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D2N3uRbjl3zs&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "NB4OzSpMxlI",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "👉 Resilience ✨ | The MiniMuslims – Season 2 Episode 5 | Islamic Cartoon for Kids"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA",
+          "after": "https://www.youtube.com/@minimuslims"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/NB4OzSpMxlI/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=NB4OzSpMxlI | https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA | https://minimuslims.com/",
+          "after": "https://www.youtube.com/watch?v=NB4OzSpMxlI|https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA|https://minimuslims.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DNB4OzSpMxlI&format=json|https://www.youtube.com/@minimuslims"
+        }
+      }
+    },
+    {
+      "videoId": "4rWoKBecS0Y",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "👉 Forgiveness ✨ | The MiniMuslims – Season 2 Episode 4 | Islamic Cartoon for Kids"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA",
+          "after": "https://www.youtube.com/@minimuslims"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/4rWoKBecS0Y/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=4rWoKBecS0Y | https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA | https://minimuslims.com/",
+          "after": "https://www.youtube.com/watch?v=4rWoKBecS0Y|https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA|https://minimuslims.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D4rWoKBecS0Y&format=json|https://www.youtube.com/@minimuslims"
+        }
+      }
+    },
+    {
+      "videoId": "5R5-jrxBtaA",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "👉 Gratitude 🙏🏼 | The MiniMuslims – Season 2 Episode 3 | Islamic Cartoon for Kids"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA",
+          "after": "https://www.youtube.com/@minimuslims"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/5R5-jrxBtaA/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=5R5-jrxBtaA | https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA | https://minimuslims.com/",
+          "after": "https://www.youtube.com/watch?v=5R5-jrxBtaA|https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA|https://minimuslims.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D5R5-jrxBtaA&format=json|https://www.youtube.com/@minimuslims"
+        }
+      }
+    },
+    {
+      "videoId": "dL1R0cQrge0",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "👉 Leadership 🌟 | The MiniMuslims – Season 2 Episode 2 | Islamic Cartoon for Kids"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA",
+          "after": "https://www.youtube.com/@minimuslims"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/dL1R0cQrge0/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=dL1R0cQrge0 | https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA | https://minimuslims.com/",
+          "after": "https://www.youtube.com/watch?v=dL1R0cQrge0|https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA|https://minimuslims.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DdL1R0cQrge0&format=json|https://www.youtube.com/@minimuslims"
+        }
+      }
+    },
+    {
+      "videoId": "MCGdv56bQBM",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "👉 Kindness 😇 | The MiniMuslims – Season 2 Episode 1 | Islamic Cartoon for Kids"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA",
+          "after": "https://www.youtube.com/@minimuslims"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/MCGdv56bQBM/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=MCGdv56bQBM | https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA | https://minimuslims.com/",
+          "after": "https://www.youtube.com/watch?v=MCGdv56bQBM|https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA|https://minimuslims.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DMCGdv56bQBM&format=json|https://www.youtube.com/@minimuslims"
+        }
+      }
+    },
+    {
+      "videoId": "uVwBbdJLZAs",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Tawakkul 🤲🏼 Episode 4 | The MiniMuslims Islamic Cartoon Series for Kids ☀️"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA",
+          "after": "https://www.youtube.com/@minimuslims"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/uVwBbdJLZAs/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=uVwBbdJLZAs | https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA | https://minimuslims.com/",
+          "after": "https://www.youtube.com/watch?v=uVwBbdJLZAs|https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA|https://minimuslims.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DuVwBbdJLZAs&format=json|https://www.youtube.com/@minimuslims"
+        }
+      }
+    },
+    {
+      "videoId": "S9wPCqglK-M",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Muslim Songs for Kids 🎈 Head Shoulders Knees and Toes ☀️ MiniMuslims"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA",
+          "after": "https://www.youtube.com/@minimuslims"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/S9wPCqglK-M/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=S9wPCqglK-M | https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA | https://minimuslims.com/",
+          "after": "https://www.youtube.com/watch?v=S9wPCqglK-M|https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA|https://minimuslims.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DS9wPCqglK-M&format=json|https://www.youtube.com/@minimuslims"
+        }
+      }
+    },
+    {
+      "videoId": "nNhaFbvqah4",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Islamic Songs for Kids 💫 Allahumma Salli (Fiyyashiyya) ☀️ MiniMuslims & Raef"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA",
+          "after": "https://www.youtube.com/@minimuslims"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/nNhaFbvqah4/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=nNhaFbvqah4 | https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA | https://minimuslims.com/",
+          "after": "https://www.youtube.com/watch?v=nNhaFbvqah4|https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA|https://minimuslims.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DnNhaFbvqah4&format=json|https://www.youtube.com/@minimuslims"
+        }
+      }
+    },
+    {
+      "videoId": "GoOxr16U6cA",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Islamic Songs For Kids 🦖 Dinosaurs 🦕 MiniMuslims"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA",
+          "after": "https://www.youtube.com/@minimuslims"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/GoOxr16U6cA/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=GoOxr16U6cA | https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA | https://minimuslims.com/",
+          "after": "https://www.youtube.com/watch?v=GoOxr16U6cA|https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA|https://minimuslims.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DGoOxr16U6cA&format=json|https://www.youtube.com/@minimuslims"
+        }
+      }
+    },
+    {
+      "videoId": "mFaWHa7hr84",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Islamic Songs For Kids 🐶 BINGO ☀️ MiniMuslims"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA",
+          "after": "https://www.youtube.com/@minimuslims"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/mFaWHa7hr84/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=mFaWHa7hr84 | https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA | https://minimuslims.com/",
+          "after": "https://www.youtube.com/watch?v=mFaWHa7hr84|https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA|https://minimuslims.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DmFaWHa7hr84&format=json|https://www.youtube.com/@minimuslims"
+        }
+      }
+    },
+    {
+      "videoId": "fGCzzuYqWzc",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Islamic Songs For Kids 🤲🏼 I Pray ☀️ Jaqlyn & MiniMuslims"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA",
+          "after": "https://www.youtube.com/@minimuslims"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/fGCzzuYqWzc/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=fGCzzuYqWzc | https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA | https://minimuslims.com/",
+          "after": "https://www.youtube.com/watch?v=fGCzzuYqWzc|https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA|https://minimuslims.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DfGCzzuYqWzc&format=json|https://www.youtube.com/@minimuslims"
+        }
+      }
+    },
+    {
+      "videoId": "vd7ga4-V6jQ",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Islamic Songs For Kids 🦈 Muslim Baby Shark ☀️ MiniMuslims"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA",
+          "after": "https://www.youtube.com/@minimuslims"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/vd7ga4-V6jQ/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=vd7ga4-V6jQ | https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA | https://minimuslims.com/",
+          "after": "https://www.youtube.com/watch?v=vd7ga4-V6jQ|https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA|https://minimuslims.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dvd7ga4-V6jQ&format=json|https://www.youtube.com/@minimuslims"
+        }
+      }
+    },
+    {
+      "videoId": "9i88jDNi1Gw",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Learn Quran For Kids | Surat Al-Fatihah سورة الفاتحة ☀️ MiniMuslims"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA",
+          "after": "https://www.youtube.com/@minimuslims"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/9i88jDNi1Gw/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=9i88jDNi1Gw | https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA | https://minimuslims.com/",
+          "after": "https://www.youtube.com/watch?v=9i88jDNi1Gw|https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA|https://minimuslims.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D9i88jDNi1Gw&format=json|https://www.youtube.com/@minimuslims"
+        }
+      }
+    },
+    {
+      "videoId": "IIYU2y3a6L8",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Learn Quran For Kids | Surat An-Naas سورة الناس ☀️ MiniMuslims"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA",
+          "after": "https://www.youtube.com/@minimuslims"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/IIYU2y3a6L8/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=IIYU2y3a6L8 | https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA | https://minimuslims.com/",
+          "after": "https://www.youtube.com/watch?v=IIYU2y3a6L8|https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA|https://minimuslims.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DIIYU2y3a6L8&format=json|https://www.youtube.com/@minimuslims"
+        }
+      }
+    },
+    {
+      "videoId": "ZvBO3mqjL4Q",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Learn Quran For Kids | Surat Al-Falaq سورة الفلق ☀️ MiniMuslims"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA",
+          "after": "https://www.youtube.com/@minimuslims"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/ZvBO3mqjL4Q/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=ZvBO3mqjL4Q | https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA | https://minimuslims.com/",
+          "after": "https://www.youtube.com/watch?v=ZvBO3mqjL4Q|https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA|https://minimuslims.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DZvBO3mqjL4Q&format=json|https://www.youtube.com/@minimuslims"
+        }
+      }
+    },
+    {
+      "videoId": "7iuQI1Izh5o",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Learn Quran For Kids | Surat Al-Ikhlas سورة الإخلاص ☀️ MiniMuslims"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA",
+          "after": "https://www.youtube.com/@minimuslims"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/7iuQI1Izh5o/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=7iuQI1Izh5o | https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA | https://minimuslims.com/",
+          "after": "https://www.youtube.com/watch?v=7iuQI1Izh5o|https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA|https://minimuslims.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D7iuQI1Izh5o&format=json|https://www.youtube.com/@minimuslims"
+        }
+      }
+    },
+    {
+      "videoId": "cBGEn_L_fxs",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Repeat Quran For Kids | The 3 Quls ☀️ Al-Ikhlas | Al-Falaq | An-Naas | الإخلاص | الفلق | الناس"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA",
+          "after": "https://www.youtube.com/@minimuslims"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/cBGEn_L_fxs/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=cBGEn_L_fxs | https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA | https://minimuslims.com/",
+          "after": "https://www.youtube.com/watch?v=cBGEn_L_fxs|https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA|https://minimuslims.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DcBGEn_L_fxs&format=json|https://www.youtube.com/@minimuslims"
+        }
+      }
+    },
+    {
+      "videoId": "MiATwU4thH4",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Learn Quran For Kids | Surat Al-Masad سورة المسد ☀️ MiniMuslims"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA",
+          "after": "https://www.youtube.com/@minimuslims"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/MiATwU4thH4/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=MiATwU4thH4 | https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA | https://minimuslims.com/",
+          "after": "https://www.youtube.com/watch?v=MiATwU4thH4|https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA|https://minimuslims.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DMiATwU4thH4&format=json|https://www.youtube.com/@minimuslims"
+        }
+      }
+    },
+    {
+      "videoId": "aiojJAA-uQc",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Repeat Quran For Kids in Pictures ☀️ Short Surahs 🌟 MiniMuslims"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA",
+          "after": "https://www.youtube.com/@minimuslims"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/aiojJAA-uQc/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=aiojJAA-uQc | https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA | https://minimuslims.com/",
+          "after": "https://www.youtube.com/watch?v=aiojJAA-uQc|https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA|https://minimuslims.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DaiojJAA-uQc&format=json|https://www.youtube.com/@minimuslims"
+        }
+      }
+    },
+    {
+      "videoId": "WyxekrpqcEQ",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "Islamic Songs for Kids 30 min Compilation MiniMuslims",
+          "after": "Islamic Songs for Kids 🌟 30 min Compilation ☀️ MiniMuslims"
+        },
+        "title_ar": {
+          "before": "",
+          "after": "Islamic Songs for Kids 🌟 30 min Compilation ☀️ MiniMuslims"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA",
+          "after": "https://www.youtube.com/@minimuslims"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/WyxekrpqcEQ/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=WyxekrpqcEQ | https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA | https://minimuslims.com/",
+          "after": "https://www.youtube.com/watch?v=WyxekrpqcEQ|https://www.youtube.com/channel/UCIDYe6rgdROl77DDevNIcPA|https://minimuslims.com/|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DWyxekrpqcEQ&format=json|https://www.youtube.com/@minimuslims"
+        }
+      }
+    },
+    {
+      "videoId": "n-wybr5unG4",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Ramadan Special | Rhymes For Kids | MuslimKids.TV"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/n-wybr5unG4/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=n-wybr5unG4 | https://www.youtube.com/@muslimkidstvofficial | https://resources.muslimkids.tv/about",
+          "after": "https://www.youtube.com/watch?v=n-wybr5unG4|https://www.youtube.com/@muslimkidstvofficial|https://resources.muslimkids.tv/about|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dn-wybr5unG4&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "1c9vf842eDg",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "My Special Prayer I Islamic Stories for Kids"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/1c9vf842eDg/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=1c9vf842eDg | https://www.youtube.com/@muslimkidstvofficial | https://resources.muslimkids.tv/about",
+          "after": "https://www.youtube.com/watch?v=1c9vf842eDg|https://www.youtube.com/@muslimkidstvofficial|https://resources.muslimkids.tv/about|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D1c9vf842eDg&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "P894h6fWjSQ",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Islamic Stories Compilation I Muslim kids TV"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/P894h6fWjSQ/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=P894h6fWjSQ | https://www.youtube.com/@muslimkidstvofficial | https://resources.muslimkids.tv/about",
+          "after": "https://www.youtube.com/watch?v=P894h6fWjSQ|https://www.youtube.com/@muslimkidstvofficial|https://resources.muslimkids.tv/about|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DP894h6fWjSQ&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "JTzdoeJ0MEs",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_ar": {
+          "before": "",
+          "after": "Islamic Cartoons for kids I Islamic Stories Compilation"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/JTzdoeJ0MEs/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=JTzdoeJ0MEs | https://www.youtube.com/@muslimkidstvofficial | https://resources.muslimkids.tv/about",
+          "after": "https://www.youtube.com/watch?v=JTzdoeJ0MEs|https://www.youtube.com/@muslimkidstvofficial|https://resources.muslimkids.tv/about|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DJTzdoeJ0MEs&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "qMXXlOUglmA",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "التجويد الميسر للأطفال| المستوى الأول| الدرس الأول: ما هو القرآن ...",
+          "after": "التجويد الميسر للأطفال| المستوى الأول| الدرس الأول: ما هو القرآن الكريم؟"
+        },
+        "title_ar": {
+          "before": "التجويد الميسر للأطفال| المستوى الأول| الدرس الأول: ما هو القرآن ...",
+          "after": "التجويد الميسر للأطفال| المستوى الأول| الدرس الأول: ما هو القرآن الكريم؟"
+        },
+        "channel_name": {
+          "before": "قناة التجويد الميسّر للأطفال",
+          "after": "التجويد الميسر للنساء"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/channel/UCbSsvw4UyJDAkbmumKArxAA",
+          "after": "https://www.youtube.com/@tajweed-muyassar"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/qMXXlOUglmA/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=qMXXlOUglmA | https://www.youtube.com/channel/UCbSsvw4UyJDAkbmumKArxAA",
+          "after": "https://www.youtube.com/watch?v=qMXXlOUglmA|https://www.youtube.com/channel/UCbSsvw4UyJDAkbmumKArxAA|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DqMXXlOUglmA&format=json|https://www.youtube.com/@tajweed-muyassar"
+        }
+      }
+    },
+    {
+      "videoId": "y1TUN9ivr-Q",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "جزء عم كامل -أحلى طريقة لتعليم القرآن للأطفال Quran for Kids",
+          "after": "جزء عم كامل -أحلى طريقة لتعليم القرآن للأطفال Quran for Kids- Juz 30 All"
+        },
+        "title_ar": {
+          "before": "جزء عم كامل -أحلى طريقة لتعليم القرآن للأطفال Quran for Kids",
+          "after": "جزء عم كامل -أحلى طريقة لتعليم القرآن للأطفال Quran for Kids- Juz 30 All"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/y1TUN9ivr-Q/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=y1TUN9ivr-Q | https://www.youtube.com/@DawoodKidsTV",
+          "after": "https://www.youtube.com/watch?v=y1TUN9ivr-Q|https://www.youtube.com/@DawoodKidsTV|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dy1TUN9ivr-Q&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "7CLccP_tElk",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/7CLccP_tElk/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=7CLccP_tElk | https://www.youtube.com/@DawoodKidsTV",
+          "after": "https://www.youtube.com/watch?v=7CLccP_tElk|https://www.youtube.com/@DawoodKidsTV|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D7CLccP_tElk&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "Or3VC7zW0EY",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "تعليم التجويد للصغار - سورةالفلق مع رودى و ماما",
+          "after": "تعليم التجويد للصغار - سورةالفلق مع رودى و ماما | قناة يمان للأطفال yamankidstv تجويد قرآن tajweed"
+        },
+        "title_ar": {
+          "before": "تعليم التجويد للصغار - سورةالفلق مع رودى و ماما",
+          "after": "تعليم التجويد للصغار - سورةالفلق مع رودى و ماما | قناة يمان للأطفال yamankidstv تجويد قرآن tajweed"
+        },
+        "channel_name": {
+          "before": "قناة يمان للأطفال yamankidstv",
+          "after": "قناة يمان للأطفال"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/Or3VC7zW0EY/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=Or3VC7zW0EY | https://www.youtube.com/@yamankidstv",
+          "after": "https://www.youtube.com/watch?v=Or3VC7zW0EY|https://www.youtube.com/@yamankidstv|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DOr3VC7zW0EY&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "ULSrzmppRR8",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "التجويد الصحيح / تلاوة الاتقان للاطفال /جزء عم / 110 سورة",
+          "after": "التجويد الصحيح / تلاوة الاتقان للاطفال /جزء عم / 110 سورة النصر  مع احكام التجويد ملونة"
+        },
+        "title_ar": {
+          "before": "التجويد الصحيح / تلاوة الاتقان للاطفال /جزء عم / 110 سورة",
+          "after": "التجويد الصحيح / تلاوة الاتقان للاطفال /جزء عم / 110 سورة النصر  مع احكام التجويد ملونة"
+        },
+        "channel_name": {
+          "before": "غير متاح بوضوح في الصفحة المفحوصة",
+          "after": "اتقان التلاوة للأطفال"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/watch?v=ULSrzmppRR8",
+          "after": "https://www.youtube.com/@%D8%A7%D8%AA%D9%82%D8%A7%D9%86%D8%A7%D9%84%D8%AA%D9%84%D8%A7%D9%88%D8%A9%D9%84%D9%84%D8%A3%D8%B7%D9%81%D8%A7%D9%84"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/ULSrzmppRR8/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=ULSrzmppRR8",
+          "after": "https://www.youtube.com/watch?v=ULSrzmppRR8|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DULSrzmppRR8&format=json|https://www.youtube.com/@%D8%A7%D8%AA%D9%82%D8%A7%D9%86%D8%A7%D9%84%D8%AA%D9%84%D8%A7%D9%88%D8%A9%D9%84%D9%84%D8%A3%D8%B7%D9%81%D8%A7%D9%84"
+        }
+      }
+    },
+    {
+      "videoId": "RT1HxhVnp68",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/RT1HxhVnp68/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=RT1HxhVnp68 | https://www.youtube.com/@DawoodKidsTV",
+          "after": "https://www.youtube.com/watch?v=RT1HxhVnp68|https://www.youtube.com/@DawoodKidsTV|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DRT1HxhVnp68&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "PDgi0UJBy0E",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/PDgi0UJBy0E/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=PDgi0UJBy0E | https://www.youtube.com/@DawoodKidsTV",
+          "after": "https://www.youtube.com/watch?v=PDgi0UJBy0E|https://www.youtube.com/@DawoodKidsTV|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DPDgi0UJBy0E&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "E21TajXMj0o",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "Surah Al Ikhlass repeated 10 times - Quran for kids",
+          "after": "تعلم سروة الإخلاص مع زكريا - سورة الإخلاص مكررة ١٠ مرات بالتجويد - القران الكريم للأطفال"
+        },
+        "title_ar": {
+          "before": "Surah Al Ikhlass repeated 10 times - Quran for kids",
+          "after": "تعلم سروة الإخلاص مع زكريا - سورة الإخلاص مكررة ١٠ مرات بالتجويد - القران الكريم للأطفال"
+        },
+        "channel_name": {
+          "before": "تعلم مع زكريا",
+          "after": "Learn with Zakaria - تعلم مع زكريا"
+        },
+        "channel_url": {
+          "before": "https://www.youtube.com/watch?v=E21TajXMj0o",
+          "after": "https://www.youtube.com/@LearnWithZakaria"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/E21TajXMj0o/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=E21TajXMj0o",
+          "after": "https://www.youtube.com/watch?v=E21TajXMj0o|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DE21TajXMj0o&format=json|https://www.youtube.com/@LearnWithZakaria"
+        }
+      }
+    },
+    {
+      "videoId": "iVCeEEYUViE",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "داوود يعلمني قصار السور ( ٢ ) - برنامج تفاعلي لتعليم القرآن للأطفال",
+          "after": "داوود يعلمني قصار السور ( ٢ )  - برنامج تفاعلي لتعليم القرآن للأطفال Dawood Teaches Me Qisar Surahs"
+        },
+        "title_ar": {
+          "before": "داوود يعلمني قصار السور ( ٢ ) - برنامج تفاعلي لتعليم القرآن للأطفال",
+          "after": "داوود يعلمني قصار السور ( ٢ )  - برنامج تفاعلي لتعليم القرآن للأطفال Dawood Teaches Me Qisar Surahs"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/iVCeEEYUViE/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=iVCeEEYUViE | https://www.youtube.com/@DawoodKidsTV",
+          "after": "https://www.youtube.com/watch?v=iVCeEEYUViE|https://www.youtube.com/@DawoodKidsTV|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DiVCeEEYUViE&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "BZT7p-T77VY",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "داوود يعلّمني سورة الرّحمن - برنامج تفاعلي لتعليم القرآن للأطفال",
+          "after": "داوود يعلّمني سورة الرّحمن - برنامج تفاعلي لتعليم القرآن للأطفال Dawood Teaches Me Surah Ar-Rahman"
+        },
+        "title_ar": {
+          "before": "داوود يعلّمني سورة الرّحمن - برنامج تفاعلي لتعليم القرآن للأطفال",
+          "after": "داوود يعلّمني سورة الرّحمن - برنامج تفاعلي لتعليم القرآن للأطفال Dawood Teaches Me Surah Ar-Rahman"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/BZT7p-T77VY/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=BZT7p-T77VY | https://www.youtube.com/@DawoodKidsTV",
+          "after": "https://www.youtube.com/watch?v=BZT7p-T77VY|https://www.youtube.com/@DawoodKidsTV|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DBZT7p-T77VY&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "0Ltah3fAz9I",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "داوود يعلّمني سورة الملك - برنامج تفاعلي لتعليم القرآن للأطفال",
+          "after": "داوود يعلمني سورة الملك - برنامج تفاعلي لتعليم القرآن للأطفال Dawood Teaches Me Surah Al Mulk"
+        },
+        "title_ar": {
+          "before": "داوود يعلّمني سورة الملك - برنامج تفاعلي لتعليم القرآن للأطفال",
+          "after": "داوود يعلمني سورة الملك - برنامج تفاعلي لتعليم القرآن للأطفال Dawood Teaches Me Surah Al Mulk"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/0Ltah3fAz9I/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=0Ltah3fAz9I | https://www.youtube.com/@DawoodKidsTV",
+          "after": "https://www.youtube.com/watch?v=0Ltah3fAz9I|https://www.youtube.com/@DawoodKidsTV|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D0Ltah3fAz9I&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "rJIsyMuk5rU",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/rJIsyMuk5rU/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=rJIsyMuk5rU | https://www.youtube.com/@DawoodKidsTV",
+          "after": "https://www.youtube.com/watch?v=rJIsyMuk5rU|https://www.youtube.com/@DawoodKidsTV|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DrJIsyMuk5rU&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "YR-dSjRfIfY",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "داوود يعلّمني سورة المسد ٣٠ دقيقة تكرار - Dawood Teaches Me",
+          "after": "داوود يعلّمني سورة المسد ٣٠ دقيقة تكرار - Dawood Teaches Me Surah Al-Masad 30' Repetition"
+        },
+        "title_ar": {
+          "before": "داوود يعلّمني سورة المسد ٣٠ دقيقة تكرار - Dawood Teaches Me",
+          "after": "داوود يعلّمني سورة المسد ٣٠ دقيقة تكرار - Dawood Teaches Me Surah Al-Masad 30' Repetition"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/YR-dSjRfIfY/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=YR-dSjRfIfY | https://www.youtube.com/@DawoodKidsTV",
+          "after": "https://www.youtube.com/watch?v=YR-dSjRfIfY|https://www.youtube.com/@DawoodKidsTV|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DYR-dSjRfIfY&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "g5L6Vi6Y0lY",
+      "catalog": "kids-media-catalog",
+      "status": "unavailable",
+      "httpStatus": 401,
+      "error": "YouTube oEmbed HTTP 401"
+    },
+    {
+      "videoId": "z12RG7b1x_U",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "title_original": {
+          "before": "سورة الليل - Quran for Kids",
+          "after": "Quran for Kids - Learn Surah Al-Lail | سورة الليل - القران للاطفال - قناة ميمي"
+        },
+        "title_ar": {
+          "before": "سورة الليل - Quran for Kids",
+          "after": "Quran for Kids - Learn Surah Al-Lail | سورة الليل - القران للاطفال - قناة ميمي"
+        },
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/z12RG7b1x_U/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=z12RG7b1x_U | https://www.youtube.com/@MimiTVKids",
+          "after": "https://www.youtube.com/watch?v=z12RG7b1x_U|https://www.youtube.com/@MimiTVKids|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dz12RG7b1x_U&format=json"
+        }
+      }
+    },
+    {
+      "videoId": "9hga7dn0kOQ",
+      "catalog": "kids-media-catalog",
+      "status": "unavailable",
+      "httpStatus": 401,
+      "error": "YouTube oEmbed HTTP 401"
+    },
+    {
+      "videoId": "jDOFDt76tpg",
+      "catalog": "kids-media-catalog",
+      "status": "updated",
+      "httpStatus": 200,
+      "changes": {
+        "thumbnail_url": {
+          "before": "",
+          "after": "https://i.ytimg.com/vi/jDOFDt76tpg/hqdefault.jpg"
+        },
+        "source_checked_at": {
+          "before": "2026-11-15",
+          "after": "2026-11-26"
+        },
+        "verification_method": {
+          "before": "public video page + publisher/channel page; no YouTube Data API credentials",
+          "after": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed metadata refreshed 2026-11-26; not a copyright or runtime-embed approval"
+        },
+        "verification_evidence_urls": {
+          "before": "https://www.youtube.com/watch?v=jDOFDt76tpg | https://www.youtube.com/@AnasforQuran",
+          "after": "https://www.youtube.com/watch?v=jDOFDt76tpg|https://www.youtube.com/@AnasforQuran|https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DjDOFDt76tpg&format=json"
+        }
+      }
+    }
+  ]
+}

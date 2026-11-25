@@ -17,38 +17,38 @@
     },
     {
       "path": "data-sources/media/acquisition/kids-media-catalog.csv",
-      "sha256": "b5797f46785bbf98f3c6bb18a18f18d37083721e798c27b23dd6eb84874cfc75",
-      "bytes": 69917,
+      "sha256": "539d115b34bda8b2635d976554a861743417f26c6a9d8b48c7acb4a3433d9b43",
+      "bytes": 88306,
       "hashMode": "utf8-lf"
     },
     {
       "path": "data-sources/media/acquisition/kids-media-catalog.json",
-      "sha256": "4ec861095869ab9049041c300237e88a8935d67ebf8a1c6e47a53e7101cc10af",
-      "bytes": 139638,
+      "sha256": "ee43aaa1bc649263ca97fea551f578c71bd5f6021c7c1f4e5a63b298e2897ef5",
+      "bytes": 158979,
       "hashMode": "utf8-lf"
     },
     {
       "path": "data-sources/media/acquisition/seerah-media-catalog.csv",
-      "sha256": "280089713ebc0bf2bc8366cfdb30ded88bc696d90eccba866d6e1ee9393a037e",
-      "bytes": 73067,
+      "sha256": "95e520d234813210f6914ca93d48f670ffa54e917a00261f35101277d2597d04",
+      "bytes": 86207,
       "hashMode": "utf8-lf"
     },
     {
       "path": "data-sources/media/acquisition/seerah-media-catalog.json",
-      "sha256": "94da03d7935a7e83ec9f6f24df4bdeaf7ade860a235a147336f0a49da582be69",
-      "bytes": 131389,
+      "sha256": "031a23bb42c94ed0d53782eaefecc4fc7da24d960d5c15ecb7066f7b18e255ec",
+      "bytes": 145549,
       "hashMode": "utf8-lf"
     },
     {
       "path": "data-sources/media/acquisition/media-rights-ledger.csv",
-      "sha256": "498e21d77c943a33c530c47b2c25ac7d6683ede3d1d700fe9b077b49352806b1",
-      "bytes": 35757,
+      "sha256": "67befe52d987b92d03aab9a3da6b50915e8c7ea33d13380a808a24ed86999702",
+      "bytes": 35762,
       "hashMode": "utf8-lf"
     },
     {
       "path": "data-sources/media/acquisition/media-rejected-and-pending.csv",
-      "sha256": "b5c60587323acc0c01dda182b4e73b75dcfcc27b6edc74b7ed6a1b40fd241cf7",
-      "bytes": 36761,
+      "sha256": "ce4dd8723cd1fe58c6914a82ce064b7f14aa43f7ec713409344ecb26b400adb8",
+      "bytes": 37641,
       "hashMode": "utf8-lf"
     }
   ],
@@ -84,17 +84,17 @@
   "outputs": {
     "catalog": {
       "path": "data-sources/media/discovery/media-discovery-catalog.json",
-      "sha256": "2ade5de6860f1977ec099c5e127859d6c2c37c653e6a9c3db1366ecc8d940dd3",
-      "bytes": 336441
+      "sha256": "de763ad203891d732914ff201a0a800bc9ebeb802197b170fc45b7edaf5ba45c",
+      "bytes": 369941
     },
     "clientCatalog": {
       "path": "client/src/visual-golden/data/media-discovery.generated.ts",
-      "sha256": "111dd2d54668e4b834d8a11226d203ee4a8969adc9dee66cbf98c0e7ae82d38a",
-      "bytes": 297439
+      "sha256": "3e94dc1c122d650346ada6beec1007cf49343e1c4877c96c9bec033a9ed5c7d4",
+      "bytes": 329454
     },
     "clientStatus": {
       "path": "client/src/visual-golden/data/media-discovery-status.generated.ts",
-      "sha256": "e22c61d0ede39763f52f41de54aad66c05b2ae272454050e33e2b0b08ce5a874",
+      "sha256": "4788669a6cb970aa3f522b750e2abe6e87039d86eae7f9245296d1048ef02d4b",
       "bytes": 396
     }
   },

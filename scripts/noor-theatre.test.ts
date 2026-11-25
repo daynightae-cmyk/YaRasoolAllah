@@ -18,6 +18,7 @@ import {
 } from "../client/src/visual-golden/data/media-discovery.generated";
 import {
   isMediaRecordApproved,
+  isOfficialProviderPlaybackCandidate,
   mediaReviewCounts,
 } from "../client/src/visual-golden/services/media/review-gates";
 import type { MediaDiscoveryRecord } from "../client/src/visual-golden/services/media/types";
@@ -136,7 +137,9 @@ test("the public Noor catalog stays a view over the governed catalog", () => {
   assert.equal(
     NOOR_MEDIA_RECORDS.length,
     DISCOVERED_MEDIA_CATALOG.filter(
-      (item) => !kidsCategories.has(item.category ?? ""),
+      (item) =>
+        item.provenance.sourceFile !== "kids-media-catalog.csv" &&
+        !kidsCategories.has(item.category ?? ""),
     ).length,
   );
   assert.equal(DISCOVERED_MEDIA_COUNTS.approved, 0);
@@ -156,15 +159,62 @@ test("no children's catalogue record leaks into the public theatre", () => {
   }
 });
 
-test("availability filters never mutate approval state", () => {
-  const filters = { ...EMPTY_NOOR_FILTERS, availability: "approved" as const };
-  assert.deepEqual(filterNoorRecords(NOOR_MEDIA_RECORDS, filters), []);
+test("availability filters use provider eligibility without mutating approval state", () => {
+  const pendingPlayable = record({
+    publisher_status: "OFFICIAL",
+    embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+  });
+  const explicitlyBlocked = record({
+    id: "blocked-record",
+    publisher_status: "OFFICIAL",
+    rights_status: "PROHIBITED",
+    embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+  });
+  const records = [pendingPlayable, explicitlyBlocked];
+  assert.deepEqual(
+    filterNoorRecords(records, { ...EMPTY_NOOR_FILTERS, availability: "approved" }),
+    [pendingPlayable],
+  );
+  assert.deepEqual(
+    filterNoorRecords(records, { ...EMPTY_NOOR_FILTERS, availability: "review" }),
+    [explicitlyBlocked],
+  );
+  assert.equal(isMediaRecordApproved(pendingPlayable), false);
 });
 
-test("pending catalogue never fabricates a player or remote art", () => {
+test("pending editorial review does not fabricate approval or block an official provider candidate", () => {
+  const pending = record({
+    publisher_status: "OFFICIAL",
+    embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+  });
+  assert.equal(isMediaRecordApproved(pending), false);
+  assert.equal(isOfficialProviderPlaybackCandidate(pending), true);
+  assert.ok(approvedNoorEmbedUrl(pending));
+  assert.ok(clearedNoorThumbnail(pending));
+});
+
+test("every public theatre playback candidate remains subject to explicit negative decisions", () => {
   for (const item of NOOR_MEDIA_RECORDS) {
-    assert.equal(approvedNoorEmbedUrl(item), null);
-    assert.equal(clearedNoorThumbnail(item), null);
+    assert.equal(
+      Boolean(approvedNoorEmbedUrl(item)),
+      isOfficialProviderPlaybackCandidate(item),
+      item.id,
+    );
+  }
+  for (const gate of [
+    "rights_status",
+    "embedding_status",
+    "editorial_status",
+    "religious_review_status",
+    "depiction_review_status",
+    "publication_status",
+  ] as const) {
+    const blocked = record({
+      publisher_status: "OFFICIAL",
+      embed_url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      [gate]: "REJECTED",
+    });
+    assert.equal(approvedNoorEmbedUrl(blocked), null, gate);
   }
 });
 
@@ -203,20 +253,23 @@ test("an approved record with an untrusted embed fails closed", () => {
   }
 });
 
-test("pending records never resolve a stored provider URL", () => {
+test("third-party acquisition records do not enter the institutional player", () => {
   assert.equal(
     approvedNoorEmbedUrl(
-      record({ embed_url: "https://www.youtube.com/embed/abcdEFG1234" }),
+      record({
+        publisher_status: "THIRD_PARTY",
+        embed_url: "https://www.youtube.com/embed/abcdEFG1234",
+      }),
     ),
     null,
   );
 });
 
-test("remote thumbnails require approval and a cleared rights decision", () => {
+test("remote thumbnails stay restricted to provider hosts and eligible records", () => {
   assert.equal(
     clearedNoorThumbnail(
       record({
-        ...PASSING,
+        publisher_status: "THIRD_PARTY",
         thumbnail_rights_status: "UNKNOWN",
         thumbnail_url: "https://i.ytimg.com/vi/abcdEFG1234/hqdefault.jpg",
       }),

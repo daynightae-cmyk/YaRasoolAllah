@@ -39,6 +39,56 @@ export function isMediaRecordApproved(record: MediaDiscoveryRecord): boolean {
   );
 }
 
+/**
+ * An explicit negative decision is different from an incomplete internal review.
+ * Unknown rights never mean that a license is granted; playback remains inside
+ * the publisher's official player and no license or ownership claim is made.
+ */
+const EXPLICIT_PLAYBACK_BLOCKERS = new Set([
+  "AGE_RESTRICTED",
+  "BLOCKED",
+  "COPYRIGHT_BLOCKED",
+  "DENIED",
+  "DISABLED",
+  "EMBEDDING_DISABLED",
+  "NOT_EMBEDDABLE",
+  "PRIVATE",
+  "PROHIBITED",
+  "REJECTED",
+  "RESTRICTED",
+  "REMOVED",
+  "UNAUTHORIZED",
+  "UNAVAILABLE",
+  "UNTRUSTED",
+]);
+
+export function hasExplicitPlaybackBlocker(record: MediaDiscoveryRecord): boolean {
+  return [
+    record.publisher_status,
+    record.rights_status,
+    record.embedding_status,
+    record.editorial_status,
+    record.religious_review_status,
+    record.depiction_review_status,
+    record.publication_status,
+  ].some((status) => EXPLICIT_PLAYBACK_BLOCKERS.has(status?.trim().toUpperCase() ?? ""));
+}
+
+/**
+ * Adult institutional media may be offered through its official provider while
+ * editorial review is still pending. This does not approve the content, clear
+ * its copyright, or guarantee that the provider will allow the embed.
+ */
+export function isOfficialProviderPlaybackCandidate(record: MediaDiscoveryRecord): boolean {
+  return (
+    record.provider.trim().toLowerCase() === "youtube" &&
+    record.publisher_status?.trim().toUpperCase() !== "THIRD_PARTY" &&
+    Boolean(record.video_id?.trim()) &&
+    Boolean(record.embed_url?.trim()) &&
+    !hasExplicitPlaybackBlocker(record)
+  );
+}
+
 export function filterMediaDiscoveryRecords(
   records: readonly MediaDiscoveryRecord[],
   query: string,

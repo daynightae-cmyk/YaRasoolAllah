@@ -32,7 +32,7 @@ import { useEffectiveMotion } from "@/visual-golden/lib/institution/effective-mo
 import {
   MEDIA_REVIEW_GATE_LABELS,
   isMediaGatePassed,
-  isMediaRecordApproved,
+  isOfficialProviderPlaybackCandidate,
   mediaReviewCounts,
   type MediaReviewGateKey,
 } from "@/visual-golden/services/media/review-gates";
@@ -87,7 +87,7 @@ export function NoorMediaTheatre() {
   const [detail, setDetail] = useState<MediaDiscoveryRecord | null>(null);
   const [playerState, setPlayerState] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [playerAttempt, setPlayerAttempt] = useState(0);
-  const [fullscreen, setFullscreen] = useState(false);
+  const [fullscreenMode, setFullscreenMode] = useState<"native" | "viewport" | null>(null);
   const [fullscreenMessage, setFullscreenMessage] = useState("");
   const [view, setView] = useState<HallView>("interactive");
   const [illuminated, setIlluminated] = useState(true);
@@ -96,8 +96,14 @@ export function NoorMediaTheatre() {
   const [plainView, setPlainView] = useState(false);
   const screenRef = useRef<HTMLDivElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const fullscreenRequestRef = useRef(0);
+  const fullscreen = fullscreenMode !== null;
 
   const counts = useMemo(() => mediaReviewCounts(NOOR_MEDIA_RECORDS), []);
+  const playbackCandidateCount = useMemo(
+    () => NOOR_MEDIA_RECORDS.filter(isOfficialProviderPlaybackCandidate).length,
+    [],
+  );
   const categories = useMemo(() => uniqueValues("category"), []);
   const channels = useMemo(() => uniqueValues("channel_name"), []);
   const speakers = useMemo(() => uniqueValues("speaker"), []);
@@ -107,8 +113,8 @@ export function NoorMediaTheatre() {
     ? filtered.find((record) => record.id === requestedId) ?? filtered[0]
     : null;
   const selectedIndex = selected ? filtered.findIndex((record) => record.id === selected.id) : -1;
-  const selectedApproved = selected ? isMediaRecordApproved(selected) : false;
   const embedUrl = selected ? approvedNoorEmbedUrl(selected) : null;
+  const selectedPlayable = Boolean(embedUrl);
   const selectedThumbnail = selected ? clearedNoorThumbnail(selected) : null;
   const visible = filtered.slice(0, visibleCount);
 
@@ -125,10 +131,50 @@ export function NoorMediaTheatre() {
   }, [playerAttempt, playerState, selected?.id]);
 
   useEffect(() => {
-    const onFullscreen = () => setFullscreen(document.fullscreenElement === screenRef.current);
+    const onFullscreen = () => {
+      if (document.fullscreenElement === screenRef.current) {
+        setFullscreenMode("native");
+        setFullscreenMessage("");
+      } else {
+        setFullscreenMode((current) => current === "native" ? null : current);
+      }
+    };
     document.addEventListener("fullscreenchange", onFullscreen);
     return () => document.removeEventListener("fullscreenchange", onFullscreen);
   }, []);
+
+  useEffect(() => {
+    const screen = screenRef.current;
+    if (fullscreenMode !== "viewport" || !screen?.showPopover) return;
+    screen.setAttribute("popover", "manual");
+    try {
+      screen.showPopover();
+    } catch {
+      screen.removeAttribute("popover");
+      return;
+    }
+    return () => {
+      if (screen.matches(":popover-open")) screen.hidePopover();
+      screen.removeAttribute("popover");
+    };
+  }, [fullscreenMode]);
+
+  useEffect(() => {
+    if (!fullscreen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || document.fullscreenElement || dialogRef.current?.open) return;
+      fullscreenRequestRef.current += 1;
+      setFullscreenMode(null);
+      setFullscreenMessage("");
+    };
+    window.addEventListener("keydown", onEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onEscape);
+    };
+  }, [fullscreen]);
 
   useEffect(() => {
     if (view === "interactive") return;
@@ -172,17 +218,51 @@ export function NoorMediaTheatre() {
   };
 
   const toggleFullscreen = async () => {
+    const requestId = ++fullscreenRequestRef.current;
     setFullscreenMessage("");
-    try {
+    if (fullscreenMode || document.fullscreenElement) {
+      setFullscreenMode(null);
       if (document.fullscreenElement) {
-        await document.exitFullscreen();
-      } else if (screenRef.current?.requestFullscreen) {
-        await screenRef.current.requestFullscreen();
-      } else {
-        setFullscreenMessage("ملء الشاشة غير مدعوم في هذا المتصفح.");
+        try {
+          await document.exitFullscreen();
+        } catch {
+          setFullscreenMessage("أغلق وضع ملء الشاشة من زر المتصفح إذا بقي ظاهرًا.");
+        }
+      }
+      return;
+    }
+
+    const screen = screenRef.current;
+    if (!screen) return;
+    // The viewport mode is immediate and remains usable when an embedded browser
+    // leaves the native Fullscreen API promise pending instead of settling it.
+    setFullscreenMode("viewport");
+    if (!screen.requestFullscreen) {
+      setFullscreenMessage("وضع ملء النافذة فعّال؛ ملء الشاشة الأصلي غير مدعوم هنا.");
+      return;
+    }
+
+    const fallbackTimer = window.setTimeout(() => {
+      if (fullscreenRequestRef.current === requestId && !document.fullscreenElement) {
+        setFullscreenMessage("وضع ملء النافذة فعّال؛ ملء الشاشة الأصلي غير متاح في بيئة العرض.");
+      }
+    }, 800);
+    try {
+      await screen.requestFullscreen();
+      window.clearTimeout(fallbackTimer);
+      if (fullscreenRequestRef.current !== requestId) {
+        if (document.fullscreenElement === screen) await document.exitFullscreen();
+        return;
+      }
+      if (document.fullscreenElement === screen) {
+        setFullscreenMode("native");
+        setFullscreenMessage("");
       }
     } catch {
-      setFullscreenMessage("تعذر فتح ملء الشاشة. يمكنك متابعة الاستكشاف داخل القاعة.");
+      window.clearTimeout(fallbackTimer);
+      if (fullscreenRequestRef.current === requestId) {
+        setFullscreenMessage("وضع ملء النافذة فعّال؛ تعذر تفعيل ملء الشاشة الأصلي.");
+      }
     }
   };
 
@@ -193,10 +273,15 @@ export function NoorMediaTheatre() {
   };
 
   const availabilityLabel = (record: MediaDiscoveryRecord) =>
-    isMediaRecordApproved(record) ? "معتمد للتشغيل" : "قيد المراجعة";
+    isOfficialProviderPlaybackCandidate(record) ? "متاح عبر مشغل المصدر" : "التشغيل الداخلي غير متاح";
 
   return (
-    <div className={styles.page} data-visual="noor-theatre" data-approved-count={counts.approved}>
+    <div
+      className={styles.page}
+      data-visual="noor-theatre"
+      data-approved-count={counts.approved}
+      data-playback-candidate-count={playbackCandidateCount}
+    >
       <div className={styles.room} data-view={plainView ? "interactive" : view} data-plain={plainView}>
       {!plainView ? <Suspense fallback={null}>
         <CinematicHall room="noor" view={view} illuminated={illuminated} />
@@ -206,7 +291,7 @@ export function NoorMediaTheatre() {
           <h1>مسرح <em>النور</em></h1>
           <p className={styles.englishTitle} lang="en">Noor Media Theatre</p>
           <p className={styles.lead}>
-            بوابة استكشاف موثّقة للسيرة والمحاضرات؛ تعرض المصدر وحالة المراجعة قبل أي قرار تشغيل.
+            مكتبة عربية للسيرة والمحاضرات والقصص؛ شاهد المواد المتاحة عبر مشغلات ناشريها الرسمية، مع بيان مستقل لحالة المراجعة والحقوق.
           </p>
         </div>
       </header>
@@ -261,19 +346,21 @@ export function NoorMediaTheatre() {
             <div
               ref={screenRef}
               className={styles.screenFrame}
-              data-player-state={selectedApproved ? playerState : "blocked"}
+              data-player-state={selectedPlayable ? playerState : "blocked"}
               data-media-id={selected?.id ?? "none"}
+              data-expanded={fullscreen}
+              data-fullscreen-mode={fullscreenMode ?? "none"}
             >
               <div className={styles.screenTopline}>
                 <span><Clapperboard size={15} aria-hidden /> {selected?.category ?? "لا توجد مادة محددة"}</span>
-                <span className={selectedApproved ? styles.approvedBadge : styles.reviewBadge}>
-                  {selectedApproved ? <ShieldCheck size={14} /> : <ShieldAlert size={14} />}
+                <span className={selectedPlayable ? styles.approvedBadge : styles.reviewBadge}>
+                  {selectedPlayable ? <ShieldCheck size={14} /> : <ShieldAlert size={14} />}
                   {selected ? availabilityLabel(selected) : "نتائج فارغة"}
                 </span>
               </div>
 
               <div className={styles.screenBody}>
-                {selected && selectedApproved && embedUrl && playerState !== "idle" ? (
+                {selected && selectedPlayable && embedUrl && playerState !== "idle" ? (
                   <>
                     <iframe
                       key={`${selected.id}-${playerAttempt}`}
@@ -318,12 +405,12 @@ export function NoorMediaTheatre() {
                       <p>
                         {!selected
                           ? "جرّب إزالة بعض الفلاتر أو البحث بكلمة أخرى."
-                          : selectedApproved && !embedUrl
-                            ? "سجل المراجعة مكتمل، لكن رابط التضمين الرسمي غير صالح؛ لم نركّب مشغلًا بديلًا."
-                            : "التشغيل الداخلي متوقف لأن حقوق الاستخدام أو التضمين أو المراجعة لم تكتمل. لا يوجد تشغيل تجريبي ولا مادة بديلة."}
+                          : selectedPlayable && !embedUrl
+                            ? "تعذر تكوين رابط التضمين الرسمي؛ لم نركّب مشغلًا بديلًا."
+                            : "لا يتوفر مشغل رسمي صالح لهذه المادة، أو توجد قيود صريحة من الناشر. يمكنك فتح المصدر الأصلي عند توفره."}
                       </p>
                       <div className={styles.emptyActions}>
-                        {selectedApproved && embedUrl ? (
+                        {selectedPlayable && embedUrl ? (
                           <button type="button" className={styles.playButton} onClick={beginPlayback}>
                             <Play size={22} fill="currentColor" aria-hidden /> تحميل المشغل الرسمي
                           </button>
@@ -335,7 +422,7 @@ export function NoorMediaTheatre() {
                         ) : null}
                         {selected ? (
                           <button type="button" className={styles.detailButton} onClick={() => setDetail(selected)}>
-                            <Info size={16} /> لماذا لا يعمل المشغل؟
+                            <Info size={16} /> المصدر وحالة التشغيل
                           </button>
                         ) : (
                           <button type="button" className={styles.detailButton} onClick={() => setFilters(EMPTY_NOOR_FILTERS)}>
@@ -359,8 +446,8 @@ export function NoorMediaTheatre() {
                   <span>{fullscreen ? "تصغير" : "ملء الشاشة"}</span>
                 </button>
               </div>
+              {fullscreenMessage ? <p className={styles.fullscreenMessage} role="status">{fullscreenMessage}</p> : null}
             </div>
-            {fullscreenMessage ? <p className={styles.fullscreenMessage} role="status">{fullscreenMessage}</p> : null}
             <div className={styles.nowCard}>
               <div>
                 <span>المادة المحددة الآن</span>
@@ -372,6 +459,18 @@ export function NoorMediaTheatre() {
                 <button type="button" onClick={() => selectRelative(1)} disabled={!filtered.length} aria-label="المادة التالية"><SkipBack size={18} /></button>
               </div>
             </div>
+            {selected ? (
+              <div className={styles.mediaAttribution} aria-label="المصدر وحقوق المحتوى">
+                <span><strong>المصدر:</strong> {selected.channel_name ?? "الناشر الأصلي غير موثق"}</span>
+                {selected.speaker ? <span><strong>المقدم:</strong> {selected.speaker}</span> : null}
+                <span>حقوق النشر والمحتوى محفوظة لأصحابها؛ يُعرض الفيديو بواسطة المشغل الرسمي وفق صلاحيات التضمين المتاحة.</span>
+                {selected.official_url ? (
+                  <a href={selected.official_url} target="_blank" rel="noopener noreferrer">
+                    رابط المصدر الأصلي <ExternalLink size={13} aria-hidden />
+                  </a>
+                ) : null}
+              </div>
+            ) : null}
           </div>
 
           <aside id="noor-playlist-panel" hidden={view !== "interactive" || !playlistOpen} className={`${styles.glassPanel} ${styles.playlist}`} aria-labelledby="noor-playlist-title">
@@ -447,7 +546,7 @@ export function NoorMediaTheatre() {
                 aria-pressed={filters.availability === value}
                 onClick={() => patchFilters({ availability: value })}
               >
-                {value === "all" ? "كل الحالات" : value === "review" ? "قيد المراجعة" : "المعتمد فقط"}
+                {value === "all" ? "كل الحالات" : value === "review" ? "غير المتاح داخليًا" : "المتاح للتشغيل"}
               </button>
             ))}
           </div>
@@ -463,8 +562,8 @@ export function NoorMediaTheatre() {
         </nav>
         <dl className={styles.ledger} aria-label="حصيلة كتالوج المسرح">
           <div><dt>مادة مفهرسة</dt><dd>{counts.total}</dd></div>
-          <div><dt>معتمدة للتشغيل</dt><dd>{counts.approved}</dd></div>
-          <div><dt>قيد المراجعة</dt><dd>{counts.pending}</dd></div>
+          <div><dt>روابط تشغيل رسمية</dt><dd>{playbackCandidateCount}</dd></div>
+          <div><dt>بانتظار المراجعة التحريرية</dt><dd>{counts.editorialPending}</dd></div>
         </dl>
       </div>
 
@@ -477,16 +576,27 @@ export function NoorMediaTheatre() {
           {visible.map((record) => {
             const active = selected?.id === record.id;
             const duration = noorMediaDuration(record.duration_seconds);
+            const thumbnail = clearedNoorThumbnail(record);
+            const playable = isOfficialProviderPlaybackCandidate(record);
             return (
               <article className={styles.mediaCard} key={record.id} data-active={active}>
                 <button type="button" className={styles.mediaSelect} onClick={() => selectRecord(record, true)} aria-label={`تحديد ${noorMediaTitle(record)}`}>
                   <span className={styles.mediaArt} aria-hidden="true">
-                    <span className={styles.mediaArch} />
-                    {record.category === "محاضرات ومواعظ" ? <Mic2 size={32} /> : <BookOpenText size={32} />}
+                    {thumbnail ? (
+                      <img src={thumbnail} alt="" loading="lazy" decoding="async" />
+                    ) : (
+                      <>
+                        <span className={styles.mediaArch} />
+                        {record.category === "محاضرات ومواعظ" ? <Mic2 size={32} /> : <BookOpenText size={32} />}
+                      </>
+                    )}
                     <b>{record.episode_number ? `حلقة ${record.episode_number}` : record.category}</b>
                   </span>
                   <span className={styles.mediaCopy}>
-                    <span className={styles.mediaStatus}><ShieldAlert size={12} /> {availabilityLabel(record)}</span>
+                    <span className={styles.mediaStatus}>
+                      {playable ? <ShieldCheck size={12} /> : <ShieldAlert size={12} />}
+                      {availabilityLabel(record)}
+                    </span>
                     <strong>{noorMediaTitle(record)}</strong>
                     <small>{recordMeta(record)}</small>
                     <em>{duration ?? "المدة غير موثقة"}</em>
@@ -518,7 +628,7 @@ export function NoorMediaTheatre() {
           <button type="button" onClick={() => selectRelative(1)} disabled={!filtered.length}>التالي <SkipBack size={16} /></button>
           {selected ? <button type="button" onClick={() => setDetail(selected)}><Info size={16} /> المصدر والحالة</button> : null}
         </div>
-        <span className={styles.dockStatus}><ShieldAlert size={15} /> {counts.approved} معتمد من {counts.total} — لا يوجد شريط تقدم افتراضي</span>
+        <span className={styles.dockStatus}><ShieldCheck size={15} /> {playbackCandidateCount} رابط مصدر رسمي من {counts.total} — التشغيل الفعلي داخل مشغل الناشر</span>
       </footer>
 
       <dialog

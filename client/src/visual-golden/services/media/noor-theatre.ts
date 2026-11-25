@@ -1,11 +1,13 @@
 import { DISCOVERED_MEDIA_CATALOG } from "@/visual-golden/data/media-discovery.generated";
-import { isMediaRecordApproved } from "./review-gates";
+import { isOfficialProviderPlaybackCandidate } from "./review-gates";
 import type { MediaDiscoveryRecord } from "./types";
 
 /** The public Noor room is a view over the governed catalog, never a second catalog. */
 const KIDS_CATEGORIES = new Set(["kids", "القرآن الكريم للأطفال"]);
 export const NOOR_MEDIA_RECORDS = DISCOVERED_MEDIA_CATALOG.filter(
-  (record) => !KIDS_CATEGORIES.has(record.category ?? ""),
+  (record) =>
+    record.provenance.sourceFile !== "kids-media-catalog.csv" &&
+    !KIDS_CATEGORIES.has(record.category ?? ""),
 );
 
 export type NoorTopic = "all" | "seerah" | "lectures" | "stories";
@@ -47,9 +49,9 @@ export function filterNoorRecords(
     if (filters.category !== "all" && record.category !== filters.category) return false;
     if (filters.channel !== "all" && record.channel_name !== filters.channel) return false;
     if (filters.speaker !== "all" && record.speaker !== filters.speaker) return false;
-    const approved = isMediaRecordApproved(record);
-    if (filters.availability === "approved" && !approved) return false;
-    if (filters.availability === "review" && approved) return false;
+    const playable = isOfficialProviderPlaybackCandidate(record);
+    if (filters.availability === "approved" && !playable) return false;
+    if (filters.availability === "review" && playable) return false;
     if (!query) return true;
     return [
       record.title_ar,
@@ -84,14 +86,14 @@ export function noorMediaDuration(seconds: number | null): string | null {
 }
 
 /**
- * Remote thumbnails are a separate rights decision. Pending media uses local
- * non-figurative artwork/CSS instead of hotlinking an uncleared thumbnail.
+ * Remote thumbnails are served directly by the official media provider for an
+ * eligible embedded record. Other media still requires an explicit art decision.
  */
 export function clearedNoorThumbnail(record: MediaDiscoveryRecord): string | null {
-  if (!isMediaRecordApproved(record)) return null;
-  if (!["CLEARED", "GRANTED", "APPROVED", "cleared", "granted", "approved"].includes(record.thumbnail_rights_status ?? "")) {
-    return null;
-  }
+  const thumbnailApproved = ["CLEARED", "GRANTED", "APPROVED", "cleared", "granted", "approved"].includes(
+    record.thumbnail_rights_status ?? "",
+  );
+  if (!thumbnailApproved && !isOfficialProviderPlaybackCandidate(record)) return null;
   const candidate = record.thumbnail_url ??
     (record.video_id ? `https://i.ytimg.com/vi/${encodeURIComponent(record.video_id)}/hqdefault.jpg` : null);
   if (!candidate) return null;
@@ -110,7 +112,7 @@ export function clearedNoorThumbnail(record: MediaDiscoveryRecord): string | nul
  * Only an official YouTube embed can be mounted, with autoplay explicitly off.
  */
 export function approvedNoorEmbedUrl(record: MediaDiscoveryRecord): string | null {
-  if (!isMediaRecordApproved(record) || !record.embed_url) return null;
+  if (!isOfficialProviderPlaybackCandidate(record) || !record.embed_url) return null;
   try {
     const url = new URL(record.embed_url);
     const allowedHost = ["www.youtube.com", "youtube.com", "www.youtube-nocookie.com"].includes(url.hostname);

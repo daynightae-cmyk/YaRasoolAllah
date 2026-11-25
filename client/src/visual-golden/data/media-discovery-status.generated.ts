@@ -2,7 +2,7 @@
 export const MEDIA_DISCOVERY_STATUS = {
   schemaVersion: 2,
   generatedAt: "2026-11-15T00:00:00.000Z",
-  sourceCatalogSha256: "2ade5de6860f1977ec099c5e127859d6c2c37c653e6a9c3db1366ecc8d940dd3",
+  sourceCatalogSha256: "de763ad203891d732914ff201a0a800bc9ebeb802197b170fc45b7edaf5ba45c",
   totalDiscoveryRecords: 116,
   blockedPendingReview: 116,
   approvedForPublicDisplay: 0,
