@@ -112,6 +112,22 @@ export function NoorMediaTheatre() {
   const effectiveMotion = useEffectiveMotion();
   const [filters, setFilters] = useState<NoorFilters>(EMPTY_NOOR_FILTERS);
   const [visibleCount, setVisibleCount] = useState(8);
+
+  // Deep-link into a topic from other institution sections:
+  // /noor?topic=quran opens the Qur'an sciences room, /noor?topic=seerah the
+  // Prophetic biography room, etc. Applied once on mount so the visitor's own
+  // topic choices are not overwritten afterwards.
+  useEffect(() => {
+    const topicParam = new URLSearchParams(search).get("topic");
+    if (topicParam && topicParam !== "all") {
+      const validTopic = ["all", "seerah", "quran", "history", "companions", "worship", "lectures", "stories"].includes(topicParam)
+        ? (topicParam as NoorFilters["topic"])
+        : "all";
+      if (validTopic !== "all") {
+        setFilters((current) => ({ ...current, topic: validTopic, category: "all" }));
+      }
+    }
+  }, []);
   const [detail, setDetail] = useState<MediaDiscoveryRecord | null>(null);
   const [playerState, setPlayerState] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [playerAttempt, setPlayerAttempt] = useState(0);
