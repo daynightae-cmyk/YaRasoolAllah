@@ -4,9 +4,11 @@
         "canonical_id":  1,
         "route":  "/library",
         "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/library/REF-01-grand-library-hub.png",
-        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "status":  "VERIFIED",
         "evidence":  [
-
+                     "LibraryHub connected to LibraryPage with REF-01 grand library hub: emerald/gold plaque, Arabic+English titles, wide real search, eight arched category entrances with real catalog counts, metrics rail with governed capability numbers, reading-continuation rail, gold exploration baseline.",
+                     "Real data wired: domainCounts from 9,129 catalog works per domain; mediaTotal=1,742 discovered records; manuscriptCount=2 source providers; recent=reading progress from institution store.",
+                     "57 library-focused tests pass; tsc and eslint clean; committed and pushed to origin/main."
                      ],
         "blocker":  null
     },
@@ -27,7 +29,7 @@
         "route":  "/noor",
         "reference":  "artifacts/visual-references/candidates/04_noor_media_theatre.png",
         "status":  "PARTIALLY_VERIFIED",
-        "evidence":  ["scripts/verify-cinematic-halls.mjs: /noor rendered with WebGL on desktop and mobile.", "Exercise media selection, 53-record catalogue, collapsible rooms, lighting, three viewing modes, and ordinary accessible view."],
+        "evidence":  ["scripts/verify-cinematic-halls.mjs: /noor rendered with WebGL on desktop and mobile.", "Exercise media selection, 53-record catalogue, collapsible rooms, lighting, three viewing modes, and ordinary accessible view.", "Added ?topic= URL deep-linking so institution sections (Qur'an, Seerah, history, etc.) open the corresponding Noor media room."],
         "blocker":  "Fine architectural detail and material realism remain below the owner reference. The registry has zero approved playable records."
     },
     {
@@ -46,9 +48,11 @@
         "canonical_id":  5,
         "route":  "/kids",
         "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/kids/REF-05-islamic-kids-world.png",
-        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "status":  "PARTIALLY_VERIFIED",
         "evidence":  [
-
+                     "Children's World expanded from 5 to 11 platform-original adaptations covering prayer/wudu education, Prophet stories (Nuh, Yunus), and ethics (honesty, hospitality) — all labeled platform_original_not_a_direct_quote, no_prophetic_depiction, review pending.",
+                     "Kids page: story grid with age bands, KidsTVRoom, MediaLibrarySection (kids catalog), StoryTheatre, ColoringStudio, KidsQuizGarden, parental guidance, safety commitments.",
+                     "27 kids tests pass; tsc and eslint clean."
                      ],
         "blocker":  null
     },
@@ -58,7 +62,7 @@
         "route":  "/quran",
         "reference":  "artifacts/visual-references/approved/03_quran_chamber.png",
         "status":  "PARTIALLY_VERIFIED",
-        "evidence":  ["scripts/verify-primary-interfaces.mjs: /quran entrance captured on desktop and mobile with working reader navigation."],
+        "evidence":  ["scripts/verify-primary-interfaces.mjs: /quran entrance captured on desktop and mobile with working reader navigation.", "QuranCinematicStudio now renders real audio playback visualization (progress bar, timestamps, playing state) driven by actual governed audio element state — no simulated recitation."],
         "blocker":  "Ornament, floor reflections and card artwork differ from REF-06."
     },
     {
@@ -612,7 +616,7 @@
         "route":  "/quran; /tafsir",
         "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/assets-rooms/REF-54-digital-quran-learning-studio.png",
         "status":  "PARTIALLY_VERIFIED",
-        "evidence":  ["scripts/verify-cinematic-halls.mjs: /quran?studio=1 rendered with WebGL and selected verified Qur’an text on desktop and mobile."],
+        "evidence":  ["scripts/verify-cinematic-halls.mjs: /quran?studio=1 rendered with WebGL and selected verified Qur’an text on desktop and mobile.", "QuranCinematicStudio renders real audio playback visualization (progress bar, timestamps, playing state) driven by actual governed audio element state — no simulated recitation."],
         "blocker":  "The independent studio uses procedural architecture. Photorealistic materials and a provider-backed waveform remain incomplete."
     },
     {
