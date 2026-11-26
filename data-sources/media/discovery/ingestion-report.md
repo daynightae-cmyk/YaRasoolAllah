@@ -1,48 +1,52 @@
 # تقرير الاستيراد (Ingestion Report)
 
-تاريخ الإنشاء الثابت: 2026-11-15T00:00:00.000Z
+تاريخ الإنشاء الثابت: 2026-11-26T00:00:00.000Z
 مولّد البيانات: media-discovery-ingest/2.0.0
-عدد السجلات الفريدة المستوردة: 116
+عدد السجلات الفريدة المستوردة: 1742
 تم تخطي المكررات: 0
 المؤهلة للعرض العام (APPROVED): 0
-المعلّقة للمراجعة (PENDING/DRAFT): 116
-بحقوق UNKNOWN: 116
+غير مكتملة الاعتماد الكامل (PENDING/DRAFT): 1742
+بحقوق UNKNOWN: 1742
 
 ## بصمات المدخلات
-- data-sources/media/acquisition/media-acquisition-manifest.json: ec248dc092be69016a30b93e8c6a0b983fe48d0bc0f977691c1ac67de53970ef (1266 bytes, utf8-lf)
-- data-sources/media/acquisition/kids-media-catalog.csv: 539d115b34bda8b2635d976554a861743417f26c6a9d8b48c7acb4a3433d9b43 (88306 bytes, utf8-lf)
-- data-sources/media/acquisition/kids-media-catalog.json: ee43aaa1bc649263ca97fea551f578c71bd5f6021c7c1f4e5a63b298e2897ef5 (158979 bytes, utf8-lf)
-- data-sources/media/acquisition/seerah-media-catalog.csv: 95e520d234813210f6914ca93d48f670ffa54e917a00261f35101277d2597d04 (86207 bytes, utf8-lf)
-- data-sources/media/acquisition/seerah-media-catalog.json: 031a23bb42c94ed0d53782eaefecc4fc7da24d960d5c15ecb7066f7b18e255ec (145549 bytes, utf8-lf)
-- data-sources/media/acquisition/media-rights-ledger.csv: 67befe52d987b92d03aab9a3da6b50915e8c7ea33d13380a808a24ed86999702 (35762 bytes, utf8-lf)
-- data-sources/media/acquisition/media-rejected-and-pending.csv: ce4dd8723cd1fe58c6914a82ce064b7f14aa43f7ec713409344ecb26b400adb8 (37641 bytes, utf8-lf)
+- data-sources/media/acquisition/media-acquisition-manifest.json: cf5d7bb9d89ff293e4162280ee0ed1ad10ee868ff7be1ac36e06a00d34e9b06f (1308 bytes, utf8-lf)
+- data-sources/media/acquisition/kids-media-catalog.csv: b451838edd0eb69d2274c981d6e5076e767d34fce644f5224ec8d76e4e27e7f6 (88754 bytes, utf8-lf)
+- data-sources/media/acquisition/kids-media-catalog.json: 9754524efbad91dc981626443f0e8bf187dda2f65f7cdaea0e30a60a1f115775 (159453 bytes, utf8-lf)
+- data-sources/media/acquisition/seerah-media-catalog.csv: 989d1954971f91141ebe1286c2b52532f11256d56a7e703276e7a791b24f88ca (2829417 bytes, utf8-lf)
+- data-sources/media/acquisition/seerah-media-catalog.json: 8343ef9ecaa18a16c098926bd9cffccff971a7f1fccb7075a6fec946bbf6f8d8 (4703641 bytes, utf8-lf)
+- data-sources/media/acquisition/media-rights-ledger.csv: c8bad33861866e5194eaf800525bc60d97165442f4d5ec219b50ae59bd7a1c6a (534690 bytes, utf8-lf)
+- data-sources/media/acquisition/media-rejected-and-pending.csv: f80802089c9cfb8124698ccc1130a555df93cc0d66053c74df4a8272d9fa3c67 (601878 bytes, utf8-lf)
 
 ## بصمات المخرجات
-- media-discovery-catalog.json: de763ad203891d732914ff201a0a800bc9ebeb802197b170fc45b7edaf5ba45c
-- ingestion-manifest.json: efdef8ca55dad343de4c1fbc9a4b3820552ab7e607ecd237036cc5c9907982bd
-- media-discovery.generated.ts: 3e94dc1c122d650346ada6beec1007cf49343e1c4877c96c9bec033a9ed5c7d4
-- media-discovery-status.generated.ts: 4788669a6cb970aa3f522b750e2abe6e87039d86eae7f9245296d1048ef02d4b
+- media-discovery-catalog.json: dfd41080a68ea41a239d2e86ad563be6c9361be790d6ebaef37c19b82e75f971
+- ingestion-manifest.json: 93dd383c902b7cfd5eaf832217d2f905351c06175a070eb28d6ba26e49d41209
+- media-discovery.generated.ts: c952b03530b6e7537f8fdc69e6c879f8b4de0b2e394e560be17fcf1ba2322ce9
+- media-discovery-status.generated.ts: a2fd6b4c7a84c71e57f7026389b78184257694f7b1e99f23136441a6a4ef2d28
 
 ## حسب الفئة
 - kids: 46
 - seerah: 14
-- السيرة النبوية: 9
+- التاريخ الإسلامي: 227
+- السيرة النبوية: 169
 - السيرة النبوية الكاملة: 9
+- الصحابة والأئمة: 379
+- العبادات: 23
 - القرآن الكريم للأطفال: 17
+- القرآن وعلومه: 438
 - سيرة نبوية: 7
-- قصص الأنبياء والدروس: 5
-- محاضرات ومواعظ: 9
+- قصص الأنبياء والدروس: 64
+- محاضرات ومواعظ: 349
 
 ## حسب حالة النشر
-- DRAFT: 116
+- DRAFT: 1742
 
 ## حسب حالة الحقوق
-- UNKNOWN: 116
+- UNKNOWN: 1742
 
 ## السياسة
 - لا يوجد سجل تمت ترقيته إلى APPROVED.
 - جميع السجلات بقيمة DRAFT / PENDING_REVIEW remain في طبقة discovery غير العامة.
-- حقل embed_url يُعامل كمرشح غير مختبر (UNTESTED candidate) ولا يُستخدم للتشغيل حتى التحقق الفعلي.
+- حقل embed_url مرشح لمشغل المصدر للبالغين فقط؛ UNTESTED لا يعني أن التشغيل تحقق فعليًا ولا أن الحقوق أو المراجعة اكتملت.
 
 ## تحذيرات
 acquisition manifest declares a file that is not present in this checkout: kids-media-catalog-README.md

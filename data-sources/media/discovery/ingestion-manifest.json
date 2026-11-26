@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "generator": "media-discovery-ingest/2.0.0",
-  "generatedAt": "2026-11-15T00:00:00.000Z",
+  "generatedAt": "2026-11-26T00:00:00.000Z",
   "sourcePack": "YA_RASOOL_ALLAH_VERIFIED_MEDIA_ACQUISITION_PACK",
   "sourceJob": "9e80bb2aa838",
   "sourceFiles": [
@@ -11,68 +11,72 @@
   "inputs": [
     {
       "path": "data-sources/media/acquisition/media-acquisition-manifest.json",
-      "sha256": "ec248dc092be69016a30b93e8c6a0b983fe48d0bc0f977691c1ac67de53970ef",
-      "bytes": 1266,
+      "sha256": "cf5d7bb9d89ff293e4162280ee0ed1ad10ee868ff7be1ac36e06a00d34e9b06f",
+      "bytes": 1308,
       "hashMode": "utf8-lf"
     },
     {
       "path": "data-sources/media/acquisition/kids-media-catalog.csv",
-      "sha256": "539d115b34bda8b2635d976554a861743417f26c6a9d8b48c7acb4a3433d9b43",
-      "bytes": 88306,
+      "sha256": "b451838edd0eb69d2274c981d6e5076e767d34fce644f5224ec8d76e4e27e7f6",
+      "bytes": 88754,
       "hashMode": "utf8-lf"
     },
     {
       "path": "data-sources/media/acquisition/kids-media-catalog.json",
-      "sha256": "ee43aaa1bc649263ca97fea551f578c71bd5f6021c7c1f4e5a63b298e2897ef5",
-      "bytes": 158979,
+      "sha256": "9754524efbad91dc981626443f0e8bf187dda2f65f7cdaea0e30a60a1f115775",
+      "bytes": 159453,
       "hashMode": "utf8-lf"
     },
     {
       "path": "data-sources/media/acquisition/seerah-media-catalog.csv",
-      "sha256": "95e520d234813210f6914ca93d48f670ffa54e917a00261f35101277d2597d04",
-      "bytes": 86207,
+      "sha256": "989d1954971f91141ebe1286c2b52532f11256d56a7e703276e7a791b24f88ca",
+      "bytes": 2829417,
       "hashMode": "utf8-lf"
     },
     {
       "path": "data-sources/media/acquisition/seerah-media-catalog.json",
-      "sha256": "031a23bb42c94ed0d53782eaefecc4fc7da24d960d5c15ecb7066f7b18e255ec",
-      "bytes": 145549,
+      "sha256": "8343ef9ecaa18a16c098926bd9cffccff971a7f1fccb7075a6fec946bbf6f8d8",
+      "bytes": 4703641,
       "hashMode": "utf8-lf"
     },
     {
       "path": "data-sources/media/acquisition/media-rights-ledger.csv",
-      "sha256": "67befe52d987b92d03aab9a3da6b50915e8c7ea33d13380a808a24ed86999702",
-      "bytes": 35762,
+      "sha256": "c8bad33861866e5194eaf800525bc60d97165442f4d5ec219b50ae59bd7a1c6a",
+      "bytes": 534690,
       "hashMode": "utf8-lf"
     },
     {
       "path": "data-sources/media/acquisition/media-rejected-and-pending.csv",
-      "sha256": "ce4dd8723cd1fe58c6914a82ce064b7f14aa43f7ec713409344ecb26b400adb8",
-      "bytes": 37641,
+      "sha256": "f80802089c9cfb8124698ccc1130a555df93cc0d66053c74df4a8272d9fa3c67",
+      "bytes": 601878,
       "hashMode": "utf8-lf"
     }
   ],
-  "totalUniqueRecords": 116,
+  "totalUniqueRecords": 1742,
   "duplicatesSkipped": 0,
   "byCategory": {
     "kids": 46,
     "seerah": 14,
-    "السيرة النبوية": 9,
+    "التاريخ الإسلامي": 227,
+    "السيرة النبوية": 169,
     "السيرة النبوية الكاملة": 9,
+    "الصحابة والأئمة": 379,
+    "العبادات": 23,
     "القرآن الكريم للأطفال": 17,
+    "القرآن وعلومه": 438,
     "سيرة نبوية": 7,
-    "قصص الأنبياء والدروس": 5,
-    "محاضرات ومواعظ": 9
+    "قصص الأنبياء والدروس": 64,
+    "محاضرات ومواعظ": 349
   },
   "byPublicationStatus": {
-    "DRAFT": 116
+    "DRAFT": 1742
   },
   "byRightsStatus": {
-    "UNKNOWN": 116
+    "UNKNOWN": 1742
   },
   "approvedForPublicDisplay": 0,
-  "blockedPendingReview": 116,
-  "rightsUnknown": 116,
+  "blockedPendingReview": 1742,
+  "rightsUnknown": 1742,
   "declaredFilesMissing": [
     "kids-media-catalog-README.md",
     "media-agent-handoff.md",
@@ -84,19 +88,19 @@
   "outputs": {
     "catalog": {
       "path": "data-sources/media/discovery/media-discovery-catalog.json",
-      "sha256": "de763ad203891d732914ff201a0a800bc9ebeb802197b170fc45b7edaf5ba45c",
-      "bytes": 369941
+      "sha256": "dfd41080a68ea41a239d2e86ad563be6c9361be790d6ebaef37c19b82e75f971",
+      "bytes": 5903194
     },
     "clientCatalog": {
       "path": "client/src/visual-golden/data/media-discovery.generated.ts",
-      "sha256": "3e94dc1c122d650346ada6beec1007cf49343e1c4877c96c9bec033a9ed5c7d4",
-      "bytes": 329454
+      "sha256": "c952b03530b6e7537f8fdc69e6c879f8b4de0b2e394e560be17fcf1ba2322ce9",
+      "bytes": 5295011
     },
     "clientStatus": {
       "path": "client/src/visual-golden/data/media-discovery-status.generated.ts",
-      "sha256": "4788669a6cb970aa3f522b750e2abe6e87039d86eae7f9245296d1048ef02d4b",
-      "bytes": 396
+      "sha256": "a2fd6b4c7a84c71e57f7026389b78184257694f7b1e99f23136441a6a4ef2d28",
+      "bytes": 399
     }
   },
-  "policy": "Discovery-only ingestion. No record is promoted to APPROVED. embed_url remains UNTESTED candidate until runtime verification."
+  "policy": "Governed discovery ingestion. No record is promoted to APPROVED. Adult provider candidates may use the source player while review remains pending; UNTESTED never means runtime-verified or rights-cleared."
 }

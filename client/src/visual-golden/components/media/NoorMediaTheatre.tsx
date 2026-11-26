@@ -5,10 +5,13 @@ import {
   CheckCircle2,
   ChevronLeft,
   Clapperboard,
+  Clock3,
   ExternalLink,
   Film,
+  HandHeart,
   Headphones,
   Info,
+  Landmark,
   LayoutGrid,
   ListFilter,
   ListVideo,
@@ -18,6 +21,7 @@ import {
   Minimize2,
   Play,
   RotateCcw,
+  ScrollText,
   Search,
   SearchX,
   ShieldAlert,
@@ -25,6 +29,7 @@ import {
   SkipBack,
   SkipForward,
   Sun,
+  Users,
   X,
   XCircle,
 } from "lucide-react";
@@ -41,13 +46,17 @@ import {
   NOOR_MEDIA_RECORDS,
   approvedNoorEmbedUrl,
   clearedNoorThumbnail,
+  compareNoorEpisodes,
   filterNoorRecords,
+  matchesNoorTopic,
   noorMediaDuration,
   noorMediaTitle,
   type NoorAvailability,
+  type NoorDuration,
   type NoorFilters,
   type NoorTopic,
 } from "@/visual-golden/services/media/noor-theatre";
+import { recordMediaCategory } from "@/visual-golden/services/media/taxonomy";
 import type { MediaDiscoveryRecord } from "@/visual-golden/services/media/types";
 import type { HallView } from "@/visual-golden/components/three/CinematicHall";
 import { art } from "@/visual-golden/mock/art";
@@ -64,12 +73,31 @@ const GATE_ORDER = Object.keys(MEDIA_REVIEW_GATE_LABELS) as MediaReviewGateKey[]
 const TOPICS: ReadonlyArray<{ id: NoorTopic; label: string; en: string; icon: typeof Film }> = [
   { id: "all", label: "كل المواد", en: "Complete catalog", icon: LayoutGrid },
   { id: "seerah", label: "السيرة النبوية", en: "Prophetic biography", icon: BookOpenText },
+  { id: "quran", label: "القرآن وعلومه", en: "Quran sciences", icon: ScrollText },
+  { id: "history", label: "التاريخ الإسلامي", en: "Islamic history", icon: Landmark },
+  { id: "companions", label: "الصحابة والأئمة", en: "Companions and imams", icon: Users },
+  { id: "worship", label: "العبادات", en: "Worship", icon: HandHeart },
   { id: "lectures", label: "محاضرات ومواعظ", en: "Lectures", icon: Mic2 },
-  { id: "stories", label: "قصص الأنبياء والدروس", en: "Stories and lessons", icon: Film },
+  { id: "stories", label: "قصص الأنبياء", en: "Prophetic stories", icon: Film },
 ];
 
-function uniqueValues(key: "category" | "channel_name" | "speaker"): string[] {
-  return [...new Set(NOOR_MEDIA_RECORDS.map((record) => record[key]).filter((value): value is string => Boolean(value)))];
+const QUEUE_PAGE_SIZE = 24;
+const DURATION_CHOICES: ReadonlyArray<{ id: NoorDuration; label: string }> = [
+  { id: "all", label: "كل المدد" },
+  { id: "short", label: "حتى 15 دقيقة" },
+  { id: "medium", label: "15–45 دقيقة" },
+  { id: "long", label: "أكثر من 45 دقيقة" },
+  { id: "unknown", label: "المدة غير موثقة" },
+];
+
+function uniqueValues(key: "channel_name" | "speaker" | "series_name"): string[] {
+  return [...new Set(NOOR_MEDIA_RECORDS.map((record) => record[key]).filter((value): value is string => Boolean(value)))]
+    .sort((a, b) => a.localeCompare(b, "ar"));
+}
+
+function uniqueCanonicalCategories(): string[] {
+  return [...new Set(NOOR_MEDIA_RECORDS.map((record) => recordMediaCategory(record)))]
+    .sort((a, b) => a.localeCompare(b, "ar"));
 }
 
 function recordMeta(record: MediaDiscoveryRecord): string {
@@ -104,15 +132,36 @@ export function NoorMediaTheatre() {
     () => NOOR_MEDIA_RECORDS.filter(isOfficialProviderPlaybackCandidate).length,
     [],
   );
-  const categories = useMemo(() => uniqueValues("category"), []);
+  const categories = useMemo(uniqueCanonicalCategories, []);
+  const seriesOptions = useMemo(() => uniqueValues("series_name"), []);
   const channels = useMemo(() => uniqueValues("channel_name"), []);
   const speakers = useMemo(() => uniqueValues("speaker"), []);
+  const topicCounts = useMemo(() => {
+    return Object.fromEntries(
+      TOPICS.map((topic) => [
+        topic.id,
+        NOOR_MEDIA_RECORDS.filter((record) => matchesNoorTopic(record, topic.id)).length,
+      ]),
+    ) as Record<NoorTopic, number>;
+  }, []);
   const filtered = useMemo(() => filterNoorRecords(NOOR_MEDIA_RECORDS, filters), [filters]);
   const requestedId = new URLSearchParams(search).get("media");
   const selected = filtered.length
     ? filtered.find((record) => record.id === requestedId) ?? filtered[0]
     : null;
   const selectedIndex = selected ? filtered.findIndex((record) => record.id === selected.id) : -1;
+  const navigationRecords = useMemo(() => {
+    if (!selected?.series_name) return filtered;
+    const sameSeries = filtered.filter((record) => record.series_name === selected.series_name);
+    return sameSeries.length ? [...sameSeries].sort(compareNoorEpisodes) : filtered;
+  }, [filtered, selected?.id, selected?.series_name]);
+  const navigationIndex = selected
+    ? navigationRecords.findIndex((record) => record.id === selected.id)
+    : -1;
+  const queueStart = selectedIndex < 0
+    ? 0
+    : Math.max(0, Math.min(selectedIndex - Math.floor(QUEUE_PAGE_SIZE / 2), Math.max(0, filtered.length - QUEUE_PAGE_SIZE)));
+  const queue = filtered.slice(queueStart, queueStart + QUEUE_PAGE_SIZE);
   const embedUrl = selected ? approvedNoorEmbedUrl(selected) : null;
   const selectedPlayable = Boolean(embedUrl);
   const selectedThumbnail = selected ? clearedNoorThumbnail(selected) : null;
@@ -193,8 +242,13 @@ export function NoorMediaTheatre() {
   }, [detail]);
 
   const patchFilters = (patch: Partial<NoorFilters>) => {
-    setFilters((current) => ({ ...current, ...patch }));
-    setVisibleCount(8);
+    const structuralPatch = ["topic", "category", "channel", "speaker"].some((key) => key in patch);
+    setFilters((current) => ({
+      ...current,
+      ...patch,
+      ...(structuralPatch && !("series" in patch) ? { series: "all" } : {}),
+    }));
+    setVisibleCount(12);
   };
 
   const selectRecord = (record: MediaDiscoveryRecord, bringIntoView = false) => {
@@ -210,11 +264,11 @@ export function NoorMediaTheatre() {
   };
 
   const selectRelative = (direction: -1 | 1) => {
-    if (!filtered.length) return;
-    const nextIndex = selectedIndex < 0
+    if (!navigationRecords.length) return;
+    const nextIndex = navigationIndex < 0
       ? 0
-      : (selectedIndex + direction + filtered.length) % filtered.length;
-    selectRecord(filtered[nextIndex]);
+      : (navigationIndex + direction + navigationRecords.length) % navigationRecords.length;
+    selectRecord(navigationRecords[nextIndex]);
   };
 
   const toggleFullscreen = async () => {
@@ -273,7 +327,7 @@ export function NoorMediaTheatre() {
   };
 
   const availabilityLabel = (record: MediaDiscoveryRecord) =>
-    isOfficialProviderPlaybackCandidate(record) ? "متاح عبر مشغل المصدر" : "التشغيل الداخلي غير متاح";
+    isOfficialProviderPlaybackCandidate(record) ? "مرشح لمشغل المصدر الرسمي" : "لا يوجد مشغل رسمي صالح";
 
   return (
     <div
@@ -281,6 +335,8 @@ export function NoorMediaTheatre() {
       data-visual="noor-theatre"
       data-approved-count={counts.approved}
       data-playback-candidate-count={playbackCandidateCount}
+      data-result-count={filtered.length}
+      data-selected-series={selected?.series_name ?? ""}
     >
       <div className={styles.room} data-view={plainView ? "interactive" : view} data-plain={plainView}>
       {!plainView ? <Suspense fallback={null}>
@@ -320,9 +376,7 @@ export function NoorMediaTheatre() {
             <div className={styles.topicList}>
               {TOPICS.map((topic) => {
                 const Icon = topic.icon;
-                const count = NOOR_MEDIA_RECORDS.filter((record) =>
-                  filterNoorRecords([record], { ...EMPTY_NOOR_FILTERS, topic: topic.id }).length > 0,
-                ).length;
+                const count = topicCounts[topic.id];
                 return (
                   <button
                     type="button"
@@ -352,7 +406,7 @@ export function NoorMediaTheatre() {
               data-fullscreen-mode={fullscreenMode ?? "none"}
             >
               <div className={styles.screenTopline}>
-                <span><Clapperboard size={15} aria-hidden /> {selected?.category ?? "لا توجد مادة محددة"}</span>
+                <span><Clapperboard size={15} aria-hidden /> {selected ? recordMediaCategory(selected) : "لا توجد مادة محددة"}</span>
                 <span className={selectedPlayable ? styles.approvedBadge : styles.reviewBadge}>
                   {selectedPlayable ? <ShieldCheck size={14} /> : <ShieldAlert size={14} />}
                   {selected ? availabilityLabel(selected) : "نتائج فارغة"}
@@ -476,11 +530,11 @@ export function NoorMediaTheatre() {
           <aside id="noor-playlist-panel" hidden={view !== "interactive" || !playlistOpen} className={`${styles.glassPanel} ${styles.playlist}`} aria-labelledby="noor-playlist-title">
             <header className={styles.panelHead}>
               <ListVideo size={18} aria-hidden />
-              <div><h2 id="noor-playlist-title">قائمة التشغيل</h2><span>{filtered.length} مادة في العرض الحالي</span></div>
+              <div><h2 id="noor-playlist-title">قائمة التشغيل</h2><span>{queue.length} من {filtered.length} نتيجة</span></div>
             </header>
             <p className={styles.playlistNote}>اختيار مادة يعرض بيانها، ولا يشغّلها تلقائيًا.</p>
             <ol className={styles.playlistItems}>
-              {filtered.map((record, index) => {
+              {queue.map((record, index) => {
                 const active = selected?.id === record.id;
                 const duration = noorMediaDuration(record.duration_seconds);
                 return (
@@ -492,7 +546,7 @@ export function NoorMediaTheatre() {
                       aria-current={active ? "true" : undefined}
                       onClick={() => selectRecord(record)}
                     >
-                      <span className={styles.queueIndex}>{String(index + 1).padStart(2, "0")}</span>
+                      <span className={styles.queueIndex}>{String(queueStart + index + 1).padStart(2, "0")}</span>
                       <span className={styles.queueCopy}>
                         <strong>{noorMediaTitle(record)}</strong>
                         <small>{record.speaker ?? record.channel_name ?? "ناشر غير موثق"}</small>
@@ -519,10 +573,21 @@ export function NoorMediaTheatre() {
               placeholder="ابحث بالعنوان أو السلسلة أو القناة أو المتحدث"
             />
           </label>
-          <label className={styles.selectBox}><span>التصنيف الدقيق</span>
+          <label className={styles.selectBox}><span>التصنيف</span>
             <select value={filters.category} onChange={(event) => patchFilters({ category: event.target.value, topic: "all" })}>
               <option value="all">كل التصنيفات</option>
               {categories.map((category) => <option key={category} value={category}>{category}</option>)}
+            </select>
+          </label>
+          <label className={styles.selectBox}><span>السلسلة</span>
+            <select value={filters.series} onChange={(event) => patchFilters({ series: event.target.value })}>
+              <option value="all">كل السلاسل</option>
+              {seriesOptions.map((series) => <option key={series} value={series}>{series}</option>)}
+            </select>
+          </label>
+          <label className={styles.selectBox}><span>المدة</span>
+            <select value={filters.duration} onChange={(event) => patchFilters({ duration: event.target.value as NoorDuration })}>
+              {DURATION_CHOICES.map((choice) => <option key={choice.id} value={choice.id}>{choice.label}</option>)}
             </select>
           </label>
           <label className={styles.selectBox}><span>القناة / الناشر</span>
@@ -546,7 +611,7 @@ export function NoorMediaTheatre() {
                 aria-pressed={filters.availability === value}
                 onClick={() => patchFilters({ availability: value })}
               >
-                {value === "all" ? "كل الحالات" : value === "review" ? "غير المتاح داخليًا" : "المتاح للتشغيل"}
+                {value === "all" ? "كل الحالات" : value === "review" ? "غير مرشحة للمشغل" : "مرشحة للمشغل"}
               </button>
             ))}
           </div>
@@ -562,15 +627,15 @@ export function NoorMediaTheatre() {
         </nav>
         <dl className={styles.ledger} aria-label="حصيلة كتالوج المسرح">
           <div><dt>مادة مفهرسة</dt><dd>{counts.total}</dd></div>
-          <div><dt>روابط تشغيل رسمية</dt><dd>{playbackCandidateCount}</dd></div>
-          <div><dt>بانتظار المراجعة التحريرية</dt><dd>{counts.editorialPending}</dd></div>
+          <div><dt>مرشحة لمشغل المصدر</dt><dd>{playbackCandidateCount}</dd></div>
+          <div><dt>بانتظار الاعتماد التحريري الكامل</dt><dd>{counts.editorialPending}</dd></div>
         </dl>
       </div>
 
       <section className={styles.library} aria-labelledby="noor-library-title">
         <header className={styles.libraryHead}>
           <div><p className={styles.kicker}><Film size={15} /> فهرس القاعة</p><h2 id="noor-library-title">المواد المسجّلة في مسرح النور</h2></div>
-          <p><strong>{filtered.length}</strong> نتيجة · الصور الخارجية محجوبة ما لم تُعتمد حقوقها مستقلًا.</p>
+          <p><strong>{filtered.length}</strong> نتيجة · لا يُركَّب مشغل إلا للمادة المحددة، وصور YouTube الرسمية تظهر للمرشحات فقط.</p>
         </header>
         <div className={styles.mediaGrid}>
           {visible.map((record) => {
@@ -590,7 +655,7 @@ export function NoorMediaTheatre() {
                         {record.category === "محاضرات ومواعظ" ? <Mic2 size={32} /> : <BookOpenText size={32} />}
                       </>
                     )}
-                    <b>{record.episode_number ? `حلقة ${record.episode_number}` : record.category}</b>
+                    <b>{record.episode_number ? `حلقة ${record.episode_number}` : recordMediaCategory(record)}</b>
                   </span>
                   <span className={styles.mediaCopy}>
                     <span className={styles.mediaStatus}>

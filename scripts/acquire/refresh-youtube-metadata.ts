@@ -22,7 +22,7 @@ type OEmbed = {
 type Change = {
   videoId: string;
   catalog: string;
-  status: "updated" | "unchanged" | "unavailable";
+  status: "updated" | "unchanged" | "unavailable" | "blocked";
   httpStatus?: number;
   changes?: Record<string, { before: unknown; after: unknown }>;
   error?: string;
@@ -114,7 +114,9 @@ function applyMetadata(row: CsvRow, metadata: OEmbed, endpoint: string): Record<
     channel_url: metadata.author_url ?? row.channel_url ?? "",
     thumbnail_url: metadata.thumbnail_url ?? row.thumbnail_url ?? "",
     source_checked_at: checkedAt,
-    verification_method: `${row.verification_method ? `${row.verification_method}; ` : ""}YouTube oEmbed metadata refreshed ${checkedAt}; not a copyright or runtime-embed approval`,
+    verification_method: row.verification_method?.includes(`YouTube oEmbed metadata refreshed ${checkedAt}`)
+      ? row.verification_method
+      : `${row.verification_method ? `${row.verification_method}; ` : ""}YouTube oEmbed metadata refreshed ${checkedAt}; not a copyright or runtime-embed approval`,
     verification_evidence_urls: [...new Set([
       ...evidence(row.verification_evidence_urls),
       endpoint,
@@ -149,6 +151,39 @@ async function main(): Promise<void> {
     const endpoint = oEmbedUrl(videoId);
     const result = await fetchMetadata(videoId);
     if (!result.metadata) {
+      const providerStatus = [401, 403].includes(result.status)
+        ? "PROVIDER_REFUSED"
+        : result.status === 404
+          ? "UNAVAILABLE"
+          : null;
+      if (write && providerStatus) {
+        const beforeStatus = row.embedding_status;
+        const verificationNote = `YouTube oEmbed HTTP ${result.status} on ${checkedAt}; provider playback candidate blocked pending a new explicit technical check`;
+        row.embedding_status = providerStatus;
+        row.source_checked_at = checkedAt;
+        row.verification_method = row.verification_method?.includes(verificationNote)
+          ? row.verification_method
+          : `${row.verification_method ? `${row.verification_method}; ` : ""}${verificationNote}`;
+        row.verification_evidence_urls = [...new Set([...evidence(row.verification_evidence_urls), endpoint])].join("|");
+        const jsonRecord = catalog.json.records.find((record) => record.video_id === videoId);
+        if (jsonRecord) {
+          jsonRecord.embedding_status = providerStatus;
+          jsonRecord.source_checked_at = checkedAt;
+          jsonRecord.verification_method = row.verification_method;
+          jsonRecord.verification_evidence_urls = evidence(row.verification_evidence_urls);
+        }
+        for (const item of ledger.rows.filter((entry) => entry.video_id === videoId)) {
+          item.embedding_status = providerStatus;
+        }
+        return {
+          videoId,
+          catalog: catalog.name,
+          status: "blocked",
+          httpStatus: result.status,
+          error: result.error,
+          changes: { embedding_status: { before: beforeStatus, after: providerStatus } },
+        };
+      }
       return { videoId, catalog: catalog.name, status: "unavailable", httpStatus: result.status, error: result.error };
     }
     const before = { ...row };
@@ -186,6 +221,7 @@ async function main(): Promise<void> {
     updated: changes.filter((change) => change.status === "updated").length,
     unchanged: changes.filter((change) => change.status === "unchanged").length,
     unavailable: changes.filter((change) => change.status === "unavailable").length,
+    blocked: changes.filter((change) => change.status === "blocked").length,
     note: "Metadata verification only. No rights, editorial, religious, publication, age-safety, or embedding approval is inferred.",
   };
 
@@ -200,8 +236,8 @@ async function main(): Promise<void> {
   mkdirSync(dirname(reportPath), { recursive: true });
   writeFileSync(reportPath, `${JSON.stringify({ summary, changes }, null, 2)}\n`, "utf8");
   console.log(JSON.stringify({ ...summary, report: reportPath }, null, 2));
-  for (const change of changes.filter((item) => item.status === "unavailable")) {
-    console.log(`UNAVAILABLE ${change.videoId}: ${change.error}`);
+  for (const change of changes.filter((item) => item.status === "unavailable" || item.status === "blocked")) {
+    console.log(`${change.status.toUpperCase()} ${change.videoId}: ${change.error}`);
   }
 }
 

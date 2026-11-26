@@ -2792,7 +2792,7 @@
       "channel_url": "https://www.youtube.com/@MimiTVKids",
       "content_type": "تعليمي وتحفيظ",
       "duration_seconds": null,
-      "embedding_status": "UNTESTED",
+      "embedding_status": "PROVIDER_REFUSED",
       "episode_number": null,
       "language": "ar",
       "license_evidence_url": null,
@@ -2810,7 +2810,8 @@
       "title_original": "سورة الفاتحة -تعليم القرآن للأطفال-قناة ميمي Quran for Kids Al Fatiha -The Best Quran Video for Kids",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=g5L6Vi6Y0lY",
-        "https://www.youtube.com/@MimiTVKids"
+        "https://www.youtube.com/@MimiTVKids",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3Dg5L6Vi6Y0lY&format=json"
       ],
       "video_id": "g5L6Vi6Y0lY",
       "id": "youtube:g5L6Vi6Y0lY",
@@ -2825,8 +2826,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed HTTP 401 on 2026-11-26; provider playback candidate blocked pending a new explicit technical check",
       "embed_url": "https://www.youtube.com/embed/g5L6Vi6Y0lY",
       "channel_id": null
     },
@@ -2883,7 +2884,7 @@
       "channel_url": "https://www.youtube.com/@MimiTVKids",
       "content_type": "تعليمي وتحفيظ",
       "duration_seconds": null,
-      "embedding_status": "UNTESTED",
+      "embedding_status": "PROVIDER_REFUSED",
       "episode_number": null,
       "language": "ar",
       "license_evidence_url": null,
@@ -2901,7 +2902,8 @@
       "title_original": "Quran for Kids Al Masad-The Best Quran Video for Kids",
       "verification_evidence_urls": [
         "https://www.youtube.com/watch?v=9hga7dn0kOQ",
-        "https://www.youtube.com/@MimiTVKids"
+        "https://www.youtube.com/@MimiTVKids",
+        "https://www.youtube.com/oembed?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D9hga7dn0kOQ&format=json"
       ],
       "video_id": "9hga7dn0kOQ",
       "id": "youtube:9hga7dn0kOQ",
@@ -2916,8 +2918,8 @@
       "religious_review_status": "PENDING_REVIEW",
       "depiction_review_status": "PENDING_REVIEW",
       "thumbnail_rights_status": "UNKNOWN",
-      "source_checked_at": "2026-11-15",
-      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials",
+      "source_checked_at": "2026-11-26",
+      "verification_method": "public video page + publisher/channel page; no YouTube Data API credentials; YouTube oEmbed HTTP 401 on 2026-11-26; provider playback candidate blocked pending a new explicit technical check",
       "embed_url": "https://www.youtube.com/embed/9hga7dn0kOQ",
       "channel_id": null
     },

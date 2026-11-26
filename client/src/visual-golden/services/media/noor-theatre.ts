@@ -1,5 +1,6 @@
 import { DISCOVERED_MEDIA_CATALOG } from "@/visual-golden/data/media-discovery.generated";
-import { isOfficialProviderPlaybackCandidate } from "./review-gates";
+import { isOfficialProviderPlaybackCandidate, normalizeMediaSearch } from "./review-gates";
+import { recordMediaCategory } from "./taxonomy";
 import type { MediaDiscoveryRecord } from "./types";
 
 /** The public Noor room is a view over the governed catalog, never a second catalog. */
@@ -10,15 +11,18 @@ export const NOOR_MEDIA_RECORDS = DISCOVERED_MEDIA_CATALOG.filter(
     !KIDS_CATEGORIES.has(record.category ?? ""),
 );
 
-export type NoorTopic = "all" | "seerah" | "lectures" | "stories";
+export type NoorTopic = "all" | "seerah" | "quran" | "history" | "companions" | "worship" | "lectures" | "stories";
 export type NoorAvailability = "all" | "approved" | "review";
+export type NoorDuration = "all" | "short" | "medium" | "long" | "unknown";
 
 export interface NoorFilters {
   query: string;
   topic: NoorTopic;
   category: string;
+  series: string;
   channel: string;
   speaker: string;
+  duration: NoorDuration;
   availability: NoorAvailability;
 }
 
@@ -26,47 +30,73 @@ export const EMPTY_NOOR_FILTERS: NoorFilters = {
   query: "",
   topic: "all",
   category: "all",
+  series: "all",
   channel: "all",
   speaker: "all",
+  duration: "all",
   availability: "all",
 };
 
+/**
+ * Topic matching uses canonical presentation categories while the catalog keeps
+ * the original acquisition category untouched in provenance.
+ */
 export function matchesNoorTopic(record: MediaDiscoveryRecord, topic: NoorTopic): boolean {
   if (topic === "all") return true;
-  const category = record.category ?? "";
-  if (topic === "seerah") return category === "seerah" || category.includes("سيرة");
+  const category = recordMediaCategory(record);
+  if (topic === "seerah") return category === "السيرة النبوية";
+  if (topic === "quran") return category === "القرآن وعلومه";
+  if (topic === "history") return category === "التاريخ الإسلامي";
+  if (topic === "companions") return category === "الصحابة والأئمة";
+  if (topic === "worship") return category === "العبادات";
   if (topic === "lectures") return category === "محاضرات ومواعظ";
   return category === "قصص الأنبياء والدروس";
+}
+
+export function matchesNoorDuration(record: MediaDiscoveryRecord, duration: NoorDuration): boolean {
+  if (duration === "all") return true;
+  const seconds = record.duration_seconds;
+  if (duration === "unknown") return !Number.isFinite(seconds) || !seconds || seconds <= 0;
+  if (!Number.isFinite(seconds) || !seconds || seconds <= 0) return false;
+  if (duration === "short") return seconds <= 900;
+  if (duration === "medium") return seconds > 900 && seconds <= 2700;
+  return seconds > 2700;
+}
+
+export function compareNoorEpisodes(a: MediaDiscoveryRecord, b: MediaDiscoveryRecord): number {
+  const episode = (a.episode_number ?? Number.MAX_SAFE_INTEGER) - (b.episode_number ?? Number.MAX_SAFE_INTEGER);
+  if (episode !== 0) return episode;
+  return noorMediaTitle(a).localeCompare(noorMediaTitle(b), "ar");
 }
 
 export function filterNoorRecords(
   records: readonly MediaDiscoveryRecord[],
   filters: NoorFilters,
 ): MediaDiscoveryRecord[] {
-  const query = filters.query.trim().toLocaleLowerCase("ar");
-  return records.filter((record) => {
+  const query = normalizeMediaSearch(filters.query);
+  const matched = records.filter((record) => {
     if (!matchesNoorTopic(record, filters.topic)) return false;
-    if (filters.category !== "all" && record.category !== filters.category) return false;
+    if (filters.category !== "all" && recordMediaCategory(record) !== filters.category) return false;
+    if (filters.series !== "all" && record.series_name !== filters.series) return false;
     if (filters.channel !== "all" && record.channel_name !== filters.channel) return false;
     if (filters.speaker !== "all" && record.speaker !== filters.speaker) return false;
+    if (!matchesNoorDuration(record, filters.duration)) return false;
     const playable = isOfficialProviderPlaybackCandidate(record);
     if (filters.availability === "approved" && !playable) return false;
     if (filters.availability === "review" && playable) return false;
     if (!query) return true;
-    return [
+    return normalizeMediaSearch([
       record.title_ar,
       record.title_original,
       record.channel_name,
       record.category,
+      recordMediaCategory(record),
       record.subcategory,
       record.series_name,
       record.speaker,
-    ]
-      .filter(Boolean)
-      .join(" ")
-      .toLocaleLowerCase("ar")
-      .includes(query);
+    ].filter(Boolean).join(" ")).includes(query);
   });
+  return filters.series === "all" ? matched : [...matched].sort(compareNoorEpisodes);
 }
 
 export function noorMediaTitle(record: MediaDiscoveryRecord): string {

@@ -58,14 +58,22 @@ test("the four formerly shifted source rows keep every review field aligned", ()
 });
 
 test("generated discovery catalog is fail-closed and repairs the shifted statuses", () => {
-  assert.equal(DISCOVERED_MEDIA_COUNTS.total, 116);
+  const total = DISCOVERED_MEDIA_CATALOG.length;
+  assert.equal(total, 1742);
+  assert.equal(DISCOVERED_MEDIA_COUNTS.total, total);
   assert.equal(DISCOVERED_MEDIA_COUNTS.approved, 0);
-  assert.equal(DISCOVERED_MEDIA_COUNTS.pending, 116);
-  assert.equal(DISCOVERED_MEDIA_CATALOG.length, 116);
-  assert.equal(new Set(DISCOVERED_MEDIA_CATALOG.map((record) => record.id)).size, 116);
+  assert.equal(DISCOVERED_MEDIA_COUNTS.pending, total);
+  assert.equal(new Set(DISCOVERED_MEDIA_CATALOG.map((record) => record.id)).size, total);
   assert.ok(DISCOVERED_MEDIA_CATALOG.every((record) => record.rights_status === "UNKNOWN"));
   assert.ok(DISCOVERED_MEDIA_CATALOG.every((record) => record.publication_status === "DRAFT"));
-  assert.ok(DISCOVERED_MEDIA_CATALOG.every((record) => record.embedding_status === "UNTESTED"));
+  assert.deepEqual(
+    DISCOVERED_MEDIA_CATALOG
+      .filter((record) => record.embedding_status === "PROVIDER_REFUSED")
+      .map((record) => record.video_id)
+      .sort(),
+    ["9hga7dn0kOQ", "g5L6Vi6Y0lY", "wyAr0xvt43o"],
+  );
+  assert.ok(DISCOVERED_MEDIA_CATALOG.every((record) => ["UNTESTED", "PROVIDER_REFUSED"].includes(record.embedding_status ?? "")));
 
   for (const videoId of REGRESSION_IDS) {
     const record = DISCOVERED_MEDIA_CATALOG.find((candidate) => candidate.video_id === videoId);
@@ -90,11 +98,11 @@ test("the discovery manifest records canonical input and output hashes", () => {
     inputs: { path: string; sha256: string; bytes: number; hashMode: string }[];
     outputs: { catalog: { sha256: string }; clientCatalog: { sha256: string } };
   };
-  assert.equal(manifest.generatedAt, "2026-11-15T00:00:00.000Z");
-  assert.equal(manifest.totalUniqueRecords, 116);
+  assert.match(manifest.generatedAt, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+  assert.equal(manifest.totalUniqueRecords, DISCOVERED_MEDIA_CATALOG.length);
   assert.equal(manifest.approvedForPublicDisplay, 0);
-  assert.equal(manifest.blockedPendingReview, 116);
-  assert.equal(manifest.rightsUnknown, 116);
+  assert.equal(manifest.blockedPendingReview, DISCOVERED_MEDIA_CATALOG.length);
+  assert.equal(manifest.rightsUnknown, DISCOVERED_MEDIA_CATALOG.length);
   assert.ok(manifest.inputs.length >= 7);
   assert.ok(manifest.inputs.every((input) => input.hashMode === "utf8-lf" && /^[a-f0-9]{64}$/.test(input.sha256)));
 
@@ -107,13 +115,14 @@ test("the discovery manifest records canonical input and output hashes", () => {
 
 test("review filters and gate semantics are deterministic", () => {
   const counts = mediaReviewCounts(DISCOVERED_MEDIA_CATALOG);
+  const total = DISCOVERED_MEDIA_CATALOG.length;
   assert.deepEqual(counts, {
-    total: 116,
+    total,
     approved: 0,
-    pending: 116,
-    rightsUnknown: 116,
-    embeddingUntested: 116,
-    editorialPending: 116,
+    pending: total,
+    rightsUnknown: total,
+    embeddingUntested: DISCOVERED_MEDIA_CATALOG.filter((record) => record.embedding_status === "UNTESTED").length,
+    editorialPending: total,
   });
 
   const quotedComma = filterMediaDiscoveryRecords(DISCOVERED_MEDIA_CATALOG, "Prayer, duas", "all", "all");

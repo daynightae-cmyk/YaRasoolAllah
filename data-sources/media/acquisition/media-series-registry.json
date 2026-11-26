@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-11-26",
+  "purpose": "Explicit adult Arabic playlist acquisition registry. Listing a series does not approve its content, rights, embedding, or religious review.",
+  "publishers": [
+    {
+      "channel_id": "UCTW4teojDBh2Bs2cDSMgztA",
+      "channel_name": "د. طارق السويدان",
+      "channel_url": "https://www.youtube.com/@DrAlSuwaidan",
+      "publisher_status": "OFFICIAL",
+      "speaker": "د. طارق السويدان",
+      "playlists": [
+        { "id": "PLATlJNRzYr-C4scyewXpY0gQJ2nMB3Wbt", "series_name": "السيرة النبوية", "category": "السيرة النبوية", "subcategory": "السيرة النبوية الكاملة" },
+        { "id": "PLEFA02A9A67BF8704", "series_name": "قصص الأنبياء", "category": "قصص الأنبياء والدروس", "subcategory": "قصص الأنبياء" },
+        { "id": "PLATlJNRzYr-Bg6Q9KgxmozcmTzDIzqJTz", "series_name": "سيرة أبو بكر الصديق رضي الله عنه", "category": "الصحابة والأئمة", "subcategory": "الخلفاء الراشدون" },
+        { "id": "PLATlJNRzYr-A2AUsntjR_iWDl-nIylPnP", "series_name": "سيرة عمر بن الخطاب رضي الله عنه", "category": "الصحابة والأئمة", "subcategory": "الخلفاء الراشدون" },
+        { "id": "PLATlJNRzYr-A-2FFrdl50N6shXQ_CFhsy", "series_name": "سيرة عثمان بن عفان رضي الله عنه", "category": "الصحابة والأئمة", "subcategory": "الخلفاء الراشدون" },
+        { "id": "PLATlJNRzYr-B25vGJ27SX77a8RIlgy1xJ", "series_name": "سيرة علي بن أبي طالب رضي الله عنه", "category": "الصحابة والأئمة", "subcategory": "الخلفاء الراشدون" },
+        { "id": "PLATlJNRzYr-Bbzm5JWheg7kzyyQL2wIxd", "series_name": "سيرة خالد بن الوليد رضي الله عنه", "category": "الصحابة والأئمة", "subcategory": "الصحابة" },
+        { "id": "PLATlJNRzYr-B23BdQe3jUwEHng_bX2q8z", "series_name": "الرسول الإنسان", "category": "السيرة النبوية", "subcategory": "الشمائل النبوية" },
+        { "id": "PLATlJNRzYr-D7fmBNPiP4Y3-BRENorwbg", "series_name": "من شمائل الرسول الإنسان ﷺ", "category": "السيرة النبوية", "subcategory": "الشمائل النبوية" },
+        { "id": "PLATlJNRzYr-CNivplhPFIFlSmRT2D7saH", "series_name": "هكذا علمني القرآن", "category": "القرآن وعلومه", "subcategory": "تدبر القرآن" },
+        { "id": "PLATlJNRzYr-DxRzfhP6pJ-XH23l7MmUO3", "series_name": "معاني أسماء الله الحسنى", "category": "القرآن وعلومه", "subcategory": "أسماء الله الحسنى" },
+        { "id": "PLATlJNRzYr-CHngFL3nPtCZhHMpoclOx2", "series_name": "الإعجاز القرآني", "category": "القرآن وعلومه", "subcategory": "الإعجاز القرآني" },
+        { "id": "PLATlJNRzYr-DSQnJBjQB_-VI6-winvX_i", "series_name": "تاريخ الأندلس المفقود", "category": "التاريخ الإسلامي", "subcategory": "الأندلس" },
+        { "id": "PLATlJNRzYr-DIlzAPolzCNnqSXXVGbU3I", "series_name": "تاريخ القدس وفلسطين", "category": "التاريخ الإسلامي", "subcategory": "القدس وفلسطين" },
+        { "id": "PLATlJNRzYr-CGTSLWG-PoMEiSi-kIuo3-", "series_name": "الإمام الشافعي", "category": "الصحابة والأئمة", "subcategory": "الأئمة" },
+        { "id": "PLATlJNRzYr-APYdZhaKWvVn8D4PasQQbc", "series_name": "الإمام مالك بن أنس", "category": "الصحابة والأئمة", "subcategory": "الأئمة" },
+        { "id": "PLATlJNRzYr-AOzLMoQO8znqmGAF5ia6_Q", "series_name": "الإمام أحمد بن حنبل", "category": "الصحابة والأئمة", "subcategory": "الأئمة" },
+        { "id": "PLATlJNRzYr-Ck_3XAW_tipYXq4jGU6-sU", "series_name": "الإمام أبو حنيفة النعمان", "category": "الصحابة والأئمة", "subcategory": "الأئمة" },
+        { "id": "PLATlJNRzYr-DP_bnNV9t94O6nB2FO82ii", "series_name": "صناعة الحضارة", "category": "التاريخ الإسلامي", "subcategory": "الحضارة الإسلامية" },
+        { "id": "PLATlJNRzYr-DDcH9LWnfS9KhU0MD5fB6r", "series_name": "قصة النهاية", "category": "محاضرات ومواعظ", "subcategory": "الإيمان والآخرة" },
+        { "id": "PLATlJNRzYr-Cu-E-_FBMRzHaC5mG8O9NF", "series_name": "الإسلام ببساطة", "category": "محاضرات ومواعظ", "subcategory": "أساسيات الإسلام" },
+        { "id": "PLATlJNRzYr-DVZUPVWj4kQyksQkZzEfwv", "series_name": "روائع القصص", "category": "قصص الأنبياء والدروس", "subcategory": "قصص ودروس" },
+        { "id": "PLATlJNRzYr-Ax1OneMa3GYO2WlSQXWUr2", "series_name": "أسرار الحج", "category": "العبادات", "subcategory": "الحج" }
+      ]
+    },
+    {
+      "channel_id": "UCByuJcxuwS0yK43sOAVaQsg",
+      "channel_name": "قصة الإسلام",
+      "channel_url": "https://www.youtube.com/@islamstory",
+      "publisher_status": "VERIFIED_PUBLISHER",
+      "speaker": "د. راغب السرجاني",
+      "playlists": [
+        { "id": "PL_-cpA04qyLLoEvjPpinBeFw9KxdnMB1L", "series_name": "السيرة النبوية", "category": "السيرة النبوية", "subcategory": "السيرة النبوية الكاملة" },
+        { "id": "PL536CFDF03CBD595C", "series_name": "الرحمة في حياة الرسول ﷺ", "category": "السيرة النبوية", "subcategory": "الشمائل النبوية" },
+        { "id": "PL_-cpA04qyLIMNXXgYfO1eMp-pXPIMSao", "series_name": "أبو بكر الصاحب والخليفة", "category": "الصحابة والأئمة", "subcategory": "الخلفاء الراشدون" },
+        { "id": "PL_-cpA04qyLLayYT-XlWmd_t5u7RUmU8A", "series_name": "كن صحابيًا", "category": "الصحابة والأئمة", "subcategory": "الصحابة" },
+        { "id": "PL_-cpA04qyLLVOmi6SriEzOc3dO02Bq-X", "series_name": "تاريخ الإسلام", "category": "التاريخ الإسلامي", "subcategory": "التاريخ الإسلامي العام" },
+        { "id": "PL_-cpA04qyLJCu962QMMQMH1N0YOnU2km", "series_name": "قصة الدولة العثمانية", "category": "التاريخ الإسلامي", "subcategory": "الدولة العثمانية" },
+        { "id": "PL_-cpA04qyLLz1xKtr_wiRtx-lBPnVS_P", "series_name": "الأندلس من الفتح إلى السقوط", "category": "التاريخ الإسلامي", "subcategory": "الأندلس" },
+        { "id": "PL_-cpA04qyLJO3YQl1OJkzQO2hTuovGBn", "series_name": "التتار من البداية إلى عين جالوت", "category": "التاريخ الإسلامي", "subcategory": "التتار" },
+        { "id": "PL_-cpA04qyLLVEsWJKa3QgQrjvTSaEG8-", "series_name": "فتح فلسطين وبلاد الشام", "category": "التاريخ الإسلامي", "subcategory": "الفتوحات الإسلامية" },
+        { "id": "PL7B7E7AD09DC6128C", "series_name": "الطريق إلى حطين", "category": "التاريخ الإسلامي", "subcategory": "حطين" },
+        { "id": "PL_-cpA04qyLJ7HjEre-pufyE56JH123D2", "series_name": "فلسطين حتى لا تكون أندلسًا أخرى", "category": "التاريخ الإسلامي", "subcategory": "القدس وفلسطين" },
+        { "id": "PL_-cpA04qyLJvK-pYr0wExZYbO8fhtrJt", "series_name": "الحج", "category": "العبادات", "subcategory": "الحج" }
+      ]
+    },
+    {
+      "channel_id": "UCfpli4VHoS12syPkPxHl7XA",
+      "channel_name": "الشيخ صالح المغامسي",
+      "channel_url": "https://www.youtube.com/@Alrasekhoon",
+      "publisher_status": "UNKNOWN",
+      "speaker": "الشيخ صالح المغامسي",
+      "playlists": [
+        { "id": "PLUh1Rr7X1uT6UVDmw3wRZy-zPjuvE8Fif", "series_name": "حياة الرسول", "category": "السيرة النبوية", "subcategory": "السيرة النبوية الكاملة" },
+        { "id": "PLUh1Rr7X1uT53F2inPfeCfOGg91ubYXpM", "series_name": "تفسير سورة هود", "category": "القرآن وعلومه", "subcategory": "التفسير" },
+        { "id": "PLUh1Rr7X1uT4HxMRda-TGziOwieIYlwdA", "series_name": "خطبة الجمعة", "category": "محاضرات ومواعظ", "subcategory": "خطب الجمعة" },
+        { "id": "PL5C4B3F4205BD5FE2", "series_name": "القول المؤصل في سور المفصل", "category": "القرآن وعلومه", "subcategory": "التفسير" },
+        { "id": "PLDE1F919791973C6F", "series_name": "أعلام القرآن", "category": "القرآن وعلومه", "subcategory": "أعلام القرآن" },
+        { "id": "PL0010443BF044AF27", "series_name": "محاضرات وخطب الشيخ صالح المغامسي", "category": "محاضرات ومواعظ", "subcategory": "محاضرات وخطب" },
+        { "id": "PLA6D9137488D3C52E", "series_name": "تأملات قرآنية", "category": "القرآن وعلومه", "subcategory": "تدبر القرآن" },
+        { "id": "PL6E79F9137DB2EDD2", "series_name": "هو الله", "category": "القرآن وعلومه", "subcategory": "أسماء الله الحسنى" },
+        { "id": "PLEC615CD41BB3837D", "series_name": "لطائف المعارف", "category": "محاضرات ومواعظ", "subcategory": "الإيمان والآخرة" },
+        { "id": "PLUh1Rr7X1uT5St4D2fjxoeZa16ACH5MVn", "series_name": "خاتم النبيين", "category": "السيرة النبوية", "subcategory": "السيرة النبوية الكاملة" },
+        { "id": "PLUh1Rr7X1uT4_en8BxlFWsN4gLpCC5sfD", "series_name": "تفسير القرآن العظيم 1437هـ", "category": "القرآن وعلومه", "subcategory": "التفسير" },
+        { "id": "PLUh1Rr7X1uT7vwPvzP_Y0cBPqgk8jNwKl", "series_name": "الباقيات الصالحات", "category": "القرآن وعلومه", "subcategory": "تدبر القرآن" }
+      ]
+    }
+  ]
+}

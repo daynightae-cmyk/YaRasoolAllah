@@ -54,6 +54,7 @@ const EXPLICIT_PLAYBACK_BLOCKERS = new Set([
   "NOT_EMBEDDABLE",
   "PRIVATE",
   "PROHIBITED",
+  "PROVIDER_REFUSED",
   "REJECTED",
   "RESTRICTED",
   "REMOVED",
@@ -89,13 +90,28 @@ export function isOfficialProviderPlaybackCandidate(record: MediaDiscoveryRecord
   );
 }
 
+export function normalizeMediaSearch(value: string): string {
+  return value
+    .normalize("NFKD")
+    .replace(/\p{M}/gu, "")
+    .toLocaleLowerCase("ar")
+    .replace(/[أإآٱ]/g, "ا")
+    .replace(/ى/g, "ي")
+    .replace(/ؤ/g, "و")
+    .replace(/ئ/g, "ي")
+    .replace(/ة/g, "ه")
+    .replace(/ـ/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export function filterMediaDiscoveryRecords(
   records: readonly MediaDiscoveryRecord[],
   query: string,
   category: string | "all",
   status: string | "all",
 ): MediaDiscoveryRecord[] {
-  const normalized = query.trim().toLocaleLowerCase();
+  const normalized = normalizeMediaSearch(query);
   return records.filter((record) => {
     if (category !== "all" && record.category !== category) return false;
     if (status !== "all" && record.publication_status !== status) return false;
@@ -110,9 +126,8 @@ export function filterMediaDiscoveryRecords(
       record.review_reason,
     ]
       .filter(Boolean)
-      .join(" ")
-      .toLocaleLowerCase();
-    return haystack.includes(normalized);
+      .join(" ");
+    return normalizeMediaSearch(haystack).includes(normalized);
   });
 }
 

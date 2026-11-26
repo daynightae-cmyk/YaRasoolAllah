@@ -484,7 +484,7 @@ export function buildDiscoveryArtifacts() {
   const catalog: DiscoveryCatalogPayload = {
     schemaVersion: 2,
     generatedAt,
-    policy: "Discovery-only ingestion. No record is promoted to APPROVED. embed_url remains UNTESTED candidate until runtime verification.",
+    policy: "Governed discovery ingestion. No record is promoted to APPROVED. Adult provider candidates may use the source player while review remains pending; UNTESTED never means runtime-verified or rights-cleared.",
     counts: {
       total: records.length,
       approved: approvedForPublicDisplay,
@@ -581,7 +581,7 @@ export function buildDiscoveryArtifacts() {
     `عدد السجلات الفريدة المستوردة: ${records.length}`,
     `تم تخطي المكررات: ${duplicatesSkipped}`,
     `المؤهلة للعرض العام (APPROVED): ${approvedForPublicDisplay}`,
-    `المعلّقة للمراجعة (PENDING/DRAFT): ${blockedPendingReview}`,
+    `غير مكتملة الاعتماد الكامل (PENDING/DRAFT): ${blockedPendingReview}`,
     `بحقوق UNKNOWN: ${rightsUnknown}`,
     "",
     "## بصمات المدخلات",
@@ -605,7 +605,7 @@ export function buildDiscoveryArtifacts() {
     "## السياسة",
     "- لا يوجد سجل تمت ترقيته إلى APPROVED.",
     "- جميع السجلات بقيمة DRAFT / PENDING_REVIEW remain في طبقة discovery غير العامة.",
-    "- حقل embed_url يُعامل كمرشح غير مختبر (UNTESTED candidate) ولا يُستخدم للتشغيل حتى التحقق الفعلي.",
+    "- حقل embed_url مرشح لمشغل المصدر للبالغين فقط؛ UNTESTED لا يعني أن التشغيل تحقق فعليًا ولا أن الحقوق أو المراجعة اكتملت.",
     "",
     "## تحذيرات",
     ...(warnings.length > 0 ? warnings : ["لا توجد تحذيرات."]),
@@ -650,7 +650,7 @@ function main() {
   console.log(` - total unique records: ${result.total}`);
   console.log(` - duplicates skipped: ${result.manifest?.duplicatesSkipped ?? 0}`);
   console.log(` - approved for public display: ${result.approved}`);
-  console.log(` - blocked pending review: ${result.pending}`);
+  console.log(` - not fully approved: ${result.pending}`);
   console.log(` - catalog sha256: ${result.catalogHash}`);
   console.log(` - manifest sha256: ${result.manifestHash}`);
   console.log(` - output: ${result.outputPath}`);

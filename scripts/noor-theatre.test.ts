@@ -9,9 +9,12 @@ import {
   approvedNoorEmbedUrl,
   clearedNoorThumbnail,
   filterNoorRecords,
+  matchesNoorDuration,
+  matchesNoorTopic,
   noorMediaDuration,
   noorMediaTitle,
 } from "../client/src/visual-golden/services/media/noor-theatre";
+import { normalizeMediaSearch } from "../client/src/visual-golden/services/media/review-gates";
 import {
   DISCOVERED_MEDIA_CATALOG,
   DISCOVERED_MEDIA_COUNTS,
@@ -180,6 +183,32 @@ test("availability filters use provider eligibility without mutating approval st
     [explicitlyBlocked],
   );
   assert.equal(isMediaRecordApproved(pendingPlayable), false);
+});
+
+test("canonical topics, durations, series order, and Arabic search normalization work together", () => {
+  const seerahAlias = record({ id: "seerah-alias", category: "seerah" });
+  const second = record({ id: "episode-2", category: "seerah", series_name: "Series", episode_number: 2, duration_seconds: 3600 });
+  const first = record({ id: "episode-1", category: "seerah", series_name: "Series", episode_number: 1, duration_seconds: 300 });
+  const unknownDuration = record({ id: "unknown", category: "seerah", series_name: "Series", episode_number: 3, duration_seconds: null });
+
+  assert.equal(matchesNoorTopic(seerahAlias, "seerah"), true);
+  assert.equal(matchesNoorTopic(record({ category: "محاضرات ومواعظ" }), "lectures"), true);
+  assert.deepEqual(
+    filterNoorRecords([second, unknownDuration, first], { ...EMPTY_NOOR_FILTERS, topic: "seerah", series: "Series" }).map((item) => item.id),
+    ["episode-1", "episode-2", "unknown"],
+  );
+  assert.equal(matchesNoorDuration(first, "short"), true);
+  assert.equal(matchesNoorDuration(second, "long"), true);
+  assert.equal(matchesNoorDuration(unknownDuration, "unknown"), true);
+  assert.equal(matchesNoorDuration(unknownDuration, "short"), false);
+  assert.equal(
+    normalizeMediaSearch("\u0623\u0644\u0642\u0631\u0622\u0646"),
+    normalizeMediaSearch("\u0627\u0644\u0642\u0631\u0627\u0646"),
+  );
+  assert.deepEqual(
+    filterNoorRecords([record({ id: "hit", title_original: "\u0627\u0644\u0642\u0631\u0622\u0646" })], { ...EMPTY_NOOR_FILTERS, query: "\u0623\u0644\u0642\u0631\u0622\u0646" }).map((item) => item.id),
+    ["hit"],
+  );
 });
 
 test("pending editorial review does not fabricate approval or block an official provider candidate", () => {

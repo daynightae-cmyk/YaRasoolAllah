@@ -31,7 +31,8 @@ test("Basirah and library counters are explicit and distinct", () => {
 test("media discovery catalog has unique IDs, secure source URLs, and zero approvals", () => {
   const ids = DISCOVERED_MEDIA_CATALOG.map((item) => item.id);
   assert.equal(new Set(ids).size, ids.length);
-  assert.equal(DISCOVERED_MEDIA_COUNTS.total, 116);
+  assert.equal(DISCOVERED_MEDIA_COUNTS.total, DISCOVERED_MEDIA_CATALOG.length);
+  assert.ok(DISCOVERED_MEDIA_COUNTS.total >= 1742);
   assert.equal(DISCOVERED_MEDIA_COUNTS.approved, 0);
   for (const item of DISCOVERED_MEDIA_CATALOG) {
     if (item.official_url) assert.match(item.official_url, /^https:\/\//);
