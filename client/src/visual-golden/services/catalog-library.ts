@@ -244,3 +244,36 @@ export function catalogCapabilityReport(payload: CatalogPayload): CatalogCapabil
 
   return report;
 }
+
+/**
+ * The one Arabic-aware normalization every Library search surface uses.
+ * Diacritics and the common alef/ya spelling variants are folded so a reader
+ * who types "القران" finds "القرآن" and a reader who types "الامام" finds
+ * "الإمام". No surface keeps a private copy of this.
+ */
+export function normalizeCatalogSearch(value: string): string {
+  return value
+    .normalize("NFKD")
+    .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, "")
+    .replace(/[أإآٱ]/g, "ا")
+    .replace(/ى/g, "ي")
+    .toLocaleLowerCase("ar");
+}
+
+/**
+ * True when a catalog work matches the reader's query over its real fields.
+ * An empty query matches everything, so callers can use this directly as a
+ * filter predicate without a separate empty-search branch.
+ */
+export function workMatchesCatalogQuery(work: CatalogWork, query: string): boolean {
+  const needle = normalizeCatalogSearch(query.trim());
+  if (!needle) return true;
+  return [
+    work.titleAr,
+    work.titleEn,
+    work.authorAr,
+    work.authorEn,
+    work.category,
+    work.subcategory,
+  ].some((value) => Boolean(value) && normalizeCatalogSearch(value as string).includes(needle));
+}

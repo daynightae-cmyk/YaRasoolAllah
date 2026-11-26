@@ -139,12 +139,13 @@ export function InstitutionShell({ children }: { children: ReactNode }) {
     setSidebarOpen(false);
   }, [pathname]);
 
-  // Cinema surface: full-viewport experiences (the Library arcade and the
-  // terrain studio) own the whole layout. Navigation chrome hides but the
-  // shell, theme, motion and a11y landmarks stay mounted, so the reader is
-  // never trapped. The Library keeps its door because the door is also the
-  // entrance to this wing.
-  const cinema = /^\/(seerah\/terrain|seerah\/world|library)(\/|$)/.test(pathname);
+  // Cinema surface: full-viewport experiences (the terrain studio) own the
+  // whole layout. Navigation chrome hides but the shell, theme, motion and
+  // a11y landmarks stay mounted, so the reader is never trapped. /library is
+  // deliberately NOT cinema: the approved hub (REF-01) keeps the institution
+  // header + sidebar and scrolls inside #main-content like every other wing —
+  // clipping it here is what stalled production scrolling.
+  const cinema = /^\/(seerah\/terrain|seerah\/world)(\/|$)/.test(pathname);
   const referenceNavigation = ["/", "/quran", "/hadith", "/seerah", "/noor", "/atlas"].includes(pathname);
 
   return (

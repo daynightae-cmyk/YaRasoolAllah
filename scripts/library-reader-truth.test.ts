@@ -320,14 +320,11 @@ describe("the reader keeps the reader's place", () => {
 
 describe("the route has one search term and one catalog download", () => {
   it("does not keep a second private query that the hero box cannot reach", () => {
-    // The page owns one search term. The hero box writes it, and both the
-    // catalog and the shelf hall read the same value, so no view can drift
-    // into a private search the hero cannot reach.
-    assert.match(libraryPage, /value=\{query\}/);
-    assert.match(
-      libraryPage,
-      /onChange=\{\(event\) => onSearchChange\(event\.target\.value\)\}/,
-    );
+    // The page owns one search term. LibraryHub writes it (the wide REF-01
+    // search bar), and both the catalog and the shelf hall read the same
+    // value, so no view can drift into a private search the hub cannot reach.
+    assert.match(libraryPage, /query=\{query\}/);
+    assert.match(libraryPage, /onQueryChange={onSearchChange}/);
     assert.match(libraryPage, /setQuery\(value\)/);
     assert.match(libraryPage, /query=\{query\}/);
     assert.match(libraryPage, /onQueryChange=\{setQuery\}/);

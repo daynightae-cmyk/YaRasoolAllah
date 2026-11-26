@@ -1,20 +1,14 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from "react";
-import {
-  BookOpen,
-  LibraryBig,
-  LoaderCircle,
-  Search,
-} from "lucide-react";
+import { LibraryBig, LoaderCircle } from "lucide-react";
 import { useInstitution } from "@/visual-golden/lib/institution/store";
-import { PageHero } from "@/visual-golden/components/shared/PageHero";
-import { worldPlateForWing } from "@/visual-golden/lib/institution/worlds";
+import { LibraryHub } from "@/visual-golden/components/library/LibraryHub";
 import { CatalogShelfHall } from "@/visual-golden/components/library/CatalogShelfHall";
 import { LibraryCatalog } from "@/visual-golden/components/library/LibraryCatalog";
 import { CatalogReadingChamber } from "@/visual-golden/components/library/CatalogReadingChamber";
 import { LibraryLivingShelf } from "@/visual-golden/components/library/LibraryLivingShelf";
 import { ManuscriptGallery } from "@/visual-golden/components/library/ManuscriptGallery";
 import { ManuscriptReader } from "@/visual-golden/components/library/ManuscriptReader";
-import type { ManuscriptSource } from "@/visual-golden/services/iiif";
+import { MANUSCRIPT_SOURCES, type ManuscriptSource } from "@/visual-golden/services/iiif";
 import {
   LibraryDomainShelves,
   type DomainGateway,
@@ -32,6 +26,7 @@ import {
   type CatalogPayload,
   type CatalogWork,
 } from "@/visual-golden/services/catalog-library";
+import { MEDIA_DISCOVERY_STATUS } from "@/visual-golden/data/media-discovery-status.generated";
 import styles from "./LibraryPage.module.css";
 
 // Keep the engine out of the Library route chunk. The deep-reader route and
@@ -114,6 +109,7 @@ const DOMAIN_GATEWAYS: DomainGateway[] = [
 export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
   const lang = useInstitution((state) => state.lang);
   const hydrated = useInstitution((state) => state.hydrated);
+  const readingProgress = useInstitution((state) => state.readingProgress);
   const motion = useEffectiveMotion();
   const [lowCapacity] = useState(() =>
     isLowCapacityDevice(readDeviceCapacitySignals()),
@@ -173,6 +169,25 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
     () => (payload ? catalogCapabilityReport(payload) : null),
     [payload],
   );
+
+  // Real category counts derived from the loaded catalog — never illustrative
+  // reference numbers. Each domain gateway's count is the number of catalogued
+  // works in that category, so every entrance opens real filtered content.
+  const domainCounts = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const work of (payload?.works ?? [])) {
+      if (work.category) counts[work.category] = (counts[work.category] ?? 0) + 1;
+    }
+    return counts;
+  }, [payload]);
+
+  const librarySubtitle = lang === "ar"
+    ? "ادخل رواق المكتبة، اختر باباً من العلوم، واقرأ عملاً حقيقياً من الفهرس."
+    : "Enter the library arcade, choose a domain of knowledge, and read a real work from the catalog.";
+
+  // LibraryHub is bilingual Arabic/English; the store UI lang also includes fr/ur,
+  // and LibraryPage already renders everything as ar vs non-ar.
+  const hubLang: "ar" | "en" = lang === "ar" ? "ar" : "en";
 
   // Entering through the hall's own exit (`?view=shelves`) is a deliberate
   // request for the shelf surface; honour it once the catalog has loaded so
@@ -343,70 +358,27 @@ export function LibraryPage({ initialWorkId }: { initialWorkId?: string }) {
 
   const libraryContent = (
     <div className={styles.page}>
-      <PageHero
-        title={labels.title}
-        subtitle={labels.subtitle}
-        desc={labels.description}
-        image={worldPlateForWing("library").plate}
-        wing="library"
-        compact
-      >
-        <div className={styles.search}>
-          <Search size={16} aria-hidden="true" />
-          <input
-            value={query}
-            onChange={(event) => onSearchChange(event.target.value)}
-            placeholder={labels.search}
-            aria-label={labels.searchLabel}
-          />
-          {query.trim().length > 1 ? (
-            <span className={styles.searchHint}>{labels.searchHint}</span>
-          ) : null}
-        </div>
-      </PageHero>
+      <LibraryHub
+        lang={hubLang}
+        query={query}
+        onQueryChange={onSearchChange}
+        placeholder={labels.search}
+        searchLabel={labels.searchLabel}
+        searchHint={labels.searchHint}
+        subtitle={librarySubtitle}
+        domains={DOMAIN_GATEWAYS}
+        domainCounts={domainCounts}
+        capability={capability}
+        mediaTotal={MEDIA_DISCOVERY_STATUS.totalDiscoveryRecords}
+        manuscriptCount={MANUSCRIPT_SOURCES.length}
+        recent={readingProgress}
+        view={view}
+        onViewChange={(next) => setViewChoice(next)}
+        onEnterDomain={enterDomain}
+      />
 
       {!initialWorkId ? (
         <>
-          <nav className={styles.modeSwitch} aria-label={labels.modesLabel}>
-            <button
-              type="button"
-              className={view === "library3d" ? styles.modeOn : ""}
-              onClick={() => setViewChoice("library3d")}
-              aria-pressed={view === "library3d"}
-            >
-              <span className={styles.modeMark} aria-hidden="true">◈</span>
-              <span>
-                <strong>{labels.threeD}</strong>
-                <small>{labels.threeDHint}</small>
-              </span>
-            </button>
-            <button
-              type="button"
-              className={view === "shelves" ? styles.modeOn : ""}
-              onClick={() => setViewChoice("shelves")}
-              aria-pressed={view === "shelves"}
-              data-visual="library-mode-shelves"
-            >
-              <LibraryBig size={19} aria-hidden="true" />
-              <span>
-                <strong>{labels.shelves}</strong>
-                <small>{labels.shelvesHint}</small>
-              </span>
-            </button>
-            <button
-              type="button"
-              className={view === "catalog" ? styles.modeOn : ""}
-              onClick={() => setViewChoice("catalog")}
-              aria-pressed={view === "catalog"}
-            >
-              <BookOpen size={19} aria-hidden="true" />
-              <span>
-                <strong>{labels.catalog}</strong>
-                <small>{labels.catalogHint}</small>
-              </span>
-            </button>
-          </nav>
-
           {showAutoViewNote ? (
             <p className={styles.autoViewNote} role="status">
               {labels.auto2d}

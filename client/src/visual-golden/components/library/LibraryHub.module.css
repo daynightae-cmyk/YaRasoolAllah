@@ -1,0 +1,415 @@
+/* ==========================================================================
+   YA RASOOL ALLAH — LIBRARY HUB (REF-01 GRAND LIBRARY HUB)
+   Emerald plaque + gold mihrab frame, wide search bar, arched category
+   portals, narrow metrics rail, gold baseline. Glassy on the world plate.
+   ========================================================================== */
+
+.hub {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(250px, 300px);
+  gap: clamp(0.7rem, 1.8vw, 1.2rem);
+  align-items: start;
+  padding: clamp(0.7rem, 2vw, 1.4rem) clamp(0.55rem, 2vw, 1.2rem) 0;
+}
+
+.hubMain {
+  display: grid;
+  gap: clamp(0.7rem, 1.6vw, 1.1rem);
+  min-width: 0;
+}
+
+/* --- Emerald plaque with gold mihrab frame ------------------------------ */
+.plaque {
+  position: relative;
+  text-align: center;
+  padding: clamp(2rem, 4.5vw, 3rem) clamp(1rem, 3vw, 2.2rem) clamp(1.1rem, 2.4vw, 1.6rem);
+  border: 1px solid var(--border-gold);
+  border-radius: clamp(90px, 14vw, 170px) clamp(90px, 14vw, 170px) 26px 26px;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(232, 197, 71, 0.22), transparent 46%),
+    radial-gradient(circle at 50% 115%, rgba(13, 58, 49, 0.55), transparent 60%),
+    linear-gradient(180deg, rgba(9, 46, 38, 0.92), rgba(4, 24, 20, 0.96));
+  box-shadow:
+    var(--shadow-panel),
+    inset 0 0 0 5px rgba(0, 0, 0, 0.25),
+    inset 0 0 0 6px rgba(212, 160, 23, 0.35);
+  overflow: hidden;
+}
+
+.plaque::before,
+.plaque::after {
+  content: "";
+  position: absolute;
+  top: 10px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(232, 197, 71, 0.55);
+  pointer-events: none;
+}
+.plaque::before {
+  inset-inline-start: 12px;
+  border-radius: 50%;
+}
+.plaque::after {
+  inset-inline-end: 12px;
+  border-radius: 50%;
+}
+
+.medallion {
+  display: inline-grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  margin-bottom: 0.55rem;
+  border-radius: 50%;
+  color: #1a1405;
+  background:
+    radial-gradient(circle at 32% 28%, #ffe9a8, #d4a017 58%, #8a6410);
+  box-shadow:
+    0 0 0 3px rgba(212, 160, 23, 0.35),
+    0 10px 24px -10px rgba(0, 0, 0, 0.8);
+}
+
+.plaqueTitle {
+  margin: 0;
+  font-size: clamp(1.5rem, 3.4vw, 2.4rem);
+  line-height: 1.35;
+  color: #f5edd8;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55);
+}
+
+.plaqueEn {
+  margin: 0.15rem 0 0;
+  font-size: clamp(0.72rem, 1.4vw, 0.9rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-300, #e8c547);
+}
+
+.plaqueSub {
+  margin: 0.55rem auto 0;
+  max-width: 46rem;
+  font-size: clamp(0.72rem, 1.5vw, 0.86rem);
+  line-height: 1.9;
+  color: var(--text-secondary);
+}
+
+/* --- Wide search bar ----------------------------------------------------- */
+.searchBar {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.35rem 0.4rem 0.35rem 0.9rem;
+  border: 1px solid var(--border-gold);
+  border-radius: 999px;
+  background: rgba(4, 16, 13, 0.72);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), var(--shadow-panel);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+:global([dir="ltr"]) .searchBar {
+  padding: 0.35rem 0.9rem 0.35rem 0.4rem;
+}
+
+.searchIcon {
+  color: var(--gold-300, #e8c547);
+  flex: 0 0 auto;
+}
+
+.searchBar input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #f5edd8;
+  font-size: clamp(0.8rem, 1.6vw, 0.95rem);
+  padding: 0.55rem 0.2rem;
+}
+
+.searchBar input::placeholder {
+  color: var(--text-secondary);
+}
+
+.searchBar input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+.searchHint {
+  flex: 0 0 auto;
+  font-size: 0.66rem;
+  color: var(--text-secondary);
+}
+
+.searchGo {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--border-gold);
+  border-radius: 12px;
+  color: var(--gold-300, #e8c547);
+  background: linear-gradient(180deg, rgba(212, 160, 23, 0.2), rgba(212, 160, 23, 0.08));
+  cursor: pointer;
+}
+
+/* --- Arched category portals --------------------------------------------- */
+.portals {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: clamp(0.4rem, 1vw, 0.7rem);
+}
+
+.portal {
+  display: grid;
+  justify-items: center;
+  gap: 0.3rem;
+  padding: 0.9rem 0.35rem 0.7rem;
+  border: 1px solid rgba(212, 160, 23, 0.4);
+  border-radius: 999px 999px 16px 16px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(232, 197, 71, 0.14), transparent 55%),
+    linear-gradient(180deg, rgba(10, 44, 36, 0.85), rgba(4, 20, 17, 0.92));
+  color: #f5edd8;
+  cursor: pointer;
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.portal:hover,
+.portal:focus-visible {
+  transform: translateY(-3px);
+  border-color: rgba(232, 197, 71, 0.85);
+  box-shadow: 0 14px 30px -14px rgba(0, 0, 0, 0.8);
+}
+
+.portalArch {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 1 / 1.05;
+  border-radius: 999px 999px 10px 10px;
+  border: 1px solid rgba(232, 197, 71, 0.35);
+  background:
+    radial-gradient(circle at 50% 18%, rgba(232, 197, 71, 0.28), transparent 60%),
+    linear-gradient(180deg, #0d3a30, #051a15);
+}
+
+.portalMark {
+  font-size: 1.15rem;
+  color: var(--gold-300, #e8c547);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.6);
+}
+
+.portalName {
+  font-size: clamp(0.6rem, 1.2vw, 0.74rem);
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.portalCount {
+  font-size: 0.62rem;
+  color: var(--gold-300, #e8c547);
+}
+
+/* --- Metrics rail --------------------------------------------------------- */
+.rail {
+  display: grid;
+  gap: clamp(0.7rem, 1.8vw, 1.2rem);
+  min-width: 0;
+}
+
+.panel {
+  border: 1px solid var(--border-gold);
+  border-radius: 20px;
+  padding: 0.85rem 0.9rem;
+  background: rgba(4, 16, 13, 0.72);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.panelTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.6rem;
+  font-size: 0.8rem;
+  color: var(--gold-300, #e8c547);
+}
+
+.metrics {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.metrics li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.42rem 0.55rem;
+  border: 1px solid rgba(212, 160, 23, 0.22);
+  border-radius: 12px;
+  background: rgba(9, 40, 33, 0.55);
+  font-size: 0.7rem;
+}
+
+.metricIcon {
+  display: grid;
+  place-items: center;
+  color: var(--gold-300, #e8c547);
+}
+
+.metricLabel {
+  flex: 1;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.metricValue {
+  color: #f5edd8;
+  font-size: 0.82rem;
+}
+
+.recentList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.recentLink {
+  display: grid;
+  gap: 0.1rem;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid rgba(212, 160, 23, 0.22);
+  border-radius: 12px;
+  background: rgba(9, 40, 33, 0.55);
+  text-decoration: none;
+  color: inherit;
+}
+
+.recentLink:hover {
+  border-color: rgba(232, 197, 71, 0.7);
+}
+
+.recentTitle {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #f5edd8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recentMeta {
+  font-size: 0.62rem;
+  color: var(--text-secondary);
+}
+
+.empty {
+  margin: 0;
+  font-size: 0.7rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+}
+
+/* --- Gold baseline -------------------------------------------------------- */
+.baseline {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.55rem clamp(0.6rem, 2vw, 1.2rem);
+  border: 1px solid rgba(232, 197, 71, 0.6);
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(232, 197, 71, 0.22), rgba(150, 110, 20, 0.28)),
+    rgba(10, 30, 25, 0.85);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.baseline button,
+.baselineLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.42rem 0.8rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: #f0d67c;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.baseline button:hover,
+.baselineLink:hover {
+  border-color: rgba(232, 197, 71, 0.7);
+  background: rgba(232, 197, 71, 0.12);
+}
+
+.baselineOn {
+  border-color: rgba(232, 197, 71, 0.9) !important;
+  background: linear-gradient(180deg, #e8c547, #b8860b) !important;
+  color: #1a1405 !important;
+}
+
+.baselineGhost {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* --- Responsive ----------------------------------------------------------- */
+@media (max-width: 1100px) {
+  .portals {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1024px) {
+  .hub {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .portals {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .rail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .baseline {
+    border-radius: 20px;
+  }
+  .searchHint {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portal,
+  .baseline button,
+  .baselineLink {
+    transition: none;
+  }
+  .portal:hover {
+    transform: none;
+  }
+}

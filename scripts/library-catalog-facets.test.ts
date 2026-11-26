@@ -55,7 +55,7 @@ test("language facets are canonicalized so one language is one filter", () => {
 test("the ported filters did not displace the controlled hero query", () => {
   assert.match(catalogSource, /query: externalQuery/);
   assert.match(catalogSource, /const query = externalQuery \?\? ownQuery/);
-  assert.match(page, /value=\{query\}/);
+  assert.match(page, /query=\{query\}/);
   assert.match(page, /onQueryChange=\{setQuery\}/);
   assert.match(page, /setQuery\(value\)/);
 });
