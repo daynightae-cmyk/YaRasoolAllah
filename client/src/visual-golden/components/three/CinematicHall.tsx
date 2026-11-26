@@ -259,10 +259,30 @@ export default function CinematicHall({ room, view, illuminated }: HallProps) {
           }
 
           if (room === "quran") {
+            // Central circular illuminated platform — sapphire and gold stage.
+            const platform = add(
+              new THREE.CylinderGeometry(5.2, 5.2, .18, 64),
+              brass,
+              0, .1, -9.2,
+            );
+            platform.receiveShadow = true;
+            const platformGlow = new THREE.PointLight("#e8c547", 120, 14, 2);
+            platformGlow.position.set(0, 1.2, -9.2);
+            scene.add(platformGlow);
+            const platformRing = add(
+              new THREE.RingGeometry(4.6, 5.4, 64),
+              rim,
+              0, .12, -9.19,
+            );
+            platformRing.rotation.x = -Math.PI / 2;
+
+            // Elegant Quran stands — open Mushaf on carved wooden lecterns.
             for (const side of [-1, 1]) {
               box(.89, .16, 1.75, wood, side * .36, 1.18, -7.12).rotation.z = side * .6;
               box(1.1, .13, 1.52, brass, side * .56, 1.59, -7.12).rotation.z = side * -.16;
               box(1.06, .135, 1.48, page, side * .55, 1.66, -7.12).rotation.z = side * -.16;
+              // Gilded stand ornament.
+              add(new THREE.TorusGeometry(.14, .03, 8, 16), brass, side * .55, 1.76, -7.12);
               const x = side * 5.75;
               box(1.02, .55, .55, equipment, x, 2.24, -.55);
               cylinder(.087, 1.99, equipment, x, 1, -.55);
@@ -270,6 +290,12 @@ export default function CinematicHall({ room, view, illuminated }: HallProps) {
             }
             cylinder(.045, 1.67, brass, 2.75, 1.6, -7.15);
             add(new THREE.CapsuleGeometry(.11, .25, 4, 8), equipment, 2.75, 2.49, -7.15).rotation.z = .3;
+
+            // Secondary auxiliary displays — flanking side walls.
+            for (const side of [-1, 1]) {
+              const aux = new THREE.PlaneGeometry(5.2, 2.6, 24, 1);
+              add(aux, led, side * 9.4, 3.6, -13.2);
+            }
           }
 
           const updateView = (next: HallView) => {
