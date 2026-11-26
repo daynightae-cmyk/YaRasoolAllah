@@ -28,6 +28,8 @@ import type { SeerahChapter } from "@/data/seerahData";
 export interface SeerahSceneConfig {
   /** Canonical chapter id from seerahData.ts (must match exactly). */
   chapterId: string;
+  /** LivingSeerahWorld scene id to enter from this chapter's Play/Enter. */
+  worldSceneId: string;
   /** Display label shown inside the chapter entrance. */
   titleAr: string;
   /** Era name for subtitle. */
@@ -49,6 +51,7 @@ export interface SeerahSceneConfig {
 const SEERAH_SCENES: SeerahSceneConfig[] = [
   {
     chapterId: "birth-and-upbringing",
+    worldSceneId: "desert-camp",
     titleAr: "المولد والنشأة",
     eraAr: "قبل البعثة — سنة الفيل",
     light: "bronze-day",
@@ -60,6 +63,7 @@ const SEERAH_SCENES: SeerahSceneConfig[] = [
   },
   {
     chapterId: "prophethood-beginning",
+    worldSceneId: "hira-cave",
     titleAr: "بدء الوحي",
     eraAr: "بعثة النبي ﷺ",
     light: "obsidian-night",
@@ -71,6 +75,7 @@ const SEERAH_SCENES: SeerahSceneConfig[] = [
   },
   {
     chapterId: "secret-public-dawah",
+    worldSceneId: "desert-camp",
     titleAr: "الدعوة السرية ثم العلنية",
     eraAr: "مكة — الدعوة والصبر",
     light: "gold-dawn",
@@ -83,6 +88,7 @@ const SEERAH_SCENES: SeerahSceneConfig[] = [
   },
   {
     chapterId: "hijra-to-madinah",
+    worldSceneId: "madinah-walk",
     titleAr: "الهجرة إلى المدينة",
     eraAr: "الهجرة — السنة 13 من البعثة",
     light: "emerald-dusk",
@@ -95,6 +101,7 @@ const SEERAH_SCENES: SeerahSceneConfig[] = [
   },
   {
     chapterId: "establishing-state",
+    worldSceneId: "madinah-walk",
     titleAr: "إقامة الدولة",
     eraAr: "المدينة — التأسيس",
     light: "ivory-morning",
@@ -106,6 +113,7 @@ const SEERAH_SCENES: SeerahSceneConfig[] = [
   },
   {
     chapterId: "battles-conquests",
+    worldSceneId: "badr-valley",
     titleAr: "الغزوات والفتوحات",
     eraAr: "المدينة — الدفاع والغزوات",
     light: "bronze-day",
@@ -118,6 +126,7 @@ const SEERAH_SCENES: SeerahSceneConfig[] = [
   },
   {
     chapterId: "farewell-hajj",
+    worldSceneId: "desert-camp",
     titleAr: "حجة الوداع",
     eraAr: "مكة — الحج والوداع",
     light: "gold-dawn",
@@ -130,6 +139,7 @@ const SEERAH_SCENES: SeerahSceneConfig[] = [
   },
   {
     chapterId: "prophet-death",
+    worldSceneId: "desert-camp",
     titleAr: "الوفاة والدفن",
     eraAr: "السنة 11 هـ — 632م",
     light: "obsidian-night",
@@ -144,6 +154,12 @@ const SEERAH_SCENES: SeerahSceneConfig[] = [
 /** Resolve scene config by chapter id. Returns null when no scene is defined. */
 export function getSeerahScene(chapterId: string): SeerahSceneConfig | null {
   return SEERAH_SCENES.find((scene) => scene.chapterId === chapterId) ?? null;
+}
+
+/** Resolve the LivingSeerahWorld scene id for a chapter's Play/Enter. */
+export function getWorldSceneIdForChapter(chapterId: string): string | null {
+  const scene = SEERAH_SCENES.find((s) => s.chapterId === chapterId);
+  return scene?.worldSceneId ?? null;
 }
 
 /** All scenes in canonical chapter order. */

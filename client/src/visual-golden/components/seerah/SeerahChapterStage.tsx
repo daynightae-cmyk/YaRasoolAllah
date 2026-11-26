@@ -11,10 +11,11 @@
  * - Approximate places stay approximate and link to the existing atlas only.
  */
 
-import { Link } from "wouter";
-import { ArrowLeft, BookOpen, ChevronLeft, ChevronRight, Database, Map, Sparkles } from "lucide-react";
+import { Link, useLocation } from "wouter";
+import { ArrowLeft, BookOpen, ChevronLeft, ChevronRight, Compass, Database, Map, Sparkles } from "lucide-react";
 import { art } from "@/visual-golden/mock/art";
 import { chapterWorldPlate } from "@/visual-golden/services/seerah-worlds";
+import { getWorldSceneIdForChapter } from "@/visual-golden/services/seerah-scene";
 import type { SeerahChapter } from "@/data/seerahData";
 import type { SeerahSceneConfig } from "@/visual-golden/services/seerah-scene";
 import { stationCountLabel } from "@/visual-golden/services/seerah";
@@ -55,6 +56,14 @@ export function SeerahChapterStage({
   canPrevious,
   canNext,
 }: SeerahChapterStageProps) {
+  const [, navigate] = useLocation();
+  const worldSceneId = scene ? getWorldSceneIdForChapter(chapter.id) : null;
+
+  const enterWorld = () => {
+    if (!worldSceneId) return;
+    navigate(`/seerah/world?scene=${encodeURIComponent(worldSceneId)}`);
+  };
+
   // Prefer the 2026 cinematic world plate when the pack provides one for
   // this chapter; otherwise keep the schematic SVG scene plate.
   const plate = chapterWorldPlate(chapter.id) ?? (scene ? art[scene.plate] : art.desert);
@@ -94,6 +103,17 @@ export function SeerahChapterStage({
               <BookOpen size={16} aria-hidden />
               اقرأ الفصل
             </button>
+            {worldSceneId ? (
+              <button
+                type="button"
+                className={styles.secondary}
+                onClick={enterWorld}
+                aria-label={`ادخل العالم الحي — ${chapter.title}`}
+              >
+                <Compass size={15} aria-hidden />
+                ادخل العالم
+              </button>
+            ) : null}
             <Link href="/seerah/database" className={styles.secondary}>
               <Database size={15} aria-hidden />
               القاعدة الزمنية
