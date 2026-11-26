@@ -1,47 +1,53 @@
 # تقرير الاستيراد (Ingestion Report)
 
-تاريخ الإنشاء الثابت: 2026-11-26T00:00:00.000Z
+تاريخ الإنشاء الثابت: 2026-11-27T00:00:00.000Z
 مولّد البيانات: media-discovery-ingest/2.0.0
-عدد السجلات الفريدة المستوردة: 1742
+عدد السجلات الفريدة المستوردة: 3580
 تم تخطي المكررات: 0
 المؤهلة للعرض العام (APPROVED): 0
-غير مكتملة الاعتماد الكامل (PENDING/DRAFT): 1742
-بحقوق UNKNOWN: 1742
+غير مكتملة الاعتماد الكامل (PENDING/DRAFT): 3580
+بحقوق UNKNOWN: 3580
 
 ## بصمات المدخلات
-- data-sources/media/acquisition/media-acquisition-manifest.json: cf5d7bb9d89ff293e4162280ee0ed1ad10ee868ff7be1ac36e06a00d34e9b06f (1308 bytes, utf8-lf)
-- data-sources/media/acquisition/kids-media-catalog.csv: b451838edd0eb69d2274c981d6e5076e767d34fce644f5224ec8d76e4e27e7f6 (88754 bytes, utf8-lf)
-- data-sources/media/acquisition/kids-media-catalog.json: 9754524efbad91dc981626443f0e8bf187dda2f65f7cdaea0e30a60a1f115775 (159453 bytes, utf8-lf)
-- data-sources/media/acquisition/seerah-media-catalog.csv: 989d1954971f91141ebe1286c2b52532f11256d56a7e703276e7a791b24f88ca (2829417 bytes, utf8-lf)
-- data-sources/media/acquisition/seerah-media-catalog.json: 8343ef9ecaa18a16c098926bd9cffccff971a7f1fccb7075a6fec946bbf6f8d8 (4703641 bytes, utf8-lf)
-- data-sources/media/acquisition/media-rights-ledger.csv: c8bad33861866e5194eaf800525bc60d97165442f4d5ec219b50ae59bd7a1c6a (534690 bytes, utf8-lf)
-- data-sources/media/acquisition/media-rejected-and-pending.csv: f80802089c9cfb8124698ccc1130a555df93cc0d66053c74df4a8272d9fa3c67 (601878 bytes, utf8-lf)
+- data-sources/media/acquisition/media-acquisition-manifest.json: a06270368c2ae84bc53be61cc7c06404cbee08e021b3fea31973e1143c16b4db (1308 bytes, utf8-lf)
+- data-sources/media/acquisition/kids-media-catalog.csv: 9ccfeed801af94229765596a921b63496b0b24ea1bb090e1c8eba0cba363658c (94413 bytes, utf8-lf)
+- data-sources/media/acquisition/kids-media-catalog.json: fde743323a72bbc8796c5b6f27455b369fa36c83937faf31a057c53a329c13d3 (165112 bytes, utf8-lf)
+- data-sources/media/acquisition/seerah-media-catalog.csv: 666644c42f75d3573738ac7bfd800afd8260b09005a507d204b88618eb4b0170 (5983247 bytes, utf8-lf)
+- data-sources/media/acquisition/seerah-media-catalog.json: 763795c5f60943c0bc936c64578ef199c75521da9a974b3b1fc9d65dca242a15 (9910793 bytes, utf8-lf)
+- data-sources/media/acquisition/media-rights-ledger.csv: 4730d8f858ca71759e817309ffa467ff65d974018d5151c70ac44ebb5f6f3fe2 (1111344 bytes, utf8-lf)
+- data-sources/media/acquisition/media-rejected-and-pending.csv: 400a72cee059703df9dadb9ba1ef6ee84ddce5ad385efab03b2bffbebff7fa9e (1197854 bytes, utf8-lf)
 
 ## بصمات المخرجات
-- media-discovery-catalog.json: dfd41080a68ea41a239d2e86ad563be6c9361be790d6ebaef37c19b82e75f971
-- ingestion-manifest.json: 93dd383c902b7cfd5eaf832217d2f905351c06175a070eb28d6ba26e49d41209
-- media-discovery.generated.ts: c952b03530b6e7537f8fdc69e6c879f8b4de0b2e394e560be17fcf1ba2322ce9
-- media-discovery-status.generated.ts: a2fd6b4c7a84c71e57f7026389b78184257694f7b1e99f23136441a6a4ef2d28
+- media-discovery-catalog.json: 512277d8e7ba5d96e889c75d47662d5787675498449060bb02d0241307a15a55
+- ingestion-manifest.json: 0eed661d5e6789599cd0c7543c93e4bb60546b1fff9fd96584d782810c6697a9
+- media-discovery.generated.ts: 5972b1f659ab00e20078d6cf2f02ded4c36e4dd31bdadd8cd9b91e7cce649f9d
+- media-discovery-status.generated.ts: 485dbe252f0e78e289d68f2982bf15d002451aaf0f782ad5b7785497d2b90b2b
 
 ## حسب الفئة
 - kids: 46
 - seerah: 14
-- التاريخ الإسلامي: 227
-- السيرة النبوية: 169
+- الأخلاق والآداب: 6
+- التاريخ الإسلامي: 336
+- السيرة النبوية: 303
 - السيرة النبوية الكاملة: 9
 - الصحابة والأئمة: 379
-- العبادات: 23
+- الصيام ورمضان: 346
+- العبادات: 290
+- العقيدة: 24
+- الفقه: 29
 - القرآن الكريم للأطفال: 17
-- القرآن وعلومه: 438
+- القرآن وعلومه: 619
+- اللغة العربية: 14
+- الوثائقية: 356
 - سيرة نبوية: 7
-- قصص الأنبياء والدروس: 64
-- محاضرات ومواعظ: 349
+- قصص الأنبياء والدروس: 198
+- محاضرات ومواعظ: 587
 
 ## حسب حالة النشر
-- DRAFT: 1742
+- DRAFT: 3580
 
 ## حسب حالة الحقوق
-- UNKNOWN: 1742
+- UNKNOWN: 3580
 
 ## السياسة
 - لا يوجد سجل تمت ترقيته إلى APPROVED.

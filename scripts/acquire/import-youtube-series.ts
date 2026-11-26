@@ -245,7 +245,7 @@ function main() {
             title_original: title,
             title_ar: /[\u0600-\u06ff]/.test(title) ? title : "",
             description_ar: "",
-            language: "ar",
+            language: /[\u0600-\u06ff]/.test(title) ? "ar" : "en",
             duration_seconds: numberCell(item.entry.duration ?? null),
             published_at: "",
             channel_id: item.publisher.channel_id,

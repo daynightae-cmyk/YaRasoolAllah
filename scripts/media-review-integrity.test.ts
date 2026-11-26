@@ -59,7 +59,9 @@ test("the four formerly shifted source rows keep every review field aligned", ()
 
 test("generated discovery catalog is fail-closed and repairs the shifted statuses", () => {
   const total = DISCOVERED_MEDIA_CATALOG.length;
-  assert.equal(total, 1742);
+  // Golden count of the governed discovery catalog: 2026-11-27 expansion to
+  // 125 enumerated playlists (5 publishers) took it from 1742 to 3580 records.
+  assert.equal(total, 3580);
   assert.equal(DISCOVERED_MEDIA_COUNTS.total, total);
   assert.equal(DISCOVERED_MEDIA_COUNTS.approved, 0);
   assert.equal(DISCOVERED_MEDIA_COUNTS.pending, total);

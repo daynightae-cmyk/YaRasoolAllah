@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "checked_at": "2026-11-26",
+  "checked_at": "2026-11-27",
   "purpose": "Explicit adult Arabic playlist acquisition registry. Listing a series does not approve its content, rights, embedding, or religious review.",
   "publishers": [
     {
@@ -32,7 +32,25 @@
         { "id": "PLATlJNRzYr-DDcH9LWnfS9KhU0MD5fB6r", "series_name": "قصة النهاية", "category": "محاضرات ومواعظ", "subcategory": "الإيمان والآخرة" },
         { "id": "PLATlJNRzYr-Cu-E-_FBMRzHaC5mG8O9NF", "series_name": "الإسلام ببساطة", "category": "محاضرات ومواعظ", "subcategory": "أساسيات الإسلام" },
         { "id": "PLATlJNRzYr-DVZUPVWj4kQyksQkZzEfwv", "series_name": "روائع القصص", "category": "قصص الأنبياء والدروس", "subcategory": "قصص ودروس" },
-        { "id": "PLATlJNRzYr-Ax1OneMa3GYO2WlSQXWUr2", "series_name": "أسرار الحج", "category": "العبادات", "subcategory": "الحج" }
+        { "id": "PLATlJNRzYr-Ax1OneMa3GYO2WlSQXWUr2", "series_name": "أسرار الحج", "category": "العبادات", "subcategory": "الحج" },
+        { "id": "PLZdjw9hH1a70", "series_name": "سلسلة الدار الآخرة", "category": "محاضرات ومواعظ", "subcategory": "الإيمان والآخرة" },
+        { "id": "PLATlJNRzYr-A8GfvMqkO0jhVK4PpF3CPA", "series_name": "سلسلة جدد إيمانك | د. طارق السويدان", "category": "العقيدة", "subcategory": "تجديد الإيمان" },
+        { "id": "PLATlJNRzYr-Can0iz6A_P33ENlBSJiz20", "series_name": "سلسلة قطار الحياة | د. طارق السويدان", "category": "محاضرات ومواعظ", "subcategory": "تفكر وتدبر" },
+        { "id": "PLATlJNRzYr-CNMyBIsiJ1YbDQHFxpuJDd", "series_name": "قصص رائعة وملهمة | د. طارق السويدان", "category": "قصص الأنبياء والدروس", "subcategory": "قصص ودروس" },
+        { "id": "PLATlJNRzYr-BY7qYTfyU5--2mn3PwcCHw", "series_name": "خلاصات في الدين والدعوة | د. طارق السويدان", "category": "محاضرات ومواعظ", "subcategory": "دروس ومحاضرات" },
+        { "id": "PLATlJNRzYr-CXdKUbdmZZ4ErFnBMoZWeJ", "series_name": "كن ذا أثر | سلسلة حلقات وقفية | د. طارق السويدان", "category": "الأخلاق والآداب", "subcategory": "الآداب" },
+        { "id": "PLATlJNRzYr-B1unbrIHCxKXCjHHvihfmu", "series_name": "برنامج الرسول القائد | د. طارق السويدان", "category": "السيرة النبوية", "subcategory": "القيادة النبوية" },
+        { "id": "PLATlJNRzYr-B83RcCPH8ml02U8FRBnVqT", "series_name": "سلسلة الرسول القائد - د. طارق السويدان", "category": "السيرة النبوية", "subcategory": "القيادة النبوية" },
+        { "id": "PLATlJNRzYr-AgNEc-TJZg43KY21TE38KW", "series_name": "روائع أسرار القيادة النبوية | د. طارق السويدان", "category": "السيرة النبوية", "subcategory": "القيادة النبوية" },
+        { "id": "PLATlJNRzYr-BiAUfFC1CtdsgYhzdHh1qW", "series_name": "برنامج أسرار القيادة النبوية | د. طارق السويدان", "category": "السيرة النبوية", "subcategory": "القيادة النبوية" },
+        { "id": "PLATlJNRzYr-A6f25c79PzITfcS5lJVei_", "series_name": "سلسلة علمني التاريخ | د. طارق السويدان", "category": "التاريخ الإسلامي", "subcategory": "التاريخ الإسلامي العام" },
+        { "id": "PLATlJNRzYr-AbmM1X3LVy6cI1wFSUzCJF", "series_name": "سلسلة فن الإحسان | د. طارق السويدان", "category": "العبادات", "subcategory": "الإحسان" },
+        { "id": "PLATlJNRzYr-Ceiie9WBHxmDepXrxLROam", "series_name": "سلسلة خماسية الولاء | د. طارق السويدان", "category": "العقيدة", "subcategory": "الولاء والبراء" },
+        { "id": "PLATlJNRzYr-DASgwTXSD5pIkzxct0BoT9", "series_name": "تَفكر", "category": "محاضرات ومواعظ", "subcategory": "تفكر وتدبر" },
+        { "id": "PLATlJNRzYr-Dq7IQMqiGIy3SO58b5EXq2", "series_name": "برنامج سحر القرآن | د. طارق السويدان", "category": "القرآن وعلومه", "subcategory": "علوم القرآن" },
+        { "id": "PL18FCFD0221A47E72", "series_name": "برنامج نساء خالدات | د. طارق السويدان", "category": "قصص الأنبياء والدروس", "subcategory": "قصص ودروس" },
+        { "id": "PLD664CB5A9A1D459C", "series_name": "خواطر الجمعة | د. طارق السويدان", "category": "محاضرات ومواعظ", "subcategory": "خواطر" },
+        { "id": "PL75D7FC547359F2AF", "series_name": "مؤتمرات ومحاضرات", "category": "محاضرات ومواعظ", "subcategory": "مؤتمرات" }
       ]
     },
     {
@@ -53,7 +71,21 @@
         { "id": "PL_-cpA04qyLLVEsWJKa3QgQrjvTSaEG8-", "series_name": "فتح فلسطين وبلاد الشام", "category": "التاريخ الإسلامي", "subcategory": "الفتوحات الإسلامية" },
         { "id": "PL7B7E7AD09DC6128C", "series_name": "الطريق إلى حطين", "category": "التاريخ الإسلامي", "subcategory": "حطين" },
         { "id": "PL_-cpA04qyLJ7HjEre-pufyE56JH123D2", "series_name": "فلسطين حتى لا تكون أندلسًا أخرى", "category": "التاريخ الإسلامي", "subcategory": "القدس وفلسطين" },
-        { "id": "PL_-cpA04qyLJvK-pYr0wExZYbO8fhtrJt", "series_name": "الحج", "category": "العبادات", "subcategory": "الحج" }
+        { "id": "PL_-cpA04qyLJvK-pYr0wExZYbO8fhtrJt", "series_name": "الحج", "category": "العبادات", "subcategory": "الحج" },
+        { "id": "PL_-cpA04qyLKBq2Q1sZp0-gb1OFKqS6Gs", "series_name": "قصة محمد الفاتح", "category": "التاريخ الإسلامي", "subcategory": "الفتوحات الإسلامية" },
+        { "id": "PL_-cpA04qyLKBzrsUtFweGKu3tIPLRK7F", "series_name": "خط الزمن", "category": "التاريخ الإسلامي", "subcategory": "التاريخ الإسلامي العام" },
+        { "id": "PL_-cpA04qyLKsEb2BKD5K5thR23Lhr3RO", "series_name": "أغرب من الخيال", "category": "قصص الأنبياء والدروس", "subcategory": "قصص ودروس" },
+        { "id": "PL_-cpA04qyLL8bLzLFdmgEHmYvFBN-e9V", "series_name": "قطوف", "category": "محاضرات ومواعظ", "subcategory": "مواعظ" },
+        { "id": "PL867D6580EB221145", "series_name": "خواطر الفجر | رمضان 1433هـ", "category": "الصيام ورمضان", "subcategory": "رمضان" },
+        { "id": "PLDD23778C7908EA28", "series_name": "الانتفاضة الفلسطينية الثالثة", "category": "التاريخ الإسلامي", "subcategory": "القدس وفلسطين" },
+        { "id": "PLB5A0D957B2841167", "series_name": "شبهات حول الإسلام", "category": "العقيدة", "subcategory": "شبهات" },
+        { "id": "PLA1A387EF4FA976C9", "series_name": "خطبة جمعة - أحوال الأمة الإسلامية", "category": "محاضرات ومواعظ", "subcategory": "خطب الجمعة" },
+        { "id": "PL6917060ED3E86442", "series_name": "الإعجاز في ديار ثمود", "category": "قصص الأنبياء والدروس", "subcategory": "قصص الأنبياء" },
+        { "id": "PL568E54E3E761A3D6", "series_name": "كيف غير الإسلام تفكير العلماء", "category": "التاريخ الإسلامي", "subcategory": "الحضارة الإسلامية" },
+        { "id": "PL7F26DED6EE7BD65E", "series_name": "كن داعيا", "category": "محاضرات ومواعظ", "subcategory": "دعوة" },
+        { "id": "PLAD1E2044BF7250D3", "series_name": "القرآن وبناء الأمة", "category": "القرآن وعلومه", "subcategory": "تدبر القرآن" },
+        { "id": "PLDB110448FAEC7B39", "series_name": "المشروع الحضاري الإسلامي", "category": "التاريخ الإسلامي", "subcategory": "الحضارة الإسلامية" },
+        { "id": "PL8EF910767905FB08", "series_name": "استعجال النصر", "category": "محاضرات ومواعظ", "subcategory": "دروس ومحاضرات" }
       ]
     },
     {
@@ -74,7 +106,71 @@
         { "id": "PLEC615CD41BB3837D", "series_name": "لطائف المعارف", "category": "محاضرات ومواعظ", "subcategory": "الإيمان والآخرة" },
         { "id": "PLUh1Rr7X1uT5St4D2fjxoeZa16ACH5MVn", "series_name": "خاتم النبيين", "category": "السيرة النبوية", "subcategory": "السيرة النبوية الكاملة" },
         { "id": "PLUh1Rr7X1uT4_en8BxlFWsN4gLpCC5sfD", "series_name": "تفسير القرآن العظيم 1437هـ", "category": "القرآن وعلومه", "subcategory": "التفسير" },
-        { "id": "PLUh1Rr7X1uT7vwPvzP_Y0cBPqgk8jNwKl", "series_name": "الباقيات الصالحات", "category": "القرآن وعلومه", "subcategory": "تدبر القرآن" }
+        { "id": "PLUh1Rr7X1uT7vwPvzP_Y0cBPqgk8jNwKl", "series_name": "الباقيات الصالحات", "category": "القرآن وعلومه", "subcategory": "تدبر القرآن" },
+        { "id": "PLUh1Rr7X1uT5QJwlCRQtBTx68k6zbE97D", "series_name": "الأشهر الحرم", "category": "العبادات", "subcategory": "الأشهر الحرم" },
+        { "id": "PLUh1Rr7X1uT62KbncNZwEx_FLx11spWnL", "series_name": "قصص دينية و تاريخية", "category": "قصص الأنبياء والدروس", "subcategory": "قصص دينية وتاريخية" },
+        { "id": "PLUh1Rr7X1uT6A0uL2CUCty2QyTt3cSIPC", "series_name": "حلقات برنامج \"زاد الصائمين\"", "category": "الصيام ورمضان", "subcategory": "زاد الصائمين" },
+        { "id": "PLUh1Rr7X1uT6-DVfnABpY2tAoqbQlovkS", "series_name": "حلقات برنامج \"الحج في القرآن\"", "category": "العبادات", "subcategory": "الحج" },
+        { "id": "PLUh1Rr7X1uT732tRVRgkwidLB15F9NgLm", "series_name": "شهر رمضان - جميع المقاطع والبرامج الخاصة بشهر رمضان", "category": "الصيام ورمضان", "subcategory": "رمضان" },
+        { "id": "PLEEE6D2AD071E30F4", "series_name": "برنامج معين الأنبياء", "category": "قصص الأنبياء والدروس", "subcategory": "قصص الأنبياء" },
+        { "id": "PLUh1Rr7X1uT4xxyQPcBmeoWgwmx2OU-65", "series_name": "حلقات برنامج تاريخ الفقه الإسلامي ــ قناة اقرأ -1435هـ", "category": "الفقه", "subcategory": "تاريخ الفقه الإسلامي" },
+        { "id": "PLUh1Rr7X1uT6pTY3ZgMBpSzy3fwAS7mWh", "series_name": "برنامج دار السلام 1 ( رمضان 1434 هـ )", "category": "الصيام ورمضان", "subcategory": "رمضان" },
+        { "id": "PL4C86C1399FF8FAEB", "series_name": "(( الحج )) جميع المقاطع والبرامج الخاصة بفريضة الحج", "category": "العبادات", "subcategory": "الحج" },
+        { "id": "PL1FC1EAE0EC83EB4C", "series_name": "برنامج نضرة النعيم [ جديد ]", "category": "محاضرات ومواعظ", "subcategory": "دروس ومحاضرات" },
+        { "id": "PL7CFAAC67D9D0AD02", "series_name": "برنامج روح المعاني", "category": "القرآن وعلومه", "subcategory": "معاني القرآن" },
+        { "id": "PL144779A5DE490595", "series_name": "برنامج أسرار التنزيل", "category": "القرآن وعلومه", "subcategory": "أسباب النزول" },
+        { "id": "PL26D2750AB4176DED", "series_name": "برنامج أهل البقيع", "category": "السيرة النبوية", "subcategory": "مواقع السيرة" },
+        { "id": "PL72C357D89D3F7BBB", "series_name": "دروس شرح الدرة المضيئة", "category": "القرآن وعلومه", "subcategory": "التجويد" },
+        { "id": "PLF2289C10FD155361", "series_name": "برنامج الصادق المصدوق", "category": "السيرة النبوية", "subcategory": "السيرة النبوية الكاملة" },
+        { "id": "PL6115CB64104DF409", "series_name": "برنامج محاسن التأويل", "category": "القرآن وعلومه", "subcategory": "التفسير" },
+        { "id": "PL637903C910BE68F0", "series_name": "برنامج السائحون", "category": "محاضرات ومواعظ", "subcategory": "قصص ودروس" },
+        { "id": "PLEEE34326F2931044", "series_name": "المدائح النبوية", "category": "محاضرات ومواعظ", "subcategory": "المدائح النبوية" }
+      ]
+    },
+    {
+      "channel_id": "UC0LSnqrwqtMwl2YwfUpO66g",
+      "channel_name": "الجزيرة الوثائقية",
+      "channel_url": "https://www.youtube.com/@aljazeeradocumentary",
+      "publisher_status": "OFFICIAL",
+      "speaker": "",
+      "playlists": [
+        { "id": "PLA5MNF7tHNqI", "series_name": "محطات فاصلة في تاريخنا العربي", "category": "التاريخ الإسلامي", "subcategory": "تاريخ عربي" },
+        { "id": "PLmrET10kAE97RuC47XUMWxQ9BlXB_9QDB", "series_name": "الحروب الصليبية", "category": "التاريخ الإسلامي", "subcategory": "الحروب الصليبية" },
+        { "id": "PLmrET10kAE948ONSZ7dpVcwkwYc7LQNVU", "series_name": "سلسلة النكبة", "category": "الوثائقية", "subcategory": "النكبة" },
+        { "id": "PLmrET10kAE94guH49qguLs6Xm5ZZGpkQ4", "series_name": "في ذكرى النكبة.. قصة فلسطين", "category": "الوثائقية", "subcategory": "فلسطين" },
+        { "id": "PLmrET10kAE95G1CqkT7NvBw-OsKNFAeak", "series_name": "عام فلسطين", "category": "الوثائقية", "subcategory": "فلسطين" },
+        { "id": "PLPHi7QD0q-eM", "series_name": "عقول عربية وإسلامية", "category": "الوثائقية", "subcategory": "علماء وعقول" },
+        { "id": "PLmrET10kAE94VLoOE3p5g1qx3gLKIEhwU", "series_name": "العلماء المسلمون", "category": "الوثائقية", "subcategory": "العلماء المسلمون" },
+        { "id": "PLmrET10kAE97z_4n8mCTWr43ThOC9VPjY", "series_name": "سلسلة الإسلاميون", "category": "الوثائقية", "subcategory": "الإسلاميون" },
+        { "id": "PLmrET10kAE97ld2WaWAxZTeIf6WRJ7ZKn", "series_name": "سلسلة الأزهر", "category": "الوثائقية", "subcategory": "الأزهر" },
+        { "id": "PLmrET10kAE95A22eN3XvhUwb4Vr94j8x1", "series_name": "تاريخ وسياسة", "category": "الوثائقية", "subcategory": "تاريخ" },
+        { "id": "PLWNBWX-63hZ4", "series_name": "رواد الأدب العربي", "category": "اللغة العربية", "subcategory": "الأدب العربي" },
+        { "id": "PLmrET10kAE940f4gL52YK8DEB4dgk58sQ", "series_name": "سلسلة لُغتنا", "category": "اللغة العربية", "subcategory": "اللغة العربية" },
+        { "id": "PLmrET10kAE95VNc2542r-waNL6cTQRO-2", "series_name": "رمضان من كل مكان", "category": "الصيام ورمضان", "subcategory": "رمضان" },
+        { "id": "PLmrET10kAE97xFGpYdBdNjjt9EZqDWbSD", "series_name": "رمضان ومدينة", "category": "الصيام ورمضان", "subcategory": "رمضان" },
+        { "id": "PL8DB7D3D6F8B59C3E", "series_name": "مهن رمضانية", "category": "الصيام ورمضان", "subcategory": "مهن" },
+        { "id": "PLmrET10kAE96B5uHxNnHbHYgB2PsuDEtG", "series_name": "رحلة الحج", "category": "العبادات", "subcategory": "الحج" },
+        { "id": "PL6F30BFBA91119D96", "series_name": "المجتمعات الدينية", "category": "الوثائقية", "subcategory": "مجتمعات دينية" },
+        { "id": "PLPqBdj2QFtO8", "series_name": "معركة هرمجدون", "category": "الوثائقية", "subcategory": "علامات الساعة" },
+        { "id": "PLcLFipaAy8rw", "series_name": "تونس", "category": "الوثائقية", "subcategory": "بلدان عربية" },
+        { "id": "PLcFaV1z_ppeo", "series_name": "سوريا", "category": "الوثائقية", "subcategory": "بلدان عربية" },
+        { "id": "PLI2x6i_buKLw", "series_name": "الجزائر", "category": "الوثائقية", "subcategory": "بلدان عربية" },
+        { "id": "PLSl9DF2BRk1o", "series_name": "المغرب", "category": "الوثائقية", "subcategory": "بلدان عربية" },
+        { "id": "PLIo6m1dHWbC4", "series_name": "مصر", "category": "الوثائقية", "subcategory": "بلدان عربية" },
+        { "id": "PLPtIbt6NDpRY", "series_name": "سلطنة عُمان", "category": "الوثائقية", "subcategory": "بلدان عربية" }
+      ]
+    },
+    {
+      "channel_id": "UCcThu-JrAJnR-tCvxbxIbzQ",
+      "channel_name": "Quran Tajweed Academy",
+      "channel_url": "https://www.youtube.com/@QuranTajweedAcademyOfficial",
+      "publisher_status": "VERIFIED_PUBLISHER",
+      "speaker": "",
+      "playlists": [
+        { "id": "PLPnB8RNwXbbQ", "series_name": "Quran Recitation & Tajweed Correction | Sheikh Osamah Abu Zaid", "category": "القرآن وعلومه", "subcategory": "التجويد" },
+        { "id": "PLK71R2TUmGJs", "series_name": "Tajweed Lessons | Sheikh Ayman Swaid", "category": "القرآن وعلومه", "subcategory": "التجويد" },
+        { "id": "PLK4drzyimc-M", "series_name": "Recitation Correction | Sheikh Osamah Abu Zaid", "category": "القرآن الكريم", "subcategory": "تلاوة وتجويد" },
+        { "id": "PLePpy-NGuvBYudXlLd2uBT5s5SDFDP8xZ", "series_name": "Qari Bashir Ahmad Siddiq رحمه الله | Quran & Tajweed", "category": "القرآن الكريم", "subcategory": "تلاوة وتجويد" }
       ]
     }
   ]

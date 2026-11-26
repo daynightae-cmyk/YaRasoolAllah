@@ -7,7 +7,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const acquisition = resolve(root, "data-sources/media/acquisition");
 const reportPath = resolve(root, "artifacts/evidence/media-metadata-refresh-20261126.json");
 const write = process.argv.includes("--write");
-const checkedAt = "2026-11-26";
+const checkedAt = "2026-11-27";
 const catalogNames = ["seerah-media-catalog", "kids-media-catalog"] as const;
 
 type CsvRow = Record<string, string> & { __sourceLine: number };
