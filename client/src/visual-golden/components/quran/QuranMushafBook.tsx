@@ -310,7 +310,7 @@ export function QuranMushafBook({
     drag.lastX = event.clientX;
     drag.lastTime = now;
     drag.moved ||= Math.abs(delta) > 4;
-    const raw = drag.direction === 1 ? -delta / (width * 0.42) : delta / (width * 0.42);
+    const raw = drag.direction === 1 ? delta / (width * 0.42) : -delta / (width * 0.42);
     setTurn((current) => current ? { ...current, progress: clamp(raw), dragging: true } : current);
   };
 
@@ -321,7 +321,7 @@ export function QuranMushafBook({
     if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
     setTurn((current) => {
       if (!current) return null;
-      const thrownForward = drag.direction === 1 ? drag.velocity < -0.45 : drag.velocity > 0.45;
+      const thrownForward = drag.direction === 1 ? drag.velocity > 0.45 : drag.velocity < -0.45;
       if (current.progress < 0.24 && !thrownForward && drag.moved) return null;
       return { ...current, dragging: false };
     });
@@ -346,7 +346,7 @@ export function QuranMushafBook({
     const distance = end - touchStart.current;
     touchStart.current = null;
     if (Math.abs(distance) < 56) return;
-    startTurn(distance < 0 ? 1 : -1);
+    startTurn(distance > 0 ? 1 : -1);
   };
 
   const currentRight = pages[spreadIndex * 2];
@@ -357,14 +357,14 @@ export function QuranMushafBook({
   const angle = visualProgress * 180;
   const lift = Math.sin(visualProgress * Math.PI);
   const leafStyle = turn ? {
-    "--leaf-angle": `${turn.direction === 1 ? -angle : angle}deg`,
+    "--leaf-angle": `${turn.direction === 1 ? angle : -angle}deg`,
     "--leaf-lift": lift,
     "--leaf-curl": `${lift * 4.5}deg`,
   } as CSSProperties : undefined;
-  const baseRight = turn?.direction === 1 ? targetRight : turn && visualProgress >= 0.5 ? targetRight : currentRight;
-  const baseLeft = turn?.direction === -1 ? targetLeft : turn && visualProgress >= 0.5 ? targetLeft : currentLeft;
-  const leafFront = turn?.direction === 1 ? currentRight : currentLeft;
-  const leafBack = turn?.direction === 1 ? targetLeft : targetRight;
+  const baseRight = turn?.direction === -1 ? targetRight : turn && visualProgress >= 0.5 ? targetRight : currentRight;
+  const baseLeft = turn?.direction === 1 ? targetLeft : turn && visualProgress >= 0.5 ? targetLeft : currentLeft;
+  const leafFront = turn?.direction === 1 ? currentLeft : currentRight;
+  const leafBack = turn?.direction === 1 ? targetRight : targetLeft;
   const sharedFaceProps = {
     selectedAyah,
     onSelectAyah,
@@ -427,10 +427,10 @@ export function QuranMushafBook({
               aria-hidden="true"
             >
               <div className={`${styles.face} ${turn.direction === 1 ? styles.faceRight : styles.faceLeft}`}>
-                <PageFace {...sharedFaceProps} page={leafFront} side={turn.direction === 1 ? "right" : "left"} interactive={false} />
+                <PageFace {...sharedFaceProps} page={leafFront} side={turn.direction === 1 ? "left" : "right"} interactive={false} />
               </div>
               <div className={`${styles.face} ${styles.reverseFace}`}>
-                <PageFace {...sharedFaceProps} page={leafBack} side={turn.direction === 1 ? "left" : "right"} back />
+                <PageFace {...sharedFaceProps} page={leafBack} side={turn.direction === 1 ? "right" : "left"} back />
               </div>
               <div className={styles.curlEdge} aria-hidden="true" />
             </div>

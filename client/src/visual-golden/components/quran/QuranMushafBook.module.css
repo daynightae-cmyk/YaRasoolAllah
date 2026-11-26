@@ -5,6 +5,8 @@
 
 .mushaf {
   position: relative;
+  min-width: 0;
+  max-width: 100%;
   isolation: isolate;
   direction: rtl;
   font-family: var(--font-quran, "Scheherazade New", "Amiri", "Amiri Quran", serif);
@@ -226,8 +228,8 @@
   border-bottom: 1px solid transparent;
   transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
 }
-.ayah span {
-  display: block;
+.ayah .ayahText {
+  display: inline;
 }
 .ayah span[lang="ar"] { font-family: inherit; }
 .ayah.ayahOn {
@@ -235,7 +237,7 @@
   background: radial-gradient(circle at 50% 0%, rgba(178, 132, 43, 0.18), transparent 70%);
   border-radius: 4px;
 }
-.ayahNumber {
+.ayah .ayahNumber {
   display: inline-grid;
   place-items: center;
   width: clamp(1.15rem, 2vw, 1.35rem);
@@ -248,6 +250,8 @@
   font-size: 0.66rem;
   font-weight: 700;
   vertical-align: middle;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .endMark {
@@ -315,8 +319,8 @@
   pointer-events: none;
   transform: translateZ(calc(var(--leaf-lift, 0) * 12px)) rotateY(var(--leaf-angle, 0deg));
 }
-.leafPrevious { left: 0; right: auto; transform-origin: right center; }
-.leafNext { left: 50%; right: auto; transform-origin: left center; }
+.leafPrevious { left: 50%; right: auto; transform-origin: left center; }
+.leafNext { left: 0; right: auto; transform-origin: right center; }
 .leaf[data-animating] { transition: none; }
 
 .face {
@@ -337,14 +341,16 @@
   border-radius: 1rem 0 0 1rem;
 }
 
-.leafPrevious .face.right,
-.leafNext .face.left {
-  border-radius: 1rem 0 0 1rem;
-}
-.leafPrevious .face.left,
-.leafNext .face.right {
-  border-radius: 0 1rem 1rem 0;
-}
+/* Face sides: the free (outer) edge is rounded, the binding edge stays square. */
+.faceLeft { border-radius: 1rem 0 0 1rem; }
+.faceRight { border-radius: 0 1rem 1rem 0; }
+
+/* Forward turn (leafNext) starts on the left half and swings to the right. */
+.leafNext .face { border-radius: 1rem 0 0 1rem; }
+.leafNext .reverseFace { border-radius: 0 1rem 1rem 0; }
+/* Backward turn (leafPrevious) starts on the right half and swings to the left. */
+.leafPrevious .face { border-radius: 0 1rem 1rem 0; }
+.leafPrevious .reverseFace { border-radius: 1rem 0 0 1rem; }
 
 /* Corner controls */
 .corner {
@@ -364,8 +370,8 @@
   opacity: 0.35;
 }
 .corner:active { cursor: grabbing; }
-.corner[data-page-corner="next"] { inset-inline-end: 0; border-radius: 0 0 0 999px; }
-.corner[data-page-corner="previous"] { inset-inline-start: 0; border-radius: 0 0 999px 0; }
+.corner[data-page-corner="next"] { left: 0; border-radius: 0 0 0 999px; }
+.corner[data-page-corner="previous"] { right: 0; border-radius: 0 0 999px 0; }
 .corner:disabled { opacity: 0.15; cursor: not-allowed; }
 .corner span {
   position: absolute;
