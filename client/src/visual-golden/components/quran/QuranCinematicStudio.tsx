@@ -12,6 +12,12 @@ interface StudioProps {
   onClose(): void;
   onAccessibleReading(): void;
   children: ReactNode;
+  /** Actual playback position in seconds, from the governed audio element. */
+  audioTime?: number;
+  /** Actual playback duration in seconds, from the governed audio element. */
+  audioDuration?: number;
+  /** Whether recitation audio is currently playing. */
+  audioPlaying?: boolean;
 }
 
 const views = [
@@ -20,7 +26,7 @@ const views = [
   { id: "cinema", title: "عرض سينمائي" },
 ] as const;
 
-export function QuranCinematicStudio({ verse, passage, onClose, onAccessibleReading, children }: StudioProps) {
+export function QuranCinematicStudio({ verse, passage, onClose, onAccessibleReading, children, audioTime, audioDuration, audioPlaying }: StudioProps) {
   const host = useRef<HTMLElement>(null);
   const title = useRef<HTMLHeadingElement>(null);
   const [view, setView] = useState<HallView>("interactive");
@@ -73,6 +79,22 @@ export function QuranCinematicStudio({ verse, passage, onClose, onAccessibleRead
         <div className={styles.display} aria-live="polite">
           <span>{passage}</span>
           {verse ? <p lang="ar">{verse}</p> : null}
+        </div>
+      ) : null}
+      {audioDuration && audioDuration > 0 && audioTime != null ? (
+        <div className={styles.audioProgress} role="group" aria-label="تقدّم التلاوة">
+          <span className={styles.audioTime} id="quran-audio-time">
+            {Math.floor(audioTime / 60)}:{String(Math.floor(audioTime % 60)).padStart(2, "0")}
+          </span>
+          <span className={styles.audioTime} id="quran-audio-duration">
+            {Math.floor(audioDuration / 60)}:{String(Math.floor(audioDuration % 60)).padStart(2, "0")}
+          </span>
+          <div className={styles.audioBar}>
+            <span className={styles.audioFill} style={{ width: `${Math.min(100, Math.max(0, ((audioTime ?? 0) / audioDuration) * 100))}%` }} aria-hidden="true" />
+          </div>
+          <span className={styles.audioState}>
+            {audioPlaying ? "تُراد الآيات" : "مستعدة"}
+          </span>
         </div>
       ) : null}
       {view === "interactive" ? <div className={styles.readingControls}>{children}</div> : null}

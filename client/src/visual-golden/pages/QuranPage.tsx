@@ -724,6 +724,9 @@ export function QuranPage() {
         <QuranCinematicStudio
           verse={loading || loadError ? null : selectedVerse?.arabic ?? null}
           passage={loading ? "جارٍ فتح النص المحلي…" : loadError ?? (currentChapter ? `سورة ${currentChapter.arabicName} · الآية ${selectedVerse?.ayah ?? ayah}` : "المصحف المحلي")}
+          audioTime={audioTime}
+          audioDuration={audioDuration}
+          audioPlaying={audioPlaying}
           onClose={() => {
             setStudioOpen(false);
             window.requestAnimationFrame(() => document.getElementById("quran-studio-enter")?.focus());

@@ -62,9 +62,50 @@
 .display p { margin: .3rem 0; font: clamp(1.48rem, 3vw, 2.85rem)/1.9 var(--font-display), serif; }
 .studio[data-view="cinema"] .display { width: min(93%, 67rem); max-height: 56vh; }
 .status { margin: 0; background: #132747; padding: .3rem .55rem; }
+
+/* Audio progress visualization reflecting actual playback state. */
+.audioProgress {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .55rem .75rem;
+  max-width: min(79%, 48rem);
+  margin: 0 auto;
+  background: radial-gradient(ellipse at top, #244b78, #0c2242);
+  border: 3px double #f5cb83;
+  border-radius: 3% 3% 12% 12% / 4% 4% 7% 7%;
+  box-shadow: 0 0 1.15rem #f8be56ba, 0 1rem 2.2rem #1e1b36a6;
+}
+.audioTime {
+  flex: 0 0 auto;
+  color: #ffdc97;
+  font: 700 .8rem var(--font-display), serif;
+}
+.audioBar {
+  flex: 1;
+  min-width: 0;
+  height: .5rem;
+  background: #122641;
+  border-radius: .25rem;
+  overflow: hidden;
+  border: 1px solid #dbb97a;
+}
+.audioFill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #e2a64c, #ffdd9b);
+  border-radius: .25rem;
+  transition: width 200ms ease;
+}
+.audioState {
+  flex: 0 0 auto;
+  color: #b5c4e0;
+  font-size: .72rem;
+}
 @media (max-width: 600px) {
   .studio { padding: .5rem; }
   .display { width: 98%; margin-block-start: 1rem; }
   .readingControls :is(select, input) { max-width: 50vw; }
+  .audioProgress { max-width: 98%; }
   .studio[data-view="explore"] { min-height: max(32rem, 78svh); }
 }
