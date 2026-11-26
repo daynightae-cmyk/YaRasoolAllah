@@ -257,6 +257,7 @@ export function LibraryHub({
         <button
           type="button"
           className={view === "library3d" ? styles.baselineOn : ""}
+          data-visual="library-mode-3d"
           aria-pressed={view === "library3d"}
           onClick={() => onViewChange("library3d")}
         >
@@ -265,6 +266,7 @@ export function LibraryHub({
         <button
           type="button"
           className={view === "shelves" ? styles.baselineOn : ""}
+          data-visual="library-mode-shelves"
           aria-pressed={view === "shelves"}
           onClick={() => onViewChange("shelves")}
         >
@@ -273,6 +275,7 @@ export function LibraryHub({
         <button
           type="button"
           className={view === "catalog" ? styles.baselineOn : ""}
+          data-visual="library-mode-catalog"
           aria-pressed={view === "catalog"}
           onClick={() => onViewChange("catalog")}
         >

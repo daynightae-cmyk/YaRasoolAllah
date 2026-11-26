@@ -322,11 +322,25 @@ try {
       // registry enums (CLEARED_WITH_ATTRIBUTION, TXT_MARKDOWN) straight into
       // the metadata. Opening it and reading what is actually on screen is the
       // only way that claim can be checked.
-      // The page now mounts the domain gateway shelves itself, and the hall
-      // shows the complete run of spines directly. Older layouts needed an
-      // "enter hall" click first; support both without requiring the click.
+      // REF-01 flow: the LibraryHub is the entrance and the desktop default is
+      // the 3D arcade, so the shelf surface is reached through the hub's own
+      // baseline mode control ("Shelves"). Once the shelves view is active the
+      // page mounts the domain gateway shelves itself and the complete hall
+      // shows the real run of spines directly — no "enter hall" click needed.
+      // Older layouts had no mode hook and needed an "enter hall" click first;
+      // keep supporting both without requiring the legacy click.
+      await waitFor(
+        session,
+        'document.querySelector(\'[data-visual="library-hub"]\') !== null',
+        `${item.name} library hub`,
+        200,
+      );
       await evaluate(session, `(() => {
-        document.querySelector('[data-visual="library-mode-shelves"]')?.click();
+        const hub = document.querySelector('[data-visual="library-hub"]');
+        const mode = hub?.querySelector('[data-visual="library-mode-shelves"]')
+          ?? [...(hub?.querySelectorAll("nav button") ?? [])].find((button) =>
+            /الرفوف|Shelves/.test(button.textContent || ""));
+        mode?.click();
         return true;
       })()`);
       await evaluate(
