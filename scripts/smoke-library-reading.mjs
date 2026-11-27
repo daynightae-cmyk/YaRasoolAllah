@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import WebSocket from "ws";
@@ -350,6 +350,103 @@ try {
 
   await screenshot(session, "library-reading-accessibility.jpg");
 
+  // --- Actual-reader verification across the remaining library domains -----
+  // Seerah is covered above (Ibn Hisham). For each other governed domain,
+  // deep-link the catalog work, open the internal reading chamber through the
+  // real UI, and assert that real text renders from the pinned OpenITI release
+  // commit — never from a floating tag and never through the internal reader
+  // API.
+  const registrySource = readFileSync(resolve("shared", "knowledge-registry.ts"), "utf8");
+  const pinnedCommit = (registrySource.match(/OPENITI_RELEASE_COMMIT =\s*\n?\s*"([0-9a-f]{40})"/) || [])[1];
+  if (!pinnedCommit) throw new Error("could not read OPENITI_RELEASE_COMMIT from the registry");
+  const DOMAIN_WORKS = [
+    { category: "history", workId: "openiti_work_0310Tabari.Tarikh", expectTitle: "تاريخ الطبري" },
+    { category: "tafsir", workId: "openiti_work_0444AbuCamrDani.TahdidFiItqan", expectTitle: "التحديد" },
+    { category: "hadith", workId: "openiti_work_0279Tirmidhi.ShamailMuhammadiyya", expectTitle: "الشمائل" },
+    { category: "adab", workId: "openiti_work_0256Bukhari.AdabMufrad", expectTitle: "الأدب المفرد" },
+  ];
+  const domainReads = [];
+  for (const item of DOMAIN_WORKS) {
+    await session.send("Page.navigate", {
+      url: `${origin}/library/work/${encodeURIComponent(item.workId)}`,
+    });
+    await waitFor(
+      session,
+      `document.readyState === "complete" && document.querySelector("#catalog-work-title") !== null`,
+      `${item.category} work detail`,
+      200,
+    );
+    const title = await evaluate(session, `document.querySelector("#catalog-work-title")?.textContent ?? ""`);
+    if (!title.includes(item.expectTitle)) {
+      throw new Error(`${item.category}: deep link resolved the wrong work: ${title}`);
+    }
+    await evaluate(
+      session,
+      `(() => {
+        const button = [...document.querySelectorAll("button")].find((b) => (b.textContent || "").includes("فتح غرفة القراءة"));
+        if (!button) throw new Error("reading chamber opener missing for ${item.workId}");
+        button.click();
+        return true;
+      })()`,
+    );
+    await waitFor(session, "Boolean(document.querySelector('[role=dialog]'))", `${item.category} chamber dialog`);
+    await evaluate(
+      session,
+      `(() => {
+        const tab = [...document.querySelectorAll('[role="dialog"] [role="tab"]')].find((t) => (t.textContent || "").trim() === "قراءة");
+        if (!tab) throw new Error("text tab missing in chamber");
+        tab.click();
+        return true;
+      })()`,
+    );
+    await waitFor(
+      session,
+      `(() => {
+        const dialog = document.querySelector("[role=dialog]");
+        if (!dialog) return false;
+        if (dialog.textContent?.includes("تعذر فتح النص")) throw new Error("Reader returned an error state for ${item.workId}");
+        const paper = [...dialog.querySelectorAll("article")].find((article) => article.textContent?.trim().length > 180);
+        return Boolean(paper && dialog.textContent?.includes("OpenITI"));
+      })()`,
+      `${item.category} real governed text`,
+      240,
+    );
+    const domainReading = await evaluate(
+      session,
+      `(() => {
+        const dialog = document.querySelector("[role=dialog]");
+        const article = [...dialog.querySelectorAll("article")].find((item) => item.textContent?.trim().length > 180);
+        const resources = performance.getEntriesByType("resource").map((entry) => entry.name);
+        const rawUrlAttr = document.querySelector("[data-reader-raw-url]")?.getAttribute("data-reader-raw-url") ?? null;
+        const pinnedResources = resources.filter((url) => url.includes("raw.githubusercontent.com/OpenITI/RELEASE/${pinnedCommit}/"));
+        return {
+          textLength: article?.textContent?.trim().length ?? 0,
+          hasPinnedSource: dialog?.textContent?.includes("OpenITI") ?? false,
+          hasDigitalNumberingNotice: dialog?.textContent?.includes("مقاطع رقمية") ?? false,
+          usedDirectPinnedSource: pinnedResources.length > 0,
+          pinnedResourceSample: pinnedResources[0] ?? null,
+          rawUrlAttr,
+          rawUrlIsPinned: rawUrlAttr ? rawUrlAttr.includes("/OpenITI/RELEASE/${pinnedCommit}/") : false,
+          usedInternalReaderApi: resources.some((url) => url.includes("/api/content/library/read/")),
+          usedFloatingRelease: resources.some((url) => url.includes("raw.githubusercontent.com/OpenITI/RELEASE/v")),
+        };
+      })()`,
+    );
+    if (
+      domainReading.textLength < 180 ||
+      !domainReading.hasPinnedSource ||
+      !domainReading.hasDigitalNumberingNotice ||
+      !domainReading.usedDirectPinnedSource ||
+      !domainReading.rawUrlIsPinned ||
+      domainReading.usedInternalReaderApi ||
+      domainReading.usedFloatingRelease
+    ) {
+      throw new Error(`${item.category} reader evidence incomplete: ${JSON.stringify(domainReading)}`);
+    }
+    domainReads.push({ category: item.category, workId: item.workId, title, ...domainReading });
+    await screenshot(session, `library-domain-${item.category}.jpg`);
+  }
+
   const runtimeErrors = session.events
     .filter((event) =>
       event.method === "Runtime.exceptionThrown" ||
@@ -367,8 +464,10 @@ try {
 
   const report = {
     origin,
+    pinnedCommit,
     shelf: shelfDiagnostics,
     reading,
+    domainReads,
     audiobookGate,
     ttsFallback: { ...ttsFallback, ...ttsAfterClick },
     runtimeErrors,
