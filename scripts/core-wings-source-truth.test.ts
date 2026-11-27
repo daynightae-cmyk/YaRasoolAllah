@@ -290,9 +290,9 @@ describe("the pinned OpenITI artifacts are measured and bounded", () => {
     )[0];
     assert.equal(
       largest.versionId,
-      "version-0310Tabari.JamicBayan.JK000164-ara1",
+      "version-0427AbuIshaqThaclabi.KashfWaBayan.Sham19Y0018686-ara1",
     );
-    assert.equal(largest.artifactBytes, 26_360_746);
+    assert.equal(largest.artifactBytes, 33_451_839);
     assert.ok(largest.artifactBytes < DIRECT_READER_MAX_BYTES);
     assert.ok(
       DIRECT_READER_MAX_BYTES <= 32 * 1024 * 1024,

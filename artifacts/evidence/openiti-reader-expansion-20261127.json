@@ -1,0 +1,1388 @@
+{
+  "report": "openiti-reader-expansion-20261127",
+  "checkedAt": "2026-11-27",
+  "pinnedReleaseCommit": "cfc4157a3cf2054c0888f133970a4eaa3e22e58c",
+  "method": "GitHub contents API (repos/OpenITI/RELEASE/contents/data/<author>/<work>?ref=<commit>) for blob sha+size; raw.githubusercontent.com HEAD with Accept-Encoding: identity to confirm content-length equals blob size; only verified text versions within the 32 MiB reader budget were registered",
+  "worksAdded": 33,
+  "versionRowsAdded": 108,
+  "skipped": [],
+  "works": [
+    {
+      "openitiWorkUri": "0001Quran.Mushaf",
+      "workId": "work-quran-mushaf",
+      "registryCategory": "tafsir",
+      "catalogCategory": "A-القرآن وعلومه",
+      "titleAr": "القران",
+      "versions": [
+        {
+          "versionUri": "0001Quran.Mushaf.QuranAnalysis001-ara1",
+          "suffix": "mARkdown",
+          "sha": "196c6d79489d7b161228100e12a8be6e0a3f1d19",
+          "bytes": 798797,
+          "headStatus": 200,
+          "headLength": 798797,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0001Quran.Mushaf.Shia000001-ara1",
+          "suffix": "mARkdown",
+          "sha": "3969f39a9b2b105624bef734b454b1adc1aeb76f",
+          "bytes": 798714,
+          "headStatus": 200,
+          "headLength": 798714,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0001Quran.Mushaf.Tanzil001-ara1",
+          "suffix": "mARkdown",
+          "sha": "8d0a6c806598d6c6afe6b7f9b20940ab1baeddee",
+          "bytes": 810476,
+          "headStatus": 200,
+          "headLength": 810476,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0444AbuCamrDani.TahdidFiItqan",
+      "workId": "work-abucamrdani-tahdidfiitqan",
+      "registryCategory": "tafsir",
+      "catalogCategory": "A-القرآن وعلومه",
+      "titleAr": "التحديد في الإتقان والتجويد",
+      "versions": [
+        {
+          "versionUri": "0444AbuCamrDani.TahdidFiItqan.Shamela0026458-ara1",
+          "suffix": "plain",
+          "sha": "2ccecc75e24a05038030922284a11b84fce411ab",
+          "bytes": 152963,
+          "headStatus": 200,
+          "headLength": 152963,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0911Suyuti.Itqan",
+      "workId": "work-suyuti-itqan",
+      "registryCategory": "tafsir",
+      "catalogCategory": "B-التفسير",
+      "titleAr": "الإتقان في علوم القرآن",
+      "versions": [
+        {
+          "versionUri": "0911Suyuti.Itqan.JK001295-ara1",
+          "suffix": "plain",
+          "sha": "1e07cefe7f2ff9f0a212f3b0a9bcfd3c7bdabc31",
+          "bytes": 2454673,
+          "headStatus": 200,
+          "headLength": 2454673,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0911Suyuti.Itqan.Shamela0011728-ara1",
+          "suffix": "plain",
+          "sha": "96813a3bfff1fda0a375c94dadee9027a6af6fda",
+          "bytes": 2404336,
+          "headStatus": 200,
+          "headLength": 2404336,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0911Suyuti.Itqan.Shia002675Vols-ara1",
+          "suffix": "plain",
+          "sha": "2b03be85cf244f2a1e26cb01f5b1c9029aa90861",
+          "bytes": 2405923,
+          "headStatus": 200,
+          "headLength": 2405923,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0911Suyuti.TafsirJalalayn",
+      "workId": "work-suyuti-tafsirjalalayn",
+      "registryCategory": "tafsir",
+      "catalogCategory": "B-التفسير",
+      "titleAr": "تفسير الجلالين",
+      "versions": [
+        {
+          "versionUri": "0911Suyuti.TafsirJalalayn.JK000818-ara1",
+          "suffix": "plain",
+          "sha": "151a47183e57e30c66213d30570482a864472ed2",
+          "bytes": 2413045,
+          "headStatus": 200,
+          "headLength": 2413045,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0911Suyuti.TafsirJalalayn.Shamela0012876-ara1",
+          "suffix": "plain",
+          "sha": "bb2dd7f548e3a0b3a29037480c171983709172af",
+          "bytes": 2040795,
+          "headStatus": 200,
+          "headLength": 2040795,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0911Suyuti.TafsirJalalayn.Shia002669-ara1",
+          "suffix": "plain",
+          "sha": "f413219e68a00d18387263ad3d2f18453aaf9038",
+          "bytes": 2711944,
+          "headStatus": 200,
+          "headLength": 2711944,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0911Suyuti.TafsirJalalayn.Tafsir01008-ara1",
+          "suffix": "plain",
+          "sha": "fccaf63db5faa80adc46beb6b2725f038e4b17f5",
+          "bytes": 2051215,
+          "headStatus": 200,
+          "headLength": 2051215,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0710IbnAhmadHafizDinNasafi.Tafsir",
+      "workId": "work-ibnahmadhafizdinnasafi-tafsir",
+      "registryCategory": "tafsir",
+      "catalogCategory": "B-التفسير",
+      "titleAr": "تفسير النسفي",
+      "versions": [
+        {
+          "versionUri": "0710IbnAhmadHafizDinNasafi.Tafsir.JK000876-ara1",
+          "suffix": "plain",
+          "sha": "ab257a411aa83b2dc203eccf2e6fabc830040e4e",
+          "bytes": 5367630,
+          "headStatus": 200,
+          "headLength": 5367630,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0710IbnAhmadHafizDinNasafi.Tafsir.ShamAY0034061-ara1",
+          "suffix": "plain",
+          "sha": "81bfc75bd69e5dd9ca548ff8e504ca7c8287ad95",
+          "bytes": 5326979,
+          "headStatus": 200,
+          "headLength": 5326979,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0710IbnAhmadHafizDinNasafi.Tafsir.Shamela0001394-ara1",
+          "suffix": "plain",
+          "sha": "8c7d376796188e4941c11012da2a4db4cb9e61ba",
+          "bytes": 5617922,
+          "headStatus": 200,
+          "headLength": 5617922,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0710IbnAhmadHafizDinNasafi.Tafsir.Shia002557Vols-ara1",
+          "suffix": "plain",
+          "sha": "30ebcfc326ba77da99b97085cb00b091b4b81861",
+          "bytes": 4810866,
+          "headStatus": 200,
+          "headLength": 4810866,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0710IbnAhmadHafizDinNasafi.Tafsir.Tafsir02017-ara1",
+          "suffix": "plain",
+          "sha": "9bf6db4831684aaad44242be50bc2c695439415b",
+          "bytes": 4853060,
+          "headStatus": 200,
+          "headLength": 4853060,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0427AbuIshaqThaclabi.KashfWaBayan",
+      "workId": "work-abuishaqthaclabi-kashfwabayan",
+      "registryCategory": "tafsir",
+      "catalogCategory": "B-التفسير",
+      "titleAr": "الكشف والبيان",
+      "versions": [
+        {
+          "versionUri": "0427AbuIshaqThaclabi.KashfWaBayan.JK000449-ara1",
+          "suffix": "plain",
+          "sha": "de814ec4b563078c458e941d41105da5294b9b5b",
+          "bytes": 11127182,
+          "headStatus": 200,
+          "headLength": 11127182,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0427AbuIshaqThaclabi.KashfWaBayan.JK007093-ara1",
+          "suffix": "plain",
+          "sha": "a8a0d9e674af95a8f454eaa09cb1ad012c0cdb71",
+          "bytes": 11175644,
+          "headStatus": 200,
+          "headLength": 11175644,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0427AbuIshaqThaclabi.KashfWaBayan.Rafed0001643Vols-ara1",
+          "suffix": "plain",
+          "sha": "55b7aa0a05e354d5cddfe93831bcb03c14fe2f37",
+          "bytes": 11568934,
+          "headStatus": 200,
+          "headLength": 11568934,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0427AbuIshaqThaclabi.KashfWaBayan.Sham19Y0018686-ara1",
+          "suffix": "plain",
+          "sha": "819006514da40f3e082a66e585cbd5abe8c2b85f",
+          "bytes": 33451839,
+          "headStatus": 200,
+          "headLength": 33451839,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0427AbuIshaqThaclabi.KashfWaBayan.Shamela0023578-ara1",
+          "suffix": "mARkdown",
+          "sha": "8a36dff7c8d673a063b9fe7f94b4007c0282917e",
+          "bytes": 10484602,
+          "headStatus": 200,
+          "headLength": 10484602,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0427AbuIshaqThaclabi.KashfWaBayan.Shia002529Vols-ara1",
+          "suffix": "plain",
+          "sha": "055915952dd7933b807e41d17310619a86e9293e",
+          "bytes": 10597792,
+          "headStatus": 200,
+          "headLength": 10597792,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0427AbuIshaqThaclabi.KashfWaBayan.Tafsir02075-ara1",
+          "suffix": "plain",
+          "sha": "0c98b88a1c011e125f7a08b1f9f43ff128e3a0be",
+          "bytes": 9578834,
+          "headStatus": 200,
+          "headLength": 9578834,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0179MalikIbnAnas.Muwatta",
+      "workId": "work-malikibnanas-muwatta",
+      "registryCategory": "hadith",
+      "catalogCategory": "C-الحديث النبوي",
+      "titleAr": "الموطأ",
+      "versions": [
+        {
+          "versionUri": "0179MalikIbnAnas.Muwatta.JK000466-ara1",
+          "suffix": "plain",
+          "sha": "d9592fafe0ff0d0043d70d19d87d4d2a932fe37f",
+          "bytes": 1344119,
+          "headStatus": 200,
+          "headLength": 1344119,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0179MalikIbnAnas.Muwatta.ShamAY0033921-ara1",
+          "suffix": "plain",
+          "sha": "d7a7eca343cae43b3840d5e7869f2a18b4742747",
+          "bytes": 322420,
+          "headStatus": 200,
+          "headLength": 322420,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0179MalikIbnAnas.Muwatta.ShamAY0033922-ara1",
+          "suffix": "plain",
+          "sha": "1f6e4b92bcfc8deb2764239d3e7fca08569d102d",
+          "bytes": 62050,
+          "headStatus": 200,
+          "headLength": 62050,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0179MalikIbnAnas.Muwatta.ShamAY0033923-ara1",
+          "suffix": "plain",
+          "sha": "e4530c5664fbe68918ad21bc89ac2fef110701d1",
+          "bytes": 819649,
+          "headStatus": 200,
+          "headLength": 819649,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0179MalikIbnAnas.Muwatta.ShamAY0033991-ara1",
+          "suffix": "plain",
+          "sha": "9406530de91bec2ce24695ccc0f0dc23a1a5d54d",
+          "bytes": 133713,
+          "headStatus": 200,
+          "headLength": 133713,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0179MalikIbnAnas.Muwatta.Shamela0001699-ara1",
+          "suffix": "completed",
+          "sha": "a8ce4cf6fe5e2ca05d7e7f933cc197ac6bf596af",
+          "bytes": 1397896,
+          "headStatus": 200,
+          "headLength": 1397896,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0179MalikIbnAnas.Muwatta.Shamela0008140-ara1",
+          "suffix": "completed",
+          "sha": "f0277baf5a99b8f1c95c17895245ea8a66cdba5d",
+          "bytes": 1511089,
+          "headStatus": 200,
+          "headLength": 1511089,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0179MalikIbnAnas.Muwatta.Shamela0016050-ara1",
+          "suffix": "completed",
+          "sha": "7e7b933285aee843b2b6ae2b89c621bceae7e75e",
+          "bytes": 627361,
+          "headStatus": 200,
+          "headLength": 627361,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0179MalikIbnAnas.Muwatta.Shamela0028107-ara1",
+          "suffix": "completed",
+          "sha": "081fa907b9c1e1fa39db66ce874db543193099d3",
+          "bytes": 2400174,
+          "headStatus": 200,
+          "headLength": 2400174,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0179MalikIbnAnas.Muwatta.Shia000901Vols-ara1",
+          "suffix": "plain",
+          "sha": "8d841dceb8abaf08428abbf93d0d84ba4f21703f",
+          "bytes": 2054658,
+          "headStatus": 200,
+          "headLength": 2054658,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0275AbuDawudSijistani.Sunan",
+      "workId": "work-abudawudsijistani-sunan",
+      "registryCategory": "hadith",
+      "catalogCategory": "C-الحديث النبوي",
+      "titleAr": "سنن أبي داود",
+      "versions": [
+        {
+          "versionUri": "0275AbuDawudSijistani.Sunan.JK000142-ara1",
+          "suffix": "plain",
+          "sha": "a3f54c9912a04665a295a6dbb94003d90ad72a23",
+          "bytes": 3123002,
+          "headStatus": 200,
+          "headLength": 3123002,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0275AbuDawudSijistani.Sunan.ShamAY0033960-ara1",
+          "suffix": "plain",
+          "sha": "6824cdbb3d198cd7550598342eb720af6df13708",
+          "bytes": 3478131,
+          "headStatus": 200,
+          "headLength": 3478131,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0275AbuDawudSijistani.Sunan.Shamela0001726-ara1",
+          "suffix": "plain",
+          "sha": "cac9781b0308dae1aa920b8d007753cc060dcbf4",
+          "bytes": 3398133,
+          "headStatus": 200,
+          "headLength": 3398133,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0275AbuDawudSijistani.Sunan.Shamela0117359-ara1",
+          "suffix": "plain",
+          "sha": "6d54c91199fe0e18cd9437b834e4c1d540edf87f",
+          "bytes": 3753828,
+          "headStatus": 200,
+          "headLength": 3753828,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0275AbuDawudSijistani.Sunan.Shia001733Vols-ara1",
+          "suffix": "plain",
+          "sha": "05e400e358936ee55d009fcf6c9645712ce1ef90",
+          "bytes": 3373563,
+          "headStatus": 200,
+          "headLength": 3373563,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0273IbnMaja.Sunan",
+      "workId": "work-ibnmaja-sunan",
+      "registryCategory": "hadith",
+      "catalogCategory": "C-الحديث النبوي",
+      "titleAr": "سنن ابن ماجه",
+      "versions": [
+        {
+          "versionUri": "0273IbnMaja.Sunan.JK000141-ara1",
+          "suffix": "plain",
+          "sha": "632ef8cce8b0868c213ea8e6930b724bae271f00",
+          "bytes": 2289442,
+          "headStatus": 200,
+          "headLength": 2289442,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0273IbnMaja.Sunan.ShamAY0033959-ara1",
+          "suffix": "plain",
+          "sha": "c14bde4a59b1f75416019acd8b3e5b7e59d51105",
+          "bytes": 2525013,
+          "headStatus": 200,
+          "headLength": 2525013,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0273IbnMaja.Sunan.Shamela0001198-ara1",
+          "suffix": "plain",
+          "sha": "06362689ca55bacb90a6b7da2cb3bda766297a14",
+          "bytes": 2535073,
+          "headStatus": 200,
+          "headLength": 2535073,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0273IbnMaja.Sunan.Shamela0098138-ara1",
+          "suffix": "plain",
+          "sha": "b2c52c64d41a158a670cbeb2d0466cafdd8a9a2d",
+          "bytes": 2678249,
+          "headStatus": 200,
+          "headLength": 2678249,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0273IbnMaja.Sunan.Shia001731Vols-ara1",
+          "suffix": "plain",
+          "sha": "00dfa78b2d7a0346a01706964033af2b06cad6e3",
+          "bytes": 2663374,
+          "headStatus": 200,
+          "headLength": 2663374,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0741KhatibTabrizi.MishkatMasabih",
+      "workId": "work-khatibtabrizi-mishkatmasabih",
+      "registryCategory": "hadith",
+      "catalogCategory": "C-الحديث النبوي",
+      "titleAr": "مشكاة المصابيح",
+      "versions": [
+        {
+          "versionUri": "0741KhatibTabrizi.MishkatMasabih.JK007045-ara1",
+          "suffix": "plain",
+          "sha": "020bc6253ba7af620afd65a54e2c7953e5c04934",
+          "bytes": 2750460,
+          "headStatus": 200,
+          "headLength": 2750460,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0741KhatibTabrizi.MishkatMasabih.Shamela0008360-ara1",
+          "suffix": "plain",
+          "sha": "616cf07fa96115307407410511dbaa46fd043ef4",
+          "bytes": 2980108,
+          "headStatus": 200,
+          "headLength": 2980108,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0643IbnSalahShahrazuri.MuqaddimatCulumHadith",
+      "workId": "work-ibnsalahshahrazuri-muqaddimatculumhadith",
+      "registryCategory": "hadith",
+      "catalogCategory": "C-الحديث النبوي",
+      "titleAr": "مقدمة ابن الصلاح",
+      "versions": [
+        {
+          "versionUri": "0643IbnSalahShahrazuri.MuqaddimatCulumHadith.JK000537-ara1",
+          "suffix": "completed",
+          "sha": "50caa7f0dd49fe834b88f73412961e42fcb612af",
+          "bytes": 543311,
+          "headStatus": 200,
+          "headLength": 543311,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0643IbnSalahShahrazuri.MuqaddimatCulumHadith.Shamela0022870-ara1",
+          "suffix": "plain",
+          "sha": "31a94e266545cab527a67965b0b43de6caa5d8db",
+          "bytes": 567854,
+          "headStatus": 200,
+          "headLength": 567854,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0643IbnSalahShahrazuri.MuqaddimatCulumHadith.Shamela0023799-ara1",
+          "suffix": "plain",
+          "sha": "aee2397fe72c9585ed9eaf6111a7c33a1c5f1a3a",
+          "bytes": 677507,
+          "headStatus": 200,
+          "headLength": 677507,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0643IbnSalahShahrazuri.MuqaddimatCulumHadith.Shamela0029878BK1-ara1",
+          "suffix": "completed",
+          "sha": "944f247adbb5e11a08c4244f6d112e86bb269853",
+          "bytes": 1397852,
+          "headStatus": 200,
+          "headLength": 1397852,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0643IbnSalahShahrazuri.MuqaddimatCulumHadith.Shia002184-ara1",
+          "suffix": "plain",
+          "sha": "aeb0c9a6ad1c766deae1fa803f3a09d374cd3ffe",
+          "bytes": 548221,
+          "headStatus": 200,
+          "headLength": 548221,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0242IbnAslamTusi.Arbacun",
+      "workId": "work-ibnaslamtusi-arbacun",
+      "registryCategory": "hadith",
+      "catalogCategory": "C-الحديث النبوي",
+      "titleAr": "الأربعون",
+      "versions": [
+        {
+          "versionUri": "0242IbnAslamTusi.Arbacun.Shamela0010620-ara1",
+          "suffix": "plain",
+          "sha": "113c79e90507830829453209456a4ca443083b4a",
+          "bytes": 28920,
+          "headStatus": 200,
+          "headLength": 28920,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0151IbnIshaq.Sira",
+      "workId": "work-ibnishaq-sira",
+      "registryCategory": "seerah",
+      "catalogCategory": "D-السيرة النبوية",
+      "titleAr": "سيرة  ابن اسحاق",
+      "versions": [
+        {
+          "versionUri": "0151IbnIshaq.Sira.JK001038-ara1",
+          "suffix": "plain",
+          "sha": "6a56ab178fbe7b8ed4013c549ca72f9b53a62479",
+          "bytes": 416476,
+          "headStatus": 200,
+          "headLength": 416476,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0151IbnIshaq.Sira.Masaha002221-ara1",
+          "suffix": "plain",
+          "sha": "2c34f000c04536375c5d21b591ecc3867a08fe42",
+          "bytes": 835264,
+          "headStatus": 200,
+          "headLength": 835264,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0151IbnIshaq.Sira.Shamela0009862-ara2",
+          "suffix": "mARkdown",
+          "sha": "5f011b9592310db6f65575467c07b9afd26d0406",
+          "bytes": 659564,
+          "headStatus": 200,
+          "headLength": 659564,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0151IbnIshaq.Sira.Shia003660Vols-ara1",
+          "suffix": "plain",
+          "sha": "de5fe6d4356ed2417218685a46979cc78aa29f82",
+          "bytes": 643883,
+          "headStatus": 200,
+          "headLength": 643883,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0456IbnHazm.JawamicSira",
+      "workId": "work-ibnhazm-jawamicsira",
+      "registryCategory": "seerah",
+      "catalogCategory": "D-السيرة النبوية",
+      "titleAr": "جوامع السيرة النبوية",
+      "versions": [
+        {
+          "versionUri": "0456IbnHazm.JawamicSira.JK011036-ara1",
+          "suffix": "plain",
+          "sha": "6553e14ab405359368010a402a22e67fec04c801",
+          "bytes": 597250,
+          "headStatus": 200,
+          "headLength": 597250,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0456IbnHazm.JawamicSira.Shamela0001036-ara1",
+          "suffix": "plain",
+          "sha": "55c3de49fe7f53d74cc4444435c61a0a73bc6f2a",
+          "bytes": 598465,
+          "headStatus": 200,
+          "headLength": 598465,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0456IbnHazm.JawamicSira.Shamela0009728-ara1",
+          "suffix": "completed",
+          "sha": "43b75df5983487869097c231df43fbbd7893af34",
+          "bytes": 413807,
+          "headStatus": 200,
+          "headLength": 413807,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0767CizzDinIbnJamaca.MukhtasarKabir",
+      "workId": "work-cizzdinibnjamaca-mukhtasarkabir",
+      "registryCategory": "seerah",
+      "catalogCategory": "D-السيرة النبوية",
+      "titleAr": "المختصر الكبير في سيرة الرسول صلى الله عليه وسلم",
+      "versions": [
+        {
+          "versionUri": "0767CizzDinIbnJamaca.MukhtasarKabir.JK007037-ara1",
+          "suffix": "plain",
+          "sha": "e32708cc3643d674409b94765fdd7c04c506fbf3",
+          "bytes": 209345,
+          "headStatus": 200,
+          "headLength": 209345,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0767CizzDinIbnJamaca.MukhtasarKabir.Masaha002867-ara1",
+          "suffix": "plain",
+          "sha": "1c0df83a0922514b4279ceae32d825b40b251061",
+          "bytes": 563755,
+          "headStatus": 200,
+          "headLength": 563755,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0767CizzDinIbnJamaca.MukhtasarKabir.Shamela0006593-ara1",
+          "suffix": "plain",
+          "sha": "f33c1fc5f61f570e0f7294c13910ccbe903137b0",
+          "bytes": 201714,
+          "headStatus": 200,
+          "headLength": 201714,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0354IbnHibbanBusti.Sira",
+      "workId": "work-ibnhibbanbusti-sira",
+      "registryCategory": "seerah",
+      "catalogCategory": "D-السيرة النبوية",
+      "titleAr": "السيرة النبوية وأخبار الخلفاء",
+      "versions": [
+        {
+          "versionUri": "0354IbnHibbanBusti.Sira.Shamela0009898-ara1",
+          "suffix": "plain",
+          "sha": "bc8b64e5b881e69acb0bf9c73d5574c28363c4c8",
+          "bytes": 962462,
+          "headStatus": 200,
+          "headLength": 962462,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0264IbnYahyaMuzani.Mukhtasar",
+      "workId": "work-ibnyahyamuzani-mukhtasar",
+      "registryCategory": "hadith",
+      "catalogCategory": "J-الفقه",
+      "titleAr": "مختصر المزني",
+      "versions": [
+        {
+          "versionUri": "0264IbnYahyaMuzani.Mukhtasar.JK001504-ara1",
+          "suffix": "plain",
+          "sha": "ae33212d408e1523c72fc175d8e8f8d65b10ba80",
+          "bytes": 1594063,
+          "headStatus": 200,
+          "headLength": 1594063,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0264IbnYahyaMuzani.Mukhtasar.Shamela0001661-ara1",
+          "suffix": "plain",
+          "sha": "fbbfa2b3168c7c14fe391ad779175b1e4ad85833",
+          "bytes": 1665467,
+          "headStatus": 200,
+          "headLength": 1665467,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0264IbnYahyaMuzani.Mukhtasar.Shia000828-ara1",
+          "suffix": "plain",
+          "sha": "8b86b4f70cceaf9c6dad55b11aa0983ada75bc41",
+          "bytes": 1637971,
+          "headStatus": 200,
+          "headLength": 1637971,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0505Ghazali.Wasit",
+      "workId": "work-ghazali-wasit",
+      "registryCategory": "hadith",
+      "catalogCategory": "J-الفقه",
+      "titleAr": "الوسيط في المذهب",
+      "versions": [
+        {
+          "versionUri": "0505Ghazali.Wasit.JK000309-ara1",
+          "suffix": "plain",
+          "sha": "d1fba7aeef4d78f90be32d35976be9dccd33ac11",
+          "bytes": 3897721,
+          "headStatus": 200,
+          "headLength": 3897721,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0505Ghazali.Wasit.Shamela0006128-ara1",
+          "suffix": "plain",
+          "sha": "15dbf69680c2da4398f77d91052d0b2f7f23f1c6",
+          "bytes": 3918154,
+          "headStatus": 200,
+          "headLength": 3918154,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0676Nawawi.Majmuc",
+      "workId": "work-nawawi-majmuc",
+      "registryCategory": "hadith",
+      "catalogCategory": "J-الفقه",
+      "titleAr": "المجموع",
+      "versions": [
+        {
+          "versionUri": "0676Nawawi.Majmuc.JK000913-ara1",
+          "suffix": "plain",
+          "sha": "3844be34f8e2d8fd6ff14a0b662bf1612e34ae7a",
+          "bytes": 13395822,
+          "headStatus": 200,
+          "headLength": 13395822,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0676Nawawi.Majmuc.Shamela0002186-ara1",
+          "suffix": "plain",
+          "sha": "d21d29d23809c52572076b51f380850cc78fbae4",
+          "bytes": 27020543,
+          "headStatus": 200,
+          "headLength": 27020543,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0676Nawawi.Majmuc.Shia000841Vols-ara1",
+          "suffix": "plain",
+          "sha": "1b79fcf252a2520716fbda7500d32b3d12551adf",
+          "bytes": 27098140,
+          "headStatus": 200,
+          "headLength": 27098140,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0676Nawawi.RawdatTalibin",
+      "workId": "work-nawawi-rawdattalibin",
+      "registryCategory": "hadith",
+      "catalogCategory": "J-الفقه",
+      "titleAr": "روضة الطالبين وعمدة المفتين",
+      "versions": [
+        {
+          "versionUri": "0676Nawawi.RawdatTalibin.JK000192-ara1",
+          "suffix": "plain",
+          "sha": "c971d92c3215c3a10da9fd17144b169c327a54c8",
+          "bytes": 10455957,
+          "headStatus": 200,
+          "headLength": 10455957,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0676Nawawi.RawdatTalibin.ShamAY0034251BK3-ara1",
+          "suffix": "plain",
+          "sha": "4a528acb098b23f75219e629742869ffabcbf8b0",
+          "bytes": 10988981,
+          "headStatus": 200,
+          "headLength": 10988981,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0676Nawawi.RawdatTalibin.Shamela0000499-ara1",
+          "suffix": "plain",
+          "sha": "6367ff216807d6e48b6e286cfbe5ff1355f87b1c",
+          "bytes": 10960478,
+          "headStatus": 200,
+          "headLength": 10960478,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0676Nawawi.RawdatTalibin.Shia000861VolsBK3-ara1",
+          "suffix": "plain",
+          "sha": "3e300bdefefd717bc075a373554c746b0448e0c0",
+          "bytes": 10956689,
+          "headStatus": 200,
+          "headLength": 10956689,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0593BurhanDinFarghaniMarghinani.Bidaya",
+      "workId": "work-burhandinfarghanimarghinani-bidaya",
+      "registryCategory": "hadith",
+      "catalogCategory": "J-الفقه",
+      "titleAr": "بداية المبتدي",
+      "versions": [
+        {
+          "versionUri": "0593BurhanDinFarghaniMarghinani.Bidaya.JK000278-ara1",
+          "suffix": "plain",
+          "sha": "813fcaa051090c9f1d279889c256fff019e3eef0",
+          "bytes": 720499,
+          "headStatus": 200,
+          "headLength": 720499,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0593BurhanDinFarghaniMarghinani.Bidaya.Shamela0006170-ara1",
+          "suffix": "plain",
+          "sha": "a6e00d49c4cd2e6021b16e62ca18a8e072fa37b3",
+          "bytes": 722328,
+          "headStatus": 200,
+          "headLength": 722328,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0476AbuIshaqShirazi.LumacFiUsulFiqh",
+      "workId": "work-abuishaqshirazi-lumacfiusulfiqh",
+      "registryCategory": "hadith",
+      "catalogCategory": "K-أصول الفقه والقواعد",
+      "titleAr": "اللمع في أصول الفقه",
+      "versions": [
+        {
+          "versionUri": "0476AbuIshaqShirazi.LumacFiUsulFiqh.JK000427-ara1",
+          "suffix": "plain",
+          "sha": "cb039182262810214fef499b04a5190ca058558e",
+          "bytes": 304609,
+          "headStatus": 200,
+          "headLength": 304609,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0476AbuIshaqShirazi.LumacFiUsulFiqh.Shamela0008536-ara1",
+          "suffix": "plain",
+          "sha": "c8ed272ff3be177314f37c136c24b910798efc1a",
+          "bytes": 307208,
+          "headStatus": 200,
+          "headLength": 307208,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0476AbuIshaqShirazi.LumacFiUsulFiqh.Shia002913-ara1",
+          "suffix": "plain",
+          "sha": "bb6b0ea12900ea8445ce789918298ad1ed4b159d",
+          "bytes": 308853,
+          "headStatus": 200,
+          "headLength": 308853,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0478ImamHaramaynJuwayni.BurhanFiUsulFiqh",
+      "workId": "work-imamharamaynjuwayni-burhanfiusulfiqh",
+      "registryCategory": "hadith",
+      "catalogCategory": "K-أصول الفقه والقواعد",
+      "titleAr": "البرهان في أصول الفقه",
+      "versions": [
+        {
+          "versionUri": "0478ImamHaramaynJuwayni.BurhanFiUsulFiqh.JK000781-ara1",
+          "suffix": "plain",
+          "sha": "04139d903d16c4dc266303efe250519db490b3de",
+          "bytes": 1535653,
+          "headStatus": 200,
+          "headLength": 1535653,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0478ImamHaramaynJuwayni.BurhanFiUsulFiqh.ShamAY0034188-ara1",
+          "suffix": "plain",
+          "sha": "7ce340c4fbe096112031edd2988a79a7aa8b46a5",
+          "bytes": 1539761,
+          "headStatus": 200,
+          "headLength": 1539761,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0478ImamHaramaynJuwayni.BurhanFiUsulFiqh.Shamela0007439-ara1",
+          "suffix": "plain",
+          "sha": "0533622499f9f6ab3c1b614bb0311ed50cdc109b",
+          "bytes": 1478691,
+          "headStatus": 200,
+          "headLength": 1478691,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0505Ghazali.Mustasfa",
+      "workId": "work-ghazali-mustasfa",
+      "registryCategory": "hadith",
+      "catalogCategory": "K-أصول الفقه والقواعد",
+      "titleAr": "المستصفى",
+      "versions": [
+        {
+          "versionUri": "0505Ghazali.Mustasfa.JK000276-ara1",
+          "suffix": "plain",
+          "sha": "1a26ef8a81ec4ee0dec540aacc4ddbcae2243295",
+          "bytes": 1762220,
+          "headStatus": 200,
+          "headLength": 1762220,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0505Ghazali.Mustasfa.ShamAY0034180-ara1",
+          "suffix": "plain",
+          "sha": "509c6fd941a5bf276bafc519b732ac5682ce39cd",
+          "bytes": 1797789,
+          "headStatus": 200,
+          "headLength": 1797789,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0505Ghazali.Mustasfa.Shamela0005459-ara1",
+          "suffix": "plain",
+          "sha": "6c29223e63add89e4e25267986c0633e883ecfb9",
+          "bytes": 1807610,
+          "headStatus": 200,
+          "headLength": 1807610,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0505Ghazali.Mustasfa.Shia002916-ara1",
+          "suffix": "plain",
+          "sha": "23193bce48043f9cf5098f8be9eae68424b373ad",
+          "bytes": 1793973,
+          "headStatus": 200,
+          "headLength": 1793973,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0460ShaykhTusi.CiddatUsul",
+      "workId": "work-shaykhtusi-ciddatusul",
+      "registryCategory": "hadith",
+      "catalogCategory": "K-أصول الفقه والقواعد",
+      "titleAr": "عدة الأصول (ط.ج)",
+      "versions": [
+        {
+          "versionUri": "0460ShaykhTusi.CiddatUsul.Shia002748Vols-ara1",
+          "suffix": "plain",
+          "sha": "512c0e970f7f5beeb1de86a05fc84dce2de8977d",
+          "bytes": 1253365,
+          "headStatus": 200,
+          "headLength": 1253365,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0460ShaykhTusi.CiddatUsul.Shia002750Vols-ara1",
+          "suffix": "plain",
+          "sha": "9729a115dbef12bcb8299890906c96f00d437a67",
+          "bytes": 1715760,
+          "headStatus": 200,
+          "headLength": 1715760,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0321Tahawi.MatnCaqida",
+      "workId": "work-tahawi-matncaqida",
+      "registryCategory": "adab",
+      "catalogCategory": "I-العقيدة",
+      "titleAr": "متن العقيدة الطحاوية",
+      "versions": [
+        {
+          "versionUri": "0321Tahawi.MatnCaqida.JK000126-ara1",
+          "suffix": "plain",
+          "sha": "802014164422903f08566ca079fbe16c69355249",
+          "bytes": 23374,
+          "headStatus": 200,
+          "headLength": 23374,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0728IbnTaymiyya.CaqidaWasitiyya",
+      "workId": "work-ibntaymiyya-caqidawasitiyya",
+      "registryCategory": "adab",
+      "catalogCategory": "I-العقيدة",
+      "titleAr": "العقيدة الواسطية",
+      "versions": [
+        {
+          "versionUri": "0728IbnTaymiyya.CaqidaWasitiyya.JK000359-ara1",
+          "suffix": "plain",
+          "sha": "e8e87a898e637f72b5da9d71cdca968c219a7af6",
+          "bytes": 48960,
+          "headStatus": 200,
+          "headLength": 48960,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0728IbnTaymiyya.CaqidaWasitiyya.Sham19Y0018098-ara1",
+          "suffix": "plain",
+          "sha": "2aef86adceb47de32491e6018da6c88c59e63b7c",
+          "bytes": 90700,
+          "headStatus": 200,
+          "headLength": 90700,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0728IbnTaymiyya.CaqidaWasitiyya.Shamela0022665-ara1",
+          "suffix": "plain",
+          "sha": "febd09681171805896d1e4a7807985a046af5477",
+          "bytes": 69483,
+          "headStatus": 200,
+          "headLength": 69483,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0478ImamHaramaynJuwayni.LamcAdilla",
+      "workId": "work-imamharamaynjuwayni-lamcadilla",
+      "registryCategory": "adab",
+      "catalogCategory": "I-العقيدة",
+      "titleAr": "لمع الأدلة في قواعد عقائد أهل السنة والجماعة",
+      "versions": [
+        {
+          "versionUri": "0478ImamHaramaynJuwayni.LamcAdilla.JK001133-ara1",
+          "suffix": "plain",
+          "sha": "b598ec55a2b3270b58c07de2022bf07af312fda0",
+          "bytes": 38931,
+          "headStatus": 200,
+          "headLength": 38931,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0478ImamHaramaynJuwayni.LamcAdilla.Shamela0006398-ara1",
+          "suffix": "plain",
+          "sha": "0264eb6466fb8ac24b8cd8a017f4cda823a46fe3",
+          "bytes": 39035,
+          "headStatus": 200,
+          "headLength": 39035,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0478ImamHaramaynJuwayni.LamcAdilla.Shia004493-ara1",
+          "suffix": "plain",
+          "sha": "6fd5e3b8bbadf8bfd5ac7ae89ef1394cb1031d07",
+          "bytes": 39668,
+          "headStatus": 200,
+          "headLength": 39668,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0180Sibawayhi.KitabSibawayhi",
+      "workId": "work-sibawayhi-kitabsibawayhi",
+      "registryCategory": "adab",
+      "catalogCategory": "P-اللغة العربية",
+      "titleAr": "كتاب سيبويه",
+      "versions": [
+        {
+          "versionUri": "0180Sibawayhi.KitabSibawayhi.JK006989-ara1",
+          "suffix": "plain",
+          "sha": "5252a722c3ec1ebb6839911ae492d9c3912f948c",
+          "bytes": 2639395,
+          "headStatus": 200,
+          "headLength": 2639395,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0180Sibawayhi.KitabSibawayhi.Shamela0023018-ara1",
+          "suffix": "mARkdown",
+          "sha": "acb4c12204ae661d26b2309f00986938afa796d8",
+          "bytes": 2692552,
+          "headStatus": 200,
+          "headLength": 2692552,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0821Qalqashandi.SubhAcsha",
+      "workId": "work-qalqashandi-subhacsha",
+      "registryCategory": "adab",
+      "catalogCategory": "P-اللغة العربية",
+      "titleAr": "صبح الأعشى في صناعة الانشاء",
+      "versions": [
+        {
+          "versionUri": "0821Qalqashandi.SubhAcsha.JK000958-ara1",
+          "suffix": "plain",
+          "sha": "2c41e989627abb12084e4a0ac16fdae24479138e",
+          "bytes": 14129746,
+          "headStatus": 200,
+          "headLength": 14129746,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0821Qalqashandi.SubhAcsha.Shamela0009429-ara1",
+          "suffix": "mARkdown",
+          "sha": "0e306732936a25efbe85a886393a58187a600f22",
+          "bytes": 14615830,
+          "headStatus": 200,
+          "headLength": 14615830,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0911Suyuti.CuqudJuman",
+      "workId": "work-suyuti-cuqudjuman",
+      "registryCategory": "adab",
+      "catalogCategory": "P-اللغة العربية",
+      "titleAr": "عقود الجمان في علم المعاني والبيان",
+      "versions": [
+        {
+          "versionUri": "0911Suyuti.CuqudJuman.Shamela0097803-ara1",
+          "suffix": "plain",
+          "sha": "1fa7e34fce82ba84c7783fd077715310baa87692",
+          "bytes": 111001,
+          "headStatus": 200,
+          "headLength": 111001,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0255Jahiz.BayanWaTabyin",
+      "workId": "work-jahiz-bayanwatabyin",
+      "registryCategory": "adab",
+      "catalogCategory": "UNCLASSIFIED_OPENITI",
+      "titleAr": "البيان والتبيين",
+      "versions": [
+        {
+          "versionUri": "0255Jahiz.BayanWaTabyin.JK001009-ara1",
+          "suffix": "plain",
+          "sha": "873785f40f71107a2a93bcf296612c123fbc1f14",
+          "bytes": 1527598,
+          "headStatus": 200,
+          "headLength": 1527598,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0255Jahiz.BayanWaTabyin.Masaha003365Vols-ara1",
+          "suffix": "plain",
+          "sha": "add8f65de43923d504334c99e9dd3b4d2ab27c8d",
+          "bytes": 1828477,
+          "headStatus": 200,
+          "headLength": 1828477,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0255Jahiz.BayanWaTabyin.ShamAY0033779-ara1",
+          "suffix": "plain",
+          "sha": "b18759d48b6b6d6a5fac80a4387f46915f504770",
+          "bytes": 1531754,
+          "headStatus": 200,
+          "headLength": 1531754,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0255Jahiz.BayanWaTabyin.ShamAY0033801-ara1",
+          "suffix": "plain",
+          "sha": "601bdae6b7830cb4704eac63a690d21322c452b3",
+          "bytes": 1540252,
+          "headStatus": 200,
+          "headLength": 1540252,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0255Jahiz.BayanWaTabyin.Shamela0010614-ara1",
+          "suffix": "completed",
+          "sha": "3065c54b79062dfc6459c7912713efd4de61e450",
+          "bytes": 1620199,
+          "headStatus": 200,
+          "headLength": 1620199,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0255Jahiz.BayanWaTabyin.Zaydiyya0000478-ara1",
+          "suffix": "plain",
+          "sha": "afe9b657c569ffb2103a2b1906aeefffabdbe876",
+          "bytes": 1541800,
+          "headStatus": 200,
+          "headLength": 1541800,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    },
+    {
+      "openitiWorkUri": "0505Ghazali.IhyaCulumDin",
+      "workId": "work-ghazali-ihyaculumdin",
+      "registryCategory": "adab",
+      "catalogCategory": "P-اللغة العربية",
+      "titleAr": "إحياء علوم الدين",
+      "versions": [
+        {
+          "versionUri": "0505Ghazali.IhyaCulumDin.JK000001-ara1",
+          "suffix": "plain",
+          "sha": "eb5a979a12570ce5f554a61d48d8f508288ce8c5",
+          "bytes": 9470821,
+          "headStatus": 200,
+          "headLength": 9470821,
+          "verified": true,
+          "overBudget": false
+        },
+        {
+          "versionUri": "0505Ghazali.IhyaCulumDin.Shamela0009472-ara1",
+          "suffix": "completed",
+          "sha": "e1798f789384b5e987cac279ce95de474005607d",
+          "bytes": 7968487,
+          "headStatus": 200,
+          "headLength": 7968487,
+          "verified": true,
+          "overBudget": false
+        }
+      ]
+    }
+  ]
+}

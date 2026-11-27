@@ -18,8 +18,8 @@ export const OPENITI_READER_RIGHTS_STATE =
 /**
  * Decoded UTF-8 budget for one in-app book.
  *
- * The largest pinned artifact in the audited registry is al-Tabari's
- * Jami' al-Bayan at 26,360,746 bytes (measured 2026-11-15 with
+ * The largest pinned artifact in the audited registry is al-Tha'labi's
+ * Kashf wa'l-bayan at 33,451,839 bytes (measured 2026-11-27 with
  * `Accept-Encoding: identity` against the immutable RELEASE commit). A 32 MiB
  * ceiling covers every governed work while still refusing an unbounded load
  * on a phone. `artifactBytes` is verified metadata, and the streaming reader

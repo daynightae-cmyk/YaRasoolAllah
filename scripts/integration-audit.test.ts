@@ -24,8 +24,8 @@ test("Quran provenance resolves to the acquired Tanzil source in Basirah", () =>
 test("Basirah and library counters are explicit and distinct", () => {
   assert.equal(BASIRAH_COUNTS.catalogWorks, LIBRARY_COUNTS.works);
   assert.equal(BASIRAH_COUNTS.catalogVersions, LIBRARY_COUNTS.versions);
-  assert.equal(BASIRAH_COUNTS.indexedWorks, 17);
-  assert.equal(BASIRAH_COUNTS.catalogWorks, 16);
+  assert.equal(BASIRAH_COUNTS.indexedWorks, 50);
+  assert.equal(BASIRAH_COUNTS.catalogWorks, 49);
 });
 
 test("media discovery catalog has unique IDs, secure source URLs, and zero approvals", () => {
