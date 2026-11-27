@@ -159,6 +159,7 @@ try {
     session,
     `localStorage.setItem("institution-welcome-seen", "true");
      localStorage.setItem("preferred-language", "ar");
+     sessionStorage.setItem("yra-splash", "1");
      true;`,
   );
   await session.send("Page.navigate", { url: `${origin}/kids` });
