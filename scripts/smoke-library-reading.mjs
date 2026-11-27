@@ -350,20 +350,41 @@ try {
 
   await screenshot(session, "library-reading-accessibility.jpg");
 
-  // --- Actual-reader verification across the remaining library domains -----
-  // Seerah is covered above (Ibn Hisham). For each other governed domain,
-  // deep-link the catalog work, open the internal reading chamber through the
-  // real UI, and assert that real text renders from the pinned OpenITI release
-  // commit — never from a floating tag and never through the internal reader
-  // API.
+  // --- Actual-reader verification across every library gateway -------------
+  // Seerah (gateway D) is covered above via Ibn Hisham. For each library
+  // domain gateway (A quran sciences, B tafsir, C hadith, D seerah, J fiqh,
+  // K usul, I creed, P language/literature) plus N history, deep-link the
+  // smallest governed work of that domain, open the internal reading chamber
+  // through the real UI, and assert that real text renders from the pinned
+  // OpenITI release commit — never from a floating tag and never through the
+  // internal reader API.
   const registrySource = readFileSync(resolve("shared", "knowledge-registry.ts"), "utf8");
   const pinnedCommit = (registrySource.match(/OPENITI_RELEASE_COMMIT =\s*\n?\s*"([0-9a-f]{40})"/) || [])[1];
   if (!pinnedCommit) throw new Error("could not read OPENITI_RELEASE_COMMIT from the registry");
+  // The work detail renders the category through categoryLabel() from
+  // library-catalog-presentation.ts, i.e. the Arabic label of the
+  // "X-<label>" catalog category code — never the raw code itself.
+  const GATEWAY_LABELS = {
+    A: "القرآن وعلومه",
+    B: "التفسير",
+    C: "الحديث النبوي",
+    D: "السيرة النبوية",
+    I: "العقيدة",
+    J: "الفقه",
+    K: "أصول الفقه والقواعد",
+    N: "التاريخ الإسلامي",
+    P: "اللغة والأدب",
+  };
   const DOMAIN_WORKS = [
-    { category: "history", workId: "openiti_work_0310Tabari.Tarikh", expectTitle: "تاريخ الطبري" },
-    { category: "tafsir", workId: "openiti_work_0444AbuCamrDani.TahdidFiItqan", expectTitle: "التحديد" },
-    { category: "hadith", workId: "openiti_work_0279Tirmidhi.ShamailMuhammadiyya", expectTitle: "الشمائل" },
-    { category: "adab", workId: "openiti_work_0256Bukhari.AdabMufrad", expectTitle: "الأدب المفرد" },
+    { gateway: "A", workId: "openiti_work_0444AbuCamrDani.TahdidFiItqan", expectTitle: "التحديد" },
+    { gateway: "B", workId: "openiti_work_0911Suyuti.TafsirJalalayn", expectTitle: "تفسير الجلالين" },
+    { gateway: "C", workId: "openiti_work_0242IbnAslamTusi.Arbacun", expectTitle: "الأربعون" },
+    { gateway: "D", workId: "openiti_work_0774IbnKathir.FusulMinSira", expectTitle: "فصول" },
+    { gateway: "I", workId: "openiti_work_0321Tahawi.MatnCaqida", expectTitle: "الطحاوية" },
+    { gateway: "J", workId: "openiti_work_0593BurhanDinFarghaniMarghinani.Bidaya", expectTitle: "بداية المبتدي" },
+    { gateway: "K", workId: "openiti_work_0476AbuIshaqShirazi.LumacFiUsulFiqh", expectTitle: "اللمع" },
+    { gateway: "P", workId: "openiti_work_0911Suyuti.CuqudJuman", expectTitle: "عقود الجمان" },
+    { gateway: "N", workId: "openiti_work_0310Tabari.Tarikh", expectTitle: "تاريخ الطبري" },
   ];
   const domainReads = [];
   for (const item of DOMAIN_WORKS) {
@@ -373,12 +394,23 @@ try {
     await waitFor(
       session,
       `document.readyState === "complete" && document.querySelector("#catalog-work-title") !== null`,
-      `${item.category} work detail`,
+      `gateway ${item.gateway} work detail`,
       200,
     );
     const title = await evaluate(session, `document.querySelector("#catalog-work-title")?.textContent ?? ""`);
     if (!title.includes(item.expectTitle)) {
-      throw new Error(`${item.category}: deep link resolved the wrong work: ${title}`);
+      throw new Error(`gateway ${item.gateway}: deep link resolved the wrong work: ${title}`);
+    }
+    const expectedLabel = GATEWAY_LABELS[item.gateway];
+    const categoryShown = await evaluate(
+      session,
+      `(() => {
+        const dds = [...document.querySelectorAll("dd")].map((el) => (el.textContent || "").trim());
+        return dds.find((text) => text === ${JSON.stringify(expectedLabel)}) ?? null;
+      })()`,
+    );
+    if (categoryShown === null) {
+      throw new Error(`gateway ${item.gateway}: work detail does not show category label "${expectedLabel}"`);
     }
     await evaluate(
       session,
@@ -389,7 +421,7 @@ try {
         return true;
       })()`,
     );
-    await waitFor(session, "Boolean(document.querySelector('[role=dialog]'))", `${item.category} chamber dialog`);
+    await waitFor(session, "Boolean(document.querySelector('[role=dialog]'))", `gateway ${item.gateway} chamber dialog`);
     await evaluate(
       session,
       `(() => {
@@ -408,7 +440,7 @@ try {
         const paper = [...dialog.querySelectorAll("article")].find((article) => article.textContent?.trim().length > 180);
         return Boolean(paper && dialog.textContent?.includes("OpenITI"));
       })()`,
-      `${item.category} real governed text`,
+      `gateway ${item.gateway} real governed text`,
       240,
     );
     const domainReading = await evaluate(
@@ -441,10 +473,10 @@ try {
       domainReading.usedInternalReaderApi ||
       domainReading.usedFloatingRelease
     ) {
-      throw new Error(`${item.category} reader evidence incomplete: ${JSON.stringify(domainReading)}`);
+      throw new Error(`gateway ${item.gateway} reader evidence incomplete: ${JSON.stringify(domainReading)}`);
     }
-    domainReads.push({ category: item.category, workId: item.workId, title, ...domainReading });
-    await screenshot(session, `library-domain-${item.category}.jpg`);
+    domainReads.push({ gateway: item.gateway, workId: item.workId, title, categoryShown, ...domainReading });
+    await screenshot(session, `library-gateway-${item.gateway}.jpg`);
   }
 
   const runtimeErrors = session.events
