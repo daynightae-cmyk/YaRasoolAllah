@@ -134,6 +134,15 @@ export const SCENE_DESERT_CAMP: WorldSceneConfig = {
       "سفر إلى شوارع يثرب بعد الهجرة؛ ساحة المسجد الأول والبيوت الطينية.",
       { type: "scene", id: "madinah-walk" },
     ),
+    createInteraction(
+      "gate-to-hijrah-road",
+      new THREE.Vector3(0, 2, -58),
+      5,
+      "transition",
+      "بوابة درب الهجرة",
+      "سفر إلى درب الهجرة الصحراوي؛ مسار تعليمي بين مكة والمدينة.",
+      { type: "scene", id: "hijrah-road" },
+    ),
   ],
   interactions: [
     createInteraction(
@@ -656,6 +665,15 @@ export const SCENE_MADINAH_WALK: WorldSceneConfig = {
       "سفر إلى الخندق؛ خط دفاع حُفر حمايةً للمدينة، وعرضه هندسي تعليمي.",
       { type: "scene", id: "khandaq-trench" },
     ),
+    createInteraction(
+      "gate-to-hijrah-road",
+      new THREE.Vector3(30, 2, 40),
+      5,
+      "transition",
+      "بوابة درب الهجرة",
+      "سفر إلى درب الهجرة الصحراوي؛ المسار التوضيحي بين مكة والمدينة.",
+      { type: "scene", id: "hijrah-road" },
+    ),
   ],
   interactions: [
     createInteraction(
@@ -852,6 +870,154 @@ export const SCENE_HIRA_CAVE: WorldSceneConfig = {
   canonicalRef: { chapterId: "prophethood-beginning", eventId: "first-revelation" },
 };
 
+/* ============================================================
+ * SCENE 7: Hijrah Road (The Migration Desert Journey)
+ *
+ * REF-13: an illustrative desert route with milestone markers.
+ * The path is schematic and educational — it is NOT a surveyed
+ * geographical route, and no stop position is claimed as exact.
+ * ============================================================ */
+export const SCENE_HIJRAH_ROAD: WorldSceneConfig = {
+  id: "hijrah-road",
+  nameAr: "درب الهجرة",
+  descriptionAr: "درب صحراوي طويل من مكة إلى يثرب، ومعالم للطريق مسجلة في السيرة.",
+  seed: 20261128,
+  biome: "dunes",
+  bounds: { width: 160, depth: 320, height: 40 },
+  skyColor: "#472a38",
+  fogColor: "#6b4230",
+  fogNear: 20,
+  fogFar: 170,
+  sunPosition: new THREE.Vector3(-70, 22, -90),
+  sunColor: "#ffb066",
+  sunIntensity: 2.4,
+  groundColor: "#b08a5e",
+  groundRoughness: 0.96,
+  groundMetalness: 0,
+  rockColor: "#7d6248",
+  entryPosition: new THREE.Vector3(0, 2, 150),
+  entryYaw: 0, // face -Z: down the road toward the milestones and Madinah
+  props: [
+    { id: "prop-rest-fire", type: "campfire", position: new THREE.Vector3(-8, 2, 50) },
+  ],
+  exits: [
+    createInteraction(
+      "exit-to-reading",
+      new THREE.Vector3(-16, 2, 138),
+      4,
+      "transition",
+      "العودة إلى القراءة",
+      "الخروج إلى فصل الهجرة",
+      { type: "chapter", id: "hijra-to-madinah" },
+    ),
+    // ---- TRAVEL GATES (living-world network) ----
+    createInteraction(
+      "gate-to-desert-camp",
+      new THREE.Vector3(-60, 2, 120),
+      5,
+      "transition",
+      "بوابة درب الصحراء",
+      "سفر إلى درب الصحراء ومعسكر القوافل، نقطة الانطلاق بين بيئات السيرة.",
+      { type: "scene", id: "desert-camp" },
+    ),
+    createInteraction(
+      "gate-to-madinah-walk",
+      new THREE.Vector3(0, 2, -140),
+      5,
+      "transition",
+      "بوابة المدينة المنورة",
+      "سفر إلى شوارع يثرب بعد الوصول؛ ساحة المسجد الأول وبيوت المدينة.",
+      { type: "scene", id: "madinah-walk" },
+    ),
+  ],
+  interactions: [
+    createInteraction(
+      "route-start-makkah",
+      new THREE.Vector3(0, 2, 128),
+      4,
+      "info",
+      "بداية الطريق من مكة",
+      "انطلاقة الرحلة من مكة في ليلة الهجرة؛ القصة في فصل الهجرة.",
+      { type: "event", id: "hijra-start" },
+    ),
+    createInteraction(
+      "route-thawr",
+      new THREE.Vector3(-18, 2, 80),
+      4,
+      "info",
+      "غار ثور",
+      "محطة غار ثور على طريق الهجرة؛ ثلاث ليالٍ في الغار كما يروي الفصل، بلا تمثيل.",
+      { type: "event", id: "cave-thawr" },
+    ),
+    createInteraction(
+      "route-desert-mid",
+      new THREE.Vector3(14, 2, 20),
+      4,
+      "info",
+      "درب الصحراء",
+      "رمال ومسافات طويلة ودليل خبير بالطرق؛ السياق في فصل الهجرة.",
+      { type: "chapter", id: "hijra-to-madinah" },
+    ),
+    createInteraction(
+      "route-quba",
+      new THREE.Vector3(-12, 2, -80),
+      4,
+      "info",
+      "قباء على مشارف يثرب؛ أول ما نزل به القادم من مكة قبل دخول المدينة.",
+      "قباء قرية على مشارف يثرب؛ أول موضع نزل به القادم من مكة قبل دخول المدينة، كما يذكر فصل الهجرة.",
+      { type: "event", id: "arrival-quba" },
+    ),
+    createInteraction(
+      "route-atlas-quba",
+      new THREE.Vector3(-24, 2, -92),
+      3,
+      "info",
+      "قباء في الأطلس",
+      "موضع قباء في الخريطة التعليمية للأطلس.",
+      { type: "atlas", id: "قباء" },
+    ),
+  ],
+  audioZones: [
+    createAudioZone(
+      "zone-hijrah-desert",
+      new THREE.Box3(new THREE.Vector3(-80, 0, -160), new THREE.Vector3(80, 20, 160)),
+      "ambience-desert-wind",
+      20,
+      0,
+    ),
+    createAudioZone(
+      "zone-hijrah-rest",
+      new THREE.Box3(new THREE.Vector3(-20, 0, 40), new THREE.Vector3(5, 10, 62)),
+      "ambience-camp",
+      12,
+      10,
+    ),
+  ],
+  lifeEntities: [
+    // Camels are owned by the ambient "caravan" preset on this road.
+    { id: "tent-rest-1", animationType: "sway", animationSpeed: 0.3, cullDistance: 80 },
+    { id: "palm-road-1", animationType: "sway", animationSpeed: 0.25, cullDistance: 100 },
+    { id: "palm-road-2", animationType: "sway", animationSpeed: 0.3, cullDistance: 100 },
+    { id: "palm-road-3", animationType: "sway", animationSpeed: 0.22, cullDistance: 100 },
+  ],
+  particles: [
+    createParticles(
+      "hijrah-sand-drift",
+      900,
+      new THREE.Box3(new THREE.Vector3(-80, 0.5, -160), new THREE.Vector3(80, 14, 160)),
+      0.08,
+      new THREE.Color("#e0c49a"),
+      0.35,
+      new THREE.Vector3(-0.5, 0, -0.2),
+      0.5,
+      18,
+      45,
+    ),
+  ],
+  disclosureAr: "دربُ هجرةٍ ثلاثيُّ الأبعادِ — مسارٌ فنيٌّ تقريبيٌّ بين مكة والمدينة، لا خريطةٌ مساحية، ولا تجسيدٌ للأشخاص.",
+  canonicalRef: { chapterId: "hijra-to-madinah" },
+};
+
 /** All scenes registry. */
 export const WORLD_SCENES: WorldSceneConfig[] = [
   SCENE_DESERT_CAMP,
@@ -860,6 +1026,7 @@ export const WORLD_SCENES: WorldSceneConfig[] = [
   SCENE_KHANDAQ,
   SCENE_MADINAH_WALK,
   SCENE_HIRA_CAVE,
+  SCENE_HIJRAH_ROAD,
 ];
 
 /** Get scene by ID. */

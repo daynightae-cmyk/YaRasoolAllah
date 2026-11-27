@@ -18,7 +18,7 @@ if (!chromePath) throw new Error("CHROME_PATH is required for the seerah composi
 
 const CANONICAL = [
   "/", "/library", "/quran", "/tafsir", "/seerah", "/seerah/database", "/atlas",
-  "/hadith", "/kids", "/daily", "/audio", "/basirah", "/sources",
+  "/hadith", "/kids", "/daily", "/audio", "/basirah", "/sources", "/noor",
 ];
 
 const evidenceDir = resolve("artifacts", "seerah-composition-smoke");
@@ -164,10 +164,11 @@ try {
     session,
     `localStorage.setItem("institution-welcome-seen", "true");
      localStorage.setItem("preferred-language", "ar");
+     sessionStorage.setItem("yra-splash", "1");
      true;`,
   );
-  await session.send("Page.navigate", { url: `${origin}/seerah` });
-  await waitFor(session, "document.readyState === 'complete' && location.pathname === '/seerah'", "seerah route");
+  await session.send("Page.navigate", { url: `${origin}/seerah?ceremony=0&door=0` });
+  await waitFor(session, "document.readyState === 'complete' && location.pathname === '/seerah' && location.search.includes('door=0')", "seerah route");
 
   // 1. Hero, journey band, chapter rail gateway and explore rail all mount.
   const composition = await waitFor(
@@ -245,7 +246,7 @@ try {
   );
 
   // 5. Deep-link ?journey= still binds the theatre stop.
-  await session.send("Page.navigate", { url: `${origin}/seerah?journey=hijrah-thawr` });
+  await session.send("Page.navigate", { url: `${origin}/seerah?journey=hijrah-thawr&ceremony=0&door=0` });
   const journey = await waitFor(
     session,
     `document.querySelector('[data-journey-stop="hijrah-thawr"]') !== null ? { ok: true } : null`,

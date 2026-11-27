@@ -64,6 +64,7 @@
 .portal img { object-fit: cover; z-index: -2; filter: brightness(1.14) saturate(1.1); }
 .portal::after { content: ""; background: linear-gradient(0deg, #101b11 0, #0f2118c9 16%, transparent 59%); z-index: -1; }
 .portal small { font: .72em/1.2 var(--font-latin), Georgia, serif; }
+button.portal { cursor: pointer; appearance: none; font-family: inherit; }
 .portal:hover, .portal:focus-visible { border-color: #fff2bd; }
 .portal:focus-visible, .crossroadsHome:focus-visible { outline: 3px solid #fff4c6; outline-offset: 3px; }
 .center { grid-area: center; }

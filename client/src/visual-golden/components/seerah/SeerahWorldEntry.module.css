@@ -1,0 +1,68 @@
+/* SeerahWorldEntry — the in-place Play-to-Enter layer on the crossroads.
+   The veil is a FLIP plate: it mounts at the portal button's rect, expands
+   to the full viewport, then fades out to reveal the 3D camera flight. */
+
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+}
+
+.veil {
+  position: fixed;
+  z-index: 1200;
+  top: var(--vt, 0);
+  left: var(--vl, 0);
+  width: var(--vw, 100vw);
+  height: var(--vh, 100vh);
+  overflow: hidden;
+  border-radius: 1.4rem;
+  border: 4px double #dcb875;
+  box-shadow: 0 0 0 2px #412c19, 0 2rem 5rem #000000cc;
+  pointer-events: none;
+  transition:
+    top 0.85s cubic-bezier(0.4, 0, 0.2, 1),
+    left 0.85s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.85s cubic-bezier(0.4, 0, 0.2, 1),
+    height 0.85s cubic-bezier(0.4, 0, 0.2, 1),
+    border-radius 0.85s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.8s ease 0.1s;
+}
+
+.veil img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(1.1) saturate(1.08);
+}
+
+.veilExpand {
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+}
+
+.veilOut {
+  opacity: 0;
+}
+
+.exitVeil {
+  position: fixed;
+  inset: 0;
+  z-index: 1300;
+  background: #0d1f16;
+  pointer-events: none;
+  animation: seerahExitFade 0.42s ease forwards;
+}
+
+@keyframes seerahExitFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .veil { transition: none; }
+  .exitVeil { animation-duration: 0.06s; }
+}

@@ -140,6 +140,7 @@ try {
     `localStorage.setItem("institution-welcome-seen", "true");
      localStorage.setItem("preferred-language", "ar");
      localStorage.setItem("divine-mode", "heaven");
+     sessionStorage.setItem("yra-splash", "1");
      true;`,
   );
 

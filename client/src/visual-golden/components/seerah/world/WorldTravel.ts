@@ -57,6 +57,10 @@ export const WORLD_TRAVEL_ARRIVALS: Record<string, ArrivalSpec> = {
   "madinah-walk->desert-camp": { position: [50, 2, 50], lookAt: [0, 2, 0] },
   "madinah-walk->khandaq-trench": { position: [50, 2, -48], lookAt: [0, 2, 0] },
   "khandaq-trench->madinah-walk": { position: [-44, 2, -42], lookAt: [0, 2, 0] },
+  "desert-camp->hijrah-road": { position: [0, 2, 120], lookAt: [0, 2, 0] },
+  "hijrah-road->desert-camp": { position: [-30, 2, 60], lookAt: [0, 2, 0] },
+  "hijrah-road->madinah-walk": { position: [-50, 2, 48], lookAt: [0, 2, 0] },
+  "madinah-walk->hijrah-road": { position: [50, 2, 120], lookAt: [0, 2, 40] },
 };
 
 /** Stable id for a directed travel edge. */

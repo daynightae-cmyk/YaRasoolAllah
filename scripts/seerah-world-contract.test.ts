@@ -386,7 +386,11 @@ describe("governed content links", () => {
 
   it("keeps religious guardrails: disclosure on every scene, no depiction claims", async () => {
     const { WORLD_SCENES } = await loadRegistry();
-    assert.equal(WORLD_SCENES.length, 6);
+    assert.deepEqual(
+      WORLD_SCENES.map((s) => s.id).sort(),
+      ["badr-valley", "desert-camp", "hijrah-road", "hira-cave", "khandaq-trench", "madinah-walk", "uhud-mountain"],
+      "the registered living-world scenes are exactly the authored set",
+    );
     for (const scene of WORLD_SCENES) {
       assert.ok(scene.disclosureAr.length > 20, `${scene.id} needs a disclosure`);
       assert.match(scene.disclosureAr, /تفسير|فني|تقريب/, `${scene.id} disclosure must label reconstruction`);

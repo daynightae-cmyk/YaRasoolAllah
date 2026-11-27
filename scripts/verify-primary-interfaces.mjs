@@ -76,7 +76,9 @@ try {
           assert.equal(await navigation.getByRole("link").count(), 3);
         } else {
           const crossroads = page.getByRole("region", { name: "السيرة النبوية" });
-          assert.equal(await crossroads.getByRole("link").count(), 9);
+          // 5 route-link portals + the home link stay links; 4 world gates are Play-to-Enter buttons.
+          assert.equal(await crossroads.getByRole("link").count(), 6);
+          assert.equal(await crossroads.getByRole("button").count(), 4);
           await crossroads.getByRole("link", { name: "الحديث الشريف Hadith" }).click();
           await page.waitForURL((destination) => destination.pathname === "/hadith");
           await page.goto(url, { waitUntil: "domcontentloaded" });

@@ -16,6 +16,8 @@ export const AMBIENT_SCENE_PRESETS: Record<string, AmbientPresetName[]> = {
   "badr-valley": ["march", "caravan"],
   "uhud-mountain": ["march"],
   "khandaq-trench": ["march", "camp"],
+
+  "hijrah-road": ["caravan"],
   // Hira receives only a distant, generic travelling route; nothing enacts
   // revelation or assigns an identity to anyone near the cave.
   "hira-cave": ["caravan"],

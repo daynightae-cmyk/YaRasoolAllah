@@ -76,6 +76,30 @@ interface LivingSeerahWorldProps {
   travelFromAr?: string;
   /** Current scene id (used by the HUD station log). */
   onSceneVisited?: (sceneId: string) => void;
+  /**
+   * Cinematic Play-to-Enter flight: when present (and motion is full), the
+   * camera starts at `from` with input locked, flies to the scene entry pose
+   * over `duration` seconds with an ease-in-out arc, then hands control to
+   * the player. Under reduced motion the flight is skipped and the world
+   * opens directly at the entry pose.
+   */
+  entryFlight?: { from: THREE.Vector3; duration?: number };
+  /** Called once the world build has finished and rendering has begun. */
+  onReady?: () => void;
+  /** Called when the entry flight begins. */
+  onEntryFlightStart?: () => void;
+  /** Called when the entry flight completes and input is handed over. */
+  onEntryFlightComplete?: () => void;
+}
+
+/** Internal state of an in-progress Play-to-Enter camera flight. */
+interface EntryFlightState {
+  t: number;
+  from: THREE.Vector3;
+  to: THREE.Vector3;
+  yaw: number;
+  duration: number;
+  arc: number;
 }
 
 /** HUD state is throttled — React must not re-render at frame rate. */
@@ -107,6 +131,10 @@ export function LivingSeerahWorld({
   initialYaw,
   travelFromAr,
   onSceneVisited,
+  entryFlight,
+  onReady,
+  onEntryFlightStart,
+  onEntryFlightComplete,
 }: LivingSeerahWorldProps) {
   const effectiveMotion = useEffectiveMotion();
   const reducedMotion = effectiveMotion === "reduced";
@@ -151,12 +179,16 @@ export function LivingSeerahWorld({
   const sceneConfig = useMemo(() => getWorldScene(sceneId) ?? DEFAULT_WORLD_SCENE, [sceneId]);
 
   // Live refs so the adapter never depends on changing callbacks/state.
-  const callbacksRef = useRef({ onExit, onUnavailable, onNavigate, onSceneVisited });
-  callbacksRef.current = { onExit, onUnavailable, onNavigate, onSceneVisited };
+  const callbacksRef = useRef({ onExit, onUnavailable, onNavigate, onSceneVisited, onReady, onEntryFlightStart, onEntryFlightComplete });
+  callbacksRef.current = { onExit, onUnavailable, onNavigate, onSceneVisited, onReady, onEntryFlightStart, onEntryFlightComplete };
   const motionRef = useRef(reducedMotion);
   motionRef.current = reducedMotion;
   const initialRef = useRef({ position: initialPosition, yaw: initialYaw });
   initialRef.current = { position: initialPosition, yaw: initialYaw };
+  const entryFlightRef = useRef(entryFlight);
+  entryFlightRef.current = entryFlight;
+  /** Active Play-to-Enter camera flight (null when idle or reduced motion). */
+  const flightRef = useRef<EntryFlightState | null>(null);
   const gestureRef = useRef(false);
   const hudTimerRef = useRef(0);
   const reducedGraceRef = useRef(0);
@@ -431,7 +463,35 @@ export function LivingSeerahWorld({
     registerDisposable(() => {
       controller.dispose();
       if (controllerRef.current === controller) controllerRef.current = null;
+      flightRef.current = null;
     });
+
+    // ---- PLAY-TO-ENTER ENTRY FLIGHT ----
+    // The host (portal crossroads) hands us a start pose "at the portal";
+    // the camera flies from there to the authored entry pose, then input is
+    // handed over. Reduced motion skips the flight entirely.
+    const flightSpec = entryFlightRef.current;
+    if (flightSpec && !motionRef.current) {
+      const from = flightSpec.from.clone();
+      from.y = Math.max(from.y, groundHeightAt(from.x, from.z) + 0.5);
+      const to = (initialRef.current.position ?? config.entryPosition).clone();
+      const flightYaw = initialRef.current.yaw ?? config.entryYaw;
+      controller.teleport(from, flightYaw);
+      controller.state.position.y = from.y;
+      controller.setInputEnabled(false);
+      flightRef.current = {
+        t: 0,
+        from,
+        to,
+        yaw: flightYaw,
+        duration: Math.max(0.8, flightSpec.duration ?? 2.8),
+        arc: 3.2,
+      };
+      host.dataset.worldEntryFlight = "active";
+      callbacksRef.current.onEntryFlightStart?.();
+    } else {
+      host.dataset.worldEntryFlight = flightSpec ? "skipped-reduced-motion" : "none";
+    }
 
     // ---- OPTIONAL ANONYMOUS AMBIENT POPULATION ----
     // Construction is cheap, but NavGrid/entity creation starts only after the
@@ -482,13 +542,15 @@ export function LivingSeerahWorld({
 
     setWorldNameAr(config.nameAr);
     setLoading(false);
+    callbacksRef.current.onReady?.();
     setAudioState({ muted: audio.isMuted(), volume: audio.getMasterVolume() });
     // Record the visit so the station log can show the traveller's route.
     callbacksRef.current.onSceneVisited?.(config.id);
 
     // Cinematic entrance: brief golden title card, then fade out to reveal
     // the world. Reduced motion gets an immediate reveal (no timer drama).
-    if (motionRef.current) {
+    // A Play-to-Enter flight owns the reveal instead of the title card.
+    if (motionRef.current || flightRef.current) {
       setEntered(true);
       setEntranceGone(true);
     } else {
@@ -592,7 +654,27 @@ export function LivingSeerahWorld({
         timeState.elapsed = elapsed;
 
         pollGamepad();
-        controller.update(delta);
+        // Play-to-Enter flight: drive the controller along an eased arc from
+        // the portal pose to the entry pose; input stays locked until done.
+        const flight = flightRef.current;
+        if (flight) {
+          flight.t += delta / flight.duration;
+          const k = Math.min(1, flight.t);
+          // easeInOutCubic
+          const e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+          playerPos.lerpVectors(flight.from, flight.to, e);
+          playerPos.y += Math.sin(e * Math.PI) * flight.arc;
+          controller.teleport(playerPos, flight.yaw);
+          controller.state.position.y = playerPos.y;
+          host.dataset.worldEntryFlight = k >= 1 ? "done" : "active";
+          if (k >= 1) {
+            flightRef.current = null;
+            controller.setInputEnabled(true);
+            callbacksRef.current.onEntryFlightComplete?.();
+          }
+        } else {
+          controller.update(delta);
+        }
         const state = controller.state;
         worldContext.playerState = state;
         playerPos.copy(state.position);
