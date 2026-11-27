@@ -30,13 +30,17 @@ import { MediaLibrarySection } from "@/visual-golden/components/media/MediaLibra
 import {
   KIDS_COUNTS,
   KIDS_STORIES,
+  KIDS_TOPICS,
   ageBandLabel,
   countDistinctSeenKidsAdaptations,
   hasThreeStoryKidsBadge,
   isRegisteredKidsAdaptationId,
   kidsAdaptationPosition,
   kidsAdaptationSources,
+  kidsTopicForAdaptation,
+  type KidsTopicId,
 } from "@/visual-golden/services/kids";
+import { KidsReviewQueue } from "@/visual-golden/components/kids/KidsReviewQueue";
 import styles from "./KidsPage.module.css";
 import { PARENT_DISCOVERY_SOURCES } from "@shared/kids-media-governance";
 
@@ -80,6 +84,7 @@ export function KidsPage() {
   const [activeRoom, setActiveRoom] = useState<"stories" | "parents">("stories");
   const [activeAdaptationId, setActiveAdaptationId] = useState("");
   const [ageFilter, setAgeFilter] = useState<AgeBandFilter>("all");
+  const [topicFilter, setTopicFilter] = useState<KidsTopicId | "all">("all");
   const recordReadingProgress = useInstitution((state) => state.recordReadingProgress);
 
   const current = KIDS_STORIES.find((story) => story.adaptationId === activeAdaptationId) ?? null;
@@ -93,8 +98,15 @@ export function KidsPage() {
   // Age-appropriate navigation: the visible list narrows, the full registry
   // remains available through "الكل" and the theatre's prev/next rail.
   const visibleStories = useMemo(
-    () => (ageFilter === "all" ? KIDS_STORIES : KIDS_STORIES.filter((story) => story.ageBand === ageFilter)),
-    [ageFilter],
+    () =>
+      KIDS_STORIES.filter((story) => {
+        if (ageFilter !== "all" && story.ageBand !== ageFilter) return false;
+        if (topicFilter !== "all" && kidsTopicForAdaptation(story.adaptationId)?.id !== topicFilter) {
+          return false;
+        }
+        return true;
+      }),
+    [ageFilter, topicFilter],
   );
   const ageCounts = useMemo(() => {
     const counts = new Map<string, number>();
@@ -411,6 +423,29 @@ export function KidsPage() {
             <p id="kids-adaptation-help" className="muted" style={{ margin: "0.55rem 0 0.6rem", fontSize: "0.76rem" }}>
               الاختيار وحده لا يُحتسب فتحًا؛ تُحتسب القصة عند فتحها فعليًا من القائمة أدناه.
             </p>
+            <div className={styles.ageFilter} role="group" aria-label="تصفح حسب الموضوع" data-visual="kids-topic-rail">
+              <span className={styles.ageFilterLabel}>الموضوع:</span>
+              <button
+                type="button"
+                className={topicFilter === "all" ? styles.ageChipActive : styles.ageChip}
+                aria-pressed={topicFilter === "all"}
+                onClick={() => setTopicFilter("all")}
+              >
+                الكل ({KIDS_STORIES.length})
+              </button>
+              {KIDS_TOPICS.map((topic) => (
+                <button
+                  key={topic.id}
+                  type="button"
+                  className={topicFilter === topic.id ? styles.ageChipActive : styles.ageChip}
+                  aria-pressed={topicFilter === topic.id}
+                  title={topic.descriptionAr}
+                  onClick={() => setTopicFilter(topic.id)}
+                >
+                  {topic.labelAr}
+                </button>
+              ))}
+            </div>
             <div className={styles.ageFilter} role="group" aria-label="تصفية حسب الفئة العمرية" data-visual="kids-age-filter">
               <span className={styles.ageFilterLabel}>الفئة العمرية:</span>
               <button
@@ -437,6 +472,7 @@ export function KidsPage() {
               {visibleStories.map((story, index) => {
                 const isSeen = seen.includes(story.adaptationId);
                 const isCurrent = story.adaptationId === activeAdaptationId;
+                const topic = kidsTopicForAdaptation(story.adaptationId);
                 return (
                   <li key={story.adaptationId}>
                     <article className={styles.adaptCard} data-seen={isSeen} data-current={isCurrent}>
@@ -446,6 +482,7 @@ export function KidsPage() {
                         <p>{story.summaryAr}</p>
                         <div className={styles.adaptMeta}>
                           <span>{ageBandLabel(story.ageBand)}</span>
+                          {topic ? <span>{topic.labelAr}</span> : null}
                           <span>{story.sourceIds.length} مصادر</span>
                           <span className={styles.adaptPending}>مراجعة تحريرية وعلمية معلّقة</span>
                           {isSeen ? <span className={styles.adaptSeen}>فُتحت</span> : null}
@@ -470,7 +507,9 @@ export function KidsPage() {
             </ul>
             {!visibleStories.length && (
               <p className="muted" style={{ fontSize: "0.8rem" }}>
-                {KIDS_STORIES.length === 0 ? "لا توجد تكييفات مسجلة بعد." : "لا توجد تكييفات في هذه الفئة العمرية بعد."}
+                {KIDS_STORIES.length === 0
+                  ? "لا توجد تكييفات مسجلة بعد."
+                  : "لا توجد تكييفات في هذا الموضوع أو هذه الفئة العمرية بعد."}
               </p>
             )}
           </section>
@@ -485,6 +524,10 @@ export function KidsPage() {
         title="مكتبة نور للأطفال"
         subtitle="فيديوهات وقنوات أطفال من كتالوج المصادر، مع رابط الصفحة الأصلية وحالة المراجعة أسفل كل مادة."
       />
+
+      <div id="kids-review-queue">
+        <KidsReviewQueue />
+      </div>
 
       {/* Safety band, as in the approved composition: declared design
           commitments — never a safety certificate or scholarly approval. */}
