@@ -377,17 +377,26 @@ try {
   };
   const DOMAIN_WORKS = [
     { gateway: "A", workId: "openiti_work_0444AbuCamrDani.TahdidFiItqan", expectTitle: "التحديد" },
+    { gateway: "A", workId: "openiti_work_0276IbnQutaybaDinawari.GharibQuran", expectTitle: "غريب القرآن", batch: "expansion" },
     { gateway: "B", workId: "openiti_work_0911Suyuti.TafsirJalalayn", expectTitle: "تفسير الجلالين" },
+    { gateway: "B", workId: "openiti_work_0597IbnJawzi.ZadMasir", expectTitle: "زاد المسير", batch: "expansion" },
+    { gateway: "B", workId: "openiti_work_0104MujahidIbnJabr.Tafsir", expectTitle: "مجاهد", batch: "expansion" },
     { gateway: "C", workId: "openiti_work_0242IbnAslamTusi.Arbacun", expectTitle: "الأربعون" },
+    { gateway: "C", workId: "openiti_work_0458Bayhaqi.SunanKubra", expectTitle: "سنن البيهقي", batch: "expansion" },
     { gateway: "D", workId: "openiti_work_0774IbnKathir.FusulMinSira", expectTitle: "فصول" },
+    { gateway: "D", workId: "openiti_work_0450AbuHasanMawardi.AclamNubuwwa", expectTitle: "أعلام النبوة", batch: "expansion" },
     { gateway: "I", workId: "openiti_work_0321Tahawi.MatnCaqida", expectTitle: "الطحاوية" },
+    { gateway: "I", workId: "openiti_work_0324Ashcari.MaqalatIslamiyyin", expectTitle: "مقالات الإسلاميين", batch: "expansion" },
     { gateway: "J", workId: "openiti_work_0593BurhanDinFarghaniMarghinani.Bidaya", expectTitle: "بداية المبتدي" },
+    { gateway: "J", workId: "openiti_work_0386IbnAbiZaydQayrawani.Risala", expectTitle: "رسالة ابن أبي زيد", batch: "expansion" },
     { gateway: "K", workId: "openiti_work_0476AbuIshaqShirazi.LumacFiUsulFiqh", expectTitle: "اللمع" },
+    { gateway: "K", workId: "openiti_work_0595IbnRushdHafid.BidayatMujtahid", expectTitle: "بداية المجتهد", batch: "expansion" },
     { gateway: "P", workId: "openiti_work_0911Suyuti.CuqudJuman", expectTitle: "عقود الجمان" },
+    { gateway: "P", workId: "openiti_work_0170KhalilFarahidi.JumalFiNahw", expectTitle: "الجمل في النحو", batch: "expansion" },
     { gateway: "N", workId: "openiti_work_0310Tabari.Tarikh", expectTitle: "تاريخ الطبري" },
   ];
   const domainReads = [];
-  for (const item of DOMAIN_WORKS) {
+  for (const [index, item] of DOMAIN_WORKS.entries()) {
     await session.send("Page.navigate", {
       url: `${origin}/library/work/${encodeURIComponent(item.workId)}`,
     });
@@ -475,8 +484,18 @@ try {
     ) {
       throw new Error(`gateway ${item.gateway} reader evidence incomplete: ${JSON.stringify(domainReading)}`);
     }
-    domainReads.push({ gateway: item.gateway, workId: item.workId, title, categoryShown, ...domainReading });
-    await screenshot(session, `library-gateway-${item.gateway}.jpg`);
+    domainReads.push({ gateway: item.gateway, batch: item.batch ?? "core", workId: item.workId, title, categoryShown, ...domainReading });
+    await screenshot(session, `library-gateway-${index}-${item.gateway}.jpg`);
+  }
+  const coveredGateways = new Set(domainReads.map((entry) => entry.gateway));
+  for (const gateway of ["A", "B", "C", "D", "I", "J", "K", "P"]) {
+    if (!coveredGateways.has(gateway)) {
+      throw new Error(`gateway ${gateway} has no verified reader in this run`);
+    }
+  }
+  const expansionReads = domainReads.filter((entry) => entry.batch === "expansion");
+  if (expansionReads.length === 0) {
+    throw new Error("the expansion batch must be verified readable, not just registered");
   }
 
   const runtimeErrors = session.events

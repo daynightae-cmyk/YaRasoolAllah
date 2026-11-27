@@ -5,7 +5,8 @@ import path from "node:path";
 import { DISCOVERED_MEDIA_CATALOG, DISCOVERED_MEDIA_COUNTS } from "../client/src/visual-golden/data/media-discovery.generated";
 import { BASIRAH_COUNTS, QURAN_TEXT_SOURCE_ID } from "../client/src/visual-golden/services/basirah";
 import { KIDS_COUNTS } from "../client/src/visual-golden/services/kids";
-import { LIBRARY_COUNTS } from "../client/src/visual-golden/services/library";
+import { catalog, LIBRARY_COUNTS } from "../client/src/visual-golden/services/library";
+import { workRegistry } from "../shared/knowledge-registry";
 
 const root = path.resolve(import.meta.dirname, "..");
 
@@ -24,8 +25,16 @@ test("Quran provenance resolves to the acquired Tanzil source in Basirah", () =>
 test("Basirah and library counters are explicit and distinct", () => {
   assert.equal(BASIRAH_COUNTS.catalogWorks, LIBRARY_COUNTS.works);
   assert.equal(BASIRAH_COUNTS.catalogVersions, LIBRARY_COUNTS.versions);
-  assert.equal(BASIRAH_COUNTS.indexedWorks, 50);
-  assert.equal(BASIRAH_COUNTS.catalogWorks, 49);
+  // Counters derive from the live registries, not from a frozen snapshot, so a
+  // governed expansion updates them instead of tripping them.
+  assert.equal(BASIRAH_COUNTS.indexedWorks, workRegistry.length);
+  assert.equal(BASIRAH_COUNTS.catalogWorks, catalog.length);
+  assert.ok(
+    BASIRAH_COUNTS.catalogWorks <= BASIRAH_COUNTS.indexedWorks,
+    "shelf-qualified works cannot exceed indexed registry works",
+  );
+  assert.ok(LIBRARY_COUNTS.readableWorks > 0, "at least one registry work must be readable in-app");
+  assert.ok(LIBRARY_COUNTS.readableVersions > 0);
 });
 
 test("media discovery catalog has unique IDs, secure source URLs, and zero approvals", () => {
