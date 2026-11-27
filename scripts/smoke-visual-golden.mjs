@@ -640,7 +640,17 @@ try {
     if (["/hadith", "/daily", "/basirah"].includes(item.path)) {
       await waitFor(session, '(document.querySelector(".vg-shell main h1")?.textContent || "").trim().length > 0', `${item.name} supporting wing heading`);
       if (item.path === "/hadith") {
-        await waitFor(session, 'document.querySelector(".vg-shell main")?.textContent?.includes("نطاق المحتوى الحالي")', `${item.name} Hadith corpus scope panel`);
+        // The scope panel title renders immediately; the provider rows arrive
+        // with the async status fetch, so wait for the full boundary text.
+        await waitFor(
+          session,
+          `(() => {
+            const text = document.querySelector(".vg-shell main")?.textContent || "";
+            return ["نطاق المحتوى الحالي", "Sunnah.com", "Dorar", "المتن الكامل غير متاح"].every((part) => text.includes(part)) ? true : null;
+          })()`,
+          `${item.name} Hadith corpus scope panel`,
+          100,
+        );
       }
       const truthGeometry = await evaluate(session, `(() => {
         const shell = document.querySelector(".vg-shell");
