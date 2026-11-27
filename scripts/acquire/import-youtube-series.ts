@@ -6,14 +6,74 @@ import { parseCsv } from "./ingest-media-catalog";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const acquisition = resolve(root, "data-sources/media/acquisition");
-const registryPath = resolve(acquisition, "media-series-registry.json");
-const catalogCsvPath = resolve(acquisition, "seerah-media-catalog.csv");
-const catalogJsonPath = resolve(acquisition, "seerah-media-catalog.json");
 const pendingPath = resolve(acquisition, "media-rejected-and-pending.csv");
 const ledgerPath = resolve(acquisition, "media-rights-ledger.csv");
 const manifestPath = resolve(acquisition, "media-acquisition-manifest.json");
-const reportPath = resolve(root, "artifacts/evidence/media-series-import-20261126.json");
 const write = process.argv.includes("--write");
+
+type TargetKey = "seerah" | "kids";
+type Target = {
+  key: TargetKey;
+  registryPath: string;
+  catalogCsvPath: string;
+  catalogJsonPath: string;
+  otherCatalogCsvPath: string;
+  reportPath: string;
+  ledgerCatalog: string;
+  defaultContentType: string;
+  defaultLanguage: string;
+  verificationMethod: string;
+  note: string;
+  pendingNextAction: string;
+  rightsAction: string;
+};
+
+function targetFromArgv(): Target {
+  const flagIndex = process.argv.indexOf("--target");
+  const key: TargetKey = flagIndex >= 0 && process.argv[flagIndex + 1] === "kids" ? "kids" : "seerah";
+  if (key === "kids") {
+    return {
+      key,
+      registryPath: resolve(acquisition, "kids-media-series-registry.json"),
+      catalogCsvPath: resolve(acquisition, "kids-media-catalog.csv"),
+      catalogJsonPath: resolve(acquisition, "kids-media-catalog.json"),
+      otherCatalogCsvPath: resolve(acquisition, "seerah-media-catalog.csv"),
+      reportPath: resolve(root, "artifacts/evidence/kids-media-series-import-20261127.json"),
+      ledgerCatalog: "kids",
+      defaultContentType: "animation_episode",
+      defaultLanguage: "en",
+      verificationMethod:
+        "yt-dlp flat publisher playlist enumeration (governed kids publisher); metadata only, not a copyright, age-safety, depiction, or runtime-embed approval",
+      note: "الفيديو مدرج بمعرّفه في قائمة معلنة للقناة المطابقة، ويبقى مرشحًا بانتظار مراجعة المحتوى والتصوير والفئة العمرية والحقوق على مستوى الفيديو؛ لا يُستنتج ترخيص أو موافقة من الإدراج.",
+      pendingNextAction:
+        "verify content, depiction, age band and rights per item, test official embed, then approval gate",
+      rightsAction:
+        "راجع محتوى الفيديو وتصويره وفئته العمرية وحقوقه قبل أي اعتماد؛ لا يُستنتج ترخيص من مشغل المصدر",
+    };
+  }
+  return {
+    key,
+    registryPath: resolve(acquisition, "media-series-registry.json"),
+    catalogCsvPath: resolve(acquisition, "seerah-media-catalog.csv"),
+    catalogJsonPath: resolve(acquisition, "seerah-media-catalog.json"),
+    otherCatalogCsvPath: resolve(acquisition, "kids-media-catalog.csv"),
+    reportPath: resolve(root, "artifacts/evidence/media-series-import-20261126.json"),
+    ledgerCatalog: "seerah",
+    defaultContentType: "lecture_series",
+    defaultLanguage: "ar",
+    verificationMethod:
+      "yt-dlp flat publisher playlist enumeration; metadata only, not a copyright or runtime-embed approval",
+    note: "الفيديو مدرج بمعرفه في قائمة معلنة بالقناة المطابقة. التحقق من بيانات القائمة لا يثبت المراجعة الدينية أو التحريرية أو الترخيص أو إمكانية التضمين وقت التشغيل.",
+    pendingNextAction: "verify rights, review content, test official embed, then approval gate",
+    rightsAction: "راجع الحقوق والمحتوى والتضمين قبل أي اعتماد تحريري؛ لا يُستنتج ترخيص من مشغل المصدر",
+  };
+}
+
+const target = targetFromArgv();
+const registryPath = target.registryPath;
+const catalogCsvPath = target.catalogCsvPath;
+const catalogJsonPath = target.catalogJsonPath;
+const reportPath = target.reportPath;
 
 type CsvRow = Record<string, string> & { __sourceLine: number };
 type PlaylistDefinition = {
@@ -21,6 +81,7 @@ type PlaylistDefinition = {
   series_name: string;
   category: string;
   subcategory: string;
+  content_type?: string;
 };
 type PublisherDefinition = {
   channel_id: string;
@@ -28,6 +89,8 @@ type PublisherDefinition = {
   channel_url: string;
   publisher_status: string;
   speaker: string;
+  runtime_policy?: string;
+  governance_publisher_id?: string;
   playlists: PlaylistDefinition[];
 };
 type Registry = { checked_at: string; publishers: PublisherDefinition[] };
@@ -226,8 +289,8 @@ function main() {
           existing.category ||= item.playlist.category;
           existing.subcategory ||= item.playlist.subcategory;
           existing.speaker ||= item.publisher.speaker;
-          existing.language ||= "ar";
-          existing.content_type ||= "lecture_series";
+          existing.language ||= target.defaultLanguage;
+          existing.content_type ||= item.playlist.content_type ?? target.defaultContentType;
           existing.thumbnail_url ||= `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
           existing.source_checked_at = registry.checked_at;
           if (!existing.verification_method?.includes("publisher playlist enumeration")) {
@@ -259,7 +322,7 @@ function main() {
             subcategory: item.playlist.subcategory,
             age_band: "",
             speaker: item.publisher.speaker,
-            content_type: "lecture_series",
+            content_type: item.playlist.content_type ?? target.defaultContentType,
             rights_holder: "",
             rights_notice: "حقوق النشر والمحتوى محفوظة لأصحابها؛ لا يُستنتج ترخيص من إمكانية التضمين.",
             rights_status: "UNKNOWN",
@@ -275,9 +338,9 @@ function main() {
             thumbnail_url: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
             thumbnail_rights_status: "UNKNOWN",
             source_checked_at: registry.checked_at,
-            verification_method: "yt-dlp flat publisher playlist enumeration; metadata only, not a copyright or runtime-embed approval",
+            verification_method: target.verificationMethod,
             verification_evidence_urls: [officialUrl, playlistUrl].join("|"),
-            notes: "الفيديو مدرج بمعرفه في قائمة معلنة بالقناة المطابقة. التحقق من بيانات القائمة لا يثبت المراجعة الدينية أو التحريرية أو الترخيص أو إمكانية التضمين وقت التشغيل.",
+            notes: target.note,
             __sourceLine: 0,
           } as CsvRow;
           added.push(row);
@@ -305,7 +368,8 @@ function main() {
       enrichedExisting: updated.length,
       duplicatePlaylistEntriesSkipped: duplicates.length,
       excludedEntries: playlistReports.reduce((sum, report) => sum + report.excluded.length, 0),
-      resultingAdultRecords: catalog.rows.length,
+      target: target.key,
+      resultingRecords: catalog.rows.length,
       note: "Playlist and channel metadata only. No rights, editorial, religious, publication, age-safety, or runtime-embed approval is inferred.",
     };
 
@@ -326,11 +390,11 @@ function main() {
         official_url: row.official_url,
         title_original: row.title_original,
         reason: "PENDING_REVIEW: rights UNKNOWN and/or embedding UNTESTED; no final editorial/religious review",
-        next_action: "verify rights, review content, test official embed, then approval gate",
+        next_action: target.pendingNextAction,
         __sourceLine: 0,
       });
       ledger.rows.push({
-        catalog: "seerah",
+        catalog: target.ledgerCatalog,
         video_id: row.video_id,
         official_url: row.official_url,
         channel_name: row.channel_name,
@@ -342,7 +406,7 @@ function main() {
         embedding_status: "UNTESTED",
         editorial_status: "PENDING_REVIEW",
         publication_status: "DRAFT",
-        rights_action: "راجع الحقوق والمحتوى والتضمين قبل أي اعتماد تحريري؛ لا يُستنتج ترخيص من مشغل المصدر",
+        rights_action: target.rightsAction,
         __sourceLine: 0,
       });
     }
@@ -364,19 +428,34 @@ function main() {
       records,
     }, null, 2)}\n`, "utf8");
 
-    const kidsCount = Number(acquisitionManifest.counts.kids ?? 0);
+    const otherRows = readCsv(target.otherCatalogCsvPath).rows;
+    const seerahCount = target.key === "seerah" ? catalog.rows.length : otherRows.length;
+    const kidsCount = target.key === "seerah" ? otherRows.length : catalog.rows.length;
+    const seerahPlaylistEpisodes = target.key === "seerah"
+      ? catalog.rows.filter((row) => Boolean(row.playlist_id)).length
+      : otherRows.filter((row) => Boolean(row.playlist_id)).length;
+    const kidsPlaylistEpisodes = target.key === "seerah"
+      ? otherRows.filter((row) => Boolean(row.playlist_id)).length
+      : catalog.rows.filter((row) => Boolean(row.playlist_id)).length;
     acquisitionManifest.generated_at = registry.checked_at;
     acquisitionManifest.counts = {
       ...acquisitionManifest.counts,
-      total: catalog.rows.length + kidsCount,
-      seerah: catalog.rows.length,
-      playlist_episodes: catalog.rows.filter((row) => Boolean(row.playlist_id)).length,
-      metadata_checked: catalog.rows.length + kidsCount,
-      permission_required_or_unknown: catalog.rows.length + kidsCount,
-      pending_editorial: catalog.rows.length + kidsCount,
+      total: seerahCount + kidsCount,
+      seerah: seerahCount,
+      kids: kidsCount,
+      playlist_episodes: seerahPlaylistEpisodes + kidsPlaylistEpisodes,
+      metadata_checked: seerahCount + kidsCount,
+      permission_required_or_unknown: seerahCount + kidsCount,
+      pending_editorial: seerahCount + kidsCount,
       approved: 0,
     };
-    acquisitionManifest.files = [...new Set([...acquisitionManifest.files, "media-series-registry.json"])];
+    acquisitionManifest.files = [
+      ...new Set([
+        ...acquisitionManifest.files,
+        "media-series-registry.json",
+        "kids-media-series-registry.json",
+      ]),
+    ];
     writeFileSync(manifestPath, `${JSON.stringify(acquisitionManifest, null, 2)}\n`, "utf8");
   })();
 }

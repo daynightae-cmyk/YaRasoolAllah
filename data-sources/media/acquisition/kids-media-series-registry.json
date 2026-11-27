@@ -1,0 +1,386 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-11-27",
+  "purpose": "Explicit children's playlist acquisition registry for the two governed kids publishers (see scripts/acquire/kids-youtube-publishers.ts). Listing a playlist does not approve its content, depiction, age band, rights, embedding, or religious review; every enumerated video stays a pending candidate until item-level review.",
+  "publishers": [
+    {
+      "channel_id": "UCSL4Dn-FQlvHZiSKipQZMqw",
+      "channel_name": "IQRA CARTOON - Islamic Prophets & Quran Stories",
+      "channel_url": "https://www.youtube.com/@iqracartoon",
+      "publisher_status": "OFFICIAL",
+      "speaker": "",
+      "governance_publisher_id": "iqra-cartoon",
+      "runtime_policy": "candidate_only_until_item_review",
+      "playlists": [
+        {
+          "id": "PLs6YIr-PdysDHbQxypMDkuhSYeEjPkaHU",
+          "series_name": "Kids Quran Tafsir for Children",
+          "category": "kids",
+          "subcategory": "تفسير القرآن للأطفال",
+          "content_type": "quran_learning"
+        },
+        {
+          "id": "PLs6YIr-PdysBIFUV2YUoDdXaA7JWxCaRY",
+          "series_name": "Islamic Stories",
+          "category": "kids",
+          "subcategory": "قصص إسلامية",
+          "content_type": "animated_series"
+        },
+        {
+          "id": "PLs6YIr-PdysBkjNZPvfretOqD5jAahJfW",
+          "series_name": "Quran Journey",
+          "category": "kids",
+          "subcategory": "رحلة القرآن",
+          "content_type": "quran_learning"
+        },
+        {
+          "id": "PLs6YIr-PdysBkfV9YP3YK_JXZH8HMbz-H",
+          "series_name": "Prophet stories Lesson",
+          "category": "kids",
+          "subcategory": "قصص الأنبياء",
+          "content_type": "animation_episode"
+        },
+        {
+          "id": "PLs6YIr-PdysBr-vhSyYZL8DcXTmNgWkeO",
+          "series_name": "Quran Stories For Children",
+          "category": "kids",
+          "subcategory": "قصص القرآن للأطفال",
+          "content_type": "animation_episode"
+        },
+        {
+          "id": "PLs6YIr-PdysBqIzL9yaXUt2AzAajP13vP",
+          "series_name": "Special Days",
+          "category": "kids",
+          "subcategory": "مناسبات إسلامية",
+          "content_type": "animation_episode"
+        },
+        {
+          "id": "PLs6YIr-PdysDyHUDmS55nxJgtls2P6p9C",
+          "series_name": "Dua for Kids",
+          "category": "kids",
+          "subcategory": "أدعية للأطفال",
+          "content_type": "nasheed"
+        },
+        {
+          "id": "PLs6YIr-PdysCGsvQj4BwHa81qYE_XMnWp",
+          "series_name": "Prophet Muhammad (s) Entire Life Story",
+          "category": "kids",
+          "subcategory": "سيرة النبي ﷺ",
+          "content_type": "animation_episode"
+        },
+        {
+          "id": "PLs6YIr-PdysDUgaJfwzd21VqbHnUiyKjU",
+          "series_name": "Surah Story",
+          "category": "kids",
+          "subcategory": "قصص السور",
+          "content_type": "animation_episode"
+        },
+        {
+          "id": "PLs6YIr-PdysAf_xxLJPbfUCSe2JVI9ed5",
+          "series_name": "Urdu Prophet Story",
+          "category": "kids",
+          "subcategory": "قصص الأنبياء أردوية",
+          "content_type": "animation_episode"
+        },
+        {
+          "id": "PLs6YIr-PdysDuxQyauAsWplOLisRNEItE",
+          "series_name": "Arabic Prophet Stories",
+          "category": "kids",
+          "subcategory": "قصص الأنبياء عربية",
+          "content_type": "animation_episode"
+        },
+        {
+          "id": "PLs6YIr-PdysBBJKQEKd1FSMFF3_g6_ien",
+          "series_name": "Prophet Stories",
+          "category": "kids",
+          "subcategory": "قصص الأنبياء",
+          "content_type": "animation_episode"
+        },
+        {
+          "id": "PLs6YIr-PdysBHK-7NDQW8IjP9pBYM-POt",
+          "series_name": "Nasheed (No Music) - Islamic song",
+          "category": "kids",
+          "subcategory": "نشيد بدون موسيقى",
+          "content_type": "nasheed"
+        },
+        {
+          "id": "PLs6YIr-PdysDa2vZQmE_pPLfGJGqIiMmU",
+          "series_name": "Ramadan Lessons",
+          "category": "kids",
+          "subcategory": "دروس رمضان",
+          "content_type": "animation_episode"
+        }
+      ]
+    },
+    {
+      "channel_id": "UC5vfWTTPnKdFp-8s0KbqJhw",
+      "channel_name": "One4kids",
+      "channel_url": "https://www.youtube.com/@One4kids-Zaky",
+      "publisher_status": "OFFICIAL",
+      "speaker": "",
+      "governance_publisher_id": "one4kids",
+      "runtime_policy": "candidate_only_until_item_review",
+      "playlists": [
+        {
+          "id": "PLVhRNB9aLU4hSn4AJe6qbJ9j5s6BCd7LL",
+          "series_name": "1 HOUR REPEAT QURAN WITH ZAKY",
+          "category": "kids",
+          "subcategory": "القرآن مع زكريا",
+          "content_type": "quran_learning"
+        },
+        {
+          "id": "PLVhRNB9aLU4hJl2WZe2mGIz4zS-xkGNv8",
+          "series_name": "Muslim Kids Around the World",
+          "category": "kids",
+          "subcategory": "مسلمون حول العالم",
+          "content_type": "animation_episode"
+        },
+        {
+          "id": "PLVhRNB9aLU4jl8PxmYKFUYkILGwBOsZYM",
+          "series_name": "Subi",
+          "category": "kids",
+          "subcategory": "مسلسلات",
+          "content_type": "animated_series"
+        },
+        {
+          "id": "PLVhRNB9aLU4iE5vdooRD26L8viR3l6I4n",
+          "series_name": "Schools & Live Shows",
+          "category": "kids",
+          "subcategory": "مدارس وعروض",
+          "content_type": "animated_series"
+        },
+        {
+          "id": "PLVhRNB9aLU4gFBUS3z4icOYidEiLBAlAA",
+          "series_name": "The Good Muslim",
+          "category": "kids",
+          "subcategory": "المسلم الطيب",
+          "content_type": "animation_episode"
+        },
+        {
+          "id": "PLVhRNB9aLU4jt3nTEReBt5TJUSeECUxOo",
+          "series_name": "Learn to Read with Zaky",
+          "category": "kids",
+          "subcategory": "تعلم القراءة مع زكريا",
+          "content_type": "educational"
+        },
+        {
+          "id": "PLVhRNB9aLU4jRxlZ4eIPIO2qb923MQ99Z",
+          "series_name": "KARAOKE",
+          "category": "kids",
+          "subcategory": "karaoke أناشيد",
+          "content_type": "nasheed"
+        },
+        {
+          "id": "PLVhRNB9aLU4jyFOCHbe9_wNqz_VBw2Wem",
+          "series_name": "📕 Learn Maths with Zaky - Multiplication",
+          "category": "kids",
+          "subcategory": "الرياضيات مع زكريا ضرب",
+          "content_type": "educational"
+        },
+        {
+          "id": "PLVhRNB9aLU4jur5RCRiO6gv97AmOw4c5X",
+          "series_name": "Kazwa & Bilal",
+          "category": "kids",
+          "subcategory": "قزوة وبلال",
+          "content_type": "animated_series"
+        },
+        {
+          "id": "PLVhRNB9aLU4ip4uRr02mACvZckz45eVuI",
+          "series_name": "Ramadan Reminders With Zaky",
+          "category": "kids",
+          "subcategory": "تذكيرات رمضان مع زكريا",
+          "content_type": "animation_episode"
+        },
+        {
+          "id": "PLVhRNB9aLU4jFYDCzxFtsptc5QMC1Ayix",
+          "series_name": "📕 Learn Maths with Zaky - Additions",
+          "category": "kids",
+          "subcategory": "الرياضيات مع زكريا جمع",
+          "content_type": "educational"
+        },
+        {
+          "id": "PLVhRNB9aLU4iDb7bi4wBNYpJpEAIfWnRd",
+          "series_name": "Arts & Craft with ZAKY",
+          "category": "kids",
+          "subcategory": "أعمال يدوية مع زكريا",
+          "content_type": "educational"
+        },
+        {
+          "id": "PLVhRNB9aLU4iBzwtNAtsILte8l5AJ9gaA",
+          "series_name": "Beautiful Short Hadiths",
+          "category": "kids",
+          "subcategory": "أحاديث قصيرة",
+          "content_type": "animation_episode"
+        },
+        {
+          "id": "PLVhRNB9aLU4hQGh3gEcKI7sRWT8CI2UdC",
+          "series_name": "99 Names of ALLAH",
+          "category": "kids",
+          "subcategory": "أسماء الله الحسنى",
+          "content_type": "nasheed"
+        },
+        {
+          "id": "PLVhRNB9aLU4j-dHGoey5veTGjSP7Vg181",
+          "series_name": "Little Explorers",
+          "category": "kids",
+          "subcategory": "المستكشفون الصغار",
+          "content_type": "animated_series"
+        },
+        {
+          "id": "PLVhRNB9aLU4iTWeM-u_4GkHQCrIBDRIjz",
+          "series_name": "Laith & Layla",
+          "category": "kids",
+          "subcategory": "ليث وليلى",
+          "content_type": "animated_series"
+        },
+        {
+          "id": "PLVhRNB9aLU4iijlj1hieweb16ao3P5C-o",
+          "series_name": "Zaky & Friends Compilations",
+          "category": "kids",
+          "subcategory": "تجميعات زكريا وأصدقائه",
+          "content_type": "compilation"
+        },
+        {
+          "id": "PLVhRNB9aLU4gFBliDkn8ujz-TgLSL_M15",
+          "series_name": "Omar, Hana & Zaky",
+          "category": "kids",
+          "subcategory": "عمر وهنا وزكريا",
+          "content_type": "animated_series"
+        },
+        {
+          "id": "PLVhRNB9aLU4ga734smnzlRmf4dSSimStB",
+          "series_name": "The Maryam & Fatima Show",
+          "category": "kids",
+          "subcategory": "عرض مريم وفاطمة",
+          "content_type": "animated_series"
+        },
+        {
+          "id": "PLVhRNB9aLU4jJr8ahDLANgLb4p21rjA2W",
+          "series_name": "Zaky's Discoveries",
+          "category": "kids",
+          "subcategory": "اكتشافات زكريا",
+          "content_type": "animated_series"
+        },
+        {
+          "id": "PLVhRNB9aLU4hMooCxnZTk4DnKnt2FKsQp",
+          "series_name": "A Day With Zaky & Friends",
+          "category": "kids",
+          "subcategory": "يوم مع زكريا وأصدقائه",
+          "content_type": "animated_series"
+        },
+        {
+          "id": "PLVhRNB9aLU4iyYH-LqPytjbOJvxIQ10mI",
+          "series_name": "Wonderful Words Of ALLAH - Quran Tafsir",
+          "category": "kids",
+          "subcategory": "تفسير القرآن",
+          "content_type": "quran_learning"
+        },
+        {
+          "id": "PLVhRNB9aLU4iSK_bSsKylQZH7ZtWc32Zd",
+          "series_name": "Zaky's Little Reminders",
+          "category": "kids",
+          "subcategory": "تذكيرات زكريا",
+          "content_type": "animation_episode"
+        },
+        {
+          "id": "PLVhRNB9aLU4hOKSKPGiz6432Eg-8Zqwb7",
+          "series_name": "Zaky's Learning Club",
+          "category": "kids",
+          "subcategory": "نادي زكريا التعليمي",
+          "content_type": "animated_series"
+        },
+        {
+          "id": "PLVhRNB9aLU4gscT1IDGjJN1EHm0CnOZTH",
+          "series_name": "Barakah Hills",
+          "category": "kids",
+          "subcategory": "باركة هيلز",
+          "content_type": "animated_series"
+        },
+        {
+          "id": "PLVhRNB9aLU4j3XtwfFC5ACxQT48iJohRb",
+          "series_name": "Games & Quizes",
+          "category": "kids",
+          "subcategory": "ألعاب وألغاز",
+          "content_type": "educational"
+        },
+        {
+          "id": "PLVhRNB9aLU4hNPhF6ct8KWLkZrXKqDwvl",
+          "series_name": "Learning with Zaky",
+          "category": "kids",
+          "subcategory": "التعلم مع زكريا",
+          "content_type": "educational"
+        },
+        {
+          "id": "PLVhRNB9aLU4iIuF-RMMkm-yKVa75g1oJy",
+          "series_name": "Amazing Creations Series",
+          "category": "kids",
+          "subcategory": "سلسلة عجائب المخلوقات",
+          "content_type": "animated_series"
+        },
+        {
+          "id": "PLVhRNB9aLU4iyzVl5jpZmGMdnn-bSp7Vj",
+          "series_name": "Stories of the Prophets",
+          "category": "kids",
+          "subcategory": "قصص الأنبياء",
+          "content_type": "animated_series"
+        },
+        {
+          "id": "PLVhRNB9aLU4hXEuIdEtEgE_X9CCFU5_UE",
+          "series_name": "Kids Show - Hurray For Baba Ali",
+          "category": "kids",
+          "subcategory": "عرض Kids - Baba علي",
+          "content_type": "animated_series"
+        },
+        {
+          "id": "PLVhRNB9aLU4j1jyn3-nR4BVOYVsHdsO4i",
+          "series_name": "Learn Quran With Zaky",
+          "category": "kids",
+          "subcategory": "تعلم القرآن مع زكريا",
+          "content_type": "quran_learning"
+        },
+        {
+          "id": "PLVhRNB9aLU4ibYhRjbg84cIADBKUU23W3",
+          "series_name": "Learn Arabic with Zaky",
+          "category": "kids",
+          "subcategory": "تعلم العربية مع زكريا",
+          "content_type": "educational"
+        },
+        {
+          "id": "PLVhRNB9aLU4jRNxM1vM3418TfzLQN5oFx",
+          "series_name": "Story of Prophet Ibrahim (as)",
+          "category": "kids",
+          "subcategory": "قصة النبي إبراهيم عليه السلام",
+          "content_type": "animation_episode"
+        },
+        {
+          "id": "PL57B7C8C7309D11C2",
+          "series_name": "Ramadan",
+          "category": "kids",
+          "subcategory": "رمضان",
+          "content_type": "animation_episode"
+        },
+        {
+          "id": "PLB500F90FABA85434",
+          "series_name": "Learn how to Pray & make Wudu",
+          "category": "kids",
+          "subcategory": "تعلم الصلاة والوضوء",
+          "content_type": "educational"
+        },
+        {
+          "id": "PL415C384BB6EB597B",
+          "series_name": "Let's Learn Dua with ZAKY",
+          "category": "kids",
+          "subcategory": "تعلم الدعاء مع زكريا",
+          "content_type": "nasheed"
+        },
+        {
+          "id": "PLED9B4BA03D414ED9",
+          "series_name": "Song/Nasheed",
+          "category": "kids",
+          "subcategory": "أناشيد",
+          "content_type": "nasheed"
+        }
+      ]
+    }
+  ]
+}

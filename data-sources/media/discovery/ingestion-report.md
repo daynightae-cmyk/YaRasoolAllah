@@ -2,29 +2,29 @@
 
 تاريخ الإنشاء الثابت: 2026-11-27T00:00:00.000Z
 مولّد البيانات: media-discovery-ingest/2.0.0
-عدد السجلات الفريدة المستوردة: 3580
+عدد السجلات الفريدة المستوردة: 4389
 تم تخطي المكررات: 0
 المؤهلة للعرض العام (APPROVED): 0
-غير مكتملة الاعتماد الكامل (PENDING/DRAFT): 3580
-بحقوق UNKNOWN: 3580
+غير مكتملة الاعتماد الكامل (PENDING/DRAFT): 4389
+بحقوق UNKNOWN: 4389
 
 ## بصمات المدخلات
-- data-sources/media/acquisition/media-acquisition-manifest.json: a06270368c2ae84bc53be61cc7c06404cbee08e021b3fea31973e1143c16b4db (1308 bytes, utf8-lf)
-- data-sources/media/acquisition/kids-media-catalog.csv: 9ccfeed801af94229765596a921b63496b0b24ea1bb090e1c8eba0cba363658c (94413 bytes, utf8-lf)
-- data-sources/media/acquisition/kids-media-catalog.json: fde743323a72bbc8796c5b6f27455b369fa36c83937faf31a057c53a329c13d3 (165112 bytes, utf8-lf)
+- data-sources/media/acquisition/media-acquisition-manifest.json: c8dfcdd5d737e037dde641eae248daf27851c9b4a9805aa4083f6d934eb06173 (1348 bytes, utf8-lf)
+- data-sources/media/acquisition/kids-media-catalog.csv: a80e6a237ddc21b85a36a5aa869538ac4641ce65a91bc0772b0889db47b05570 (1127314 bytes, utf8-lf)
+- data-sources/media/acquisition/kids-media-catalog.json: f7d26a88fa58c41d674d4df7dd871b0764cec8033d03e8e8569e09d4879b43f2 (2086980 bytes, utf8-lf)
 - data-sources/media/acquisition/seerah-media-catalog.csv: 666644c42f75d3573738ac7bfd800afd8260b09005a507d204b88618eb4b0170 (5983247 bytes, utf8-lf)
 - data-sources/media/acquisition/seerah-media-catalog.json: 763795c5f60943c0bc936c64578ef199c75521da9a974b3b1fc9d65dca242a15 (9910793 bytes, utf8-lf)
-- data-sources/media/acquisition/media-rights-ledger.csv: 4730d8f858ca71759e817309ffa467ff65d974018d5151c70ac44ebb5f6f3fe2 (1111344 bytes, utf8-lf)
-- data-sources/media/acquisition/media-rejected-and-pending.csv: 400a72cee059703df9dadb9ba1ef6ee84ddce5ad385efab03b2bffbebff7fa9e (1197854 bytes, utf8-lf)
+- data-sources/media/acquisition/media-rights-ledger.csv: 2b3ac9e26aca9f5eb6b5b88f8c48f5cf724a998a673a1d7b943c20c400a8875c (1363082 bytes, utf8-lf)
+- data-sources/media/acquisition/media-rejected-and-pending.csv: d00c631adc2bc7941883111d7b41848d75fba3bc9ff3929176e741d80cc8b5d2 (1447981 bytes, utf8-lf)
 
 ## بصمات المخرجات
-- media-discovery-catalog.json: 512277d8e7ba5d96e889c75d47662d5787675498449060bb02d0241307a15a55
-- ingestion-manifest.json: 0eed661d5e6789599cd0c7543c93e4bb60546b1fff9fd96584d782810c6697a9
-- media-discovery.generated.ts: 5972b1f659ab00e20078d6cf2f02ded4c36e4dd31bdadd8cd9b91e7cce649f9d
-- media-discovery-status.generated.ts: 485dbe252f0e78e289d68f2982bf15d002451aaf0f782ad5b7785497d2b90b2b
+- media-discovery-catalog.json: 8c879c8cc0240eaa716b81554633440302725706e5be89c857d7c2121db9115d
+- ingestion-manifest.json: fc967028bb9ea3058b0445060de00b69ea651b97bf662dec89def7bec6598ada
+- media-discovery.generated.ts: 3afc60f6350fb422abdb8b32336cce533b0afa0b538e8093af3f89eb8b083745
+- media-discovery-status.generated.ts: ec5a10a6d83e067e951e0ef83c6725e96d677b52b25a9c16486aea52e8fb126e
 
 ## حسب الفئة
-- kids: 46
+- kids: 855
 - seerah: 14
 - الأخلاق والآداب: 6
 - التاريخ الإسلامي: 336
@@ -44,10 +44,10 @@
 - محاضرات ومواعظ: 587
 
 ## حسب حالة النشر
-- DRAFT: 3580
+- DRAFT: 4389
 
 ## حسب حالة الحقوق
-- UNKNOWN: 3580
+- UNKNOWN: 4389
 
 ## السياسة
 - لا يوجد سجل تمت ترقيته إلى APPROVED.

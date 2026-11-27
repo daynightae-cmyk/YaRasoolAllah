@@ -59,9 +59,11 @@ test("the four formerly shifted source rows keep every review field aligned", ()
 
 test("generated discovery catalog is fail-closed and repairs the shifted statuses", () => {
   const total = DISCOVERED_MEDIA_CATALOG.length;
-  // Golden count of the governed discovery catalog: 2026-11-27 expansion to
-  // 125 enumerated playlists (5 publishers) took it from 1742 to 3580 records.
-  assert.equal(total, 3580);
+  // Golden count of the governed discovery catalog: 2026-11-27 adult expansion
+  // to 125 enumerated playlists (5 publishers) took it from 1742 to 3580; the
+  // same-day kids expansion (51 enumerated playlists, 2 governed kids
+  // publishers, candidate-only) took it from 3580 to 4389 records.
+  assert.equal(total, 4389);
   assert.equal(DISCOVERED_MEDIA_COUNTS.total, total);
   assert.equal(DISCOVERED_MEDIA_COUNTS.approved, 0);
   assert.equal(DISCOVERED_MEDIA_COUNTS.pending, total);

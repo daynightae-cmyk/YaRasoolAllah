@@ -4,17 +4,17 @@
   "source_job": "9e80bb2aa838",
   "api_credentials_available": false,
   "counts": {
-    "total": 3580,
-    "kids": 63,
+    "total": 4389,
+    "kids": 872,
     "seerah": 3517,
     "official_publishers": 2,
     "complete_series": 25,
-    "playlist_episodes": 3487,
-    "metadata_checked": 3580,
+    "playlist_episodes": 4330,
+    "metadata_checked": 4389,
     "embedding_api_checked": 0,
     "runtime_tested": 0,
-    "permission_required_or_unknown": 3580,
-    "pending_editorial": 3580,
+    "permission_required_or_unknown": 4389,
+    "pending_editorial": 4389,
     "rejected": 0,
     "duplicates_removed": 0,
     "approved": 0
@@ -34,7 +34,8 @@
     "seerah-media-catalog-README.md",
     "seerah-media-catalog.csv",
     "seerah-media-catalog.json",
-    "media-series-registry.json"
+    "media-series-registry.json",
+    "kids-media-series-registry.json"
   ],
   "limitations": [
     "No YouTube Data API verification",
