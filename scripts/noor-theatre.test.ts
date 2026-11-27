@@ -11,6 +11,7 @@ import {
   filterNoorRecords,
   matchesNoorDuration,
   matchesNoorTopic,
+  mountedNoorEmbedUrl,
   noorMediaDuration,
   noorMediaTitle,
 } from "../client/src/visual-golden/services/media/noor-theatre";
@@ -262,8 +263,25 @@ test("an approved record mounts only a no-autoplay YouTube embed", () => {
   assert.equal(url.hostname, "www.youtube-nocookie.com");
   assert.equal(url.searchParams.get("autoplay"), "0");
   assert.equal(url.searchParams.get("rel"), "0");
+  assert.equal(url.searchParams.get("enablejsapi"), "1");
   assert.equal(url.searchParams.get("t"), null);
+  assert.equal(url.searchParams.get("origin"), null, "origin is added at mount time, not baked into the record");
   assert.equal(clearedNoorThumbnail(approved), approved.thumbnail_url);
+});
+
+test("the mounted embed declares the embedding origin to the provider", () => {
+  const record_ = record({
+    ...PASSING,
+    embed_url: "https://www.youtube.com/embed/abcdEFG1234",
+  });
+  const embed = approvedNoorEmbedUrl(record_);
+  assert.ok(embed);
+  const mounted = new URL(mountedNoorEmbedUrl(embed, "https://www.yarasoolallah.it.com"));
+  assert.equal(mounted.hostname, "www.youtube-nocookie.com");
+  assert.equal(mounted.searchParams.get("origin"), "https://www.yarasoolallah.it.com");
+  assert.equal(mounted.searchParams.get("autoplay"), "0");
+  assert.equal(mounted.searchParams.get("enablejsapi"), "1");
+  assert.equal(mountedNoorEmbedUrl("not-a-url", "https://example.com"), "not-a-url");
 });
 
 test("an approved record with an untrusted embed fails closed", () => {

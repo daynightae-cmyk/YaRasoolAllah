@@ -140,6 +140,8 @@ export function clearedNoorThumbnail(record: MediaDiscoveryRecord): string | nul
 /**
  * Fail closed at the final playback boundary as well as in the catalog UI.
  * Only an official YouTube embed can be mounted, with autoplay explicitly off.
+ * `enablejsapi` lets the theatre read the provider-reported position for local
+ * watch continuation; the component adds the matching `origin` at mount time.
  */
 export function approvedNoorEmbedUrl(record: MediaDiscoveryRecord): string | null {
   if (!isOfficialProviderPlaybackCandidate(record) || !record.embed_url) return null;
@@ -154,8 +156,20 @@ export function approvedNoorEmbedUrl(record: MediaDiscoveryRecord): string | nul
     url.hash = "";
     url.searchParams.set("autoplay", "0");
     url.searchParams.set("rel", "0");
+    url.searchParams.set("enablejsapi", "1");
     return url.toString();
   } catch {
     return null;
+  }
+}
+
+/** The embed src as mounted, with the embedding origin declared to the provider. */
+export function mountedNoorEmbedUrl(embedUrl: string, origin: string): string {
+  try {
+    const url = new URL(embedUrl);
+    url.searchParams.set("origin", origin);
+    return url.toString();
+  } catch {
+    return embedUrl;
   }
 }

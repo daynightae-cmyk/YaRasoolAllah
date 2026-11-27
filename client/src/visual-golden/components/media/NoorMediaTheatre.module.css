@@ -53,7 +53,7 @@
 .viewControls { position: relative; display: flex; flex-wrap: wrap; justify-content: center; gap: .35rem; padding: .25rem .65rem; }
 .viewControls button { display: inline-flex; gap: .35rem; align-items: center; min-height: 40px; padding: .3rem .7rem; color: #fff3d2; background: #12382ee8; border: 1px solid #dfba78; border-radius: .7rem; font-size: .78rem; }
 .viewControls button:is([aria-pressed="true"], [aria-expanded="true"]) { color: #291e10; background: linear-gradient(#ffedbc, #dba452); }
-.textLink, .sourceButton, .detailButton, .goldButton, .playButton {
+.textLink, .sourceButton, .detailButton, .goldButton, .playButton, .resumeButton {
   display: inline-flex; align-items: center; justify-content: center; gap: .45rem;
   min-height: 40px; padding: .56rem .9rem; border-radius: 10px; border: 1px solid #d7ba784a;
   background: #0d372dba; color: #f8ead0; font-size: .8rem; font-weight: 700;
@@ -131,6 +131,7 @@
 .emptyActions { display: flex; justify-content: center; gap: .45rem; flex-wrap: wrap; margin-top: .4rem; }
 .playButton,.goldButton { background: linear-gradient(110deg,#b99a51,#ebc977); color: #112523; border: 0; }
 .playButton:hover,.goldButton:hover { background: #f6d38b; transform: translateY(-1px); }
+.resumeButton { border-style: dashed; font-variant-numeric: tabular-nums; }
 .screenControls { border-top: 1px solid #ffffff10; }
 .screenControls button { border: 1px solid #d6b8743c; background: #123f38; border-radius: 8px; padding: .32rem .6rem; color: #ffedcb; }
 .playerTruth { flex: 1; min-width: 0; }

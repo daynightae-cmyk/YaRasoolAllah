@@ -1,0 +1,166 @@
+{
+  "origin": "http://127.0.0.1:3000",
+  "expectedAdultTotal": 3517,
+  "adultCandidateCount": 3513,
+  "refusedAdultId": "youtube:wyAr0xvt43o",
+  "browse": {
+    "documentWidth": 1440,
+    "viewport": 1440,
+    "approved": "0",
+    "candidates": 3512,
+    "results": 3517,
+    "watchProgressCount": 0,
+    "playerState": "idle",
+    "cardCount": 8,
+    "queueCount": 24,
+    "topicCount": 8,
+    "topicRows": [
+      {
+        "label": "كل المواد",
+        "count": 3517
+      },
+      {
+        "label": "السيرة النبوية",
+        "count": 333
+      },
+      {
+        "label": "القرآن وعلومه",
+        "count": 619
+      },
+      {
+        "label": "التاريخ الإسلامي",
+        "count": 336
+      },
+      {
+        "label": "الصحابة والأئمة",
+        "count": 379
+      },
+      {
+        "label": "العبادات",
+        "count": 290
+      },
+      {
+        "label": "محاضرات ومواعظ",
+        "count": 587
+      },
+      {
+        "label": "قصص الأنبياء",
+        "count": 198
+      }
+    ],
+    "frames": 0
+  },
+  "deepLink": {
+    "id": "youtube:_-zUiPTdPhg",
+    "series": "برنامج نساء خالدات | د. طارق السويدان"
+  },
+  "playback": {
+    "attempts": [
+      {
+        "candidateId": "youtube:_-zUiPTdPhg",
+        "frameSrc": "https://www.youtube-nocookie.com/embed/_-zUiPTdPhg?autoplay=0&rel=0&enablejsapi=1&origin=http%3A%2F%2F127.0.0.1%3A3000",
+        "srcCheck": {
+          "host": "www.youtube-nocookie.com",
+          "autoplay": "0",
+          "rel": "0",
+          "enablejsapi": "1",
+          "origin": "http://127.0.0.1:3000"
+        },
+        "state": "ready",
+        "apiAttached": true,
+        "samples": [
+          {
+            "seconds": 4,
+            "duration": 2166,
+            "updatedAt": 1795760351568
+          },
+          {
+            "seconds": 11,
+            "duration": 2166,
+            "updatedAt": 1795760359174
+          },
+          {
+            "seconds": 19,
+            "duration": 2166,
+            "updatedAt": 1795760367146
+          }
+        ],
+        "advancing": true
+      }
+    ],
+    "played": {
+      "candidateId": "youtube:_-zUiPTdPhg",
+      "frameSrc": "https://www.youtube-nocookie.com/embed/_-zUiPTdPhg?autoplay=0&rel=0&enablejsapi=1&origin=http%3A%2F%2F127.0.0.1%3A3000",
+      "samples": [
+        {
+          "seconds": 4,
+          "duration": 2166,
+          "updatedAt": 1795760351568
+        },
+        {
+          "seconds": 11,
+          "duration": 2166,
+          "updatedAt": 1795760359174
+        },
+        {
+          "seconds": 19,
+          "duration": 2166,
+          "updatedAt": 1795760367146
+        }
+      ],
+      "savedSeconds": 19
+    }
+  },
+  "resume": {
+    "chipSeconds": 27,
+    "afterResume": {
+      "seconds": 32,
+      "duration": 2167
+    }
+  },
+  "refused": {
+    "state": "blocked",
+    "frames": 0,
+    "play": false,
+    "reason": true,
+    "gates": [
+      {
+        "label": "الناشر",
+        "passed": "true",
+        "status": "OFFICIAL"
+      },
+      {
+        "label": "الحقوق",
+        "passed": "false",
+        "status": "UNKNOWN"
+      },
+      {
+        "label": "التضمين",
+        "passed": "false",
+        "status": "PROVIDER_REFUSED"
+      },
+      {
+        "label": "التحرير",
+        "passed": "false",
+        "status": "PENDING_REVIEW"
+      },
+      {
+        "label": "المراجعة الدينية",
+        "passed": "false",
+        "status": "PENDING_REVIEW"
+      },
+      {
+        "label": "التصوير",
+        "passed": "false",
+        "status": "PENDING_REVIEW"
+      },
+      {
+        "label": "النشر",
+        "passed": "false",
+        "status": "DRAFT"
+      }
+    ]
+  },
+  "runtimeErrors": [],
+  "consoleErrors": []
+}

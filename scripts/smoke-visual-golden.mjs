@@ -54,6 +54,10 @@ const cases = [
   { name: "library-reader-1440-ltr", path: "/library", width: 1440, height: 1000, lang: "en", openReader: true },
   { name: "sources-1440-rtl", path: "/sources", width: 1440, height: 1000 },
   { name: "sources-360-rtl", path: "/sources", width: 360, height: 844 },
+  { name: "noor-1440-rtl", path: "/noor", width: 1440, height: 1000 },
+  { name: "noor-768-rtl", path: "/noor", width: 768, height: 900 },
+  { name: "noor-390-rtl", path: "/noor", width: 390, height: 844 },
+  { name: "noor-390-ltr", path: "/noor", width: 390, height: 844, lang: "en", expectNotice: "arabic_only" },
 ];
 
 // Optional targeted runs, e.g. SMOKE_CASES=seerah-1440-rtl,library-1440-rtl.
@@ -662,6 +666,259 @@ try {
         throw new Error(`${item.name} lost Basirah non-mufti boundary`);
       }
       diagnostics.geometry = truthGeometry;
+    }
+    if (item.path === "/noor") {
+      await waitFor(
+        session,
+        'document.querySelector(\'[data-visual="noor-theatre"]\') !== null',
+        `${item.name} theatre mount`,
+        300,
+      );
+      const noorBase = await evaluate(session, `(() => {
+        const root = document.querySelector('[data-visual="noor-theatre"]');
+        const screen = document.querySelector("[data-player-state]");
+        const library = document.querySelector('section[aria-labelledby="noor-library-title"]');
+        const more = [...(library?.querySelectorAll("button") ?? [])].find((b) => (b.textContent || "").includes("عرض المزيد"));
+        return {
+          viewport: innerWidth,
+          documentWidth: document.documentElement.scrollWidth,
+          approved: root?.getAttribute("data-approved-count") ?? null,
+          candidates: Number(root?.getAttribute("data-playback-candidate-count") ?? "NaN"),
+          results: Number(root?.getAttribute("data-result-count") ?? "NaN"),
+          playerState: screen?.getAttribute("data-player-state") ?? null,
+          cardCount: library?.querySelectorAll("article").length ?? 0,
+          moreLabel: more ? (more.textContent || "").replace(/\\s+/g, " ").trim() : null,
+          queueCount: document.querySelectorAll("#noor-playlist-panel ol li button").length,
+          topicCount: document.querySelectorAll("#noor-topics-panel button").length,
+          topicRows: [...document.querySelectorAll("#noor-topics-panel button")].map((b) => ({
+            label: (b.querySelector("strong")?.textContent || "").trim(),
+            count: Number((b.querySelector("b")?.textContent || "").trim()),
+          })),
+          frames: document.querySelectorAll("[data-player-state] iframe").length,
+        };
+      })()`);
+      const allTopic = noorBase.topicRows.find((row) => row.label === "كل المواد");
+      const seerahTopic = noorBase.topicRows.find((row) => row.label === "السيرة النبوية");
+      if (noorBase.documentWidth > noorBase.viewport + 1) {
+        throw new Error(`${item.name} noor horizontal overflow: ${JSON.stringify(noorBase)}`);
+      }
+      if (noorBase.approved !== "0") {
+        throw new Error(`${item.name} noor must not claim approvals while the count is 0: ${JSON.stringify(noorBase)}`);
+      }
+      if (!(noorBase.results > 0) || !(noorBase.candidates > 0)) {
+        throw new Error(`${item.name} noor catalog counts missing: ${JSON.stringify(noorBase)}`);
+      }
+      if (!allTopic || allTopic.count !== noorBase.results) {
+        throw new Error(`${item.name} noor all-topic count must equal the result count: ${JSON.stringify(noorBase)}`);
+      }
+      if (noorBase.topicCount !== 8) {
+        throw new Error(`${item.name} noor topic rooms incomplete: ${JSON.stringify(noorBase.topicRows)}`);
+      }
+      if (noorBase.cardCount !== 8 || !noorBase.moreLabel) {
+        throw new Error(`${item.name} noor lazy loading must start with one page of 8 cards: ${JSON.stringify(noorBase)}`);
+      }
+      if (noorBase.queueCount < 1 || noorBase.queueCount > 24) {
+        throw new Error(`${item.name} noor queue must be a single page of at most 24: ${JSON.stringify(noorBase)}`);
+      }
+      if (noorBase.frames !== 0) {
+        throw new Error(`${item.name} noor mounted a player without a user action: ${JSON.stringify(noorBase)}`);
+      }
+      if (noorBase.playerState !== "idle" && noorBase.playerState !== "blocked") {
+        throw new Error(`${item.name} noor unexpected initial player state: ${JSON.stringify(noorBase)}`);
+      }
+      // Lazy loading reveals the next page on demand.
+      await evaluate(session, `(() => {
+        const library = document.querySelector('section[aria-labelledby="noor-library-title"]');
+        const more = [...(library?.querySelectorAll("button") ?? [])].find((b) => (b.textContent || "").includes("عرض المزيد"));
+        if (!more) throw new Error("more button missing");
+        more.click();
+        return true;
+      })()`);
+      await waitFor(
+        session,
+        `document.querySelectorAll('section[aria-labelledby="noor-library-title"] article').length === 16`,
+        `${item.name} noor lazy more`,
+      );
+      // Topic rooms narrow the catalog to their own count.
+      if (!seerahTopic || !(seerahTopic.count > 0) || seerahTopic.count >= noorBase.results) {
+        throw new Error(`${item.name} noor seerah topic count implausible: ${JSON.stringify(noorBase.topicRows)}`);
+      }
+      await evaluate(session, `(() => {
+        const button = [...document.querySelectorAll("#noor-topics-panel button")].find(
+          (b) => (b.querySelector("strong")?.textContent || "").trim() === "السيرة النبوية",
+        );
+        if (!button) throw new Error("seerah topic button missing");
+        button.click();
+        return true;
+      })()`);
+      await waitFor(
+        session,
+        `Number(document.querySelector('[data-visual="noor-theatre"]')?.getAttribute("data-result-count")) === ${seerahTopic.count}`,
+        `${item.name} noor seerah topic filter`,
+      );
+      // Search narrows, a nonsense query empties the catalog honestly, reset restores.
+      await evaluate(session, `(() => {
+        const input = document.querySelector('input[type="search"]');
+        if (!input) throw new Error("search input missing");
+        const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+        setter.call(input, "zzqq-no-such-media");
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+        return true;
+      })()`);
+      await waitFor(
+        session,
+        `document.querySelector('[data-visual="noor-theatre"]')?.getAttribute("data-result-count") === "0" && document.body.textContent.includes("لا توجد مواد بهذا البحث")`,
+        `${item.name} noor empty search state`,
+      );
+      await evaluate(session, `(() => {
+        const button = [...document.querySelectorAll("button")].find((b) => (b.textContent || "").trim() === "إعادة ضبط الفلاتر");
+        if (!button) throw new Error("filter reset missing");
+        button.click();
+        return true;
+      })()`);
+      await waitFor(
+        session,
+        `Number(document.querySelector('[data-visual="noor-theatre"]')?.getAttribute("data-result-count")) === ${noorBase.results}`,
+        `${item.name} noor filter reset`,
+      );
+      diagnostics.noorBrowse = noorBase;
+      if (item.name === "noor-1440-rtl") {
+        // Select an eligible official-provider candidate; only its player may mount.
+        const selectedCard = await evaluate(session, `(() => {
+          const library = document.querySelector('section[aria-labelledby="noor-library-title"]');
+          const card = [...(library?.querySelectorAll("article") ?? [])].find((a) => (a.textContent || "").includes("مرشح لمشغل المصدر الرسمي"));
+          if (!card) return null;
+          card.querySelector("button").click();
+          return true;
+        })()`);
+        if (!selectedCard) throw new Error("noor-1440-rtl: no playback-candidate card rendered");
+        const afterSelect = await waitFor(session, `(() => {
+          const screen = document.querySelector("[data-player-state]");
+          const play = [...document.querySelectorAll("[data-player-state] button")].find((b) => (b.textContent || "").includes("تحميل المشغل الرسمي"));
+          return screen?.getAttribute("data-player-state") === "idle" && play
+            ? { id: screen.getAttribute("data-media-id"), series: document.querySelector('[data-visual="noor-theatre"]')?.getAttribute("data-selected-series") }
+            : null;
+        })()`, "noor candidate selection");
+        // Deep link round-trip keeps the same material selected.
+        await session.send("Page.navigate", { url: `${origin}/noor?media=${encodeURIComponent(afterSelect.id)}` });
+        await waitFor(
+          session,
+          `document.querySelector("[data-player-state]")?.getAttribute("data-media-id") === ${JSON.stringify(afterSelect.id)}`,
+          "noor deep link",
+          200,
+        );
+        // Mount the official provider frame explicitly; autoplay must stay off.
+        await evaluate(session, `(() => {
+          const play = [...document.querySelectorAll("[data-player-state] button")].find((b) => (b.textContent || "").includes("تحميل المشغل الرسمي"));
+          if (!play) throw new Error("official play button missing");
+          play.click();
+          return true;
+        })()`);
+        const frameSrc = await waitFor(
+          session,
+          `document.querySelector("[data-player-state] iframe")?.src ?? null`,
+          "noor provider frame",
+          120,
+        );
+        const frameUrl = new URL(frameSrc);
+        if (
+          frameUrl.hostname !== "www.youtube-nocookie.com" ||
+          frameUrl.searchParams.get("autoplay") !== "0" ||
+          frameUrl.searchParams.get("enablejsapi") !== "1" ||
+          !frameUrl.searchParams.get("origin")
+        ) {
+          throw new Error(`noor provider frame src unsafe: ${frameSrc}`);
+        }
+        const playerEnd = await waitFor(
+          session,
+          `["ready", "error"].includes(document.querySelector("[data-player-state]")?.getAttribute("data-player-state") ?? "")
+            ? document.querySelector("[data-player-state]")?.getAttribute("data-player-state")
+            : null`,
+          "noor player settle",
+          160,
+        );
+        if (playerEnd === "error") {
+          // A cold provider load can finish after the app's error timeout and
+          // flip the state back to ready; both outcomes are legitimate, the
+          // error overlay must appear whenever the state stays on error.
+          await waitFor(
+            session,
+            `(document.querySelector("[data-player-state]")?.getAttribute("data-player-state") === "ready")
+              || document.body.textContent.includes("تعذر تحميل إطار المزود")
+              ? true : null`,
+            "noor error treatment or late ready",
+            120,
+          );
+        }
+        // A provider-refused record stays blocked: no frame, no play button, honest reason.
+        await session.send("Page.navigate", { url: `${origin}/noor?media=${encodeURIComponent("youtube:wyAr0xvt43o")}` });
+        const blocked = await waitFor(session, `(() => {
+          const screen = document.querySelector("[data-player-state]");
+          if (screen?.getAttribute("data-media-id") !== "youtube:wyAr0xvt43o") return null;
+          return {
+            state: screen.getAttribute("data-player-state"),
+            frames: document.querySelectorAll("[data-player-state] iframe").length,
+            play: [...document.querySelectorAll("[data-player-state] button")].some((b) => (b.textContent || "").includes("تحميل المشغل الرسمي")),
+            reason: document.body.textContent.includes("لا يتوفر مشغل رسمي صالح"),
+          };
+        })()`, "noor refused record", 200);
+        if (!blocked || blocked.state !== "blocked" || blocked.frames !== 0 || blocked.play || !blocked.reason) {
+          throw new Error(`noor refused record not blocked correctly: ${JSON.stringify(blocked)}`);
+        }
+        // The refused record's own review dialog states the seven gates honestly.
+        await session.send("Page.navigate", { url: `${origin}/noor` });
+        await waitFor(session, 'document.querySelector(\'[data-visual="noor-theatre"]\') !== null', "noor reload for gates", 200);
+        await evaluate(session, `(() => {
+          const input = document.querySelector('input[type="search"]');
+          if (!input) throw new Error("search input missing");
+          const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+          setter.call(input, "Conquest of Damascus");
+          input.dispatchEvent(new Event("input", { bubbles: true }));
+          return true;
+        })()`);
+        await waitFor(session, `(() => {
+          const card = [...document.querySelectorAll('section[aria-labelledby="noor-library-title"] article')]
+            .find((a) => (a.textContent || "").includes("Damascus"));
+          if (!card) return null;
+          card.querySelector("button").click();
+          return true;
+        })()`, "select refused card via search", 100);
+        await waitFor(
+          session,
+          `(() => {
+            const screen = document.querySelector("[data-player-state]");
+            return screen?.getAttribute("data-media-id") === "youtube:wyAr0xvt43o" && screen?.getAttribute("data-player-state") === "blocked" ? true : null;
+          })()`,
+          "noor refused record selected and blocked via search",
+        );
+        await evaluate(session, `(() => {
+          const card = document.querySelector('section[aria-labelledby="noor-library-title"] article[data-active="true"]');
+          const button = card ? [...card.querySelectorAll("button")].find((b) => (b.textContent || "").includes("بيانات المراجعة")) : null;
+          if (!button) throw new Error("active card review button missing");
+          button.click();
+          return true;
+        })()`);
+        const gates = await waitFor(session, `(() => {
+          const dialog = document.querySelector('dialog[aria-labelledby="noor-review-title"]');
+          const gateEls = dialog?.querySelectorAll('[aria-label="بوابات المراجعة السبع"] > div');
+          if (!dialog?.open || !gateEls?.length) return null;
+          return [...gateEls].map((g) => ({
+            label: (g.querySelector("span")?.textContent || "").trim(),
+            passed: g.getAttribute("data-passed"),
+            status: (g.querySelector("b")?.textContent || "").trim(),
+          }));
+        })()`, "noor review gates", 60);
+        const embeddingGate = gates?.find((g) => g.label === "التضمين");
+        const publicationGate = gates?.find((g) => g.label === "النشر");
+        if (!gates || gates.length !== 7) throw new Error(`noor gates count wrong: ${JSON.stringify(gates)}`);
+        if (embeddingGate?.status !== "PROVIDER_REFUSED" || embeddingGate?.passed !== "false") {
+          throw new Error(`noor embedding gate must show PROVIDER_REFUSED unpassed: ${JSON.stringify(gates)}`);
+        }
+        if (publicationGate?.passed === "true" || gates.every((g) => g.passed === "true")) {
+          throw new Error(`noor refused record must not look approved: ${JSON.stringify(gates)}`);
+        }
+        diagnostics.noorPlayback = { frameSrc, playerEnd, afterSelect, blocked, gates };
+      }
     }
     const shot = await session.send("Page.captureScreenshot", {
       format: "jpeg",

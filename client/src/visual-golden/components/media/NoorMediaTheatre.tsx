@@ -49,6 +49,7 @@ import {
   compareNoorEpisodes,
   filterNoorRecords,
   matchesNoorTopic,
+  mountedNoorEmbedUrl,
   noorMediaDuration,
   noorMediaTitle,
   type NoorAvailability,
@@ -56,6 +57,12 @@ import {
   type NoorFilters,
   type NoorTopic,
 } from "@/visual-golden/services/media/noor-theatre";
+import {
+  loadWatchProgress,
+  resumableProgress,
+  saveWatchProgress,
+  type WatchProgressEntry,
+} from "@/visual-golden/services/media/watch-progress";
 import { recordMediaCategory } from "@/visual-golden/services/media/taxonomy";
 import type { MediaDiscoveryRecord } from "@/visual-golden/services/media/types";
 import type { HallView } from "@/visual-golden/components/three/CinematicHall";
@@ -70,6 +77,65 @@ const VIEW_CHOICES = [
 ] as const;
 
 const GATE_ORDER = Object.keys(MEDIA_REVIEW_GATE_LABELS) as MediaReviewGateKey[];
+
+/** Minimal shape of the provider IFrame API player used for watch continuation. */
+interface ProviderPlayer {
+  getCurrentTime(): number;
+  getDuration(): number;
+  getPlayerState(): number;
+  seekTo(seconds: number, autostart: boolean): void;
+  playVideo(): void;
+  destroy(): void;
+}
+
+interface WindowWithYouTube extends Window {
+  YT?: {
+    Player?: new (
+      element: HTMLElement,
+      options: { events: { onReady?: () => void; onError?: (event: { data: number }) => void } },
+    ) => ProviderPlayer;
+  };
+  onYouTubeIframeAPIReady?: () => void;
+}
+
+const PROVIDER_API_URL = "https://www.youtube.com/iframe_api";
+const PROGRESS_SAMPLE_MS = 4000;
+
+let providerApiPromise: Promise<boolean> | null = null;
+/** Loads the provider IFrame API once per page; resolves false when unavailable. */
+function loadProviderApi(): Promise<boolean> {
+  if (typeof window === "undefined") return Promise.resolve(false);
+  const host = window as WindowWithYouTube;
+  if (host.YT?.Player) return Promise.resolve(true);
+  if (!providerApiPromise) {
+    providerApiPromise = new Promise((resolve) => {
+      const finish = () => resolve(Boolean(host.YT?.Player));
+      const previous = host.onYouTubeIframeAPIReady;
+      host.onYouTubeIframeAPIReady = () => {
+        previous?.();
+        finish();
+      };
+      const script = document.createElement("script");
+      script.src = PROVIDER_API_URL;
+      script.async = true;
+      script.onload = () => {
+        // The API announces readiness through onYouTubeIframeAPIReady; if the
+        // hook already fired, poll briefly for YT.Player instead.
+        const started = Date.now();
+        const poll = () => {
+          if (host.YT?.Player) return finish();
+          if (Date.now() - started > 8000) return finish();
+          window.setTimeout(poll, 200);
+        };
+        poll();
+      };
+      script.onerror = () => finish();
+      document.head.appendChild(script);
+      window.setTimeout(finish, 12000);
+    });
+  }
+  return providerApiPromise;
+}
 const TOPICS: ReadonlyArray<{ id: NoorTopic; label: string; en: string; icon: typeof Film }> = [
   { id: "all", label: "كل المواد", en: "Complete catalog", icon: LayoutGrid },
   { id: "seerah", label: "السيرة النبوية", en: "Prophetic biography", icon: BookOpenText },
@@ -142,6 +208,14 @@ export function NoorMediaTheatre() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const fullscreenRequestRef = useRef(0);
   const fullscreen = fullscreenMode !== null;
+  const frameRef = useRef<HTMLIFrameElement>(null);
+  const playerRef = useRef<ProviderPlayer | null>(null);
+  const pendingResumeRef = useRef<number | null>(null);
+  const resumeAppliedForRef = useRef<string | null>(null);
+  const [apiTick, setApiTick] = useState(0);
+  const [watchProgress, setWatchProgress] = useState<Record<string, WatchProgressEntry>>(() =>
+    typeof window === "undefined" ? {} : loadWatchProgress(window.localStorage),
+  );
 
   const counts = useMemo(() => mediaReviewCounts(NOOR_MEDIA_RECORDS), []);
   const playbackCandidateCount = useMemo(
@@ -179,15 +253,90 @@ export function NoorMediaTheatre() {
     : Math.max(0, Math.min(selectedIndex - Math.floor(QUEUE_PAGE_SIZE / 2), Math.max(0, filtered.length - QUEUE_PAGE_SIZE)));
   const queue = filtered.slice(queueStart, queueStart + QUEUE_PAGE_SIZE);
   const embedUrl = selected ? approvedNoorEmbedUrl(selected) : null;
+  const mountedEmbedUrl = embedUrl && typeof window !== "undefined"
+    ? mountedNoorEmbedUrl(embedUrl, window.location.origin)
+    : embedUrl;
   const selectedPlayable = Boolean(embedUrl);
   const selectedThumbnail = selected ? clearedNoorThumbnail(selected) : null;
   const visible = filtered.slice(0, visibleCount);
+  const resumeFrom = selected ? resumableProgress(watchProgress[selected.id]) : null;
 
   useEffect(() => {
     setPlayerState("idle");
     setPlayerAttempt(0);
     setFullscreenMessage("");
+    pendingResumeRef.current = null;
+    resumeAppliedForRef.current = null;
+    if (playerRef.current) {
+      try { playerRef.current.destroy(); } catch { /* provider frame already gone */ }
+      playerRef.current = null;
+    }
   }, [selected?.id]);
+
+  // Attach the provider player once the official frame is ready, so watch
+  // continuation can sample the provider-reported position. Read-only: the
+  // theatre itself never starts playback.
+  useEffect(() => {
+    if (playerState !== "ready" || !frameRef.current) return;
+    let cancelled = false;
+    void loadProviderApi().then((ok) => {
+      if (cancelled || !ok || !frameRef.current || playerRef.current) return;
+      const host = window as WindowWithYouTube;
+      if (!host.YT?.Player) return;
+      try {
+        playerRef.current = new host.YT.Player(frameRef.current, {
+          events: {
+            onError: () => { /* provider-side refusal stays inside the provider frame */ },
+          },
+        });
+        setApiTick((tick) => tick + 1);
+      } catch {
+        playerRef.current = null;
+      }
+    });
+    return () => { cancelled = true; };
+  }, [playerState, selected?.id, playerAttempt]);
+
+  // Sample the real playback position while the official frame is mounted and
+  // persist it locally for watch continuation. No autoplay, no network call.
+  useEffect(() => {
+    if (playerState !== "ready" || !selected) return;
+    const id = selected.id;
+    const sample = () => {
+      const player = playerRef.current;
+      if (!player) return;
+      try {
+        const seconds = player.getCurrentTime();
+        const duration = player.getDuration();
+        if (!Number.isFinite(seconds) || seconds <= 0 || !Number.isFinite(duration) || duration <= 0) return;
+        const saved = saveWatchProgress(window.localStorage, id, seconds, duration);
+        setWatchProgress((current) => {
+          const next = { ...current };
+          if (saved) next[id] = saved;
+          else delete next[id];
+          return next;
+        });
+      } catch { /* provider API not ready yet */ }
+    };
+    sample();
+    const timer = window.setInterval(sample, PROGRESS_SAMPLE_MS);
+    return () => {
+      window.clearInterval(timer);
+      sample();
+    };
+  }, [playerState, selected?.id, apiTick]);
+
+  // Apply a pending resume once the provider player is attached and ready.
+  useEffect(() => {
+    if (playerState !== "ready" || pendingResumeRef.current == null) return;
+    if (resumeAppliedForRef.current !== selected?.id || !playerRef.current) return;
+    const seconds = pendingResumeRef.current;
+    pendingResumeRef.current = null;
+    try {
+      playerRef.current.seekTo(seconds, true);
+      playerRef.current.playVideo();
+    } catch { /* provider API unavailable; the resume chip stays visible */ }
+  }, [playerState, selected?.id, apiTick]);
 
   useEffect(() => {
     if (playerState !== "loading") return;
@@ -342,6 +491,20 @@ export function NoorMediaTheatre() {
     setPlayerState("loading");
   };
 
+  const requestResume = (seconds: number) => {
+    if (!selected) return;
+    resumeAppliedForRef.current = selected.id;
+    if (playerState === "ready" && playerRef.current) {
+      try {
+        playerRef.current.seekTo(seconds, true);
+        playerRef.current.playVideo();
+      } catch { /* provider API unavailable */ }
+      return;
+    }
+    pendingResumeRef.current = seconds;
+    if (playerState === "idle") beginPlayback();
+  };
+
   const availabilityLabel = (record: MediaDiscoveryRecord) =>
     isOfficialProviderPlaybackCandidate(record) ? "مرشح لمشغل المصدر الرسمي" : "لا يوجد مشغل رسمي صالح";
 
@@ -353,6 +516,7 @@ export function NoorMediaTheatre() {
       data-playback-candidate-count={playbackCandidateCount}
       data-result-count={filtered.length}
       data-selected-series={selected?.series_name ?? ""}
+      data-watch-progress-count={Object.keys(watchProgress).length}
     >
       <div className={styles.room} data-view={plainView ? "interactive" : view} data-plain={plainView}>
       {!plainView ? <Suspense fallback={null}>
@@ -434,8 +598,9 @@ export function NoorMediaTheatre() {
                   <>
                     <iframe
                       key={`${selected.id}-${playerAttempt}`}
+                      ref={frameRef}
                       className={styles.providerFrame}
-                      src={embedUrl}
+                      src={mountedEmbedUrl ?? embedUrl}
                       title={`مشغل الفيديو الرسمي: ${noorMediaTitle(selected)}`}
                       allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                       allowFullScreen
@@ -485,6 +650,16 @@ export function NoorMediaTheatre() {
                             <Play size={22} fill="currentColor" aria-hidden /> تحميل المشغل الرسمي
                           </button>
                         ) : null}
+                        {resumeFrom ? (
+                          <button
+                            type="button"
+                            className={styles.resumeButton}
+                            data-resume-seconds={resumeFrom.seconds}
+                            onClick={() => requestResume(resumeFrom.seconds)}
+                          >
+                            <RotateCcw size={15} /> متابعة المشاهدة من {noorMediaDuration(resumeFrom.seconds) ?? `${resumeFrom.seconds} ثانية`}
+                          </button>
+                        ) : null}
                         {selected?.official_url ? (
                           <a href={selected.official_url} target="_blank" rel="noopener noreferrer" className={styles.sourceButton}>
                             <ExternalLink size={16} /> فتح المصدر الرسمي
@@ -508,7 +683,9 @@ export function NoorMediaTheatre() {
               <div className={styles.screenControls}>
                 <span className={styles.playerTruth} aria-live="polite">
                   {playerState === "ready"
-                    ? "تم تحميل إطار المزود؛ التحكم والتشغيل من داخل المشغل."
+                    ? (apiTick > 0
+                      ? "تم تحميل إطار المزود؛ يتتبع تقدّم المشاهدة محليًا من داخل المشغل."
+                      : "تم تحميل إطار المزود؛ التحكم والتشغيل من داخل المشغل.")
                     : "بدون تشغيل تلقائي · بدون تقدم مشاهدة مقدّر"}
                 </span>
                 <button type="button" onClick={toggleFullscreen} aria-label={fullscreen ? "الخروج من ملء الشاشة" : "فتح المسرح بملء الشاشة"}>
