@@ -196,12 +196,24 @@ export function LivingSeerahWorld({
   const starsRef = useRef<THREE.Points | null>(null);
   const footDustRef = useRef<FootstepDust | null>(null);
 
+  const threeSceneRef = useRef<THREE.Scene | null>(null);
+  const threeCameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+
   const initializeWorld = useCallback(async (threeContext: ThreeRuntimeContext): Promise<WorldSceneHandle> => {
     const { renderer, graphicsTier: tier, shadowsEnabled, registerDisposable, signal, host } = threeContext;
     const config = sceneConfig;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(BASE_FOV, Math.max(1, host.clientWidth) / Math.max(1, host.clientHeight), 0.1, 500);
+    threeSceneRef.current = scene;
+    // The sky dome radius is max(bounds)*1.2 and it is centred on the origin,
+    // so a spawn far from the origin can push its far surface past the far
+    // plane (hijrah-road spawns at z=150 → 384 + 150 = 534m). Keep the far
+    // plane beyond the dome plus the largest spawn offset so the sky never
+    // clips into a background-coloured hole.
+    const skyRadius = Math.max(config.bounds.width, config.bounds.depth) * 1.2;
+    const spawnOffset = Math.max(config.entryPosition.length(), Math.max(config.bounds.width, config.bounds.depth) / 2);
+    const camera = new THREE.PerspectiveCamera(BASE_FOV, Math.max(1, host.clientWidth) / Math.max(1, host.clientHeight), 0.1, skyRadius + spawnOffset + 120);
+    threeCameraRef.current = camera;
 
     setGraphicsTier(tier);
 
@@ -349,11 +361,13 @@ export function LivingSeerahWorld({
       const anchor = anchors[Math.floor(random() * anchors.length)] ?? new THREE.Vector3();
       const angle = random() * Math.PI * 2;
       const radius = 5 + random() * 13;
-      const position = new THREE.Vector3(
-        anchor.x + Math.cos(angle) * radius,
-        0,
-        anchor.z + Math.sin(angle) * radius,
-      );
+      const position = entityConfig.position
+        ? entityConfig.position.clone()
+        : new THREE.Vector3(
+            anchor.x + Math.cos(angle) * radius,
+            0,
+            anchor.z + Math.sin(angle) * radius,
+          );
       position.y = groundHeightAt(position.x, position.z) + 0.1;
 
       if (entityConfig.id.includes("camel")) {
@@ -812,6 +826,9 @@ export function LivingSeerahWorld({
       (window as unknown as Record<string, unknown>).__seerahWorldDiag = {
         runtime,
         getHandle: () => (runtime as unknown as { scene: WorldSceneHandle | null }).scene,
+        getThreeScene: () => threeSceneRef.current,
+        getCamera: () => threeCameraRef.current,
+        getTHREE: () => THREE,
       };
     }
 

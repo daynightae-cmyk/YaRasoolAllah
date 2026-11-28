@@ -274,6 +274,37 @@ export function generateWorldTerrain(
     colors[i * 3 + 2] = color.b;
   }
 
+  // Authored sightline corridor: flatten the terrain along the entry forward
+  // axis so the first view down the route (road scenes) stays open.
+  const corridor = config.vistaCorridor;
+  if (corridor) {
+    const yaw = config.entryYaw ?? 0;
+    const fx = -Math.sin(yaw);
+    const fz = -Math.cos(yaw);
+    const ex = config.entryPosition.x;
+    const ez = config.entryPosition.z;
+    const sampleX = THREE.MathUtils.clamp(Math.floor((ex + worldSize / 2) / segmentSize), 0, segments);
+    const sampleZ = THREE.MathUtils.clamp(Math.floor((ez + worldSize / 2) / segmentSize), 0, segments);
+    const entryHeight = heightData[sampleZ * (segments + 1) + sampleX];
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i);
+      const z = pos.getZ(i);
+      const rx = x - ex;
+      const rz = z - ez;
+      const along = rx * fx + rz * fz;
+      const lateral = Math.abs(rx * fz - rz * fx);
+      if (along > -4 && along < corridor.length && lateral < corridor.halfWidth) {
+        const edge = THREE.MathUtils.clamp((lateral - (corridor.halfWidth - 3)) / 3, 0, 1);
+        const startFade = THREE.MathUtils.clamp((along + 4) / 8, 0, 1);
+        const factor = edge * startFade;
+        const h = heightData[i];
+        const flattened = entryHeight + (h - entryHeight) * factor;
+        pos.setY(i, Math.max(flattened, -5));
+        heightData[i] = Math.max(flattened, -5);
+      }
+    }
+  }
+
   groundGeo.setAttribute("color", new THREE.BufferAttribute(colors, 3));
   groundGeo.computeVertexNormals();
 
@@ -330,6 +361,23 @@ export function generateWorldTerrain(
         const push = (14 - dSpawn) + 2;
         x += ((x - config.entryPosition.x) / (dSpawn || 1)) * push;
         z += ((z - config.entryPosition.z) / (dSpawn || 1)) * push;
+      }
+      // Keep the authored sightline corridor clear of rocks as well.
+      const corridorCfg = config.vistaCorridor;
+      if (corridorCfg) {
+        const cyaw = config.entryYaw ?? 0;
+        const cfx = -Math.sin(cyaw);
+        const cfz = -Math.cos(cyaw);
+        const crx = x - config.entryPosition.x;
+        const crz = z - config.entryPosition.z;
+        const calong = crx * cfx + crz * cfz;
+        const clateral = crx * cfz - crz * cfx;
+        if (calong > 2 && calong < corridorCfg.length && Math.abs(clateral) < corridorCfg.halfWidth + 2) {
+          const side = clateral >= 0 ? 1 : -1;
+          const t = side * (corridorCfg.halfWidth + 2) - clateral;
+          x += cfz * t;
+          z += -cfx * t;
+        }
       }
       const sampleX = Math.floor((x + worldSize / 2) / segmentSize);
       const sampleZ = Math.floor((z + worldSize / 2) / segmentSize);

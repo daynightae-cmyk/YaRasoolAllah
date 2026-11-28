@@ -897,6 +897,8 @@ export const SCENE_HIJRAH_ROAD: WorldSceneConfig = {
   rockColor: "#7d6248",
   entryPosition: new THREE.Vector3(0, 2, 150),
   entryYaw: 0, // face -Z: down the road toward the milestones and Madinah
+  // The road itself is the authored vista: keep it flat and rock-free.
+  vistaCorridor: { halfWidth: 9, length: 320 },
   props: [
     { id: "prop-rest-fire", type: "campfire", position: new THREE.Vector3(-8, 2, 50) },
   ],
@@ -933,7 +935,7 @@ export const SCENE_HIJRAH_ROAD: WorldSceneConfig = {
   interactions: [
     createInteraction(
       "route-start-makkah",
-      new THREE.Vector3(0, 2, 128),
+      new THREE.Vector3(14, 2, 126),
       4,
       "info",
       "بداية الطريق من مكة",
@@ -995,10 +997,11 @@ export const SCENE_HIJRAH_ROAD: WorldSceneConfig = {
   ],
   lifeEntities: [
     // Camels are owned by the ambient "caravan" preset on this road.
-    { id: "tent-rest-1", animationType: "sway", animationSpeed: 0.3, cullDistance: 80 },
-    { id: "palm-road-1", animationType: "sway", animationSpeed: 0.25, cullDistance: 100 },
-    { id: "palm-road-2", animationType: "sway", animationSpeed: 0.3, cullDistance: 100 },
-    { id: "palm-road-3", animationType: "sway", animationSpeed: 0.22, cullDistance: 100 },
+    // Positions are authored so nothing lands on the entry sightline (0,150 → -Z).
+    { id: "tent-rest-1", animationType: "sway", animationSpeed: 0.3, cullDistance: 80, position: new THREE.Vector3(-16, 0, 46) },
+    { id: "palm-road-1", animationType: "sway", animationSpeed: 0.25, cullDistance: 100, position: new THREE.Vector3(18, 0, 110) },
+    { id: "palm-road-2", animationType: "sway", animationSpeed: 0.3, cullDistance: 100, position: new THREE.Vector3(-20, 0, 60) },
+    { id: "palm-road-3", animationType: "sway", animationSpeed: 0.22, cullDistance: 100, position: new THREE.Vector3(22, 0, -30) },
   ],
   particles: [
     createParticles(

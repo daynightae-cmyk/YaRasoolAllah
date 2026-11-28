@@ -179,6 +179,12 @@ export interface WorldSceneConfig {
   /** Entry position for the player. */
   entryPosition: THREE.Vector3;
   entryYaw: number;
+  /**
+   * Optional authored sightline corridor: terrain and large rocks are
+   * flattened/pushed aside along the entry forward axis so the first view
+   * down the authored route stays open (e.g. a road scene).
+   */
+  vistaCorridor?: { halfWidth: number; length: number };
   /** Night scenes get a star field and cooler ambient contrast. */
   night?: boolean;
   /** Static scenery props (wells, campfires) at authored positions. */
@@ -189,8 +195,8 @@ export interface WorldSceneConfig {
   interactions: WorldInteractionPoint[];
   /** Audio zones for spatial ambience. */
   audioZones: WorldAudioZone[];
-  /** Life entities to spawn. */
-  lifeEntities: Omit<WorldLifeEntity, "mesh" | "bounds">[];
+  /** Life entities to spawn. Optional explicit position overrides the anchor scatter. */
+  lifeEntities: Array<Omit<WorldLifeEntity, "mesh" | "bounds"> & { position?: THREE.Vector3 }>;
   /** Particle systems. */
   particles: WorldParticleSystemConfig[];
   /** Reconstruction disclosure. */
