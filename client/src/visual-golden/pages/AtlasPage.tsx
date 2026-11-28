@@ -29,7 +29,7 @@ import {
   Volume2,
   VolumeX,
 } from "lucide-react";
-import { LivingTerrainTheatre } from "@/visual-golden/components/atlas/LivingTerrainTheatre";
+import { LivingTerrainTheatre, type LivingTerrainTheatreRef } from "@/visual-golden/components/atlas/LivingTerrainTheatre";
 import { atlasCampaignTerrain } from "@/visual-golden/services/atlas-terrain";
 import { art } from "@/visual-golden/mock/art";
 import { SEERAH_DATABASE, SEERAH_DATABASE_COUNTS, getEventsForEra } from "@/data/seerah";
@@ -42,7 +42,6 @@ const TerrainTheatre3D = lazy(() =>
     default: module.TerrainTheatre3D,
   })),
 );
-const AtlasTable3D = lazy(() => import("@/visual-golden/components/atlas/AtlasTable3D").then((module) => ({ default: module.AtlasTable3D })));
 import {
   LIVING_CAMPAIGNS,
   CERTAINTY_LABEL,
@@ -149,7 +148,6 @@ export function AtlasPage() {
   const [showMarkers, setShowMarkers] = useState(true);
   const [listMode, setListMode] = useState(false);
   const [observer3D, setObserver3D] = useState(false);
-  const [tableOpen, setTableOpen] = useState(() => new URLSearchParams(window.location.search).get("table") === "open");
   const [observerFailed, setObserverFailed] = useState(false);
   const [placeFilter, setPlaceFilter] = useState<AtlasFilter>("all");
   const [placeId, setPlaceId] = useState(linkedPlace ?? ATLAS_NODES[0]?.id ?? "");
@@ -161,6 +159,7 @@ export function AtlasPage() {
   const [eraId, setEraId] = useState<string>("all");
   const [eraPlaying, setEraPlaying] = useState(false);
   const stageRef = useRef<HTMLDivElement | null>(null);
+  const theatreRef = useRef<LivingTerrainTheatreRef | null>(null);
 
   const campaign = campaignById(campaignId);
   const phase = campaign.phases[Math.min(phaseIndex, campaign.phases.length - 1)];
@@ -492,13 +491,70 @@ export function AtlasPage() {
         </div>
       </section>
 
-      <section className={styles.tableEntry} aria-label="دخول طاولة الأطلس">
-        <button type="button" className={styles.atlasCtaPrimary} aria-controls="atlas-table-panel" aria-expanded={tableOpen} onClick={() => setTableOpen((open) => !open)}>
-          <Layers size={16} aria-hidden="true" />
-          {tableOpen ? "إغلاق طاولة الأطلس" : "دخول طاولة الأطلس المجسمة"}
-        </button>
-        <div id="atlas-table-panel" hidden={!tableOpen}>
-          {tableOpen ? <Suspense fallback={<p role="status">جارٍ تجهيز طاولة الأطلس…</p>}><AtlasTable3D /></Suspense> : null}
+      {/* Dominant living historical map — the approved Atlas composition
+         becomes the interactive experience itself. Markers live on the map
+         surface and move with it; they never drift on resize. */}
+      <section
+        className={styles.tableEntry}
+        aria-label="الأطلس التاريخي التفاعلي"
+        data-visual="atlas-map-stage"
+      >
+        <div className={styles.mapViewport}>
+          {mode === "theatre" ? (
+            <LivingTerrainTheatre
+              ref={theatreRef}
+              plate={campaign.plate}
+              plateAlt={`لوحة فنية لمناخ ${campaign.nameAr} — ليست خريطة مساحية. ${campaign.terrainTeacherAr}`}
+              weather={weather}
+              overlays={campaign.overlays}
+              markers={campaign.markers}
+              selectedId={markerId}
+              activeIds={phase.activeMarkerIds}
+              showOverlays={showOverlays}
+              showMarkers={showMarkers}
+              zoom={zoom}
+              onSelect={setMarkerId}
+              onFocus={() => {
+                // Focus onto the selected marker; keep the current zoom scale.
+                setMarkerId(markerId);
+              }}
+              onReset={() => {
+                setMarkerId(campaign.markers[0]?.id ?? "");
+                setZoom(1);
+              }}
+              bounds={[0, 0, 100, 100]}
+            />
+          ) : (
+            <LivingTerrainTheatre
+              ref={theatreRef}
+              plate={HIJAZ_PLATE}
+              plateAlt="لوحة فنية لمرتفعات الحجاز — مواضع السيرة عليها تخطيطية وليست إحداثيات."
+              weather="clear-dawn"
+              overlays={[]}
+              markers={places.map((node) => ({
+                id: node.id,
+                labelAr: node.name,
+                x: node.layout.x,
+                y: node.layout.y,
+                kind: "place",
+                certainty: "schematic",
+                descriptionAr: node.mentions.map((mention) => mention.eventTitle).join(" · "),
+                source: "فصول السيرة الموجودة في المنصة",
+              }))}
+              selectedId={place?.id ?? ""}
+              activeIds={place ? [place.id] : []}
+              showOverlays={false}
+              showMarkers={showMarkers}
+              zoom={zoom}
+              onSelect={setPlaceId}
+              onFocus={() => setPlaceId(place?.id ?? "")}
+              onReset={() => {
+                setPlaceId(places[0]?.id ?? "");
+                setZoom(1);
+              }}
+              bounds={[0, 0, 100, 100]}
+            />
+          )}
         </div>
       </section>
 
@@ -593,43 +649,10 @@ export function AtlasPage() {
                   />
                 </Suspense>
               ) : (
-                <LivingTerrainTheatre
-                  plate={campaign.plate}
-                  plateAlt={`لوحة فنية لمناخ ${campaign.nameAr} — ليست خريطة مساحية. ${campaign.terrainTeacherAr}`}
-                  weather={weather}
-                  overlays={campaign.overlays}
-                  markers={campaign.markers}
-                  selectedId={marker?.id ?? ""}
-                  activeIds={phase.activeMarkerIds}
-                  showOverlays={showOverlays}
-                  showMarkers={showMarkers}
-                  zoom={zoom}
-                  onSelect={setMarkerId}
-                />
+                null
               )
             ) : (
-              <LivingTerrainTheatre
-                plate={HIJAZ_PLATE}
-                plateAlt="لوحة فنية لمرتفعات الحجاز — مواضع السيرة عليها تخطيطية وليست إحداثيات."
-                weather="clear-dawn"
-                overlays={[]}
-                markers={places.map((node) => ({
-                  id: node.id,
-                  labelAr: node.name,
-                  x: node.layout.x,
-                  y: node.layout.y,
-                  kind: "place" as const,
-                  certainty: "schematic" as const,
-                  descriptionAr: node.mentions.map((mention) => mention.eventTitle).join(" · "),
-                  source: "فصول السيرة الموجودة في المنصة",
-                }))}
-                selectedId={place?.id ?? ""}
-                activeIds={place ? [place.id] : []}
-                showOverlays={false}
-                showMarkers={showMarkers}
-                zoom={zoom}
-                onSelect={openImmersive}
-              />
+              null
             )}
           </div>
         )}
@@ -709,7 +732,7 @@ export function AtlasPage() {
               <button type="button" onClick={() => setZoom((value) => Math.max(1, +(value - 0.15).toFixed(2)))} aria-label="تصغير">
                 <ZoomOut size={16} />
               </button>
-              <button type="button" onClick={() => setZoom(1)} aria-label="إعادة الضبط">
+              <button type="button" onClick={() => { theatreRef.current?.reset(); setZoom(1); }} aria-label="إعادة الضبط">
                 <Locate size={16} />
               </button>
             </>

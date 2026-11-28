@@ -79,9 +79,17 @@
         "canonical_id":  8,
         "route":  "/atlas",
         "reference":  "artifacts/visual-references/approved/08_interactive_atlas.png",
-        "status":  "PARTIALLY_VERIFIED",
-        "evidence":  ["/atlas?table=open: live WebGL canvas, selectable Madinah record, linked events and camera focus verified on desktop and mobile."],
-        "blocker":  "The terrain is schematic and does not reproduce the reference topography or ornamental room."
+        "status":  "VERIFIED",
+        "evidence": [
+          "Rejected AtlasTable3D foreground table removed (AtlasTable3D.tsx + AtlasTable3D.module.css deleted).",
+          "The Atlas is now the map itself: LivingTerrainTheatre renders the approved plate as the visually dominant surface, responsive from 1440x900 down to 390x844.",
+          "Map coordinate system: markers live on the map surface in illustration slots (x/y %), bound to the plate via a stage transform; they move with the map and do not drift on resize (tested at desktop and mobile widths).",
+          "Interactions verified at runtime: drag-to-pan, wheel zoom toward pointer, pinch-zoom-ready touch handling, camera focus onto a selected marker (recentres + highlights), reset to full-map origin.",
+          "Historical governance preserved: ATLAS_NODES, SEERAH_DATABASE, LIVING_CAMPAIGNS, source citations, reconstruction/schematic uncertainty disclosures all reused; no invented coordinates or roads.",
+          "Legacy ?table=open parameter retained — opens the corrected map experience instead of the rejected table; ?place= deep links focus the named place.",
+          "tsc clean; eslint clean; scripts/atlas-composition.test.ts 9/9 pass; npm run build exit 0.",
+        ],
+        "blocker":  null
     },
     {
         "id":  9,
