@@ -1,4 +1,12 @@
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { AtlasMarker, OverlayPath, Weather } from "@/visual-golden/data/living-atlas";
 import { CERTAINTY_LABEL } from "@/visual-golden/data/living-atlas";
 import styles from "./LivingTerrainTheatre.module.css";
@@ -13,26 +21,29 @@ interface Props {
   activeIds: string[];
   showOverlays: boolean;
   showMarkers: boolean;
-  zoom: number;
+  /** Initial zoom scale (default 1). The theatre manages its own zoom state
+   *  internally so that pan, wheel, pinch and reset share one authoritative
+   *  transform state. */
+  initialZoom?: number;
   onSelect: (id: string) => void;
-  /** Focus camera onto one marker. */
   onFocus?: (id: string) => void;
-  /** Reset camera to full map view. */
   onReset?: () => void;
-  /** Bounds of the map surface in CSS percentage coords [x0, y0, x1, y1]. */
   bounds?: [number, number, number, number];
 }
 
-/** The map surface is an artistic plate, not a surveyed terrain. Markers live
- * on this surface in illustration slots (x/y percent). The theatre maps those
- * slots into CSS percentage coordinates through a coherent origin/scale so
- * markers never drift when the viewport resizes. */
 /** Imperative handle exposed to the page for programmatic focus and reset. */
 export interface LivingTerrainTheatreRef {
   reset(): void;
   focus(id: string): void;
+  zoomIn(): void;
+  zoomOut(): void;
+  getZoom(): number;
 }
 
+/** The map surface is an artistic plate, not a surveyed terrain. Markers live
+ *  on this surface in illustration slots (x/y percent). The theatre maps those
+ *  slots into CSS percentage coordinates through a coherent origin/scale so
+ *  markers never drift when the viewport resizes. */
 export const LivingTerrainTheatre = forwardRef<LivingTerrainTheatreRef, Props>((props, ref) => {
   const {
     plate,
@@ -44,7 +55,7 @@ export const LivingTerrainTheatre = forwardRef<LivingTerrainTheatreRef, Props>((
     activeIds,
     showOverlays,
     showMarkers,
-    zoom,
+    initialZoom = 1,
     onSelect,
     onFocus,
     onReset,
@@ -61,9 +72,23 @@ export const LivingTerrainTheatre = forwardRef<LivingTerrainTheatreRef, Props>((
 
   // Drag-to-pan state.
   const pan = useRef({ x: 0, y: 0 });
-  const dragStart = useRef<{ x: number; y: number; px: number; py: number; active: boolean; pointerId?: number; dist?: number; zoom?: number }>({ x: 0, y: 0, px: 0, py: 0, active: false });
+  const dragStart = useRef<{
+    x: number;
+    y: number;
+    px: number;
+    py: number;
+    active: boolean;
+    pointerId?: number;
+    dist?: number;
+    zoom?: number;
+  }>({ x: 0, y: 0, px: 0, py: 0, active: false });
   const pointerCount = useRef(0);
   const center = useRef({ x: 0, y: 0 });
+
+  // Internal zoom state — the single source of truth for map scale. All
+  // interaction (wheel, pinch, reset, focus) updates this, so pan, zoom and
+  // reset always share one authoritative transform state.
+  const [zoom, setZoom] = useState(initialZoom);
 
   const focusMarker = useCallback(
     (id: string) => {
@@ -91,29 +116,34 @@ export const LivingTerrainTheatre = forwardRef<LivingTerrainTheatreRef, Props>((
 
   const resetView = useCallback(() => {
     pan.current = { x: 0, y: 0 };
+    setZoom(initialZoom);
     const stage = stageRef.current;
     if (!stage) return;
-    stage.style.transform = `translate(0, 0) scale(${zoom})`;
+    stage.style.transform = `translate(0, 0) scale(${initialZoom})`;
     if (onReset) onReset();
-  }, [zoom, onReset]);
+  }, [initialZoom, onReset]);
 
   useImperativeHandle(ref, () => ({
     reset: resetView,
     focus: focusMarker,
+    zoomIn: () => {
+      const next = Math.min(3, zoom + 0.15);
+      if (next === zoom) return;
+      setZoom(next);
+      const stage = stageRef.current;
+      if (!stage) return;
+      stage.style.transform = `translate(${pan.current.x}px, ${pan.current.y}px) scale(${next})`;
+    },
+    zoomOut: () => {
+      const next = Math.max(0.4, zoom - 0.15);
+      if (next === zoom) return;
+      setZoom(next);
+      const stage = stageRef.current;
+      if (!stage) return;
+      stage.style.transform = `translate(${pan.current.x}px, ${pan.current.y}px) scale(${next})`;
+    },
+    getZoom: () => zoom,
   }));
-
-  useEffect(() => {
-    const el = selectedId ? stageRef.current?.querySelector(`[data-marker="${selectedId}"]`) : null;
-    if (el instanceof HTMLElement) {
-      el.focus({ preventScroll: true });
-    }
-  }, [selectedId]);
-
-  useEffect(() => {
-    const stage = stageRef.current;
-    if (!stage) return;
-    stage.style.transform = `translate(${pan.current.x}px, ${pan.current.y}px) scale(${zoom})`;
-  }, [zoom]);
 
   const handlePointerDown = useCallback(
     (event: React.PointerEvent) => {
@@ -171,6 +201,7 @@ export const LivingTerrainTheatre = forwardRef<LivingTerrainTheatreRef, Props>((
         x: cx - before.x * (next / zoom),
         y: cy - before.y * (next / zoom),
       };
+      setZoom(next);
       stage.style.transform = `translate(${pan.current.x}px, ${pan.current.y}px) scale(${next})`;
     },
     [zoom],
@@ -238,6 +269,7 @@ export const LivingTerrainTheatre = forwardRef<LivingTerrainTheatreRef, Props>((
           x: cx - before.x * (next / (dragStart.current.zoom || 1)),
           y: cy - before.y * (next / (dragStart.current.zoom || 1)),
         };
+        setZoom(next);
         stage.style.transform = `translate(${pan.current.x}px, ${pan.current.y}px) scale(${next})`;
       }
     },

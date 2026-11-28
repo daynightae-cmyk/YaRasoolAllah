@@ -143,7 +143,6 @@ export function AtlasPage() {
   const [campaignId, setCampaignId] = useState(LIVING_CAMPAIGNS[0].id);
   const [phaseIndex, setPhaseIndex] = useState(0);
   const [markerId, setMarkerId] = useState(LIVING_CAMPAIGNS[0].markers[0]?.id ?? "");
-  const [zoom, setZoom] = useState(1);
   const [showOverlays, setShowOverlays] = useState(false);
   const [showMarkers, setShowMarkers] = useState(true);
   const [listMode, setListMode] = useState(false);
@@ -353,7 +352,7 @@ export function AtlasPage() {
 
   useEffect(() => {
     setPhaseIndex(0);
-    setZoom(1);
+    theatreRef.current?.reset();
     setObserver3D(false);
     setObserverFailed(false);
   }, [campaignId]);
@@ -512,15 +511,14 @@ export function AtlasPage() {
               activeIds={phase.activeMarkerIds}
               showOverlays={showOverlays}
               showMarkers={showMarkers}
-              zoom={zoom}
               onSelect={setMarkerId}
               onFocus={() => {
-                // Focus onto the selected marker; keep the current zoom scale.
+                // Focus onto the selected marker; keeps current zoom scale.
                 setMarkerId(markerId);
               }}
               onReset={() => {
                 setMarkerId(campaign.markers[0]?.id ?? "");
-                setZoom(1);
+                theatreRef.current?.reset();
               }}
               bounds={[0, 0, 100, 100]}
             />
@@ -545,12 +543,11 @@ export function AtlasPage() {
               activeIds={place ? [place.id] : []}
               showOverlays={false}
               showMarkers={showMarkers}
-              zoom={zoom}
               onSelect={setPlaceId}
               onFocus={() => setPlaceId(place?.id ?? "")}
               onReset={() => {
                 setPlaceId(places[0]?.id ?? "");
-                setZoom(1);
+                theatreRef.current?.reset();
               }}
               bounds={[0, 0, 100, 100]}
             />
@@ -726,13 +723,13 @@ export function AtlasPage() {
           ) : null}
           {!showObserver ? (
             <>
-              <button type="button" onClick={() => setZoom((value) => Math.min(1.7, +(value + 0.15).toFixed(2)))} aria-label="تكبير">
+              <button type="button" onClick={() => theatreRef.current?.zoomIn()} aria-label="تكبير">
                 <ZoomIn size={16} />
               </button>
-              <button type="button" onClick={() => setZoom((value) => Math.max(1, +(value - 0.15).toFixed(2)))} aria-label="تصغير">
+              <button type="button" onClick={() => theatreRef.current?.zoomOut()} aria-label="تصغير">
                 <ZoomOut size={16} />
               </button>
-              <button type="button" onClick={() => { theatreRef.current?.reset(); setZoom(1); }} aria-label="إعادة الضبط">
+              <button type="button" onClick={() => theatreRef.current?.reset()} aria-label="إعادة الضبط">
                 <Locate size={16} />
               </button>
             </>
