@@ -103,8 +103,12 @@ describe("the garden wires the activity honestly", () => {
     assert.match(page, /data-visual="kids-age-filter"/);
     assert.match(page, /aria-pressed=\{ageFilter === band\}/);
     assert.match(page, /ageCounts\.get\(band\) \?\? 0/);
-    assert.match(page, /KIDS_STORIES\.filter\(\(story\) => story\.ageBand === ageFilter\)/);
+    // Age filter narrows stories to the selected band (behavioral contract,
+    // not a specific source pattern).
+    assert.match(page, /story\.ageBand !== ageFilter/);
     assert.match(page, /visibleStories\.map/);
+    // Topic filter narrows by governed topic mapping.
+    assert.match(page, /kidsTopicForAdaptation\(story\.adaptationId\)\?.id !== topicFilter/);
     // The full registry selector keeps covering every registered adaptation.
     assert.match(page, /KIDS_STORIES\.map\(\(story\) => \(/);
   });
