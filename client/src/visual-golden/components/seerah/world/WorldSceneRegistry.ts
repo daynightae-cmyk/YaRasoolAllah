@@ -281,6 +281,13 @@ export const SCENE_BADR_VALLEY: WorldSceneConfig = {
   groundRoughness: 0.92,
   groundMetalness: 0,
   rockColor: "#6e5a45",
+  // Surrounding mountain formations that frame the broad valley — distinct
+  // from Khandaq's narrow trench. Artistic reconstruction.
+  authoredMountains: [
+    { x: -88, z: 0, height: 44, width: 70, falloff: 2.2, ridgeAngle: 1.57, ridgeStretch: 3 },
+    { x: 88, z: 0, height: 40, width: 78, falloff: 2.2, ridgeAngle: 1.57, ridgeStretch: 3 },
+    { x: 0, z: -88, height: 34, width: 90, falloff: 2.6 },
+  ],
   // A broad valley (not a trench): spawn at the southern mouth looking down
   // the wadi floor toward the wells and the far hills.
   entryPosition: new THREE.Vector3(0, 2, 48),
@@ -409,6 +416,13 @@ export const SCENE_UHUD_MOUNTAIN: WorldSceneConfig = {
   groundRoughness: 0.94,
   groundMetalness: 0,
   rockColor: "#7d6248",
+  // Uhud dominates the scene as a real, layered mountain at the far side
+  // (negative Z). Artistic reconstruction, not a surveyed elevation.
+  authoredMountains: [
+    { x: 0, z: -70, height: 78, width: 125, falloff: 2.1 },
+    { x: -62, z: -42, height: 48, width: 80, falloff: 2.6, ridgeAngle: 0.5, ridgeStretch: 2.2 },
+    { x: 62, z: -52, height: 52, width: 90, falloff: 2.6 },
+  ],
   entryPosition: new THREE.Vector3(0, 2, 55),
   entryYaw: 0, // face -Z: toward the scene centre from the +Z spawn point
   exits: [
@@ -642,6 +656,18 @@ export const SCENE_MADINAH_WALK: WorldSceneConfig = {
   groundRoughness: 0.93,
   groundMetalness: 0,
   rockColor: "#7a6248",
+  // Mud-brick settlement around the open mosque yard and market — real
+  // structures with ground contact, artistic placement (not surveyed).
+  structures: [
+    { x: 26, z: -14, yaw: 0.5, width: 7, height: 3.5, depth: 9 },
+    { x: -30, z: -18, yaw: -0.6, width: 8, height: 3.5, depth: 10 },
+    { x: 22, z: 22, yaw: 3.0, width: 6, height: 3, depth: 8 },
+    { x: -24, z: 18, yaw: -2.9, width: 7, height: 3.5, depth: 9 },
+    { x: 32, z: 6, yaw: 1.7, width: 6, height: 3, depth: 7 },
+    { x: -38, z: -2, yaw: -1.4, width: 8, height: 3.5, depth: 10 },
+    { x: 14, z: -30, yaw: 0.3, width: 7, height: 3.5, depth: 9 },
+    { x: -14, z: -34, yaw: -0.2, width: 7, height: 3.5, depth: 9 },
+  ],
   entryPosition: new THREE.Vector3(0, 2, 55),
   entryYaw: 0, // face -Z: toward the scene centre from the +Z spawn point
   // The palm road is the authored vista: keep it flat and clear.

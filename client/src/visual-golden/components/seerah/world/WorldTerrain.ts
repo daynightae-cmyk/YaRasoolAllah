@@ -140,6 +140,9 @@ export interface WorldTerrainResult {
   ground: THREE.Mesh;
   collisionShapes: WorldCollisionShape[];
   instances: THREE.InstancedMesh[];
+  /** Authored structures (mud-brick houses, market awnings) placed on the
+   *  terrain. Added to the scene by the world owner and disposed with it. */
+  structures: THREE.Object3D[];
   disposables: Array<() => void>;
   biomeMap: Float32Array; // Per-vertex biome index for blending
 }
@@ -262,6 +265,24 @@ export function generateWorldTerrain(
           height = Math.min(height, 3 + fbm(x * 0.05, z * 0.05) * 1.5);
         }
         break;
+      }
+    }
+
+    // Authored mountains: real peaks that dominate the scene at believable
+    // scale (artistic reconstruction, not surveyed elevation). Deforms the
+    // heightfield so the mountain is walkable ground, not a separate object.
+    if (config.authoredMountains) {
+      for (const m of config.authoredMountains) {
+        const dx = x - m.x;
+        const dz = z - m.z;
+        const angle = m.ridgeAngle ?? 0;
+        const along = (dx * Math.cos(angle) + dz * Math.sin(angle)) / (m.ridgeStretch ?? 1);
+        const across = -dx * Math.sin(angle) + dz * Math.cos(angle);
+        const d = Math.min(Math.hypot(along, across) / (m.width ?? 20), 1);
+        if (d < 1) {
+          const t = 1 - d;
+          height += m.height * Math.pow(t, m.falloff ?? 2);
+        }
       }
     }
 
@@ -608,7 +629,78 @@ export function generateWorldTerrain(
     ...generateTerrainCollisionShapes(config.bounds.height, worldSize),
   );
 
-  return { ground, collisionShapes, instances, disposables, biomeMap };
+  // Authored settlement structures (mud-brick houses, market awnings).
+  // Placed on the deformed terrain so they keep proper ground contact.
+  const structures: THREE.Object3D[] = [];
+  if (config.structures && config.structures.length > 0) {
+    const structureGeometries: THREE.BufferGeometry[] = [];
+    const wallMat = new THREE.MeshStandardMaterial({
+      color: 0x8b7355,
+      roughness: 0.98,
+      metalness: 0,
+    });
+    const roofMat = new THREE.MeshStandardMaterial({
+      color: 0x5a4a3a,
+      roughness: 1,
+      metalness: 0,
+    });
+    const doorMat = new THREE.MeshStandardMaterial({
+      color: 0x3d2a18,
+      roughness: 1,
+      metalness: 0,
+    });
+    const structureMaterials: THREE.Material[] = [wallMat, roofMat, doorMat];
+    for (const s of config.structures) {
+      const gy = sampleTerrainHeight(ground, s.x, s.z);
+      const group = new THREE.Group();
+      group.position.set(s.x, gy + s.height / 2, s.z);
+      group.rotation.y = s.yaw ?? 0;
+
+      const walls = new THREE.Mesh(
+        new THREE.BoxGeometry(s.width, s.height, s.depth),
+        wallMat,
+      );
+      walls.castShadow = true;
+      walls.receiveShadow = true;
+      group.add(walls);
+      structureGeometries.push(walls.geometry);
+
+      const roof = new THREE.Mesh(
+        new THREE.BoxGeometry(s.width * 1.1, 0.18, s.depth * 1.1),
+        roofMat,
+      );
+      roof.position.set(0, s.height / 2 + 0.09, 0);
+      roof.castShadow = true;
+      roof.receiveShadow = true;
+      group.add(roof);
+      structureGeometries.push(roof.geometry);
+
+      const doorW = Math.max(0.6, s.width * 0.35);
+      const doorH = Math.max(0.9, s.height * 0.55);
+      const door = new THREE.Mesh(
+        new THREE.BoxGeometry(doorW, doorH, 0.06),
+        doorMat,
+      );
+      door.position.set(0, -s.height / 2 + doorH / 2, -s.depth / 2 - 0.031);
+      door.castShadow = true;
+      group.add(door);
+      structureGeometries.push(door.geometry);
+
+      structures.push(group);
+      collisionShapes.push({
+        type: "box",
+        center: new THREE.Vector3(s.x, gy + s.height / 2, s.z),
+        size: new THREE.Vector3(s.width, s.height, s.depth),
+        rotation: new THREE.Euler(0, s.yaw ?? 0, 0),
+      });
+    }
+    disposables.push(() => {
+      structureGeometries.forEach((g) => g.dispose());
+      structureMaterials.forEach((m) => m.dispose());
+    });
+  }
+
+  return { ground, collisionShapes, instances, structures, disposables, biomeMap };
 }
 
 /** Estimate slope at vertex for color variation. */

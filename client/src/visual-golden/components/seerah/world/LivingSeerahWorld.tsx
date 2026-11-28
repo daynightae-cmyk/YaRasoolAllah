@@ -325,10 +325,11 @@ export function LivingSeerahWorld({
     }
 
     // ---- TERRAIN ----
-    const { ground, collisionShapes, instances, disposables: terrainDisposables } =
+    const { ground, collisionShapes, instances, structures, disposables: terrainDisposables } =
       generateWorldTerrain(config, tier, shadowsEnabled);
     scene.add(ground);
     for (const inst of instances) scene.add(inst);
+    for (const structure of structures) scene.add(structure);
     for (const dispose of terrainDisposables) registerDisposable(dispose);
 
     const groundHeightAt = (x: number, z: number) => sampleTerrainHeight(ground, x, z);

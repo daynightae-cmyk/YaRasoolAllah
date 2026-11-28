@@ -170,6 +170,7 @@
           "Clickable carved doorway interaction at mosque yard (info-madinah-mosque): 'ساحة المسجد الأول' with description 'إعادة بناء فنية لفكرة المسجد الأول كما تصفه المصادر'; no depiction of the Prophet ﷺ or companions",
           "Travel gates: gate-to-desert-camp (via travel network, authored arrival pose) and gate-to-khandaq-trench; back/movement controls verified",
           "Screenshot evidence: artifacts/evidence/ref13-15/world-madinah-walk.jpg (1440x900)",
+          "Phase 03 terrain: authored mud-brick structures placed on the settlement terrain with proper ground contact around the mosque yard and market streets, forming a connected believable settlement (artistic reconstruction, not surveyed). Uhud gained an authored 78 m massif; Badr gained surrounding ridge formations.",
           "npm run check (tsc) clean; eslint clean; npm run build exit 0; full test:p0 711/711 pass"
         ],
         "blocker":  null

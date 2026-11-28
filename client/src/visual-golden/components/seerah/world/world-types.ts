@@ -195,6 +195,31 @@ export interface WorldSceneConfig {
   night?: boolean;
   /** Static scenery props (wells, campfires) at authored positions. */
   props?: WorldSceneProp[];
+  /** Optional authored mountain profiles. Each peak deforms the terrain
+   *  heightfield so a scene can be dominated by a real mountain (e.g. Uhud)
+   *  instead of a small bump. Heights are artistic, not surveyed. */
+  authoredMountains?: Array<{
+    x: number;
+    z: number;
+    height: number;
+    width: number;
+    falloff?: number;
+    /** Radians: direction the ridge is elongated along. */
+    ridgeAngle?: number;
+    /** How much the ridge is stretched along ridgeAngle (1 = round peak). */
+    ridgeStretch?: number;
+  }>;
+  /** Optional authored settlement structures (mud-brick houses, market
+   *  awnings) placed on the terrain. Artistic placement, not surveyed. */
+  structures?: Array<{
+    x: number;
+    z: number;
+    yaw?: number;
+    width: number;
+    height: number;
+    depth: number;
+    roof?: "flat" | "dome";
+  }>;
   /** Exit/transition points to other worlds or pages. */
   exits: WorldInteractionPoint[];
   /** Points of interest in this world. */
