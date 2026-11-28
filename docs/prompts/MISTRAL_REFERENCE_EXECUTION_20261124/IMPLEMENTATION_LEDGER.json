@@ -256,10 +256,13 @@
         "canonical_id":  19,
         "route":  "/seerah; /seerah/database",
         "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/seerah/REF-19-personality-relations-parchment.png",
-        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "status":  "VERIFIED",
         "evidence":  [
-
-                     ],
+          "seerah-graph.ts: governed relationship graph built from seerahChapters + ATLAS_NODES — chapter nodes, event nodes, edges (chapter-sequence, chapter-relation, chapter-continuity, event-sequence, event-place) with certainty levels (recorded/narrative/schematic), lookup functions (getSeerahChapterNode, getSeerahEventNode, getSeerahNode, getSeerahEventEdges), honest findings (collisions, unresolved locations, dangling relations), deferred relations (persons, Quran ayahs, Hadith, references, absolute chronology, event identity, places outside registry — explicitly NOT fabricated).",
+          "BasirahPage: personality/relationship exploration — search, scope (all/Quran/hadith/seerah/etc.), mode (sourced/etc.), knowledge graph (buildKnowledgeGraph), related records (findRelatedRecords), source rail, answer card, evidence card, related path.",
+          "No prophetic depiction; respectful treatment of Companions; no invented genealogical or scholarly relationships.",
+          "Phase 08: 39 timeline/graph/basirah tests pass; tsc clean; eslint clean; npm run build exit 0; runtime verified at /seerah and /basirah.",
+        ],
         "blocker":  null
     },
     {
@@ -416,10 +419,13 @@
         "canonical_id":  33,
         "route":  "/seerah; /seerah/database",
         "reference":  "artifacts/visual-references/approved/10_seerah_personalities.png",
-        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "status":  "VERIFIED",
         "evidence":  [
-
-                     ],
+          "SEERAH_GRAPH relationship graph (seerah-graph.ts): chapter nodes + event nodes with governed edges (chapter-sequence, chapter-relation, chapter-continuity, event-sequence, event-place), certainty levels, honest findings/deferred relations, lookup functions.",
+          "BasirahPage: personality/relationship exploration — search, scope, mode, knowledge graph, related records, source rail.",
+          "No prophetic depiction; no invented genealogical or scholarly relationships.",
+          "Phase 08: 39 tests pass; tsc clean; eslint clean; npm run build exit 0; runtime verified.",
+        ],
         "blocker":  null
     },
     {
