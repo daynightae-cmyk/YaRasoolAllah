@@ -69,6 +69,7 @@ interface HoverState {
 interface LibrarySceneController extends ThreeSceneHandle {
   focusHall: (index: number) => void;
   resetView: () => void;
+  pullBookForward: (work: CatalogWork | null) => void;
 }
 
 interface SceneCallbacks {
@@ -891,6 +892,47 @@ function createLibraryScene(
   let pointerDownY = 0;
   let pointerDownAt = 0;
 
+  /** The currently pulled-forward book instance, if any. */
+  let selectedInstance: {
+    mesh: THREE.InstancedMesh;
+    instanceId: number;
+    baseMatrix: THREE.Matrix4;
+    targetZ: number;
+    currentZ: number;
+  } | null = null;
+
+  const pullMatrix = new THREE.Matrix4();
+
+  /** Pull the selected book gently forward from its shelf (or restore it). */
+  const pullBookForward = (work: CatalogWork | null) => {
+    if (selectedInstance) {
+      selectedInstance.mesh.setMatrixAt(
+        selectedInstance.instanceId,
+        selectedInstance.baseMatrix,
+      );
+      selectedInstance.mesh.instanceMatrix.needsUpdate = true;
+      selectedInstance = null;
+    }
+    if (!work) return;
+    for (const mesh of bookMeshes) {
+      const hits = hitByMesh.get(mesh);
+      if (!hits) continue;
+      const index = hits.findIndex((hit) => hit.work.id === work.id);
+      if (index >= 0) {
+        const base = new THREE.Matrix4();
+        mesh.getMatrixAt(index, base);
+        selectedInstance = {
+          mesh,
+          instanceId: index,
+          baseMatrix: base,
+          targetZ: 0.3,
+          currentZ: 0,
+        };
+        break;
+      }
+    }
+  };
+
   const clearHover = () => {
     if (!hovered) return;
     hovered = null;
@@ -915,6 +957,9 @@ function createLibraryScene(
   };
 
   const onPointerMove = (event: PointerEvent) => {
+    // Mouse hover paints the outline; touch taps are handled on pointerUp so a
+    // single finger still selects a book while dragging still rotates the hall.
+    if (event.pointerType === "touch") return;
     if (event.pointerType !== "mouse" && event.pointerType !== "pen") return;
     const now = performance.now();
     if (now - lastHoverAt < 55) return;
@@ -1060,6 +1105,22 @@ function createLibraryScene(
       if (progress >= 1) focusAnimation = null;
     }
 
+    if (selectedInstance) {
+      const next = THREE.MathUtils.lerp(
+        selectedInstance.currentZ,
+        selectedInstance.targetZ,
+        0.14,
+      );
+      selectedInstance.currentZ = next;
+      pullMatrix.copy(selectedInstance.baseMatrix);
+      pullMatrix.elements[14] += next;
+      selectedInstance.mesh.setMatrixAt(
+        selectedInstance.instanceId,
+        pullMatrix,
+      );
+      selectedInstance.mesh.instanceMatrix.needsUpdate = true;
+    }
+
     controls.update();
     // Keep the visitor inside the architectural shell.
     camera.position.x = THREE.MathUtils.clamp(camera.position.x, -4.55, 4.55);
@@ -1091,6 +1152,7 @@ function createLibraryScene(
       context.invalidate();
     },
     dispose: disposeScene,
+    pullBookForward,
   };
 }
 
@@ -1203,6 +1265,11 @@ export function Library3D({
   useEffect(() => {
     runtimeRef.current?.setPaused(paused || Boolean(selected));
   }, [paused, selected]);
+
+  useEffect(() => {
+    if (!controllerRef.current) return;
+    controllerRef.current.pullBookForward(selected);
+  }, [selected]);
 
   // The initial camera is the architectural overview. Hall chips call
   // `focusHall` directly, so mounting the scene must not jump the visitor into
