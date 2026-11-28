@@ -185,6 +185,12 @@ export interface WorldSceneConfig {
    * down the authored route stays open (e.g. a road scene).
    */
   vistaCorridor?: { halfWidth: number; length: number };
+  /**
+   * Optional wadi profile override. Badr is a broad valley; the Khandaq is a
+   * narrow defensive trench. Both use the wadi biome, so the profile is
+   * authored per scene instead of hard-coded in terrain generation.
+   */
+  wadiProfile?: { halfWidth: number; wallWidth: number; wallSlope?: number; depth?: number };
   /** Night scenes get a star field and cooler ambient contrast. */
   night?: boolean;
   /** Static scenery props (wells, campfires) at authored positions. */

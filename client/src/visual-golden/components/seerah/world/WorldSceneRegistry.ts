@@ -281,8 +281,11 @@ export const SCENE_BADR_VALLEY: WorldSceneConfig = {
   groundRoughness: 0.92,
   groundMetalness: 0,
   rockColor: "#6e5a45",
-  entryPosition: new THREE.Vector3(0, 2, 60),
-  entryYaw: 0, // face -Z: toward the scene centre from the +Z spawn point
+  // A broad valley (not a trench): spawn at the southern mouth looking down
+  // the wadi floor toward the wells and the far hills.
+  entryPosition: new THREE.Vector3(0, 2, 48),
+  entryYaw: 0,
+  wadiProfile: { halfWidth: 32, wallWidth: 16, wallSlope: 0.45, depth: 2 },
   exits: [
     createInteraction(
       "exit-to-reading",
@@ -359,11 +362,13 @@ export const SCENE_BADR_VALLEY: WorldSceneConfig = {
     ),
   ],
   lifeEntities: [
-    { id: "camel-badr-1", animationType: "graze", animationSpeed: 0.4, cullDistance: 100 },
-    { id: "camel-badr-2", animationType: "idle", animationSpeed: 0.5, cullDistance: 100 },
-    { id: "palm-badr-1", animationType: "sway", animationSpeed: 0.3, cullDistance: 80 },
-    { id: "palm-badr-2", animationType: "sway", animationSpeed: 0.25, cullDistance: 80 },
-    { id: "palm-badr-3", animationType: "sway", animationSpeed: 0.35, cullDistance: 80 },
+    // Authored: grazing camels near the wells and palms along the channel,
+    // clear of the eastern terrace sightline.
+    { id: "camel-badr-1", animationType: "graze", animationSpeed: 0.4, cullDistance: 100, position: new THREE.Vector3(9, 0, -8) },
+    { id: "camel-badr-2", animationType: "idle", animationSpeed: 0.5, cullDistance: 100, position: new THREE.Vector3(-7, 0, -20) },
+    { id: "palm-badr-1", animationType: "sway", animationSpeed: 0.3, cullDistance: 80, position: new THREE.Vector3(-26, 0, 30) },
+    { id: "palm-badr-2", animationType: "sway", animationSpeed: 0.25, cullDistance: 80, position: new THREE.Vector3(26, 0, 2) },
+    { id: "palm-badr-3", animationType: "sway", animationSpeed: 0.35, cullDistance: 80, position: new THREE.Vector3(-28, 0, -32) },
   ],
   particles: [
     createParticles(
@@ -395,8 +400,8 @@ export const SCENE_UHUD_MOUNTAIN: WorldSceneConfig = {
   bounds: { width: 160, depth: 160, height: 60 },
   skyColor: "#2a1f14",
   fogColor: "#3d2c1a",
-  fogNear: 15,
-  fogFar: 90,
+  fogNear: 25,
+  fogFar: 150,
   sunPosition: new THREE.Vector3(-25, 45, 15),
   sunColor: "#ffd9a0",
   sunIntensity: 2.1,
@@ -519,6 +524,9 @@ export const SCENE_KHANDAQ: WorldSceneConfig = {
   rockColor: "#5c544a",
   entryPosition: new THREE.Vector3(0, 2, 45),
   entryYaw: 0, // face -Z: toward the scene centre from the +Z spawn point
+  // The Khandaq is a narrow, deep defensive ditch — restore its authored
+  // profile now that the wadi shape is configurable per scene.
+  wadiProfile: { halfWidth: 7, wallWidth: 6, wallSlope: 0.8, depth: 4.5 },
   night: true,
   props: [
     { id: "prop-fire-khandaq", type: "campfire", position: new THREE.Vector3(5, 2, 9) },
@@ -636,6 +644,8 @@ export const SCENE_MADINAH_WALK: WorldSceneConfig = {
   rockColor: "#7a6248",
   entryPosition: new THREE.Vector3(0, 2, 55),
   entryYaw: 0, // face -Z: toward the scene centre from the +Z spawn point
+  // The palm road is the authored vista: keep it flat and clear.
+  vistaCorridor: { halfWidth: 7, length: 120 },
   exits: [
     createInteraction(
       "exit-to-reading",
@@ -730,13 +740,15 @@ export const SCENE_MADINAH_WALK: WorldSceneConfig = {
     ),
   ],
   lifeEntities: [
-    { id: "awning-madinah-1", animationType: "flutter", animationSpeed: 0.5, cullDistance: 60 },
-    { id: "awning-madinah-2", animationType: "flutter", animationSpeed: 0.6, cullDistance: 60 },
-    { id: "awning-madinah-3", animationType: "flutter", animationSpeed: 0.4, cullDistance: 60 },
-    { id: "palm-madinah-1", animationType: "sway", animationSpeed: 0.25, cullDistance: 100 },
-    { id: "palm-madinah-2", animationType: "sway", animationSpeed: 0.3, cullDistance: 100 },
-    { id: "palm-madinah-3", animationType: "sway", animationSpeed: 0.2, cullDistance: 100 },
-    { id: "palm-madinah-4", animationType: "sway", animationSpeed: 0.35, cullDistance: 100 },
+    // Authored positions: palms and awnings line the road and the market yard
+    // instead of hashing onto the entry sightline (0,55 → -Z).
+    { id: "awning-madinah-1", animationType: "flutter", animationSpeed: 0.5, cullDistance: 60, position: new THREE.Vector3(16, 0, -2) },
+    { id: "awning-madinah-2", animationType: "flutter", animationSpeed: 0.6, cullDistance: 60, position: new THREE.Vector3(6, 0, -10) },
+    { id: "awning-madinah-3", animationType: "flutter", animationSpeed: 0.4, cullDistance: 60, position: new THREE.Vector3(-20, 0, -14) },
+    { id: "palm-madinah-1", animationType: "sway", animationSpeed: 0.25, cullDistance: 100, position: new THREE.Vector3(15, 0, 38) },
+    { id: "palm-madinah-2", animationType: "sway", animationSpeed: 0.3, cullDistance: 100, position: new THREE.Vector3(-16, 0, 32) },
+    { id: "palm-madinah-3", animationType: "sway", animationSpeed: 0.2, cullDistance: 100, position: new THREE.Vector3(18, 0, 16) },
+    { id: "palm-madinah-4", animationType: "sway", animationSpeed: 0.35, cullDistance: 100, position: new THREE.Vector3(-18, 0, 10) },
   ],
   particles: [
     createParticles(

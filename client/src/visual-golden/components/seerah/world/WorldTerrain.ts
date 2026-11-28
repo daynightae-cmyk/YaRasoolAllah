@@ -203,20 +203,32 @@ export function generateWorldTerrain(
         break;
       }
       case "rocky-plain": {
-        // Eroded terrain with scattered rocks
+        // Eroded terrain with scattered rocks, plus the authored massif that
+        // gives the Uhud viewpoint its landmark: a broad ridge on the far
+        // side of the plain, visible from the southern entry.
         const erosion = fbm(x * 0.08, z * 0.08) * 1.5;
         height += erosion;
+        const massif = Math.exp(-((x - 6) * (x - 6)) / 1400 - ((z + 64) * (z + 64)) / 700);
+        height += massif * 26;
         break;
       }
       case "wadi": {
-        // Central channel
-        const channelDist = Math.abs(x) * 0.5;
-        const channelDepth = Math.max(0, 3 - channelDist) * 1.5;
+        // Per-scene channel profile: a narrow trench (Khandaq) or a broad
+        // valley (Badr). Defaults preserve the original trench dimensions.
+        const halfWidth = config.wadiProfile?.halfWidth ?? 12;
+        const wallWidth = config.wadiProfile?.wallWidth ?? 6;
+        const wallSlope = config.wadiProfile?.wallSlope ?? 0.8;
+        const depth = config.wadiProfile?.depth ?? 2;
+        const absX = Math.abs(x);
+        const channelT = Math.min(1, absX / halfWidth);
+        const channelDepth = depth * (1 - channelT * channelT);
         height -= channelDepth;
-        // Channel walls
-        if (Math.abs(x) > 12 && Math.abs(x) < 18) {
-          height += (Math.abs(x) - 12) * 0.8;
+        if (absX > halfWidth && absX < halfWidth + wallWidth) {
+          height += (absX - halfWidth) * wallSlope;
         }
+        // Gentle rolls along the valley floor so a broad wadi reads as a
+        // landscape rather than a flat plate under the camera.
+        height += Math.sin(z * 0.028 + x * 0.012 + dunePhase) * 0.7;
         break;
       }
       case "oasis": {
@@ -451,8 +463,12 @@ export function generateWorldTerrain(
       const frondGeo = mergeGeometries(frondParts)!;
       frondParts.forEach((p) => p.dispose());
       const frondMat = new THREE.MeshStandardMaterial({
-        color: 0x2d5a30,
+        color: 0x3a6b3c,
         roughness: 0.9,
+        // A touch of self-illumination keeps fronds reading green on the
+        // shadow side instead of collapsing to black silhouettes at sunset.
+        emissive: 0x0f2611,
+        emissiveIntensity: 0.6,
         side: THREE.DoubleSide,
       });
 
@@ -462,8 +478,33 @@ export function generateWorldTerrain(
       for (let i = 0; i < palmCount; i++) {
         const angle = random() * Math.PI * 2;
         const radius = 8 + random() * (worldSize * 0.4 - 8);
-        const x = Math.cos(angle) * radius;
-        const z = Math.sin(angle) * radius;
+        let x = Math.cos(angle) * radius;
+        let z = Math.sin(angle) * radius;
+        // Keep the spawn clear and the authored sightline corridor open —
+        // a palm trunk parked two metres in front of the camera reads as a
+        // black wall, not a grove.
+        const dSpawn = Math.hypot(x - config.entryPosition.x, z - config.entryPosition.z);
+        if (dSpawn < 18) {
+          const push = (18 - dSpawn) + 2;
+          x += ((x - config.entryPosition.x) / (dSpawn || 1)) * push;
+          z += ((z - config.entryPosition.z) / (dSpawn || 1)) * push;
+        }
+        const palmCorridor = config.vistaCorridor;
+        if (palmCorridor) {
+          const pyaw = config.entryYaw ?? 0;
+          const pfx = -Math.sin(pyaw);
+          const pfz = -Math.cos(pyaw);
+          const prx = x - config.entryPosition.x;
+          const prz = z - config.entryPosition.z;
+          const palong = prx * pfx + prz * pfz;
+          const plateral = prx * pfz - prz * pfx;
+          if (palong > 0 && palong < palmCorridor.length && Math.abs(plateral) < palmCorridor.halfWidth + 2) {
+            const side = plateral >= 0 ? 1 : -1;
+            const t = side * (palmCorridor.halfWidth + 2) - plateral;
+            x += pfz * t;
+            z += -pfx * t;
+          }
+        }
         const sampleX = Math.floor((x + worldSize / 2) / segmentSize);
         const sampleZ = Math.floor((z + worldSize / 2) / segmentSize);
         const idx = THREE.MathUtils.clamp(sampleZ * (segments + 1) + sampleX, 0, heightData.length - 1);
@@ -519,6 +560,22 @@ export function generateWorldTerrain(
           const nz = (z - config.entryPosition.z) / (dSpawn || 1);
           x += nx * push;
           z += nz * push;
+        }
+        const bushCorridor = config.vistaCorridor;
+        if (bushCorridor) {
+          const byaw = config.entryYaw ?? 0;
+          const bfx = -Math.sin(byaw);
+          const bfz = -Math.cos(byaw);
+          const brx = x - config.entryPosition.x;
+          const brz = z - config.entryPosition.z;
+          const balong = brx * bfx + brz * bfz;
+          const blateral = brx * bfz - brz * bfx;
+          if (balong > 0 && balong < bushCorridor.length && Math.abs(blateral) < bushCorridor.halfWidth + 2) {
+            const side = blateral >= 0 ? 1 : -1;
+            const t = side * (bushCorridor.halfWidth + 2) - blateral;
+            x += bfz * t;
+            z += -bfx * t;
+          }
         }
         const sampleX = Math.floor((x + worldSize / 2) / segmentSize);
         const sampleZ = Math.floor((z + worldSize / 2) / segmentSize);

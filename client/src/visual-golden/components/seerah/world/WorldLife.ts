@@ -414,9 +414,16 @@ export class WorldLife {
     group.position.copy(position);
 
     const trunkColor = new THREE.Color(0x4a3728);
-    const frondColor = new THREE.Color(0x2d5a30).lerp(new THREE.Color(0x4a7c3a), random() * 0.3);
+    const frondColor = new THREE.Color(0x3a6b3c).lerp(new THREE.Color(0x4a7c3a), random() * 0.3);
     const matTrunk = new THREE.MeshStandardMaterial({ color: trunkColor, roughness: 1 });
-    const matFrond = new THREE.MeshStandardMaterial({ color: frondColor, roughness: 0.9, side: THREE.DoubleSide });
+    const matFrond = new THREE.MeshStandardMaterial({
+      color: frondColor,
+      roughness: 0.9,
+      // Keeps palms green on the shadow side instead of black cut-outs.
+      emissive: 0x0f2611,
+      emissiveIntensity: 0.6,
+      side: THREE.DoubleSide,
+    });
 
     // Trunk (slightly curved)
     const trunkHeight = 4.5 * scale;
