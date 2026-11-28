@@ -661,12 +661,22 @@ export const SCENE_MADINAH_WALK: WorldSceneConfig = {
   structures: [
     { x: 26, z: -14, yaw: 0.5, width: 7, height: 3.5, depth: 9 },
     { x: -30, z: -18, yaw: -0.6, width: 8, height: 3.5, depth: 10 },
-    { x: 22, z: 22, yaw: 3.0, width: 6, height: 3, depth: 8 },
+    { x: 22, z: 22, yaw: 3.0, width: 6, height: 3, depth: 8, courtyard: true },
     { x: -24, z: 18, yaw: -2.9, width: 7, height: 3.5, depth: 9 },
-    { x: 32, z: 6, yaw: 1.7, width: 6, height: 3, depth: 7 },
+    { x: 32, z: 6, yaw: 1.7, width: 6, height: 3, depth: 7, courtyard: true },
     { x: -38, z: -2, yaw: -1.4, width: 8, height: 3.5, depth: 10 },
     { x: 14, z: -30, yaw: 0.3, width: 7, height: 3.5, depth: 9 },
     { x: -14, z: -34, yaw: -0.2, width: 7, height: 3.5, depth: 9 },
+  ],
+  // Earthen streets connecting the mosque yard, market and settlement edges.
+  // Paths cut into the terrain so walls keep proper ground contact.
+  paths: [
+    [[0, 25], [0, -5], [12, -5]],   // mosque yard to market
+    [[0, 25], [-10, 25], [-26, 25]], // mosque yard to west edge
+    [[0, 25], [10, 25], [26, 25]],   // mosque yard to east edge
+    [[0, -5], [14, -30]],            // market to south building
+    [[-10, 25], [-24, 18]],          // west building to market path
+    [[10, 25], [32, 6]],             // east building to market path
   ],
   entryPosition: new THREE.Vector3(0, 2, 55),
   entryYaw: 0, // face -Z: toward the scene centre from the +Z spawn point

@@ -219,7 +219,14 @@ export interface WorldSceneConfig {
     height: number;
     depth: number;
     roof?: "flat" | "dome";
+    /** When true, the front wall has a courtyard opening instead of a door. */
+    courtyard?: boolean;
   }>;
+  /** Optional authored earthen paths/streets that cut into the terrain.
+   *  Each path is a sequence of [x, z] waypoints; the heightfield is
+   *  flattened along the polyline so roads follow the ground and objects
+   *  keep proper ground contact. Heights are artistic, not surveyed. */
+  paths?: Array<Array<[number, number]>>;
   /** Exit/transition points to other worlds or pages. */
   exits: WorldInteractionPoint[];
   /** Points of interest in this world. */

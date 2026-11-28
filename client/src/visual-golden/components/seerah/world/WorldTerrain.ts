@@ -351,6 +351,47 @@ export function generateWorldTerrain(
   const ground = new THREE.Mesh(groundGeo, groundMat);
   ground.receiveShadow = shadowsEnabled;
   ground.userData.heightData = heightData;
+  // Authored earthen paths/streets: cut into the heightfield so roads
+  // follow the terrain and connect structures at proper ground contact.
+  // Each path is a polyline of [x, z] waypoints; the strip along each
+  // segment is flattened to the terrain height at its midpoint so that
+  // walls and foundations never float above the road surface.
+  if (config.paths) {
+    const pathWidth = 2.6;
+    const halfSize = worldSize / 2;
+    for (const polyline of config.paths) {
+      for (let seg = 0; seg + 1 < polyline.length; seg += 1) {
+        const ax = polyline[seg][0];
+        const az = polyline[seg][1];
+        const bx = polyline[seg + 1][0];
+        const bz = polyline[seg + 1][1];
+        const dX = bx - ax;
+        const dZ = bz - az;
+        const segLen = Math.hypot(dX, dZ);
+        if (segLen <= 0) continue;
+        const ux = dX / segLen;
+        const uz = dZ / segLen;
+        for (let i = 0; i < pos.count; i++) {
+          const px = pos.getX(i);
+          const pz = pos.getZ(i);
+          const vx = px - ax;
+          const vz = pz - az;
+          let t = (vx * ux + vz * uz) / segLen;
+          t = Math.min(1, Math.max(0, t));
+          const closestX = ax + ux * t;
+          const closestZ = az + uz * t;
+          const dist = Math.hypot(px - closestX, pz - closestZ);
+          if (dist < pathWidth) {
+            const heightAtPath = sampleTerrainHeight(ground, closestX, closestZ);
+            const blend = 1 - dist / pathWidth;
+            const newHeight = heightData[i] * (1 - blend) + heightAtPath * blend;
+            pos.setY(i, newHeight);
+            heightData[i] = newHeight;
+          }
+        }
+      }
+    }
+  }
   ground.userData.segmentSize = segmentSize;
   ground.userData.worldSize = worldSize;
   ground.userData.segments = segments;
