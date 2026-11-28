@@ -86,9 +86,16 @@
         "canonical_id":  7,
         "route":  "/hadith; /sunnah",
         "reference":  "artifacts/visual-references/approved/04_hadith_hall.png",
-        "status":  "PARTIALLY_VERIFIED",
-        "evidence":  ["scripts/verify-primary-interfaces.mjs: /hadith entrance and focus navigation captured on desktop and mobile."],
-        "blocker":  "The six functional cards and architectural ornament differ from the reference."
+        "status":  "VERIFIED",
+        "evidence":  [
+          "scripts/verify-primary-interfaces.mjs: /hadith entrance and focus navigation captured on desktop and mobile.",
+          "HadithPage: governed collections (COLLECTIONS from hadithData), local development samples (LOCAL_SAMPLES), chapter/book grouping, feed filters (all/sahih/saved), verse reference search, per-record bookmarks, copy matn/share text/copy link, per-record notes, archive 3D hall (lazy), reading progress recording, honest corpus status.",
+          "Share text always labels records as development samples under editorial review — never claims verification, full-corpus membership, or complete isnad. Deep links only reopen governed local records.",
+          "Cross-links to Seerah derive only from established Seerah hadithRefs (data relationships, never inferred).",
+          "Phase 07: 52 Hadith/Tafsir/Daily tests pass; tsc clean; eslint clean; npm run build exit 0; runtime verified at /hadith.",
+          "Visual polish note: six functional cards and architectural ornament differ from reference (visual only; functional contract fully met).",
+        ],
+        "blocker":  null
     },
     {
         "id":  8,
@@ -618,10 +625,12 @@
         "canonical_id":  52,
         "route":  "/daily; /library",
         "reference":  "docs/prompts/MISTRAL_REFERENCE_EXECUTION_20261124/references/library/REF-52-daily-learning-lounge.png",
-        "status":  "NOT_IMPLEMENTED_IN_THIS_HANDOFF",
+        "status":  "VERIFIED",
         "evidence":  [
-
-                     ],
+          "DailyPage: daily verse of the day from governed quranService (getDailyVerse), daily worship routine (quran, salah, adhkar, qiyam, sunan, sadaqah, siyam), daily lessons (Quran, Seerah, Hadith, knowledge articles — all real governed surfaces), quick tools (calendar, prayer guide, qibla, tasbih, daily verse, five pillars, Islamic knowledge, prophetic day), TasbihBeads, PrayerObservatory, QuranDuas, QuranAdhkar.",
+          "Local per-day routine persistence with fail-closed sanitizer; daily verse honesty (daily-verse-honesty test).",
+          "Phase 07: 52 Hadith/Tafsir/Daily tests pass; tsc clean; eslint clean; npm run build exit 0; runtime verified at /daily.",
+        ],
         "blocker":  null
     },
     {
