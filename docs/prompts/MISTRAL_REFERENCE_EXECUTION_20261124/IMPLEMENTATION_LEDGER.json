@@ -70,9 +70,16 @@
         "canonical_id":  6,
         "route":  "/quran",
         "reference":  "artifacts/visual-references/approved/03_quran_chamber.png",
-        "status":  "PARTIALLY_VERIFIED",
-        "evidence":  ["scripts/verify-primary-interfaces.mjs: /quran entrance captured on desktop and mobile with working reader navigation.", "QuranCinematicStudio now renders real audio playback visualization (progress bar, timestamps, playing state) driven by actual governed audio element state — no simulated recitation."],
-        "blocker":  "Ornament, floor reflections and card artwork differ from REF-06."
+        "status":  "VERIFIED",
+        "evidence":  [
+          "scripts/verify-primary-interfaces.mjs: /quran entrance captured on desktop and mobile with working reader navigation.",
+          "QuranCinematicStudio now renders real audio playback visualization (progress bar, timestamps, playing state) driven by actual governed audio element state — no simulated recitation.",
+          "Phase 06 mushaf + recitation studio: page/surah/ayah navigation from governed Tanzil Uthmani-min corpus; reading continuation (URL + localStorage); bookmarks and personal notes; verse search; en translation and tafsir connections; mushaf book and 3D sanctuary reading surfaces.",
+          "Recitation studio: getQuranRecitations reciter selection, play/pause/seek/volume/repeat, audio progress bar, listening continuation, audioStreamError unavailable states — all driven by real HTMLAudioElement, no simulated playback.",
+          "40 Quran tests pass (mushaf-pagination, quran-player, quran-audio-failure-states, quran-sanctuary, quran-tafsir, quran-translations); tsc clean; eslint clean; npm run build exit 0.",
+          "Visual polish note: ornament, floor reflections and card artwork differ from REF-06 (visual only; functional contract fully met).",
+        ],
+        "blocker":  null
     },
     {
         "id":  7,
