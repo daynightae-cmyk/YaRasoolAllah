@@ -134,6 +134,7 @@
 .resumeButton { border-style: dashed; font-variant-numeric: tabular-nums; }
 .screenControls { border-top: 1px solid #ffffff10; }
 .screenControls button { border: 1px solid #d6b8743c; background: #123f38; border-radius: 8px; padding: .32rem .6rem; color: #ffedcb; }
+.screenControls button[aria-pressed="true"] { background: #1f5c4d; border-color: #83d6ae6e; color: #a6eed0; }
 .playerTruth { flex: 1; min-width: 0; }
 .playerOverlay { background: #06151be8; }
 .spinner { animation: noor-spin 1.2s linear infinite; }

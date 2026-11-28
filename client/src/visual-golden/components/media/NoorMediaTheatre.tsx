@@ -30,6 +30,8 @@ import {
   SkipForward,
   Sun,
   Users,
+  Volume2,
+  VolumeX,
   X,
   XCircle,
 } from "lucide-react";
@@ -83,8 +85,13 @@ interface ProviderPlayer {
   getCurrentTime(): number;
   getDuration(): number;
   getPlayerState(): number;
+  getVolume(): number;
+  isMuted(): boolean;
+  mute(): void;
+  unMute(): void;
   seekTo(seconds: number, autostart: boolean): void;
   playVideo(): void;
+  pauseVideo(): void;
   destroy(): void;
 }
 
@@ -197,6 +204,8 @@ export function NoorMediaTheatre() {
   const [detail, setDetail] = useState<MediaDiscoveryRecord | null>(null);
   const [playerState, setPlayerState] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const [playerAttempt, setPlayerAttempt] = useState(0);
+  const [muted, setMuted] = useState(false);
+  const mutedRef = useRef(false);
   const [fullscreenMode, setFullscreenMode] = useState<"native" | "viewport" | null>(null);
   const [fullscreenMessage, setFullscreenMessage] = useState("");
   const [view, setView] = useState<HallView>("interactive");
@@ -289,6 +298,8 @@ export function NoorMediaTheatre() {
             onError: () => { /* provider-side refusal stays inside the provider frame */ },
           },
         });
+        // Apply the locally-stored mute preference to the newly attached player.
+        applyPlayerMuted(mutedRef.current);
         setApiTick((tick) => tick + 1);
       } catch {
         playerRef.current = null;
@@ -337,6 +348,11 @@ export function NoorMediaTheatre() {
       playerRef.current.playVideo();
     } catch { /* provider API unavailable; the resume chip stays visible */ }
   }, [playerState, selected?.id, apiTick]);
+
+  // Sync mute toggles to the provider player while it is attached.
+  useEffect(() => {
+    applyPlayerMuted(muted);
+  }, [muted]);
 
   useEffect(() => {
     if (playerState !== "loading") return;
@@ -489,6 +505,21 @@ export function NoorMediaTheatre() {
     if (!embedUrl) return;
     setPlayerAttempt((attempt) => attempt + 1);
     setPlayerState("loading");
+  };
+
+  /** Apply mute state to the provider player when it is attached. Read-only —
+   *  the theatre never adjusts the provider's volume beyond mute/unmute, and
+   *  never reads the provider's audio level for any purpose beyond display. */
+  const applyPlayerMuted = (next: boolean) => {
+    mutedRef.current = next;
+    const player = playerRef.current;
+    if (!player) return;
+    try {
+      if (next) player.mute();
+      else player.unMute();
+    } catch {
+      // Provider API not ready yet; the locally stored mutedRef is applied on attach.
+    }
   };
 
   const requestResume = (seconds: number) => {
@@ -688,6 +719,16 @@ export function NoorMediaTheatre() {
                       : "تم تحميل إطار المزود؛ التحكم والتشغيل من داخل المشغل.")
                     : "بدون تشغيل تلقائي · بدون تقدم مشاهدة مقدّر"}
                 </span>
+                <button
+                  type="button"
+                  onClick={() => setMuted((next) => !next)}
+                  aria-pressed={muted}
+                  aria-label={muted ? "إلغاء كتم الصوت" : "كتم الصوت"}
+                  className={styles.volumeButton}
+                >
+                  {muted ? <VolumeX size={16} aria-hidden /> : <Volume2 size={16} aria-hidden />}
+                  <span>{muted ? "الصوت مكتوم" : "الصوت"} </span>
+                </button>
                 <button type="button" onClick={toggleFullscreen} aria-label={fullscreen ? "الخروج من ملء الشاشة" : "فتح المسرح بملء الشاشة"}>
                   {fullscreen ? <Minimize2 size={17} /> : <Maximize2 size={17} />}
                   <span>{fullscreen ? "تصغير" : "ملء الشاشة"}</span>

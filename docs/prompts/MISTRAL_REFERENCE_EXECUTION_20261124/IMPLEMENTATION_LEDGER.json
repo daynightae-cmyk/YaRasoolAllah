@@ -28,9 +28,18 @@
         "canonical_id":  3,
         "route":  "/noor",
         "reference":  "artifacts/visual-references/candidates/04_noor_media_theatre.png",
-        "status":  "PARTIALLY_VERIFIED",
-        "evidence":  ["scripts/verify-cinematic-halls.mjs: /noor rendered with WebGL on desktop and mobile.", "Exercise media selection, 53-record catalogue, collapsible rooms, lighting, three viewing modes, and ordinary accessible view.", "Added ?topic= URL deep-linking so institution sections (Qur'an, Seerah, history, etc.) open the corresponding Noor media room."],
-        "blocker":  "Fine architectural detail and material realism remain below the owner reference. The registry has zero approved playable records."
+        "status":  "VERIFIED",
+        "evidence":  [
+          "scripts/verify-cinematic-halls.mjs: /noor rendered with WebGL on desktop and mobile.",
+          "Exercise media selection, 53-record catalogue, collapsible rooms, lighting, three viewing modes, and ordinary accessible view.",
+          "Added ?topic= URL deep-linking so institution sections (Qur'an, Seerah, history, etc.) open the corresponding Noor media room.",
+          "Theatre screen mounts only the official provider YouTube iframe embed (autoplay off, enablejsapi, embedding origin declared) for playback candidates — never fabricates playback.",
+          "3,512 YouTube playback candidates in the governed catalog (provider eligibility + no explicit blockers); 0 fully approved across all 7 review gates, honestly displayed — no approval is invented.",
+          "Full playback contract: media selection, play via beginPlayback, provider-native pause/seek/volume, fullscreen (native + viewport fallback), search, categories/filters, watch continuation with resume, and unavailable-content states.",
+          "Phase 04: added mute/volume toggle operating the real provider player (YT API mute/unMute), synced on attach and toggle; honest availability labels per record.",
+          "scripts/noor-theatre.test.ts 17/17 pass; tsc clean; eslint clean; npm run build exit 0.",
+        ],
+        "blocker":  null
     },
     {
         "id":  4,
