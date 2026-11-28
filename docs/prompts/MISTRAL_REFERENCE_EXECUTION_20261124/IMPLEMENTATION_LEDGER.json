@@ -24,7 +24,7 @@
           "Established relationships only: work.sourceIds, resource.sourceId, rights.sourceId — never inferred from names/topics.",
           "SourcesTreasury3D: card-catalog cabinets with instanced drawer fronts, brass label plates, ring pulls, open drawers with blank ivory document sheets (no text in geometry), document desk, verification shield. Honesty: no document text rendered into scene textures.",
           "Distinguishes available full content vs metadata-only vs external vs unavailable via rights states and evidence statuses.",
-          "Phase 09: 63 source/IIF tests pass (sources-inspection, sources-treasury, sources-vault-composition, external-resource-registry, core-wings-source-truth, validate-source-governance, iiif-normalizer, iiif-reader); tsc clean; eslint clean; npm run build exit 0; runtime verified at /sources.",
+          "Phase 09: 63 source/IIF tests pass (sources-inspection, sources-treasury, sources-vault-composition, external-resource-registry, core-wings-source-truth, validate-source-governance, iiif-normalizer, iiif-reader); tsc clean; eslint clean; npm run build exit 0; runtime verified at /sources."
         ],
         "blocker":  null
     },
@@ -42,7 +42,7 @@
           "3,512 YouTube playback candidates in the governed catalog (provider eligibility + no explicit blockers); 0 fully approved across all 7 review gates, honestly displayed — no approval is invented.",
           "Full playback contract: media selection, play via beginPlayback, provider-native pause/seek/volume, fullscreen (native + viewport fallback), search, categories/filters, watch continuation with resume, and unavailable-content states.",
           "Phase 04: added mute/volume toggle operating the real provider player (YT API mute/unMute), synced on attach and toggle; honest availability labels per record.",
-          "scripts/noor-theatre.test.ts 17/17 pass; tsc clean; eslint clean; npm run build exit 0.",
+          "scripts/noor-theatre.test.ts 17/17 pass; tsc clean; eslint clean; npm run build exit 0."
         ],
         "blocker":  null
     },
@@ -67,7 +67,7 @@
                       "Children's World expanded from 5 to 11 platform-original adaptations covering prayer/wudu education, Prophet stories (Nuh, Yunus), and ethics (honesty, hospitality) — all labeled platform_original_not_a_direct_quote, no_prophetic_depiction, review pending.",
                       "Kids page: story grid with age bands (6-8, 9-12, 13-15) and topic filters (12 governed topics), KidsTVRoom, MediaLibrarySection (kids catalog), StoryTheatre, ColoringStudio, KidsQuizGarden, parental guidance, safety commitments.",
                       "Phase 10: genuinely interactive educational elements — story theatre with prev/next navigation, coloring studio with session counting, quiz garden with real Quran-verse questions, media library with cleared kids content, review queue, parent sources (external, clearly marked), safety band (no auto-play, no ads, no tracking, no prophetic depiction). No manipulative engagement, no invented achievements.",
-                      "42 kids tests pass; tsc clean; eslint clean; npm run build exit 0; runtime verified at /kids.",
+                      "42 kids tests pass; tsc clean; eslint clean; npm run build exit 0; runtime verified at /kids."
                       ],
         "blocker":  null
     },
@@ -83,7 +83,7 @@
           "Phase 06 mushaf + recitation studio: page/surah/ayah navigation from governed Tanzil Uthmani-min corpus; reading continuation (URL + localStorage); bookmarks and personal notes; verse search; en translation and tafsir connections; mushaf book and 3D sanctuary reading surfaces.",
           "Recitation studio: getQuranRecitations reciter selection, play/pause/seek/volume/repeat, audio progress bar, listening continuation, audioStreamError unavailable states — all driven by real HTMLAudioElement, no simulated playback.",
           "40 Quran tests pass (mushaf-pagination, quran-player, quran-audio-failure-states, quran-sanctuary, quran-tafsir, quran-translations); tsc clean; eslint clean; npm run build exit 0.",
-          "Visual polish note: ornament, floor reflections and card artwork differ from REF-06 (visual only; functional contract fully met).",
+          "Visual polish note: ornament, floor reflections and card artwork differ from REF-06 (visual only; functional contract fully met)."
         ],
         "blocker":  null
     },
@@ -99,7 +99,7 @@
           "Share text always labels records as development samples under editorial review — never claims verification, full-corpus membership, or complete isnad. Deep links only reopen governed local records.",
           "Cross-links to Seerah derive only from established Seerah hadithRefs (data relationships, never inferred).",
           "Phase 07: 52 Hadith/Tafsir/Daily tests pass; tsc clean; eslint clean; npm run build exit 0; runtime verified at /hadith.",
-          "Visual polish note: six functional cards and architectural ornament differ from reference (visual only; functional contract fully met).",
+          "Visual polish note: six functional cards and architectural ornament differ from reference (visual only; functional contract fully met)."
         ],
         "blocker":  null
     },
@@ -116,7 +116,7 @@
           "Interactions verified at runtime: drag-to-pan, wheel zoom toward pointer, pinch-zoom-ready touch handling, camera focus onto a selected marker (recentres + highlights), reset to full-map origin.",
           "Historical governance preserved: ATLAS_NODES, SEERAH_DATABASE, LIVING_CAMPAIGNS, source citations, reconstruction/schematic uncertainty disclosures all reused; no invented coordinates or roads.",
           "Legacy ?table=open parameter retained — opens the corrected map experience instead of the rejected table; ?place= deep links focus the named place.",
-          "tsc clean; eslint clean; scripts/atlas-composition.test.ts 9/9 pass; npm run build exit 0.",
+          "tsc clean; eslint clean; scripts/atlas-composition.test.ts 9/9 pass; npm run build exit 0."
         ],
         "blocker":  null
     },
@@ -267,7 +267,7 @@
           "seerah-graph.ts: governed relationship graph built from seerahChapters + ATLAS_NODES — chapter nodes, event nodes, edges (chapter-sequence, chapter-relation, chapter-continuity, event-sequence, event-place) with certainty levels (recorded/narrative/schematic), lookup functions (getSeerahChapterNode, getSeerahEventNode, getSeerahNode, getSeerahEventEdges), honest findings (collisions, unresolved locations, dangling relations), deferred relations (persons, Quran ayahs, Hadith, references, absolute chronology, event identity, places outside registry — explicitly NOT fabricated).",
           "BasirahPage: personality/relationship exploration — search, scope (all/Quran/hadith/seerah/etc.), mode (sourced/etc.), knowledge graph (buildKnowledgeGraph), related records (findRelatedRecords), source rail, answer card, evidence card, related path.",
           "No prophetic depiction; respectful treatment of Companions; no invented genealogical or scholarly relationships.",
-          "Phase 08: 39 timeline/graph/basirah tests pass; tsc clean; eslint clean; npm run build exit 0; runtime verified at /seerah and /basirah.",
+          "Phase 08: 39 timeline/graph/basirah tests pass; tsc clean; eslint clean; npm run build exit 0; runtime verified at /seerah and /basirah."
         ],
         "blocker":  null
     },
@@ -430,7 +430,7 @@
           "SEERAH_GRAPH relationship graph (seerah-graph.ts): chapter nodes + event nodes with governed edges (chapter-sequence, chapter-relation, chapter-continuity, event-sequence, event-place), certainty levels, honest findings/deferred relations, lookup functions.",
           "BasirahPage: personality/relationship exploration — search, scope, mode, knowledge graph, related records, source rail.",
           "No prophetic depiction; no invented genealogical or scholarly relationships.",
-          "Phase 08: 39 tests pass; tsc clean; eslint clean; npm run build exit 0; runtime verified.",
+          "Phase 08: 39 tests pass; tsc clean; eslint clean; npm run build exit 0; runtime verified."
         ],
         "blocker":  null
     },
@@ -641,7 +641,7 @@
         "evidence":  [
           "DailyPage: daily verse of the day from governed quranService (getDailyVerse), daily worship routine (quran, salah, adhkar, qiyam, sunan, sadaqah, siyam), daily lessons (Quran, Seerah, Hadith, knowledge articles — all real governed surfaces), quick tools (calendar, prayer guide, qibla, tasbih, daily verse, five pillars, Islamic knowledge, prophetic day), TasbihBeads, PrayerObservatory, QuranDuas, QuranAdhkar.",
           "Local per-day routine persistence with fail-closed sanitizer; daily verse honesty (daily-verse-honesty test).",
-          "Phase 07: 52 Hadith/Tafsir/Daily tests pass; tsc clean; eslint clean; npm run build exit 0; runtime verified at /daily.",
+          "Phase 07: 52 Hadith/Tafsir/Daily tests pass; tsc clean; eslint clean; npm run build exit 0; runtime verified at /daily."
         ],
         "blocker":  null
     },
