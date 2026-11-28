@@ -662,6 +662,7 @@ function createLibraryScene(
   const bookMeshes: THREE.InstancedMesh[] = [];
   const plaqueTextures: THREE.Texture[] = [];
   const hitByMesh = new Map<THREE.InstancedMesh, SceneBookHit[]>();
+  const bookToBandMesh = new Map<THREE.InstancedMesh, THREE.InstancedMesh>();
 
   shelves.forEach((shelf, hallIndex) => {
     const side = hallIndex < 5 ? 1 : -1;
@@ -795,11 +796,15 @@ function createLibraryScene(
           bookMesh.setMatrixAt(workIndex, matrix);
 
           const color = new THREE.Color(shelf.hall.tone);
-          color.offsetHSL(
-            ((seed % 17) - 8) / 900,
-            (((seed >>> 6) % 13) - 6) / 160,
-            (((seed >>> 12) % 17) - 8) / 130,
-          );
+          // Book-spine palette: leather browns, deep reds, blues, greens,
+          // strip-leather golds, worn blacks. Each book gets a distinct,
+          // believable binding colour derived from its work id hash.
+          const hue = (seed % 360) / 360;
+          const saturation = 0.35 + ((seed >>> 5) % 25) / 100;
+          const lightness = 0.25 + ((seed >>> 10) % 20) / 100;
+          color.setHSL(hue, saturation, lightness);
+          // Slightly desaturate for an aged, leather look
+          color.offsetHSL(0, -0.15, 0);
           bookMesh.setColorAt(workIndex, color);
 
           const bandPosition = new THREE.Vector3();
@@ -822,6 +827,7 @@ function createLibraryScene(
       bookMesh.instanceColor!.needsUpdate = true;
       bandMesh.instanceMatrix.needsUpdate = true;
       bookMesh.instanceMatrix.needsUpdate = true;
+      bookToBandMesh.set(bookMesh, bandMesh);
       bookMesh.userData.hits = hits;
       bookMesh.userData.hallIndex = hallIndex;
       group.add(bookMesh);
@@ -897,6 +903,9 @@ function createLibraryScene(
     mesh: THREE.InstancedMesh;
     instanceId: number;
     baseMatrix: THREE.Matrix4;
+    bandMesh: THREE.InstancedMesh;
+    bandInstanceId: number;
+    bandBaseMatrix: THREE.Matrix4;
     targetZ: number;
     currentZ: number;
   } | null = null;
@@ -911,23 +920,38 @@ function createLibraryScene(
         selectedInstance.baseMatrix,
       );
       selectedInstance.mesh.instanceMatrix.needsUpdate = true;
+      selectedInstance.bandMesh.setMatrixAt(
+        selectedInstance.bandInstanceId,
+        selectedInstance.bandBaseMatrix,
+      );
+      selectedInstance.bandMesh.instanceMatrix.needsUpdate = true;
       selectedInstance = null;
     }
     if (!work) return;
-    for (const mesh of bookMeshes) {
+    for (let mi = 0; mi < bookMeshes.length; mi += 1) {
+      const mesh = bookMeshes[mi];
       const hits = hitByMesh.get(mesh);
       if (!hits) continue;
       const index = hits.findIndex((hit) => hit.work.id === work.id);
       if (index >= 0) {
         const base = new THREE.Matrix4();
         mesh.getMatrixAt(index, base);
+        const bandMesh = bookToBandMesh.get(mesh);
+        if (!bandMesh) continue;
         selectedInstance = {
           mesh,
           instanceId: index,
           baseMatrix: base,
+          bandMesh,
+          bandInstanceId: index * 2,
+          bandBaseMatrix: new THREE.Matrix4(),
           targetZ: 0.3,
           currentZ: 0,
         };
+        selectedInstance.bandMesh.getMatrixAt(
+          selectedInstance.bandInstanceId,
+          selectedInstance.bandBaseMatrix,
+        );
         break;
       }
     }
@@ -1119,6 +1143,14 @@ function createLibraryScene(
         pullMatrix,
       );
       selectedInstance.mesh.instanceMatrix.needsUpdate = true;
+      // Move both binding bands with the book
+      pullMatrix.copy(selectedInstance.bandBaseMatrix);
+      pullMatrix.elements[14] += next;
+      selectedInstance.bandMesh.setMatrixAt(
+        selectedInstance.bandInstanceId,
+        pullMatrix,
+      );
+      selectedInstance.bandMesh.instanceMatrix.needsUpdate = true;
     }
 
     controls.update();
